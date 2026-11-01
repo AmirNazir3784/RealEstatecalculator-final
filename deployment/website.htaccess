@@ -1,0 +1,83 @@
+# Canonical host + HTTPS redirects (Hostinger / LiteSpeed / Apache)
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  # www -> apex domain (forces HTTPS at the same time)
+  RewriteCond %{HTTP_HOST} ^www\.everyrealestatecalculator\.com$ [NC]
+  RewriteRule ^(.*)$ https://everyrealestatecalculator.com/$1 [R=301,L]
+  # http -> https
+  RewriteCond %{HTTPS} off
+  RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+</IfModule>
+
+# ============================================================================
+# HOSTING HEADER TEMPLATE — Real-e-State static site
+# TEMPLATE ONLY — confirm your host before use. Do NOT assume the host is
+# Apache: this file works on Apache / LiteSpeed / Hostinger-style shared
+# hosting. On Netlify use a _headers file, on Vercel use vercel.json,
+# on Cloudflare Pages use a _headers file — translate the same header
+# values below; do not copy this file blindly to a non-Apache host.
+#
+# WHY THESE VALUES (evidence from the 2026-10-27 audit):
+# - The site is pure static HTML/CSS/JS. No backend, no cookies, no
+#   fetch/XHR, no login. There is nothing to authenticate.
+# - script-src NO LONGER uses 'unsafe-inline' (hardening pass 2026-10-27):
+#   all 10 inline onsubmit="return false" handlers were moved into page JS
+#   as form.addEventListener('submit', e => e.preventDefault()) — 9
+#   calculators plus the contact form (whose listener already existed in
+#   contact.js). Verified: no on* attributes and no inline <script> blocks
+#   remain anywhere in website/, and the tightened CSP was tested with a
+#   local server (see AUDIT-REPORT.md hardening section) before adoption.
+# - style-src keeps 'unsafe-inline' because pages use 57 inline
+#   style="" attributes. style-inline is far lower risk than
+#   script-inline; moving those attributes to classes is optional.
+# - fonts.googleapis.com / fonts.gstatic.com are needed ONLY while
+#   assets/tools.css still @imports Google Fonts (7 pages: Tools
+#   listing + 6 calculators). Self-hosting Fraunces removes that need.
+# - CSSOM el.style.width assignments (bars/charts) are NOT blocked by
+#   style-src without 'unsafe-inline', so chart/bar code is unaffected.
+# - HSTS: enable ONLY once HTTPS is confirmed working on the real
+#   domain. Never enable HSTS on a plain-HTTP test host.
+# ============================================================================
+
+<IfModule mod_headers.c>
+  # Prevent MIME sniffing
+  Header always set X-Content-Type-Options "nosniff"
+  # Do not send the full referrer cross-origin
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  # The site uses no camera, microphone, geolocation, or payment APIs
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=()"
+  # Never allow the site to be framed (clickjacking defence)
+  # (frame-ancestors in CSP below is the primary control; this header
+  # is kept out deliberately because X-Frame-Options + CSP can conflict
+  # on some hosts — CSP frame-ancestors 'none' is sufficient.)
+  # Content Security Policy — see notes above before tightening
+  Header always set Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'none'"
+  # Strict Transport Security — UNCOMMENT ONLY AFTER HTTPS IS VERIFIED
+  # Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+</IfModule>
+
+# Conservative, tiered caching — NO versioned filenames exist, so NO long
+# TTLs and NO 'immutable' anywhere: a 30/90-day cache would keep serving a
+# stale calculator after a fix. HTML is never cached (fixes go live at once);
+# CSS/JS get 1 day with must-revalidate; images/fonts get 7 days with
+# must-revalidate (they change rarely, and a week bounds any staleness).
+# If versioned (content-hashed) filenames are ever introduced, only then
+# may CSS/JS/images move to long-lived immutable caching.
+<IfModule mod_headers.c>
+  <FilesMatch "\.(html?)$">
+    Header always set Cache-Control "no-cache, must-revalidate"
+  </FilesMatch>
+  <FilesMatch "\.(css|js)$">
+    Header always set Cache-Control "public, max-age=86400, must-revalidate"
+  </FilesMatch>
+  <FilesMatch "\.(png|jpe?g|svg|webp|avif|woff2?)$">
+    Header always set Cache-Control "public, max-age=604800, must-revalidate"
+  </FilesMatch>
+</IfModule>
+
+# Never serve internal files even if they are accidentally uploaded.
+# (The production directory already excludes these; this is defence in
+# depth for the hosting root.)
+<FilesMatch "(\.md$|\.cjs$|project-files\.txt$)">
+  Require all denied
+</FilesMatch>
