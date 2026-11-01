@@ -15,7 +15,7 @@ for (const page of pages) {
   for (const key of ['og:description', 'twitter:description']) assert(html.includes(`="${key}" content="${description[0][1]}"`), page);
   assert(html.includes('property="og:type" content="website"'));
   assert(html.includes('name="twitter:card" content="summary"'));
-  assert(!/rel="canonical"|property="og:url"/.test(html), 'No unconfigured production URLs');
+  assert(html.includes('rel="canonical" href="https://everyrealestatecalculator.com'), 'Configured canonical URL required'); assert(html.includes('property="og:url" content="https://everyrealestatecalculator.com'), 'Configured og:url required');
   assert(html.includes('<html lang="en">')); assert(html.includes('charset="utf-8"'));
   assert(html.includes('class="skip-link" href="#main"'));
   let previous = 0, h1 = 0;
@@ -27,10 +27,10 @@ for (const page of pages) {
   assert.equal(h1, 1);
   for (const script of html.matchAll(/<script\b[^>]*src="[^"]+"[^>]*>/g)) assert(/\bdefer\b/.test(script[0]), page);
 }
-assert(!fs.existsSync(path.join(root, 'sitemap.xml')));
-assert(!fs.existsSync(path.join(root, 'robots.txt')));
+assert(fs.existsSync(path.join(root, 'sitemap.xml')), 'sitemap.xml required for production');
+assert(fs.existsSync(path.join(root, 'robots.txt')), 'robots.txt required for production');
 const contact = fs.readFileSync(path.join(root, 'contact/index.html'), 'utf8');
 assert(contact.includes('It does not send or save your enquiry.'));
 assert(contact.includes('Your draft (not sent)'));
 assert(!/<form[^>]*action=/.test(contact));
-console.log('PASS: 16 unique titles/descriptions, matching social metadata, heading order, language/skip links, deferred scripts, no invented canonical/sitemap URLs, honest draft-only contact messaging.');
+console.log('PASS: 16 unique titles/descriptions, matching social metadata, heading order, language/skip links, deferred scripts, configured canonical/sitemap URLs for everyrealestatecalculator.com, honest draft-only contact messaging.');
