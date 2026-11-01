@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#102131">
+<meta name="description" content="Use the mortgage calculator to estimate your full monthly payment: principal and interest, tax, insurance, HOA and PMI, with total interest and payoff savings.">
+<title>Mortgage Calculator | Real Estate Tools</title>
+<link rel="stylesheet" href="../../assets/site.css">
+<link rel="stylesheet" href="../../assets/theme.css">
+<link rel="stylesheet" href="../../assets/tools.css">
+<link rel="stylesheet" href="calculator.css">
+<link rel="icon" type="image/svg+xml" href="../../assets/favicon.svg">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Mortgage Calculator | Real Estate Tools">
+<meta property="og:description" content="Use the mortgage calculator to estimate your full monthly payment: principal and interest, tax, insurance, HOA and PMI, with total interest and payoff savings."><link rel="canonical" href="https://everyrealestatecalculator.com/tools/mortgage-calculator/"><meta property="og:url" content="https://everyrealestatecalculator.com/tools/mortgage-calculator/"><meta property="og:image" content="https://everyrealestatecalculator.com/assets/home-architecture.jpg"><meta name="twitter:image" content="https://everyrealestatecalculator.com/assets/home-architecture.jpg">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Mortgage Calculator | Real Estate Tools">
+<meta name="twitter:description" content="Use the mortgage calculator to estimate your full monthly payment: principal and interest, tax, insurance, HOA and PMI, with total interest and payoff savings.">
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="header"><div class="wrap head-inner">
+<a class="brand" href="../../" aria-label="Real Estate Tools, homepage"><span class="brand-mark" aria-hidden="true">⌂</span><span class="brand-name"><span data-brand-name>Real Estate Tools</span><em>Tools · Software · Guides</em></span></a>
+<nav class="nav" id="site-menu" aria-label="Main navigation"><a href="../../tools/" class="current" aria-current="page">All Tools</a><a href="../../realtoros/" class="" data-crm-link="login">RealtorOS</a><a href="../../resources/" class="">Resources</a><a href="../../about/">About</a><a href="../../contact/" class="">Contact</a><a class="btn btn-primary mobile-nav-cta" href="../../realtoros/" data-crm-link="login">Sign in to RealtorOS <span aria-hidden="true">↗</span></a></nav>
+<div class="nav-buttons"><a class="btn btn-primary btn-small" href="../../realtoros/" data-crm-link="login">Sign in to RealtorOS <span aria-hidden="true">↗</span></a></div>
+<button class="menu-toggle" type="button" aria-controls="site-menu" aria-expanded="false" aria-label="Open navigation"><span aria-hidden="true">☰</span></button>
+</div></header>
+<main id="main"><div class="sticky-result" id="sticky-result"><span>Total monthly payment</span><b id="sticky-value">—</b></div>
+<section class="page-hero"><div class="wrap"><h1>Mortgage Payment Calculator</h1><p>Estimate the full monthly payment on a fixed-rate home loan — principal and interest, plus property tax, insurance, HOA dues and PMI.</p></div>
+<div class="wrap calculator-layout">
+<div class="panel">
+<h2 style="font-size:1.7rem">Enter your loan details</h2>
+<p class="muted">Adjust the sample values below to calculate an estimate instantly.</p>
+<form id="mortgage-form"><fieldset class="form-group"><legend>Loan details</legend><div class="form-grid"><div class="form-field"><label for="home-price">Home price (USD)</label><span class="input-unit"><span class="unit-affix" aria-hidden="true">$</span><input class="field" id="home-price" type="number" min="0" max="1000000000000" step="1000" value="400000"></span><input class="field-slider" id="home-price-slider" type="range" min="0" max="1000000" step="1000" value="400000" aria-label="Home price (USD) slider"></div><div class="form-field"><label for="down-payment">Down payment (USD)</label><span class="input-unit"><span class="unit-affix" aria-hidden="true">$</span><input class="field" id="down-payment" type="number" min="0" step="1000" value="80000"></span><input class="field-slider" id="down-payment-slider" type="range" min="0" max="1000000" step="1000" value="80000" aria-label="Down payment (USD) slider"></div><div class="form-field"><label for="down-percent-input">Down payment (%)</label><span class="input-unit"><input class="field" id="down-percent-input" type="number" min="0" max="100" step="0.1" value="20"><span class="unit-affix" aria-hidden="true">%</span></span><small class="field-helper">Share of the home price. Edit either value; the other follows.</small></div><div class="form-field"><label for="interest-rate">Annual interest rate (%)</label><span class="input-unit"><input class="field" id="interest-rate" type="number" min="0" max="100" step="0.01" value="6.5"><span class="unit-affix" aria-hidden="true">%</span></span><input class="field-slider" id="interest-rate-slider" type="range" min="0" max="15" step="0.1" value="6.5" aria-label="Annual interest rate (%) slider"></div><div class="form-field form-field-full"><span class="seg-label" id="loan-years-label">Loan term</span><div class="seg-control" role="group" aria-labelledby="loan-years-label"><button type="button" data-years="15" aria-pressed="false">15 years</button><button type="button" data-years="20" aria-pressed="false">20 years</button><button type="button" data-years="30" aria-pressed="true">30 years</button></div><input type="hidden" id="loan-years" value="30"></div></div></fieldset><fieldset class="form-group"><legend>Ownership costs</legend><div class="form-grid"><div class="form-field"><label for="property-tax">Property tax (USD per year)</label><span class="input-unit"><span class="unit-affix" aria-hidden="true">$</span><input class="field" id="property-tax" type="number" min="0" step="100" value="4800"><span class="unit-affix" aria-hidden="true">/ year</span></span></div><div class="form-field"><label for="home-insurance">Home insurance (USD per year)</label><span class="input-unit"><span class="unit-affix" aria-hidden="true">$</span><input class="field" id="home-insurance" type="number" min="0" step="100" value="1800"><span class="unit-affix" aria-hidden="true">/ year</span></span></div><div class="form-field"><label for="hoa-fee">HOA dues (USD per month)</label><span class="input-unit"><span class="unit-affix" aria-hidden="true">$</span><input class="field" id="hoa-fee" type="number" min="0" step="10" value="0"><span class="unit-affix" aria-hidden="true">/ month</span></span></div><div class="form-field"><label for="pmi-rate">PMI rate (annual %, only below 20% down)</label><span class="input-unit"><input class="field" id="pmi-rate" type="number" min="0" max="100" step="0.05" value="0.5"><span class="unit-affix" aria-hidden="true">%</span></span></div></div></fieldset><fieldset class="form-group"><legend>Extra payments</legend><div class="form-grid"><div class="form-field"><label for="extra-payment">Extra payment (USD per month)</label><span class="input-unit"><span class="unit-affix" aria-hidden="true">$</span><input class="field" id="extra-payment" type="number" min="0" step="50" value="0"><span class="unit-affix" aria-hidden="true">/ month</span></span></div><div class="form-field"><label for="lump-sum">One-time extra payment (USD)</label><span class="input-unit"><span class="unit-affix" aria-hidden="true">$</span><input class="field" id="lump-sum" type="number" min="0" step="1000" value="0"></span></div></div></fieldset></form>
+<p class="mortgage-error" id="mortgage-error" role="alert"></p>
+</div>
+<aside class="result" aria-live="polite">
+<p class="result-label">Total monthly payment</p>
+<div class="result-number" id="monthly-total">—</div>
+<p class="result-hero-sub">Principal &amp; interest <b id="monthly-payment">—</b> per month</p>
+<p class="result-empty" id="result-empty" hidden>Enter your details to see your estimate.</p>
+        <div id="result-body"><h3 class="result-group">Monthly payment</h3>
+<div class="breakdown-track" aria-hidden="true"><div id="bd-pi" class="seg-blue"></div><div id="bd-tax" class="seg-teal"></div><div id="bd-ins" class="seg-gold"></div><div id="bd-hoa" class="seg-gray"></div><div id="bd-pmi" class="seg-coral"></div></div>
+<ul class="breakdown-legend">
+<li><span class="swatch seg-teal"></span>Property tax <b id="lg-tax">—</b></li>
+<li><span class="swatch seg-gold"></span>Home insurance <b id="lg-ins">—</b></li>
+<li><span class="swatch seg-gray"></span>HOA dues <b id="lg-hoa">—</b></li>
+<li><span class="swatch seg-coral"></span>PMI <b id="lg-pmi">—</b></li>
+</ul>
+<h3 class="result-group">Loan totals</h3>
+<div class="result-row"><span>Loan amount</span><b id="loan-amount">—</b></div>
+<div class="result-row"><span>Total interest over term</span><b id="total-interest">—</b></div>
+<div class="result-row"><span>Total principal + interest</span><b id="total-paid">—</b></div>
+<div class="result-row"><span>Total of monthly payments over term</span><b id="total-cost">—</b></div>
+<h3 class="result-group">Payoff</h3>
+<div class="result-row"><span>Estimated payoff date</span><b id="payoff-date">—</b></div>
+<div class="result-row"><span>Total interest with extra payments</span><b id="interest-with-extras">—</b></div>
+<div class="result-row" id="row-interest-saved"><span>Interest saved</span><b id="interest-saved">—</b></div>
+<div class="result-row" id="row-time-saved"><span>Time saved</span><b id="time-saved">—</b></div>
+<p class="muted" id="mortgage-pmi-note"></p>
+<div class="copy-row"><button class="tool-btn tool-btn-primary" id="copy-results" type="button">Copy results</button><button class="tool-btn tool-btn-outline" id="print-results" type="button">Print</button></div>
+<p class="copy-note" id="copy-note"></p></div>
+</aside>
+</div><div class="wrap"><a class="realtoros-link" href="../../realtoros/">Manage client follow-ups in RealtorOS ↗</a></div><div class="wrap calculator-disclaimers"><p class="disclaimer">Principal and interest use a standard amortizing fixed-rate formula. PMI is estimated only while the loan balance is above 80% of the price. Taxes, insurance and HOA figures are your own inputs, not quotes.</p>
+<p class="disclaimer">Estimates only. Not a loan offer or financial advice.</p></div></section>
+<section class="section"><div class="wrap content">
+<h2>Loan balance over time</h2>
+<p>The teal line is the remaining loan balance, falling to $0, and the gold line is the interest paid so far, rising to the total interest for the term.</p>
+<div class="chart-wrap"><svg id="balance-chart" viewBox="0 0 600 260" role="img" aria-label="Chart of remaining loan balance and cumulative interest over the loan term"></svg>
+<div class="chart-legend"><span><span class="swatch seg-teal"></span> Remaining balance <b id="chart-balance-end">—</b></span><span><span class="swatch seg-gold"></span> Interest paid so far <b id="chart-interest-end">—</b></span></div></div>
+<details class="mortgage-details">
+<summary>View amortization schedule</summary>
+<div class="mortgage-schedule-tools">
+<button class="mortgage-toggle" id="schedule-yearly-btn" type="button" aria-pressed="true">Yearly</button>
+<button class="mortgage-toggle" id="schedule-monthly-btn" type="button" aria-pressed="false">Monthly</button>
+<button class="mortgage-toggle" id="download-schedule-btn" type="button">Download CSV</button>
+</div>
+<p class="muted" id="schedule-note"></p>
+<div class="table-scroll"><table class="mortgage-schedule">
+<thead><tr><th>Year / Month</th><th>Interest</th><th>Principal</th><th>Remaining balance</th></tr></thead>
+<tbody id="mortgage-schedule-body"></tbody>
+</table></div>
+</details>
+<h2>How the mortgage payment is calculated</h2>
+<p>Principal and interest use the standard fixed-rate formula: M = P × r(1 + r)<sup>n</sup> ÷ ((1 + r)<sup>n</sup> − 1), where P is the loan amount, r is the monthly interest rate (annual rate ÷ 12), and n is the number of monthly payments. At 0% interest, the payment is simply P ÷ n. Property tax and home insurance are each divided by 12, HOA dues are added monthly, and PMI is added only while it applies. Extra monthly and one-time payments go straight to principal, which shortens the loan and reduces total interest.</p>
+<h2>Worked example</h2>
+<p>These are the values already filled in when the page loads. The 6.5% rate is a sample default, not a current market rate or a quote.</p>
+<div class="table-scroll"><table class="mortgage-schedule">
+<thead><tr><th>Input</th><th>Value</th></tr></thead>
+<tbody>
+<tr><td>Home price</td><td>$400,000</td></tr>
+<tr><td>Down payment</td><td>$80,000 (20%)</td></tr>
+<tr><td>Loan amount</td><td>$320,000</td></tr>
+<tr><td>Annual interest rate</td><td>6.5% (fixed)</td></tr>
+<tr><td>Loan term</td><td>30 years (360 payments)</td></tr>
+<tr><td>Principal and interest</td><td>$2,022.62 per month</td></tr>
+<tr><td>Property tax</td><td>$400 per month</td></tr>
+<tr><td>Home insurance</td><td>$150 per month</td></tr>
+<tr><td>HOA dues and PMI</td><td>$0 per month</td></tr>
+<tr><td>Total monthly payment</td><td>$2,572.62</td></tr>
+<tr><td>Total interest over term</td><td>$408,142.36</td></tr>
+</tbody></table></div>
+<p>Totals are calculated from unrounded values and rounded only for display, so multiplying a displayed monthly payment by a displayed number of months may not exactly equal a displayed total.</p>
+<h2>Compare loan terms</h2>
+<p>Same home price, down payment and rate — only the term changes. Your current term is highlighted. The figures below are principal and interest only; tax, insurance, HOA and PMI, where they apply, sit on top of them.</p>
+<div class="table-scroll"><table class="mortgage-schedule">
+<thead><tr><th>Term</th><th>Monthly P&amp;I</th><th>Total interest</th><th>Total paid</th></tr></thead>
+<tbody id="term-compare-body"></tbody>
+</table></div>
+<p>The trade-off is simple: a shorter term costs more each month but far less interest overall, while a longer term lowers the monthly payment and raises total interest. Choose the term you can sustain, not just the one that looks cheapest in a single month.</p>
+<h2>Extra payments</h2>
+<p>Extra principal reduces the balance that future interest is charged on, so the loan can finish early. On the default loan, adding $200 a month with no other change finishes the loan in 281 months instead of 360, saves $105,428.67 in interest, and finishes 6 years 7 months sooner. Check with your servicer how extra payments are applied — some need an explicit “apply to principal” instruction.</p>
+<h2>PMI</h2>
+<p>This calculator uses a simplified PMI rule: if the down payment is below 20%, it charges PMI at your entered annual rate on the loan amount, divided by 12, and stops once the balance is no longer above 80% of the home price. For example, a $400,000 home with 10% down gives a $360,000 loan, $2,275.44 principal and interest, $150.00 PMI a month, and a $2,975.44 total with the default tax and insurance; PMI runs for about 95 months on those inputs. That is an estimate of the simplified rule, not a promise about a real loan. For many U.S. conventional loans with borrower-paid PMI, the Consumer Financial Protection Bureau (CFPB) describes a different set of rights: you may request cancellation in writing at a scheduled 80% of the home's original value, subject to being current and other conditions, and the servicer must generally terminate PMI automatically at a scheduled 78% if you are current. FHA and VA loans and lender-paid mortgage insurance follow different rules.</p>
+<h2>Key takeaways</h2>
+<ul>
+<li>Budget on the full monthly total, not principal and interest alone — on the default example, the difference is $550.00 a month.</li>
+<li>A shorter term raises the monthly payment and cuts total interest sharply; a longer term does the opposite.</li>
+<li>Extra principal is powerful because it compounds in reverse: $200 a month extra saves $105,428.67 on the default loan.</li>
+<li>The calculator's PMI rule is simplified; real cancellation depends on your servicer and the 80% request and 78% automatic-termination points described by the CFPB.</li>
+</ul>
+<h2>Frequently asked questions</h2>
+<h3>How is a monthly mortgage payment calculated?</h3>
+<p>Principal and interest use the fixed-rate formula in “How the mortgage payment is calculated” above. Tax and insurance are divided by 12, HOA is added monthly, and PMI is added where it applies.</p>
+<h3>What is included in the total monthly payment?</h3>
+<p>Principal and interest, plus property tax, home insurance, HOA dues, and PMI if the down payment is below 20%. The CFPB describes the same shape: principal and interest, plus mortgage insurance where applicable, plus escrow for insurance and tax.</p>
+<h3>What happens if I put less than 20% down?</h3>
+<p>This calculator adds PMI at your entered rate until the balance is no longer above 80% of the price. On a $400,000 home with 10% down at 6.5% over 30 years, that is a $360,000 loan, $2,275.44 principal and interest, $150.00 PMI, and a $2,975.44 total with default tax and insurance.</p>
+<h3>Does a shorter mortgage term always save money?</h3>
+<p>It saves total interest but raises the monthly payment, so it helps only if you can sustain that payment. Compare the term table above on the same price, down payment and rate before deciding.</p>
+<h3>Do extra payments really save interest?</h3>
+<p>Yes, because extra principal reduces the balance that future interest is charged on. Adding $200 a month to the default loan finishes it in 281 months instead of 360 and saves $105,428.67 in interest.</p>
+<h3>When can PMI actually be removed from a real loan?</h3>
+<p>For many U.S. conventional loans with borrower-paid PMI, the CFPB states you may request cancellation in writing at a scheduled 80% of original value, if current and meeting the other conditions. If you do nothing, termination is generally automatic at a scheduled 78%, if current.</p>
+<h3>Why can my total payment change if I have a fixed-rate loan?</h3>
+<p>The principal-and-interest part generally stays level, but tax, insurance, HOA dues and escrow adjustments do not. This calculator holds your entered tax, insurance and HOA flat, so a real payment that moves is not a calculator error.</p>
+<h3>Is this mortgage calculator a loan offer or an approval?</h3>
+<p>No. It is an estimate from the numbers you enter only. It does not check credit, income, debts, property type, closing costs or lender fees, and it uses the sample 6.5% default unless you change it.</p>
+<h2>Limitations, sources and related calculators</h2>
+<p>This is an informational estimate, not a lender quote or financial advice. It does not include closing costs, points, lender fees or prepaid items; it holds tax, insurance and HOA flat over the whole term; it models fixed rates only, not adjustable rates; and it does not check credit, income, debts or property type. Verify the scenario you intend to take with a lender, using a written Loan Estimate.</p>
+<h3>Sources</h3>
+<ul>
+<li>Consumer Financial Protection Bureau — <a href="https://www.consumerfinance.gov/ask-cfpb/on-a-mortgage-whats-the-difference-between-my-principal-and-interest-payment-and-my-total-monthly-payment-en-1941/">On a mortgage, what's the difference between my principal and interest payment and my total monthly payment?</a></li>
+<li>Consumer Financial Protection Bureau — <a href="https://www.consumerfinance.gov/ask-cfpb/when-can-i-remove-private-mortgage-insurance-pmi-from-my-loan-en-202/">When can I remove private mortgage insurance (PMI) from my loan?</a></li>
+</ul>
+<p>All other figures on this page are outputs of this page's own calculator, not third-party statistics. No market rate, approval rate or lender claim is made.</p>
+<p>Next steps: run your own numbers in the calculator at the top of this page, then compare the result with the <a href="../home-affordability-calculator/">Home Affordability Calculator</a> to test what price fits a monthly budget, or the <a href="../rent-vs-buy-calculator/">Rent vs Buy Calculator</a> to test buying against renting over the same period. The <a href="../../resources/#mortgage-guide">mortgage guide on Resources</a> explains the same payment in shorter form, and <a href="../../tools/">all tools</a> lists every published calculator.</p>
+</div></section>
+</main>
+<footer class="footer"><div class="wrap"><div class="footer-top"><div><a class="brand" href="../../" style="color:white;display:inline-flex;margin-bottom:18px"><span class="brand-mark" style="background:#254761">⌂</span><span class="brand-name"><span data-brand-name>Real Estate Tools</span><em style="color:#adc6c8">Tools · Software · Guides</em></span></a><p>Useful real estate tools for everyday decisions, with RealtorOS as the flagship CRM. Brand and company details will be finalized before public launch.</p></div><div class="footer-tools"><h2 class="footer-heading">Platform</h2><a href="../../tools/">All tools</a><a href="../../tools/commission-calculator/">Commission calculator</a><a href="../../tools/mortgage-calculator/">Mortgage calculator</a><a href="../../tools/home-affordability-calculator/">Home affordability calculator</a><a href="../../tools/rent-vs-buy-calculator/">Rent vs buy calculator</a><a href="../../tools/cap-rate-calculator/">Cap rate calculator</a><a href="../../tools/bridge-loan-calculator/">Bridge loan calculator</a><a href="../../tools/property-investment-calculator/">Property investment calculator</a><a href="../../tools/capital-gains-tax-calculator/">Capital gains tax calculator</a><a href="../../tools/roi-calculator/">ROI calculator</a><a href="../../tools/noi-calculator/">NOI calculator</a></div><div><h2 class="footer-heading">Product</h2><a href="../../realtoros/">RealtorOS CRM</a><a href="../../resources/">Resources</a><a href="../../about/">About</a><a href="../../contact/">Contact</a></div><div><h2 class="footer-heading">Before launch</h2><p>Connect support email, app login, pricing and approved legal policies.</p></div></div><div class="foot-bottom"><span>© 2026 <span data-brand-name>Real Estate Tools</span> · Working name, brand pending.</span></div></div></footer>
+<script src="../../assets/site-config.js" defer></script>
+<script src="../../assets/site.js" defer></script>
+<script src="calculator.js" defer></script>
+</body>
+</html>

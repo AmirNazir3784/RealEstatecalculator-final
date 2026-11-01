@@ -1,0 +1,31 @@
+/* Rent vs buy calculator — scoped styles. Shared layout tokens live in theme.css. */
+/* The calculator lives inside the first (hero) section, right under the title. */
+.page-hero { padding: 24px 0 30px; }
+.page-hero h1 { font-size: clamp(2rem, 4.5vw, 2.9rem); line-height: 1.12; margin: 0 0 10px; }
+.page-hero .calculator-layout { margin-top: 24px; } /* 24px measured gap: intro p margin-bottom 16px collapses with this, so the larger value wins */
+@media (max-width: 760px) {
+  .page-hero { padding-top: 16px; }
+  .page-hero .calculator-layout { margin-top: 0; }
+}
+.section { padding: 26px 0 40px; }
+.calculator-layout { align-items: start; gap: 24px; }
+.result .result-row { padding: 6px 0; }
+.result > div:last-child { margin-top: 16px !important; }
+.rent-advanced { border-top: 1px solid var(--line); margin-top: 20px; padding-top: 14px; }
+.rent-advanced summary { font-weight: 600; cursor: pointer; }
+.rent-advanced .form-grid { margin-top: 14px; }
+.rent-verdict-box { border-radius: 12px; padding: 16px 18px; margin-bottom: 14px; }
+.rent-verdict { font-size: 1.25rem; font-weight: 700; line-height: 1.3; }
+.rent-verdict-detail { margin: 8px 0 0; font-size: 0.95rem; }
+.rent-bars { margin: 14px 0 6px; }
+.rent-bar-row { margin-bottom: 12px; }
+.rent-bar-row span { display: block; font-size: 0.92rem; }
+.rent-bar-row b { display: block; margin-top: 2px; }
+.rent-bar-track { height: 12px; border-radius: 999px; overflow: hidden; background: var(--line); margin-top: 6px; }
+.rent-bar-track > div { height: 100%; }
+.afford-total-row { border-top: 1px solid var(--line); margin-top: 12px; padding-top: 12px; }
+
+/* P2 (D-3 + tablet hero tier): supporting sections 26/40 -> 20/32 -> 16/28; hero top 20px on tablet. */
+@media (min-width:761px) and (max-width:1000px){ .page-hero{padding-top:20px} }
+@media (max-width:1000px){ .section{padding:20px 0 32px} }
+@media (max-width:760px){ .section{padding:16px 0 28px} }
