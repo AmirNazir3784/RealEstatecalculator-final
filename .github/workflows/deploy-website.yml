@@ -1,0 +1,116 @@
+name: Deploy website
+
+# Verification runs on relevant changes to main and pull requests.
+# Publishing is manual and gated by workflow_dispatch plus the production
+# environment's required reviewers.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "website/**"
+      - "deployment/website.htaccess"
+      - ".github/workflows/deploy-website.yml"
+  pull_request:
+    branches: [main]
+    paths:
+      - "website/**"
+      - "deployment/website.htaccess"
+      - ".github/workflows/deploy-website.yml"
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: "Publish the verified output to the deploy-website branch"
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-website
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    name: Test, build and validate
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Run the five website test suites
+        run: |
+          set -euo pipefail
+          for t in h1 resources w2 w4 w5a; do
+            echo "===== website/tests/$t.cjs ====="
+            node "website/tests/$t.cjs"
+          done
+      - name: Build the production package
+        run: node website/scripts/package-deploy.mjs
+      - name: Assemble and validate the deployable output
+        run: |
+          set -euo pipefail
+          mkdir -p out
+          cp -r website/dist-production/. out/
+          cp deployment/website.htaccess out/.htaccess
+          test -f out/index.html
+          test -f out/sitemap.xml
+          test -f out/robots.txt
+          test -f out/.htaccess
+          if grep -rE "http://(localhost|127\.0\.0\.1)" out/ ; then
+            echo "Development URL found in production output" ; exit 1
+          fi
+          if grep -rE "service_role|BEGIN [A-Z ]*PRIVATE KEY" out/ ; then
+            echo "Secret material found in production output" ; exit 1
+          fi
+          echo "Output files: $(find out -type f | wc -l)"
+      - name: Upload the verified output
+        uses: actions/upload-artifact@v4
+        with:
+          name: website-production-output
+          path: out/
+          retention-days: 14
+
+  publish:
+    name: Publish to deploy-website
+    needs: verify
+    if: github.event_name == 'workflow_dispatch' && inputs.publish == true
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: production-website
+    permissions:
+      contents: write
+    steps:
+      - name: Download the verified output
+        uses: actions/download-artifact@v4
+        with:
+          name: website-production-output
+          path: out
+      - name: Commit the output to the deploy-website branch
+        env:
+          SOURCE_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          TMP="$(mktemp -d)"
+          git init -q "$TMP/repo"
+          cd "$TMP/repo"
+          git remote add origin "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git"
+          if git fetch -q --depth 1 origin deploy-website ; then
+            git checkout -q -b deploy-website FETCH_HEAD
+          else
+            git checkout -q --orphan deploy-website
+          fi
+          find . -mindepth 1 -maxdepth 1 -not -name .git -exec rm -rf {} +
+          cp -r "$GITHUB_WORKSPACE/out/." .
+          git add -A
+          if git diff --cached --quiet ; then
+            echo "Output unchanged; nothing to publish."
+          else
+            git commit -q -m "Deploy website from $SOURCE_SHA"
+            git push -q origin deploy-website
+          fi

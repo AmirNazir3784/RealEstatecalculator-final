@@ -1,0 +1,122 @@
+name: Deploy CRM
+
+# Verification runs on relevant changes to main and pull requests.
+# Publishing is manual and gated by workflow_dispatch plus the production
+# environment's required reviewers.
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "Realtor main CRM/**"
+      - "deployment/package-crm.mjs"
+      - "deployment/crm.htaccess"
+      - ".github/workflows/deploy-crm.yml"
+  pull_request:
+    branches: [main]
+    paths:
+      - "Realtor main CRM/**"
+      - "deployment/package-crm.mjs"
+      - "deployment/crm.htaccess"
+      - ".github/workflows/deploy-crm.yml"
+  workflow_dispatch:
+    inputs:
+      publish:
+        description: "Publish the verified output to the deploy-crm branch"
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: deploy-crm
+  cancel-in-progress: false
+
+jobs:
+  verify:
+    name: Test, package and validate
+    runs-on: ubuntu-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: "Realtor main CRM/RealtorOS_Project/tests/package-lock.json"
+      - name: Install CRM test dependencies
+        working-directory: "Realtor main CRM/RealtorOS_Project/tests"
+        run: npm ci
+      - name: Run the CRM test suites
+        working-directory: "Realtor main CRM/RealtorOS_Project/tests"
+        run: |
+          set -euo pipefail
+          npm run test:frontend
+          npm run test:sql
+          npm run test:edge
+          npm run test:security
+      - name: Build the CRM production package
+        run: node deployment/package-crm.mjs
+      - name: Validate the deployable output
+        run: |
+          set -euo pipefail
+          test -f deployment/dist-crm/index.html
+          test -f deployment/dist-crm/sw.js
+          test -f deployment/dist-crm/manifest.webmanifest
+          test -f deployment/dist-crm/.htaccess
+          grep -q 'websiteUrl: "https://everyrealestatecalculator.com"' deployment/dist-crm/assets/js/config.js
+          if grep -rE "http://(localhost|127\.0\.0\.1)" deployment/dist-crm/ ; then
+            echo "Development URL found in production output" ; exit 1
+          fi
+          if grep -rE "service_role|BEGIN [A-Z ]*PRIVATE KEY" deployment/dist-crm/ ; then
+            echo "Secret material found in production output" ; exit 1
+          fi
+          echo "Output files: $(find deployment/dist-crm -type f | wc -l)"
+      - name: Upload the verified output
+        uses: actions/upload-artifact@v4
+        with:
+          name: crm-production-output
+          path: deployment/dist-crm/
+          retention-days: 14
+
+  publish:
+    name: Publish to deploy-crm
+    needs: verify
+    if: github.event_name == 'workflow_dispatch' && inputs.publish == true
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: production-crm
+    permissions:
+      contents: write
+    steps:
+      - name: Download the verified output
+        uses: actions/download-artifact@v4
+        with:
+          name: crm-production-output
+          path: out
+      - name: Commit the output to the deploy-crm branch
+        env:
+          SOURCE_SHA: ${{ github.sha }}
+        run: |
+          set -euo pipefail
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          TMP="$(mktemp -d)"
+          git init -q "$TMP/repo"
+          cd "$TMP/repo"
+          git remote add origin "https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}.git"
+          if git fetch -q --depth 1 origin deploy-crm ; then
+            git checkout -q -b deploy-crm FETCH_HEAD
+          else
+            git checkout -q --orphan deploy-crm
+          fi
+          find . -mindepth 1 -maxdepth 1 -not -name .git -exec rm -rf {} +
+          cp -r "$GITHUB_WORKSPACE/out/." .
+          git add -A
+          if git diff --cached --quiet ; then
+            echo "Output unchanged; nothing to publish."
+          else
+            git commit -q -m "Deploy CRM from $SOURCE_SHA"
+            git push -q origin deploy-crm
+          fi
