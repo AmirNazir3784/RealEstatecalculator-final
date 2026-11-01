@@ -28,11 +28,26 @@ const SHELL = `<!doctype html><html lang="en"><head><meta charset="utf-8"><title
   <div id="modalRoot"></div><div id="toastRoot"></div>
 </body></html>`;
 
-export async function browser(scripts, { store, derived } = {}) {
+export async function browser(scripts, { store, derived, now } = {}) {
   const JSDOM = await loadJsdom();
   if (!JSDOM) return null;
   const dom = new JSDOM(SHELL, { runScripts: "outside-only", pretendToBeVisual: true, url: "https://app.example.test/" });
   const { window } = dom;
+  const nativeDate = window.Date;
+  if (now) {
+    const fixedTime = nativeDate.parse(now);
+    if (!Number.isFinite(fixedTime)) throw new TypeError(`Invalid test clock: ${now}`);
+    class FixedDate extends nativeDate {
+      constructor(...args) {
+        super(...(args.length ? args : [fixedTime]));
+      }
+
+      static now() {
+        return fixedTime;
+      }
+    }
+    window.Date = FixedDate;
+  }
   const toasts = [];
   window.eval("window.App = window.App || {}; App.pages = App.pages || {};");
   for (const rel of scripts) {
@@ -49,7 +64,15 @@ export async function browser(scripts, { store, derived } = {}) {
       if (realToast) realToast(message, kind, opts);
     };
   }
-  return { window, document: window.document, toasts, close: () => window.close() };
+  return {
+    window,
+    document: window.document,
+    toasts,
+    close: () => {
+      window.Date = nativeDate;
+      window.close();
+    },
+  };
 }
 
 // Lets pending promises, timers and animation frames settle.

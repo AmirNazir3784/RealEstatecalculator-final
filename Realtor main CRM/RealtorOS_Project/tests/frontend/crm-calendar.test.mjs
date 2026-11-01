@@ -21,7 +21,9 @@ const SCRIPTS = [
 const TODAY = "2026-10-15";
 
 async function cal(seed) {
-  const p = await page(SCRIPTS, Object.assign({ today: TODAY }, seed));
+  const p = await page(SCRIPTS, Object.assign({ today: TODAY }, seed), {
+    now: TODAY + "T12:00:00Z",
+  });
   if (!p) return null;
   await p.window.App.pages.calendar.render(p.pane);
   await settle(p.window);
@@ -113,4 +115,45 @@ dom("what somebody typed into a showing is escaped", async () => {
   });
   assert.equal(p.pane.querySelectorAll("img").length, 0);
   assert.equal(p.window.__pwned, undefined);
+});
+
+dom("December advances into January without losing the year", async () => {
+  const p = await page(SCRIPTS, {
+    today: "2026-12-15",
+    tasks: [{ id: "tk_jan", title: "January task", dueDate: "2027-01-05", status: "To Do", priority: "High" }],
+  }, { now: "2026-12-15T12:00:00Z" });
+  await p.window.App.pages.calendar.render(p.pane);
+  await settle(p.window);
+  assert.match(p.text(), /December 2026/i);
+  assert.ok(!/January task/.test(p.text()));
+
+  p.pane.querySelector("#calNext").click();
+  await settle(p.window);
+  assert.match(p.text(), /January 2027/i);
+  assert.match(p.text(), /January task/);
+
+  p.pane.querySelector("#calPrev").click();
+  await settle(p.window);
+  assert.match(p.text(), /December 2026/i);
+});
+
+dom("January moves back into the previous year", async () => {
+  const p = await page(SCRIPTS, {
+    today: "2027-01-15",
+    tasks: [{ id: "tk_dec", title: "December task", dueDate: "2026-12-28", status: "To Do", priority: "High" }],
+  }, { now: "2027-01-15T12:00:00Z" });
+  await p.window.App.pages.calendar.render(p.pane);
+  await settle(p.window);
+  assert.match(p.text(), /January 2027/i);
+
+  p.pane.querySelector("#calPrev").click();
+  await settle(p.window);
+  assert.match(p.text(), /December 2026/i);
+  assert.match(p.text(), /December task/);
+
+  p.pane.querySelector("#calNext").click();
+  await settle(p.window);
+  p.pane.querySelector("#calToday").click();
+  await settle(p.window);
+  assert.match(p.text(), /January 2027/i);
 });
