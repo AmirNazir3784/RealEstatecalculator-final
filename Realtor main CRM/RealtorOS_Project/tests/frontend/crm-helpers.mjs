@@ -308,7 +308,7 @@ export function closeAll() {
  */
 export async function page(scripts, seed = {}, opts = {}) {
   const store = seed.store || workspace(seed);
-  const b = await browser(scripts, { store });
+  const b = await browser(scripts, { store, now: opts.now });
   if (!b) return null;
   open.push(b);
 
