@@ -93,7 +93,7 @@ assert.equal((faq.match(/<details>/g) || []).length, 4);
 assert.equal((faq.match(/<summary>/g) || []).length, 4);
 assert(faq.includes('excludes taxes'));
 assert(faq.includes('No account or signup is required'));
-for (const capability of ['Today', 'Contacts', 'Deals', 'Follow-up Plans']) assert(html.includes(`<dt>${capability}</dt>`));
+for (const capability of ['Follow-ups', 'Contacts', 'Deals', 'Next steps']) assert(html.includes(`<dt>${capability}</dt>`));
 const theme = read('assets/theme.css');
 assert(theme.includes("--font-body:'Inter'"));
 assert(theme.includes("--font-display:'Source Serif 4'"));
