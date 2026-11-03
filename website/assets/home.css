@@ -162,14 +162,21 @@
 .home .home-section-heading p {color:var(--muted);margin:0;font-size:1.0625rem;}
 .home .home-section-heading .eyebrow {margin-bottom:10px;}
 .home .home-use-cases {background:var(--white);border-bottom:1px solid var(--line);}
-.home .home-use-grid {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:22px;}
-.home .home-use-card {display:flex;flex-direction:column;align-items:flex-start;padding:26px;background:var(--mist);border:1px solid var(--line);border-radius:16px;min-width:0;}
+.home .home-use-cases .home-section-heading {max-width:800px;margin-bottom:36px;}
+.home .home-use-cases .home-section-heading .eyebrow {display:inline-flex;align-items:center;gap:12px;color:var(--navy);font-size:12px;font-weight:700;letter-spacing:1.1px;margin-bottom:16px;}
+.home .home-use-cases .home-section-heading .eyebrow:before {content:'';width:26px;height:2px;background:var(--gold);flex-shrink:0;}
+.home .home-use-cases .home-section-heading h2 {font-size:clamp(32px,3vw,42px);line-height:1.15;margin-bottom:14px;}
+.home .home-use-cases .home-section-heading p {line-height:1.6;}
+.home .home-use-grid {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;}
+@media(max-width:1099px){.home .home-use-grid {grid-template-columns:repeat(2,minmax(0,1fr));}}
+@media(max-width:699px){.home .home-use-grid {grid-template-columns:minmax(0,1fr);gap:16px;}.home .home-use-card {padding:22px;}}
+.home .home-use-card {display:flex;flex-direction:column;align-items:flex-start;padding:28px;background:var(--mist);border:1px solid var(--line);border-radius:18px;min-width:0;}
 .home .home-use-card:nth-child(2) {background:var(--paper);border-top:3px solid var(--gold);}
-.home .home-use-card .card-ico {margin-bottom:18px;}
-.home .home-use-card .eyebrow {margin-bottom:10px;}
-.home .home-use-card h3 {font-size:1.2rem;line-height:1.35;max-width:390px;margin:0 0 12px;}
-.home .home-use-card p {color:var(--muted);font-size:1rem;flex:1;}
-.home .home-use-card a {display:inline-flex;align-items:center;min-height:44px;}
+.home .home-use-card .card-ico {width:56px;height:56px;border-radius:15px;font-size:1.35rem;margin-bottom:18px;}
+.home .home-use-card .eyebrow {color:var(--teal);font-size:12px;font-weight:700;letter-spacing:1px;margin-bottom:12px;}
+.home .home-use-card h3 {font-size:20px;line-height:1.3;font-weight:700;margin:0 0 12px;}
+.home .home-use-card p {color:var(--muted);font-size:15px;line-height:1.55;flex:1;}
+.home .home-use-card a {display:inline-flex;align-items:center;min-height:44px;font-size:15px;font-weight:700;margin-top:auto;}
 .home .home-benefits-section {background:var(--paper);}
 .home .home-benefit-grid {list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px;}
 .home .home-benefit-grid li {min-width:0;border-top:1px solid var(--line);padding-top:18px;}
@@ -188,7 +195,7 @@
 .home .home-faq details p {padding:0 4px 18px;margin:0;color:var(--muted);font-size:1rem;}
 .home .home-faq details a {color:var(--teal);text-decoration:underline;text-underline-offset:3px;}
 @media(max-width:1000px){.home .home-benefit-grid {grid-template-columns:repeat(2,minmax(0,1fr));}}
-@media(max-width:760px){.home .home-use-grid,.home .home-faq-layout {grid-template-columns:minmax(0,1fr);gap:20px;}.home .home-hero h1 {font-size:clamp(2.3rem,6.3vw,3rem);}.home .home-section-heading {margin-bottom:20px;}}
+@media(max-width:760px){.home .home-faq-layout {grid-template-columns:minmax(0,1fr);gap:20px;}.home .home-hero h1 {font-size:clamp(2.3rem,6.3vw,3rem);}.home .home-section-heading {margin-bottom:20px;}}
 @media(max-width:540px){.home .home-use-card {padding:20px;}.home .home-benefit-grid {grid-template-columns:minmax(0,1fr);gap:20px;}.home .home-intro {font-size:1rem;}}
 
 /* P2 standardization: footer padding tiers, matching the shared spec. */
