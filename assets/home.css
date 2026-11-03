@@ -12,7 +12,6 @@
 .home .home-product a:focus-visible {outline-color:var(--gold);}
 .home .home-hero .eyebrow {display:inline-flex;align-items:center;gap:12px;}
 .home .home-hero .eyebrow:before {content:'';width:26px;height:2px;background:var(--gold);}
-.home .home-hero h1 span {color:var(--teal);}
 .home .home-intro {max-width:640px;margin:0 auto;color:var(--muted);font-size:1rem;line-height:1.65;}
 .home .hero-actions {justify-content:center;margin-top:22px;gap:12px;}
 .home .section {padding:48px 0;}
@@ -27,17 +26,16 @@
 .home .home-closing h2 {font-size:clamp(2rem,4vw,3.5rem);}
 .home .home-closing p {color:var(--muted);}
 /* Reference composition: editorial hero beside a live tool-search panel. */
-.home .home-hero {text-align:left;padding:48px 0;background:linear-gradient(90deg,var(--paper) 0%,rgba(246,245,240,.97) 36%,rgba(246,245,240,.45) 61%,rgba(246,245,240,.08) 100%),url('home-architecture.jpg') center right/cover;}
+.home .home-hero {text-align:left;padding:48px 0;background:linear-gradient(90deg,rgba(246,245,240,.94) 0%,rgba(246,245,240,.8) 34%,rgba(246,245,240,.34) 64%,rgba(246,245,240,.08) 100%),url('home-architecture.jpg') center right/cover;}
 /* Modern formats for the hero photo (P2-2): browsers that support image-set()
    pick AVIF, then WebP, then the JPEG; browsers without image-set() keep the
    JPEG rule above. Same gradient, position and size — only the file changes. */
-.home .home-hero {background:linear-gradient(90deg,var(--paper) 0%,rgba(246,245,240,.97) 36%,rgba(246,245,240,.45) 61%,rgba(246,245,240,.08) 100%),image-set(url('home-architecture.avif') type('image/avif'),url('home-architecture.webp') type('image/webp'),url('home-architecture.jpg') type('image/jpeg')) center right/cover;}
+.home .home-hero {background:linear-gradient(90deg,rgba(246,245,240,.94) 0%,rgba(246,245,240,.8) 34%,rgba(246,245,240,.34) 64%,rgba(246,245,240,.08) 100%),image-set(url('home-architecture.avif') type('image/avif'),url('home-architecture.webp') type('image/webp'),url('home-architecture.jpg') type('image/jpeg')) center right/cover;}
 .home .home-hero-layout {display:grid;grid-template-columns:minmax(0,1.08fr) minmax(0,1fr);gap:32px;align-items:center;}
-.home .home-hero h1 {font-size:clamp(2.8rem,4.5vw,4.2rem);line-height:1.06;letter-spacing:-.045em;margin:0 0 16px;max-width:700px;}
-.home .home-hero h1 span {text-decoration:underline;text-decoration-color:var(--gold);text-underline-offset:7px;text-decoration-thickness:3px;}
-.home .home-intro {margin:0;}
+.home .home-hero h1 {font-size:clamp(44px,3.5vw,56px);line-height:1.1;letter-spacing:-1.2px;margin:0 0 22px;max-width:610px;color:var(--navy);}
+.home .home-intro {margin:0;max-width:570px;font-size:17px;line-height:1.6;}
 .home .home-hero .hero-actions {justify-content:flex-start;}
-.home .home-hero-benefits {display:flex;flex-wrap:wrap;gap:18px;list-style:none;padding:0;margin:22px 0 0;}
+.home .home-hero-benefits {display:grid;grid-template-columns:repeat(3,max-content);gap:28px;list-style:none;padding:0;margin:30px 0 0;}
 .home .home-hero-benefits li {border-left:2px solid var(--gold);padding-left:12px;}
 .home .home-hero-benefits strong,.home .home-hero-benefits span {display:block;font-size:.8rem;}
 .home .home-hero-benefits span {color:var(--muted);margin-top:3px;}
@@ -67,8 +65,8 @@
 }
 @media(max-width:760px){
   .home .home-hero-layout {grid-template-columns:minmax(0,1fr);gap:32px;}
-  .home .home-hero {background:linear-gradient(180deg,var(--paper) 0%,rgba(246,245,240,.97) 45%,rgba(246,245,240,.55) 100%),url('home-architecture.jpg') center/cover;}
-  .home .home-hero {background:linear-gradient(180deg,var(--paper) 0%,rgba(246,245,240,.97) 45%,rgba(246,245,240,.55) 100%),image-set(url('home-architecture-768.avif') type('image/avif'),url('home-architecture-768.webp') type('image/webp'),url('home-architecture.jpg') type('image/jpeg')) center/cover;}
+  .home .home-hero {background:linear-gradient(180deg,rgba(246,245,240,.95) 0%,rgba(246,245,240,.82) 48%,rgba(246,245,240,.42) 100%),url('home-architecture.jpg') center/cover;}
+  .home .home-hero {background:linear-gradient(180deg,rgba(246,245,240,.95) 0%,rgba(246,245,240,.82) 48%,rgba(246,245,240,.42) 100%),image-set(url('home-architecture-768.avif') type('image/avif'),url('home-architecture-768.webp') type('image/webp'),url('home-architecture.jpg') type('image/jpeg')) center/cover;}
   .home .home-hero {padding:32px 0;}
   .home .home-hero h1 {font-size:clamp(2.3rem,6.4vw,3rem);}
   .home .section,.home .home-product {padding:36px 0;}
