@@ -219,7 +219,7 @@
 .home .header {height:88px;}
 .home .head-inner {width:min(1440px,calc(100% - 80px));}
 .home .header .brand {gap:12px;font-size:20px;font-weight:700;letter-spacing:-.3px;}
-.home .header .brand-mark {width:46px;height:46px;border-radius:12px;}
+.home .header .brand-mark {width:46px;height:46px;flex:0 0 46px;border-radius:12px;}
 .home .header .brand-name em {font-size:12px;line-height:1.3;color:var(--hp-secondary);}
 .home .nav {gap:30px;}
 .home .nav a:not(.btn) {color:var(--hp-body);font-size:15px;font-weight:500;}
@@ -296,6 +296,9 @@
   .home .home-hero-benefits {grid-template-columns:repeat(2,minmax(0,1fr));}
 }
 @media(max-width:540px){
+  .home .head-inner {width:min(1440px,calc(100% - 32px));}
+  .home .header .brand {font-size:14px;letter-spacing:-.5px;}
+  .home .header .brand-mark {width:40px;height:40px;flex:0 0 40px;}
   .home .home-quick-card {min-height:0;}
   .home .home-quick-card .card-ico {width:32px;height:32px;}
   .home .home-quick-card strong,.home .home-quick-card small {margin-top:0;}
