@@ -10,7 +10,7 @@
 .home main [id] {scroll-margin-top:110px;}
 .home main a:focus-visible {outline:3px solid var(--navy);outline-offset:5px;}
 .home .home-product a:focus-visible {outline-color:var(--gold);}
-.home .home-hero .eyebrow {display:inline-flex;align-items:center;gap:12px;}
+.home .home-hero .eyebrow {display:inline-flex;align-items:center;gap:12px;color:var(--teal);font-size:12px;font-weight:700;letter-spacing:1.2px;margin-bottom:24px;}
 .home .home-hero .eyebrow:before {content:'';width:26px;height:2px;background:var(--gold);}
 .home .home-intro {max-width:640px;margin:0 auto;color:var(--muted);font-size:1rem;line-height:1.65;}
 .home .hero-actions {justify-content:center;margin-top:22px;gap:12px;}
@@ -32,8 +32,8 @@
    JPEG rule above. Same gradient, position and size — only the file changes. */
 .home .home-hero {background:linear-gradient(90deg,rgba(246,245,240,.94) 0%,rgba(246,245,240,.8) 34%,rgba(246,245,240,.34) 64%,rgba(246,245,240,.08) 100%),image-set(url('home-architecture.avif') type('image/avif'),url('home-architecture.webp') type('image/webp'),url('home-architecture.jpg') type('image/jpeg')) center right/cover;}
 .home .home-hero-layout {display:grid;grid-template-columns:minmax(0,1.08fr) minmax(0,1fr);gap:32px;align-items:center;}
-.home .home-hero h1 {font-size:clamp(44px,3.5vw,56px);line-height:1.1;letter-spacing:-1.2px;margin:0 0 22px;max-width:610px;color:var(--navy);}
-.home .home-intro {margin:0;max-width:570px;font-size:17px;line-height:1.6;}
+.home .home-hero h1 {font-size:clamp(44px,3.3vw,54px);line-height:1.2;letter-spacing:-.025em;margin:0 0 22px;max-width:750px;color:#102334;font-weight:700;}
+.home .home-intro {margin:0;max-width:620px;font-size:17px;line-height:1.65;font-weight:400;}
 .home .home-hero .hero-actions {justify-content:flex-start;}
 .home .home-hero-benefits {display:grid;grid-template-columns:repeat(3,max-content);gap:28px;list-style:none;padding:0;margin:30px 0 0;}
 .home .home-hero-benefits li {border-left:2px solid var(--gold);padding-left:12px;}
@@ -53,11 +53,11 @@
 .home .home-quick-card small {font-size:.76rem;line-height:1.5;}
 .home .home-quick-card .card-ico {width:40px;height:40px;background:var(--teal);color:white;border:0;}
 .home .home-search-empty {grid-column:1/-1;padding:20px 0;color:var(--muted);}
-.home .home-feature-mini {margin-top:14px;padding:16px;border-radius:16px;background:var(--navy);color:white;}
-.home .home-feature-mini .eyebrow {color:var(--gold);font-size:.65rem;margin-bottom:8px;}
-.home .home-feature-mini h3 {font-size:1.4rem;margin:0 0 8px;}
-.home .home-feature-mini p {font-size:.88rem;color:#CBD4D7;margin:0 0 12px;}
-.home .home-feature-mini a {color:#AEE1D2;font-weight:700;font-size:.85rem;}
+.home .home-feature-mini {margin-top:14px;padding:28px 30px;border-radius:18px;background:#102334;color:white;display:block;}
+.home .home-feature-mini .eyebrow {color:var(--gold);font-size:12px;letter-spacing:1px;margin:0 0 10px;}
+.home .home-feature-mini h3 {font-size:28px;font-weight:700;margin:0 0 10px;}
+.home .home-feature-mini p {font-size:16px;line-height:1.5;color:#CBD4D7;margin:0 0 16px;}
+.home .home-feature-mini a {color:#AEE1D2;font-weight:700;font-size:16px;}
 .home .home-feature-mini a:focus-visible {outline-color:var(--gold);}
 @media(max-width:1000px){
   .home .home-hero-layout {gap:28px;}
@@ -86,7 +86,6 @@
 /* Compact category discovery and honest CRM preview, scoped to homepage. */
 .home .home-hero-copy,.home .home-product-grid>* {min-width:0;}
 .home .home-hero h1 {color:var(--navy);text-wrap:balance;}
-.home .home-feature-mini {display:grid;grid-template-columns:minmax(0,1.3fr) minmax(0,1fr);gap:16px;align-items:center;}
 .home .home-feature-mini p {margin:0 0 6px;}
 .home .home-feature-mini a {display:inline-block;min-height:44px;padding-block:10px;}
 @media(max-width:1000px){.home .home-product-grid {gap:28px;}}
@@ -130,9 +129,6 @@
 .home .home-overview-bottom {border-top:1px solid #496173;margin-top:26px;padding-top:20px;display:grid;gap:8px;}
 .home .home-overview-bottom>span {color:#CBD4D7;font-size:.8rem;}
 .home .home-overview-bottom a {display:inline-flex;align-items:center;gap:8px;min-height:44px;color:#AEE1D2;font-weight:700;font-size:.88rem;}
-.home .home-product-mark {display:grid;justify-items:center;gap:6px;color:var(--gold);border-left:1px solid #496173;padding-left:12px;}
-.home .home-product-mark span {display:grid;place-items:center;border:1px solid #496173;width:52px;height:52px;border-radius:12px;font:700 1.95rem Georgia,serif;}
-.home .home-product-mark small {color:#CBD4D7;font-size:.7rem;}
 .home .home-closing {text-align:left;}
 .home .home-closing-inner {display:flex;align-items:center;justify-content:space-between;gap:32px;}
 .home .home-closing-inner>div {max-width:640px;}
@@ -278,12 +274,12 @@
 .home .home-quick-card strong {margin-top:16px;font-size:16px;font-weight:700;line-height:1.35;color:var(--hp-navy);}
 .home .home-quick-card small {margin-top:8px;font-size:13px;line-height:1.6;color:var(--hp-secondary);}
 /* RealtorOS promotion inside the panel: tighter, balanced. */
-.home .home-feature-mini {margin-top:14px;padding:20px 24px;border-radius:14px;background:var(--hp-navy);grid-template-columns:minmax(0,1fr) 104px;gap:16px;}
+.home .home-feature-mini {margin-top:14px;padding:28px 30px;border-radius:18px;background:#102334;display:block;}
 .home .home-feature-mini .eyebrow {display:inline-flex;align-items:center;gap:10px;font-size:11px;font-weight:700;letter-spacing:1.3px;color:var(--hp-gold);margin-bottom:10px;}
 .home .home-feature-mini .eyebrow:before {content:'';width:24px;height:2px;background:var(--hp-gold);}
-.home .home-feature-mini h3 {font-size:25px;font-weight:700;line-height:1.2;color:#fff;}
-.home .home-feature-mini p {font-size:14px;line-height:1.5;color:#D5E0E4;}
-.home .home-feature-mini a {color:#83D7CD;font-weight:600;font-size:14px;}
+.home .home-feature-mini h3 {font-size:28px;font-weight:700;line-height:1.2;color:#fff;}
+.home .home-feature-mini p {font-size:16px;line-height:1.5;color:#D5E0E4;margin-bottom:16px;}
+.home .home-feature-mini a {color:#83D7CD;font-weight:600;font-size:16px;}
 /* Refinement responsive tiers. */
 @media(max-width:1100px){
   .home .head-inner,.home .home-hero .wrap {width:min(1440px,calc(100% - 56px));}
@@ -311,5 +307,5 @@
   .home .home-quick-card {min-height:0;}
   .home .home-quick-card .card-ico {width:32px;height:32px;}
   .home .home-quick-card strong,.home .home-quick-card small {margin-top:0;}
-  .home .home-feature-mini {grid-template-columns:minmax(0,1fr) 96px;padding:20px;}
+  .home .home-feature-mini {padding:24px 22px;}
 }
