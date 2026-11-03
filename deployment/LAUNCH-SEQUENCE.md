@@ -1,6 +1,6 @@
 # Launch Sequence — avoiding a broken sign-in experience
 
-The website's "Sign in to RealtorOS" links point at
+The website's "Sign in to RealtorCRM" links point at
 `https://realtorcrm.everyrealestatecalculator.com` (PR #9 configuration). That
 subdomain must be **live and verified before the website goes public**,
 otherwise the first thing visitors hit is a dead login link.
@@ -39,7 +39,7 @@ Nothing here is automatic until each gated publish is started manually.
 ## Why this is safe
 - Until step 8, the website is not public at all — no visitor can ever
   meet the not-yet-live sign-in link.
-- The RealtorOS page's existing copy ("Explore the CRM and check access
+- The RealtorCRM page's existing copy ("Explore the CRM and check access
   availability") stays accurate at every stage; nothing advertises the
   CRM as available before step 6 proves it.
 - Every step is reversible: each deployment branch keeps one commit per

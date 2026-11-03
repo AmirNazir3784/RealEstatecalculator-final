@@ -42,28 +42,28 @@ App.pages.pushSettings = (function () {
 
   const STATE_WORDS = {
     not_configured: {
-      line: "Phone notifications switch on when RealtorOS goes live.",
+      line: "Phone notifications switch on when RealtorCRM goes live.",
       help: "Everything else on this page is ready; the server just has no notification keys yet.",
     },
     ios_needs_install: {
-      line: "On an iPhone or iPad, notifications work once RealtorOS is on your Home Screen.",
-      help: "Tap Share, then Add to Home Screen, then open RealtorOS from the new icon and come back here. Needs iOS 16.4 or later.",
+      line: "On an iPhone or iPad, notifications work once RealtorCRM is on your Home Screen.",
+      help: "Tap Share, then Add to Home Screen, then open RealtorCRM from the new icon and come back here. Needs iOS 16.4 or later.",
     },
     unsupported: {
       line: "This browser cannot show notifications.",
-      help: "Chrome, Edge, Firefox and Safari all can. On iPhone, add RealtorOS to your Home Screen first.",
+      help: "Chrome, Edge, Firefox and Safari all can. On iPhone, add RealtorCRM to your Home Screen first.",
     },
     blocked: {
-      line: "Notifications are blocked for RealtorOS in this browser.",
+      line: "Notifications are blocked for RealtorCRM in this browser.",
       help: "The browser will not ask again, so this one has to be changed in its own settings: open the padlock or the site settings next to the address and allow Notifications.",
     },
     on: {
       line: "Notifications are on for this device.",
-      help: "You will get these even when RealtorOS is closed.",
+      help: "You will get these even when RealtorCRM is closed.",
     },
     off: {
       line: "Notifications are off for this device.",
-      help: "Turn them on and your phone tells you when a lead replies, without RealtorOS being open.",
+      help: "Turn them on and your phone tells you when a lead replies, without RealtorCRM being open.",
     },
   };
 
@@ -94,7 +94,7 @@ App.pages.pushSettings = (function () {
     pane.innerHTML = `
       <div class="settings-category-head">
         <div class="settings-category-title">Notifications</div>
-        <p class="form-help">Get told when a lead replies, without having RealtorOS open.</p>
+        <p class="form-help">Get told when a lead replies, without having RealtorCRM open.</p>
       </div>
       <div id="pushPanel">${App.app.loadingHtml ? App.app.loadingHtml("your notification settings") : ""}</div>`;
     await paint(pane);
@@ -184,9 +184,9 @@ App.pages.pushSettings = (function () {
         // Said in the words of what happened, because "failed" covers
         // four quite different things from the agent's side.
         if (outcome === "on") App.app.toast("Notifications are on for this device.", "success");
-        else if (outcome === "blocked") App.app.toast("This browser has blocked notifications for RealtorOS. Allow them in its site settings and try again.", "danger");
+        else if (outcome === "blocked") App.app.toast("This browser has blocked notifications for RealtorCRM. Allow them in its site settings and try again.", "danger");
         else if (outcome === "dismissed") App.app.toast("No change — the browser's permission box was closed.", "warning");
-        else if (outcome === "not_configured") App.app.toast("Phone notifications switch on when RealtorOS goes live.", "warning");
+        else if (outcome === "not_configured") App.app.toast("Phone notifications switch on when RealtorCRM goes live.", "warning");
         else App.app.toast("Could not turn notifications on for this device.", "danger");
         await paint(pane);
       });

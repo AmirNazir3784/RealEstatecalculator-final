@@ -79,8 +79,8 @@ test("the manifest is valid JSON, installable, and points at icons that exist", 
   const raw = read("manifest.webmanifest");
   const m = JSON.parse(raw);   // throws, loudly, if it is not
 
-  assert.equal(m.name, "RealtorOS");
-  assert.equal(m.short_name, "RealtorOS");
+  assert.equal(m.name, "RealtorCRM");
+  assert.equal(m.short_name, "RealtorCRM");
   assert.equal(m.display, "standalone");
   // Hash routing: the app reads location.hash, so a start_url without
   // the fragment would open the dashboard, not Today.
@@ -431,7 +431,7 @@ domTest("the install banner shows once on mobile and remembers being dismissed",
 
   const bar = p.window.App.pwa.mountBanner(p.document, win);
   assert.ok(bar && p.document.getElementById("pwaInstallBanner"), "it is on the page");
-  assert.match(bar.textContent, /Install RealtorOS/);
+  assert.match(bar.textContent, /Install RealtorCRM/);
 
   bar.querySelector("#pwaBannerDismiss").click();
   assert.equal(p.document.getElementById("pwaInstallBanner"), null, "dismissed");

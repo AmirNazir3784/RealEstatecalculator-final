@@ -11,7 +11,7 @@ App.config = {
   // (VAPID_PRIVATE_KEY); it must never appear in this file.
   //
   // Empty until go-live. While it is empty the app says
-  // "Phone notifications switch on when RealtorOS goes live." and never
+  // "Phone notifications switch on when RealtorCRM goes live." and never
   // asks for the notification permission - asking and then failing is
   // the one thing that costs the permission for good.
   //

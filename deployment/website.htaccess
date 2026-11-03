@@ -61,6 +61,9 @@
 # stale calculator after a fix. HTML is never cached (fixes go live at once);
 # CSS/JS get 1 day with must-revalidate; images/fonts get 7 days with
 # must-revalidate (they change rarely, and a week bounds any staleness).
+# Exception: assets/site-config.js is never cached — it carries the brand
+# name and the CRM address, so a stale copy would keep sending visitors to
+# an old name/address for up to a day after a correction is published.
 # If versioned (content-hashed) filenames are ever introduced, only then
 # may CSS/JS/images move to long-lived immutable caching.
 <IfModule mod_headers.c>
@@ -69,6 +72,9 @@
   </FilesMatch>
   <FilesMatch "\.(css|js)$">
     Header always set Cache-Control "public, max-age=86400, must-revalidate"
+  </FilesMatch>
+  <FilesMatch "^site-config\.js$">
+    Header always set Cache-Control "no-cache, must-revalidate"
   </FilesMatch>
   <FilesMatch "\.(png|jpe?g|svg|webp|avif|woff2?)$">
     Header always set Cache-Control "public, max-age=604800, must-revalidate"

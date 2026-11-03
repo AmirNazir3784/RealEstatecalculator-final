@@ -80,7 +80,7 @@ App.pages.emailTemplates = (function () {
       <div class="page-header">
         <div>
           <div class="page-title">Email Templates</div>
-          <div class="page-desc">Create reusable emails for manual follow-up and future RealtorOS automation.</div>
+          <div class="page-desc">Create reusable emails for manual follow-up and future RealtorCRM automation.</div>
         </div>
         <div class="page-actions">
           <button type="button" class="btn" id="etImportBtn">Import Existing Scripts</button>
