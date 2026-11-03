@@ -34,7 +34,7 @@ App.pages.googleSheetsSettings = (function () {
   // an existing connection.
   const ROTATION_CONFIRM_MESSAGE =
     "The previous token for this connection will stop working immediately. The new token is shown only " +
-    "once — you must run RealtorOS → Setup Connection inside the Google Sheet with the new " +
+    "once — you must run RealtorCRM → Setup Connection inside the Google Sheet with the new " +
     "token afterward. Only continue if you're ready to update the Sheet right away.";
 
   // Shared across the create form and every "Rotate Token" button so only
@@ -190,14 +190,14 @@ App.pages.googleSheetsSettings = (function () {
   const ERROR_MESSAGES = {
     authentication_required: "Your session has expired. Sign in again and retry.",
     invalid_spreadsheet: "That Sheet ID or URL wasn't accepted. Double-check it and try again.",
-    invalid_sync_mode: "An unsupported sync mode was submitted — this is a RealtorOS bug, please report it.",
-    invalid_sync_interval: "An unsupported sync interval was submitted — this is a RealtorOS bug, please report it.",
-    connection_lookup_failed: "RealtorOS couldn't check for an existing connection. Please try again.",
-    connection_create_failed: "RealtorOS couldn't create this connection. Please try again.",
-    connection_update_failed: "RealtorOS couldn't update this connection. Please try again.",
+    invalid_sync_mode: "An unsupported sync mode was submitted — this is a RealtorCRM bug, please report it.",
+    invalid_sync_interval: "An unsupported sync interval was submitted — this is a RealtorCRM bug, please report it.",
+    connection_lookup_failed: "RealtorCRM couldn't check for an existing connection. Please try again.",
+    connection_create_failed: "RealtorCRM couldn't create this connection. Please try again.",
+    connection_update_failed: "RealtorCRM couldn't update this connection. Please try again.",
     request_too_large: "That request was too large. Try a shorter connection name or tab names.",
-    invalid_json: "RealtorOS couldn't read that request. Please try again.",
-    internal_error: "RealtorOS hit an unexpected error. Please try again shortly."
+    invalid_json: "RealtorCRM couldn't read that request. Please try again.",
+    internal_error: "RealtorCRM hit an unexpected error. Please try again shortly."
   };
 
   function friendlyErrorMessage(err) {
@@ -282,7 +282,7 @@ App.pages.googleSheetsSettings = (function () {
     pane.innerHTML = `
       <div class="settings-category-head">
         <div class="settings-category-title">Google Sheets</div>
-        <p class="form-help">Automatically import leads from a permanent Google Sheet into RealtorOS.</p>
+        <p class="form-help">Automatically import leads from a permanent Google Sheet into RealtorCRM.</p>
       </div>
 
       <section class="card">
@@ -300,7 +300,7 @@ App.pages.googleSheetsSettings = (function () {
         <div class="card-body">
           <div class="settings-section-title">How this works</div>
           <ul class="gs-explainer-list">
-            <li>RealtorOS does not scrape or find leads for you.</li>
+            <li>RealtorCRM does not scrape or find leads for you.</li>
             <li>You supply lead data you're permitted to use, in your own Google Sheet.</li>
             <li>Leads are pasted into a <strong>Raw Leads</strong> tab.</li>
             <li>A <strong>Ready</strong> tab is rebuilt automatically from Raw Leads before every sync.</li>
@@ -356,12 +356,12 @@ App.pages.googleSheetsSettings = (function () {
           <ol class="gs-install-steps">
             <li>Open the permanent lead-intake Google Sheet.</li>
             <li>Open <strong>Extensions → Apps Script</strong>.</li>
-            <li>Install the supplied RealtorOS <code>Code.gs</code> and <code>appsscript.json</code> files.</li>
+            <li>Install the supplied RealtorCRM <code>Code.gs</code> and <code>appsscript.json</code> files.</li>
             <li>Reload the spreadsheet.</li>
-            <li>Open <strong>RealtorOS → Setup Connection</strong>.</li>
+            <li>Open <strong>RealtorCRM → Setup Connection</strong>.</li>
             <li>Paste the ingest URL and the one-time connector token shown below after connecting.</li>
             <li>Confirm the Raw Leads and Ready tab names.</li>
-            <li>Open <strong>RealtorOS → Install 15-Minute Trigger</strong>.</li>
+            <li>Open <strong>RealtorCRM → Install 15-Minute Trigger</strong>.</li>
             <li>Complete Google's authorization prompt.</li>
             <li>Paste leads only into Raw Leads.</li>
           </ol>
@@ -370,11 +370,11 @@ App.pages.googleSheetsSettings = (function () {
             <ul class="gs-explainer-list">
               <li>Ready is script-managed and must not be edited by hand — every sync rebuilds it from Raw Leads.</li>
               <li>All corrections belong in Raw Leads, including corrections to rejected rows.</li>
-              <li><strong>Sync Now</strong> in the Sheet's RealtorOS menu can be used for an immediate sync at any time.</li>
+              <li><strong>Sync Now</strong> in the Sheet's RealtorCRM menu can be used for an immediate sync at any time.</li>
               <li>The Sheet can stay closed while the scheduled 15-minute sync runs in the background.</li>
               <li>Google's 15-minute schedule is approximate, not exact.</li>
               <li>Only the connection owner should configure the token and install the trigger.</li>
-              <li>Other editors of the spreadsheet must not install their own additional RealtorOS trigger.</li>
+              <li>Other editors of the spreadsheet must not install their own additional RealtorCRM trigger.</li>
             </ul>
           </div>
         </div>

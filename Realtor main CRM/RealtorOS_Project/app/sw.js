@@ -149,7 +149,7 @@ self.addEventListener("message", (event) => {
    costs the site its permission.
    ============================================================ */
 
-const PUSH_FALLBACK_TITLE = "RealtorOS";
+const PUSH_FALLBACK_TITLE = "RealtorCRM";
 
 self.addEventListener("push", (event) => {
   let data = {};

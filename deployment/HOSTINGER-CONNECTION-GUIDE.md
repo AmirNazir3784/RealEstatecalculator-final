@@ -62,7 +62,7 @@ owner during the launch sequence.
     (Actions → Run workflow → choose that commit) with publish = true,
     then press Deploy in Hostinger (or let the webhook do it).
 
-## Connection B — RealtorOS CRM
+## Connection B — RealtorCRM CRM
 
 **GitHub `deploy-crm` → `realtorcrm.everyrealestatecalculator.com`**
 

@@ -53,8 +53,8 @@ ids['enquiry-form'].events.input(); assert.equal(ids['enquiry-draft'].value, '')
 ids['enquiry-name'].value = 'Example'; ids['enquiry-email'].value = 'example@example.invalid';
 ids['prepare-enquiry'].events.click(); assert(ids['enquiry-draft'].value.includes('Reply email: example@example.invalid'));
 const labels = [{}, {}], link = { setAttribute(k, v) { this[k] = v; } };
-const document = { title: 'About | Real Estate Tools', querySelectorAll: selector => selector === '[data-brand-name]' ? labels : [link] };
-const config = read('assets/site-config.js').replace("brandName: 'Real Estate Tools'", "brandName: 'Test label'");
+const document = { title: 'About | Every Real Estate Calculator', querySelectorAll: selector => selector === '[data-brand-name]' ? labels : [link] };
+const config = read('assets/site-config.js').replace("brandName: 'Every Real Estate Calculator'", "brandName: 'Test label'");
 vm.runInNewContext(config, { window: {}, document });
 assert.equal(labels[0].textContent, 'Test label'); assert.equal(link['aria-label'], 'Test label, homepage'); assert.equal(document.title, 'About | Test label');
 assert(read('resources/index.html').includes('Understanding Real Estate Commission'));

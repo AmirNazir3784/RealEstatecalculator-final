@@ -138,7 +138,7 @@ domTest("with no key configured it says so, and never asks for permission", asyn
   const p = await app({ vapidKey: "" });
   await renderPane(p);
 
-  assert.match(text(p), /switch on when RealtorOS goes live/);
+  assert.match(text(p), /switch on when RealtorCRM goes live/);
   assert.equal(p.pane.querySelector("#pushEnableBtn"), null,
     "no button, because pressing it could only fail");
   assert.equal(p.pane.querySelector("#pushPrefsCard"), null,
@@ -352,7 +352,7 @@ test("a push shows a notification, and a malformed one still shows something", a
   // A push with no payload at all: browsers send these, and showing
   // nothing can cost the site its permission.
   await fire(scope, "push", { data: { json: () => { throw new Error("not json"); } } });
-  assert.equal(scope.shown[2].title, "RealtorOS");
+  assert.equal(scope.shown[2].title, "RealtorCRM");
   await fire(scope, "push", {});
   assert.equal(scope.shown.length, 4, "even an empty push shows something");
 });

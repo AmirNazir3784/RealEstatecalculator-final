@@ -20,7 +20,7 @@
   }, { passive: true });
 })();
 
-/* RealtorOS links: anchors marked data-crm-link get their href from the
+/* RealtorCRM links: anchors marked data-crm-link get their href from the
    central site config, so the CRM origin is configured in exactly one
    place (assets/site-config.js) instead of being hardcoded per anchor.
    Without a configured base URL the anchors keep their in-page fallback

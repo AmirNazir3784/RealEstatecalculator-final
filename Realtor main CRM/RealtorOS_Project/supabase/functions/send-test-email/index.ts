@@ -280,7 +280,7 @@ Deno.serve(async (request: Request) => {
     // actually reached it.
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), RESEND_TIMEOUT_MS);
-    const fromHeader = `${senderProfile.display_name} via RealtorOS <${senderAddress}>`;
+    const fromHeader = `${senderProfile.display_name} via RealtorCRM <${senderAddress}>`;
 
     let outcome: "sent" | "failed" | "ambiguous" = "ambiguous";
     let providerMessageId: string | null = null;

@@ -1034,7 +1034,7 @@ async function processSendEmail(admin: AdminClient, job: JobRow): Promise<JobOut
   const links = unsubscribeLinks({ supabaseUrl, pageUrl: Deno.env.get("UNSUBSCRIBE_PAGE_URL") ?? null }, unsubscribeToken);
 
   const providerBody: Record<string, unknown> = {
-    from: `${senderProfile.display_name} via RealtorOS <${senderAddress}>`,
+    from: `${senderProfile.display_name} via RealtorCRM <${senderAddress}>`,
     to: [email],
     subject: renderedSubject,
     // The footer is appended AFTER template rendering, so no template can

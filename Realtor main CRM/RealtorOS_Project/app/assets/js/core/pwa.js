@@ -198,7 +198,7 @@ App.pwa = (function () {
   const IOS_STEPS = [
     "Tap the Share button at the bottom of Safari.",
     "Scroll down and tap “Add to Home Screen”.",
-    "Tap Add. RealtorOS appears on your home screen like any other app."
+    "Tap Add. RealtorCRM appears on your home screen like any other app."
   ];
 
   /**
@@ -212,9 +212,9 @@ App.pwa = (function () {
     const state = installState(w);
 
     const body = state.installed
-      ? `<p class="form-help" id="pwaInstalled">RealtorOS is installed on this device. Open it from your home screen or app list.</p>`
+      ? `<p class="form-help" id="pwaInstalled">RealtorCRM is installed on this device. Open it from your home screen or app list.</p>`
       : state.canPrompt
-        ? `<p class="form-help">Install it and RealtorOS opens like any other app — its own window, its own icon, and the screens you have already visited open without waiting for the network.</p>
+        ? `<p class="form-help">Install it and RealtorCRM opens like any other app — its own window, its own icon, and the screens you have already visited open without waiting for the network.</p>
            <button type="button" class="btn btn-primary" id="pwaInstallBtn">Install</button>`
         : state.ios
           ? `<p class="form-help">Safari installs an app from the Share menu rather than a button:</p>
@@ -232,7 +232,7 @@ App.pwa = (function () {
       btn.addEventListener("click", async () => {
         btn.disabled = true;
         const outcome = await promptInstall();
-        if (outcome === "accepted") App.app.toast("Installing RealtorOS…", "success");
+        if (outcome === "accepted") App.app.toast("Installing RealtorCRM…", "success");
         else if (outcome !== "unavailable") btn.disabled = false;
         renderInstallCard(el, w);
       });
@@ -266,11 +266,11 @@ App.pwa = (function () {
     bar.id = "pwaInstallBanner";
     bar.className = "pwa-banner";
     bar.setAttribute("role", "region");
-    bar.setAttribute("aria-label", "Install RealtorOS");
+    bar.setAttribute("aria-label", "Install RealtorCRM");
     bar.innerHTML = `
       <span class="pwa-banner-text">${state.ios
-        ? "Add RealtorOS to your home screen: Share, then Add to Home Screen."
-        : "Install RealtorOS on this device for a faster start."}</span>
+        ? "Add RealtorCRM to your home screen: Share, then Add to Home Screen."
+        : "Install RealtorCRM on this device for a faster start."}</span>
       ${state.canPrompt ? `<button type="button" class="btn btn-sm" id="pwaBannerInstall">Install</button>` : ""}
       <button type="button" class="pwa-banner-close" id="pwaBannerDismiss" aria-label="Dismiss">&times;</button>`;
 

@@ -390,7 +390,7 @@ App.app = (function () {
     <header id="topbar" role="banner">
       <button id="mobileMenuToggle" aria-label="Open menu" aria-controls="sidebar" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20" aria-hidden="true"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
       <div class="topbar-brand" aria-label="Realtor Pipeline & Commission OS">
-        <span class="topbar-brand-name">RealtorOS</span>
+        <span class="topbar-brand-name">RealtorCRM</span>
         <span class="topbar-brand-sep" aria-hidden="true">·</span>
         <nav class="breadcrumbs" id="breadcrumbs" aria-label="Breadcrumbs"></nav>
       </div>
@@ -1096,7 +1096,7 @@ App.app = (function () {
     // whose name the page's own .page-title already states — rendering it here
     // too just repeats it in the topbar. Only a real trail (Contacts › John
     // Smith, Settings › Pipeline) earns the space. The separator dot is hidden
-    // with it so "RealtorOS ·" never dangles.
+    // with it so "RealtorCRM ·" never dangles.
     const sep = document.querySelector(".topbar-brand-sep");
     const hasTrail = !!items && items.length > 1;
     if (sep) sep.hidden = !hasTrail;

@@ -518,7 +518,7 @@ App.pages.automation = (function () {
   function confirmActivateRule(pane, state, rule) {
     App.app.confirmDialog({
       title: "Activate this sequence?",
-      message: `Activate &ldquo;${U().esc(rule.name)}&rdquo;? Once email delivery is configured, RealtorOS will begin automatically enrolling new matching contacts and running this sequence's steps — including sending real emails and creating real tasks. Its steps and settings will be locked: you can still pause, resume, or archive it, but you can't edit a non-draft sequence's configuration. Continue?`,
+      message: `Activate &ldquo;${U().esc(rule.name)}&rdquo;? Once email delivery is configured, RealtorCRM will begin automatically enrolling new matching contacts and running this sequence's steps — including sending real emails and creating real tasks. Its steps and settings will be locked: you can still pause, resume, or archive it, but you can't edit a non-draft sequence's configuration. Continue?`,
       okLabel: "Activate"
     }, async () => {
       try {

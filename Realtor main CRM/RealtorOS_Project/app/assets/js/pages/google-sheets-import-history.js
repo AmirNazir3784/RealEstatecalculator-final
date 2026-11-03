@@ -51,7 +51,7 @@ App.pages.googleSheetsImportHistory = (function () {
   // guidance — the code itself is never interpolated into HTML or a CSS
   // class, only used as a plain object-key lookup below.
   const REJECTION_GUIDANCE = {
-    missing_lead_id: "This row has no usable lead identifier. Leave the ID column blank so RealtorOS can create one, or fix the value in Raw Leads.",
+    missing_lead_id: "This row has no usable lead identifier. Leave the ID column blank so RealtorCRM can create one, or fix the value in Raw Leads.",
     missing_full_name: "Add the lead's full name in Raw Leads.",
     missing_contact_channel: "Add at least an email address or phone number in Raw Leads.",
     identity_conflict: "Check that the email and phone belong to the same person and correct the conflicting value in Raw Leads.",
@@ -231,13 +231,13 @@ App.pages.googleSheetsImportHistory = (function () {
             <li>Open the connected Google Sheet.</li>
             <li>Correct rejected information in <strong>Raw Leads</strong>.</li>
             <li>Do not edit <strong>Ready</strong> — it is fully script-managed.</li>
-            <li>Use <strong>RealtorOS → Sync Now</strong> in the Sheet for an immediate synchronization.</li>
+            <li>Use <strong>RealtorCRM → Sync Now</strong> in the Sheet for an immediate synchronization.</li>
             <li>Alternatively, wait for the approximate 15-minute installed trigger.</li>
             <li>Return here and select <strong>Refresh History</strong>.</li>
           </ol>
           <div class="release-callout" style="margin-top:10px">
             <ul class="gs-explainer-list">
-              <li>Duplicate rows generally mean RealtorOS matched an existing contact by email or phone — nothing was lost.</li>
+              <li>Duplicate rows generally mean RealtorCRM matched an existing contact by email or phone — nothing was lost.</li>
               <li>Rejected rows were not imported until the underlying value is corrected.</li>
               <li>Ready is rebuilt automatically from Raw Leads on every sync.</li>
               <li>The Sheet can remain closed while a triggered synchronization runs.</li>
