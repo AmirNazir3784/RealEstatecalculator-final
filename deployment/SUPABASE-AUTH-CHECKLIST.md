@@ -1,4 +1,4 @@
-# Supabase Authentication Checklist — app.everyrealestatecalculator.com
+# Supabase Authentication Checklist — realtorcrm.everyrealestatecalculator.com
 
 **Do NOT apply until the CRM deployment step (launch sequence step 5).**
 Nothing here has been changed. All items are owner actions in the
@@ -10,7 +10,7 @@ Dashboard path: **Authentication → URL Configuration**
 Set the Site URL to:
 
 ```
-https://app.everyrealestatecalculator.com
+https://realtorcrm.everyrealestatecalculator.com
 ```
 
 This is the default target for email confirmation and password-recovery
@@ -21,8 +21,8 @@ Add these (keep the existing localhost entries for local development —
 they do not affect production):
 
 ```
-https://app.everyrealestatecalculator.com/**
-https://app.everyrealestatecalculator.com/index.html
+https://realtorcrm.everyrealestatecalculator.com/**
+https://realtorcrm.everyrealestatecalculator.com/index.html
 http://localhost:5500/index.html        (keep — local development)
 http://localhost:5500/**                (keep if present — local development)
 ```
@@ -45,7 +45,7 @@ Why these are needed:
 
 ## Verification after applying (owner)
 1. Create a test account on the live subdomain; confirm the confirmation
-   email link lands back on `app.everyrealestatecalculator.com`.
+   email link lands back on `realtorcrm.everyrealestatecalculator.com`.
 2. Request a password reset; confirm the recovery link opens the app's
    recovery flow on the subdomain.
 3. Sign in with email/password and with Google (if enabled).

@@ -1,7 +1,7 @@
 # Launch Sequence — avoiding a broken sign-in experience
 
 The website's "Sign in to RealtorOS" links point at
-`https://app.everyrealestatecalculator.com` (PR #9 configuration). That
+`https://realtorcrm.everyrealestatecalculator.com` (PR #9 configuration). That
 subdomain must be **live and verified before the website goes public**,
 otherwise the first thing visitors hit is a dead login link.
 
@@ -21,12 +21,12 @@ Nothing here is automatic until each gated publish is started manually.
    Run workflow → set **publish = true**. This runs the CRM suites,
    packages the app, and commits the verified output to `deploy-crm`.
 4. **Connect Hostinger Connection B** (see HOSTINGER-CONNECTION-GUIDE.md):
-   subdomain `app.everyrealestatecalculator.com` ← branch `deploy-crm`.
+   subdomain `realtorcrm.everyrealestatecalculator.com` ← branch `deploy-crm`.
    Install its SSL certificate.
 5. **Apply the Supabase authentication checklist**
    (SUPABASE-AUTH-CHECKLIST.md) — owner, in the Supabase Dashboard.
 6. **Owner verifies the CRM live:** open
-   `https://app.everyrealestatecalculator.com`, sign in, sign up,
+   `https://realtorcrm.everyrealestatecalculator.com`, sign in, sign up,
    password recovery. Production login is PENDING until this step is
    actually done by the owner — it cannot be pre-verified.
 7. **Publish the website output:** Actions → "Deploy website" →

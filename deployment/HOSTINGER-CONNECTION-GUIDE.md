@@ -64,11 +64,11 @@ owner during the launch sequence.
 
 ## Connection B — RealtorOS CRM
 
-**GitHub `deploy-crm` → `app.everyrealestatecalculator.com`**
+**GitHub `deploy-crm` → `realtorcrm.everyrealestatecalculator.com`**
 
 1. First create the subdomain if it does not exist: hPanel → Websites →
    Add Website / Domains → Subdomains → create
-   **`app.everyrealestatecalculator.com`**. It gets its **own document
+   **`realtorcrm.everyrealestatecalculator.com`**. It gets its **own document
    root** (typically `public_html/app` or a folder named for the
    subdomain — use whatever hPanel shows as that site's root).
 2. Open the subdomain site's Dashboard → Advanced → Git.
@@ -79,10 +79,10 @@ owner during the launch sequence.
 7. Verify: the folder should show `index.html`, `sw.js`,
    `manifest.webmanifest`, `unsubscribe.html`, `assets` — and **no**
    website pages (`tools/`, `resources/`, …).
-8. SSL: Lifetime SSL for `app.everyrealestatecalculator.com` → Active.
+8. SSL: Lifetime SSL for `realtorcrm.everyrealestatecalculator.com` → Active.
    The CRM `.htaccess` forces HTTPS.
 9. Apply `SUPABASE-AUTH-CHECKLIST.md` in the Supabase Dashboard, then
-   the owner signs in at `https://app.everyrealestatecalculator.com`
+   the owner signs in at `https://realtorcrm.everyrealestatecalculator.com`
    and tests sign up + password recovery before the website launch
    points public traffic at it.
 10. Later updates and rollback: same pattern as Connection A, using the
