@@ -33,7 +33,7 @@ jobs:
 
       - uses: actions/setup-node@v4
         with:
-          node-version: lts/* # tests/package.json requires node >= 23.6
+        node-version: 24 # tests/package.json requires node >= 23.6
           cache: npm
           cache-dependency-path: 'Realtor main CRM/RealtorOS_Project/tests/package-lock.json'
 
