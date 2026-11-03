@@ -146,7 +146,7 @@ h3 {letter-spacing:-.025em;}
   .hero-note {font-size:.76rem;}
   .mini-ico {height:32px;width:32px;}
   .brand {font-size:.82rem;}
-  .brand-mark {height:34px;width:34px;}
+  .brand-mark {height:34px;width:34px;flex:0 0 34px;}
   .visual-top {padding:14px;}
   .visual-body {padding:15px;}
   .section-header h2 {font-size:2.15rem;}

@@ -13,7 +13,9 @@
 // (*.md) and any previous build output.
 //
 // After copying, the script verifies the package:
-//   1. every packaged file is byte-identical to its source file;
+//   1. every packaged file is byte-identical to its source file (HTML pages
+//      are compared after recomputing their asset-version stamps, which the
+//      copy step below adds deterministically);
 //   2. no excluded artifact is present in the package;
 //   3. every relative href/src (HTML) and url() (CSS) reference resolves
 //      to a file inside the package (directories resolve to index.html);
@@ -64,12 +66,47 @@ const relFiles = walk(root).filter(rel => {
   return true;
 }).sort();
 
+// ---- asset version stamping ------------------------------------------------
+// HTML is served uncached while static assets may sit in CDN/browser caches
+// for days, so a deploy can pair new pages with stale CSS/JS. To keep a page
+// and its assets in lockstep, every reference from a packaged page to a
+// stylesheet, a script, or a brand/logo asset is stamped with ?v=<hash>,
+// where <hash> is the first 10 hex chars of the target file's SHA-256 —
+// derived from the build's own content, never invented. When an asset's
+// content changes, its URL changes and no cache can serve the old copy for
+// the new page; unchanged assets keep their URL and their cache.
+const VERSIONED_EXTS = new Set(['.css', '.js']);
+const LOGO_ASSET_NAMES = new Set(['logo.png', 'favicon.ico', 'favicon-16x16.png', 'favicon-32x32.png', 'apple-touch-icon.png', 'android-chrome-192x192.png', 'android-chrome-512x512.png']);
+const relSet = new Set(relFiles.map(toPosix));
+const hash10 = new Map(relFiles.map(rel => [toPosix(rel), sha256(fs.readFileSync(path.join(root, rel))).slice(0, 10)]));
+function stampHtml(content, pagePosix) {
+  const pageDir = path.posix.dirname(pagePosix);
+  return content.replace(/((?:href|src)\s*=\s*["'])([^"']*)(["'])/g, (m, pre, ref, post) => {
+    if (!ref || /^(?:[a-z]+:|\/\/|#)/i.test(ref)) return m;
+    const fragAt = ref.indexOf('#');
+    const frag = fragAt >= 0 ? ref.slice(fragAt) : '';
+    const noFrag = fragAt >= 0 ? ref.slice(0, fragAt) : ref;
+    const qAt = noFrag.indexOf('?');
+    const refPath = qAt >= 0 ? noFrag.slice(0, qAt) : noFrag;
+    if (!refPath) return m;
+    const target = path.posix.normalize(path.posix.join(pageDir, decodeURIComponent(refPath)));
+    if (!relSet.has(target)) return m;
+    if (!VERSIONED_EXTS.has(path.posix.extname(target).toLowerCase()) && !LOGO_ASSET_NAMES.has(path.posix.basename(target))) return m;
+    const sep = qAt >= 0 ? '&' : '?';
+    return `${pre}${noFrag}${sep}v=${hash10.get(target)}${frag}${post}`;
+  });
+}
+
 // ---- copy ------------------------------------------------------------------
 fs.rmSync(outDir, { recursive: true, force: true });
 for (const rel of relFiles) {
   const dest = path.join(outDir, rel);
   fs.mkdirSync(path.dirname(dest), { recursive: true });
-  fs.copyFileSync(path.join(root, rel), dest);
+  if (path.extname(rel).toLowerCase() === '.html') {
+    fs.writeFileSync(dest, stampHtml(fs.readFileSync(path.join(root, rel), 'utf8'), toPosix(rel)));
+  } else {
+    fs.copyFileSync(path.join(root, rel), dest);
+  }
 }
 
 // ---- verify ----------------------------------------------------------------
@@ -81,7 +118,11 @@ for (const rel of relFiles) {
   const src = fs.readFileSync(path.join(root, rel));
   const dst = fs.readFileSync(path.join(outDir, rel));
   totalBytes += dst.length;
-  if (sha256(src) !== sha256(dst)) failures.push(`not byte-identical to source: ${toPosix(rel)}`);
+  if (path.extname(rel).toLowerCase() === '.html') {
+    if (stampHtml(src.toString('utf8'), toPosix(rel)) !== dst.toString('utf8')) failures.push(`packaged page differs from its stamped source: ${toPosix(rel)}`);
+  } else if (sha256(src) !== sha256(dst)) {
+    failures.push(`not byte-identical to source: ${toPosix(rel)}`);
+  }
 }
 for (const rel of walk(outDir)) {
   const posix = toPosix(rel);
@@ -136,4 +177,4 @@ if (failures.length) {
   process.exit(1);
 }
 console.log(`Packaged ${relFiles.length} files (${totalBytes.toLocaleString('en-US')} bytes) into ${toPosix(path.relative(process.cwd(), outDir)) || outDir}`);
-console.log(`Verified: byte-identical copies, no excluded artifacts, ${references} internal references resolve, all JavaScript parses, no inline handlers or inline scripts (CSP-ready).`);
+console.log(`Verified: byte-identical copies (HTML asset-version stamps recomputed and matched), no excluded artifacts, ${references} internal references resolve, all JavaScript parses, no inline handlers or inline scripts (CSP-ready).`);
