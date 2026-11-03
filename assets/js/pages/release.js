@@ -962,7 +962,7 @@ App.pages.release = (function () {
       { id: "google-sheets", icon: "grid", title: "Google Sheets", desc: "Import leads from a Google Sheet automatically" },
       { id: "sheet-imports", icon: "activity", title: "Import History", desc: "Review Google Sheets and file imports, and fix rejected leads" },
       { id: "email-sending", icon: "chart", title: "Email Sending", desc: "Configure your sender identity and safely test email delivery" },
-      { id: "notifications", icon: "bell", title: "Notifications", desc: "Get told on your phone when a lead replies, even with RealtorOS closed" },
+      { id: "notifications", icon: "bell", title: "Notifications", desc: "Get told on your phone when a lead replies, even with RealtorCRM closed" },
       // Not "browser-only" since the Supabase migration: buildExport() in
       // backup.js serialises the loaded workspace state, which is hydrated
       // from the account's cloud tables.
@@ -1630,7 +1630,7 @@ App.pages.release = (function () {
   function previewImport(container,text){
     const box=container.querySelector('#backupPreview'); const v=B().validateImport(text);
     if(!v.valid){box.innerHTML=`<div class="release-callout release-callout-danger"><strong>Not imported.</strong> ${U().esc(v.error)}</div>`;return;}
-    const sum=v.summary; box.innerHTML=`<div class="release-callout"><strong>Valid Realtor OS backup</strong><br>${sum.contacts} contacts · ${sum.properties} properties · ${sum.deals} deals · ${sum.tasks} tasks · ${sum.scheduledItems} scheduled item${sum.scheduledItems===1?'':'s'} · ${sum.income} income · ${sum.expenses} expenses · ${sum.teamMembers} team member${sum.teamMembers===1?'':'s'} · ${sum.customFields} custom field${sum.customFields===1?'':'s'}<br><button class="btn btn-primary btn-sm" id="commitBackup" style="margin-top:10px">Restore This Backup</button></div>`;
+    const sum=v.summary; box.innerHTML=`<div class="release-callout"><strong>Valid RealtorCRM backup</strong><br>${sum.contacts} contacts · ${sum.properties} properties · ${sum.deals} deals · ${sum.tasks} tasks · ${sum.scheduledItems} scheduled item${sum.scheduledItems===1?'':'s'} · ${sum.income} income · ${sum.expenses} expenses · ${sum.teamMembers} team member${sum.teamMembers===1?'':'s'} · ${sum.customFields} custom field${sum.customFields===1?'':'s'}<br><button class="btn btn-primary btn-sm" id="commitBackup" style="margin-top:10px">Restore This Backup</button></div>`;
     box.querySelector('#commitBackup').onclick=()=>App.app.confirmDialog({title:'Restore this backup?',message:'This will merge every record from the backup into your account. New records are added, existing records with matching IDs are updated, and nothing is deleted. Export your current workspace first if you may need it later.',okLabel:'Restore backup',danger:true},async ()=>{
       const btn = box.querySelector('#commitBackup'); if (btn) { btn.disabled = true; btn.textContent = 'Restoring…'; }
       const r=await B().commitImport(v.envelope);

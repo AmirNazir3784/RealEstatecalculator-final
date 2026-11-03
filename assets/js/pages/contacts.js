@@ -621,7 +621,7 @@ App.pages.contacts = (function () {
             <div class="card-header"><div class="card-title">Contact them</div></div>
             <div class="card-body">
               ${App.followUp ? App.followUp.barHtml(contact) : ""}
-              <p class="form-help" style="margin:8px 0 0">Opens your own phone or mail app. RealtorOS never sends these for you.</p>
+              <p class="form-help" style="margin:8px 0 0">Opens your own phone or mail app. RealtorCRM never sends these for you.</p>
             </div>
           </div>
           <div class="card">

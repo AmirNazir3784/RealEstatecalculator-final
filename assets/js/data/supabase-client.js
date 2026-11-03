@@ -50,7 +50,7 @@ App.cloud = (function () {
     // can actually animate rather than jump.
     root.innerHTML = `<div class="cloud-auth-card" id="cloudAuthCard">
         <div class="cloud-auth-form-panel" id="cloudAuthPanel">
-          <h1>Realtor OS</h1>
+          <h1>RealtorCRM</h1>
           <form id="cloudAuthForm">
             <p class="cloud-auth-intro" id="cloudAuthIntro"></p>
             <div class="cloud-auth-tabs" role="tablist" aria-label="Account access">
@@ -125,7 +125,7 @@ App.cloud = (function () {
           <div class="cloud-auth-illustration-art">
             <img class="cloud-auth-illustration-img" src="assets/illustrations/realtor-auth-buy-house.svg" alt="" width="248" height="239">
           </div>
-          <p class="cloud-auth-illustration-label">REALTOROS</p>
+          <p class="cloud-auth-illustration-label">REALTORCRM</p>
           <h2 class="cloud-auth-illustration-heading">Your real estate workspace</h2>
           <p class="cloud-auth-illustration-desc">Organize deals, build relationships, and close with confidence.</p>
         </div>

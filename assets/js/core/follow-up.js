@@ -4,12 +4,12 @@
 
    NOTHING HERE SENDS ANYTHING. Every button is a link that hands the
    conversation to an app the agent already has on their phone: the
-   dialler, their SMS app, WhatsApp, their mail client. RealtorOS does not
+   dialler, their SMS app, WhatsApp, their mail client. RealtorCRM does not
    deliver the message, does not see it, and does not know whether it was
    read. That is the whole point of this phase — no SMS or WhatsApp
    account, no per-message cost, no new provider to configure.
 
-   The only thing RealtorOS records is what the agent tells it afterwards
+   The only thing RealtorCRM records is what the agent tells it afterwards
    through the quick log: an activity, the contact's last-contact date, and
    when to come back. All three go through App.store like every other
    write in the app.
@@ -275,7 +275,7 @@ App.followUp = (function () {
       title: (isEmail ? "Email " : (channel === "sms" ? "Text " : "WhatsApp ")) + (contact.name || "contact"),
       wide: true,
       body: `
-        <p class="form-help">RealtorOS does not send this. Your own ${isEmail ? "mail app" : "messaging app"} opens with the message ready, and you send it.</p>
+        <p class="form-help">RealtorCRM does not send this. Your own ${isEmail ? "mail app" : "messaging app"} opens with the message ready, and you send it.</p>
         <div class="form-grid">
           <label class="field full"><span>Start from a template</span>
             <select id="fuTemplate"><option value="">Blank message</option></select>

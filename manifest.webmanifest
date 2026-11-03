@@ -1,6 +1,6 @@
 {
-  "name": "RealtorOS",
-  "short_name": "RealtorOS",
+  "name": "RealtorCRM",
+  "short_name": "RealtorCRM",
   "description": "Pipeline, contacts and commission for independent real estate agents.",
   "id": "./",
   "start_url": "./#/daily",

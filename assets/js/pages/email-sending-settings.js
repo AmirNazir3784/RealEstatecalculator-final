@@ -110,15 +110,15 @@ App.pages.emailSendingSettings = (function () {
     pane.innerHTML = `
       <div class="settings-category-head">
         <div class="settings-category-title">Email Sending</div>
-        <p class="form-help">Configure your RealtorOS sender identity and safely test email delivery.</p>
+        <p class="form-help">Configure your RealtorCRM sender identity and safely test email delivery.</p>
       </div>
 
       <div class="release-callout" style="margin-bottom:16px">
-        <strong>How RealtorOS sends email</strong>
+        <strong>How RealtorCRM sends email</strong>
         <ul class="gs-explainer-list" style="margin-top:8px">
-          <li>RealtorOS sends from its own verified email domain — you do not need to set up your own.</li>
+          <li>RealtorCRM sends from its own verified email domain — you do not need to set up your own.</li>
           <li>You get your own sender email address, so your emails never appear to come from a shared address.</li>
-          <li>Replies always go to your saved Reply-To email below, never to your RealtorOS sender address.</li>
+          <li>Replies always go to your saved Reply-To email below, never to your RealtorCRM sender address.</li>
           <li>Email delivery is still being set up for this workspace. Until it is ready, test sends will tell you so clearly instead of silently failing.</li>
           <li>Saving these settings alone never starts automation. A sequence only sends once you activate it and the automation system is running for this workspace.</li>
         </ul>
@@ -204,7 +204,7 @@ App.pages.emailSendingSettings = (function () {
     const previewEl = el.querySelector("#epSenderPreview");
     const updatePreview = () => {
       const name = nameInput.value.trim() || "Your Name";
-      previewEl.textContent = name + " via RealtorOS <Your unique RealtorOS sender address will be assigned when the sending domain is connected.>";
+      previewEl.textContent = name + " via RealtorCRM <Your unique RealtorCRM sender address will be assigned when the sending domain is connected.>";
     };
     updatePreview();
     nameInput.addEventListener("input", updatePreview);
