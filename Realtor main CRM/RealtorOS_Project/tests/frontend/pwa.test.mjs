@@ -106,7 +106,7 @@ test("the manifest is valid JSON, installable, and points at icons that exist", 
 
   const files = m.icons.map((i) => i.src)
     .concat(m.shortcuts ? m.shortcuts.flatMap((s) => (s.icons || []).map((i) => i.src)) : [])
-    .concat(["assets/icons/apple-touch-icon-180.png", "assets/icons/favicon-32.png", "assets/icons/icon.svg"]);
+    .concat(["assets/icons/apple-touch-icon-180.png", "assets/icons/favicon-32.png", "assets/icons/favicon-16.png", "assets/icons/favicon.ico"]);
   files.forEach((src) => {
     const abs = path.join(APP, src);
     assert.ok(fs.existsSync(abs), "missing icon file: " + src);
