@@ -32,7 +32,7 @@
 // Bump this when the shell changes. The cache name carries it, so a new
 // version installs beside the old one and the old one is deleted on
 // activate - never a half-old, half-new shell.
-const VERSION = "u7-onboarding-20261018";
+const VERSION = "u8-auth-branding-20261104";
 const CACHE = "realtoros-shell-" + VERSION;
 
 // Everything the app needs to render its first screen without a network.
@@ -103,7 +103,6 @@ const SHELL = [
   "./assets/icons/icon-maskable-512.png",
   "./assets/icons/apple-touch-icon-180.png",
   "./assets/icons/favicon-32.png",
-  "./assets/icons/icon.svg",
 ];
 
 self.addEventListener("install", (event) => {
