@@ -42,6 +42,8 @@ App.cloud = (function () {
     const ICON_USER = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.2"></circle><path d="M5 19c0-3.5 3-6 7-6s7 2.5 7 6"></path></svg>';
     const ICON_EMAIL = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="M3 7l9 6 9-6"></path></svg>';
     const ICON_LOCK = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>';
+    const ICON_EYE = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 12S6 5.6 12 5.6 21.5 12 21.5 12 18 18.4 12 18.4 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="3"/></svg>';
+    const ICON_EYE_OFF = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 4.5l15 15"/><path d="M9.9 6.2A9.8 9.8 0 0 1 12 5.6c6 0 9.5 6.4 9.5 6.4a17.6 17.6 0 0 1-3.2 3.5M6.1 8A16.9 16.9 0 0 0 2.5 12S6 18.4 12 18.4c1.5 0 2.9-.4 4.1-1"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/></svg>';
     const ICON_GOOGLE = '<svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path fill="#4285F4" d="M19.6 10.23c0-.68-.06-1.36-.18-2H10v3.79h5.38a4.6 4.6 0 0 1-2 3.02v2.5h3.23c1.89-1.74 2.99-4.3 2.99-7.31z"/><path fill="#34A853" d="M10 20c2.7 0 4.96-.89 6.62-2.42l-3.23-2.5c-.9.6-2.06.95-3.39.95-2.6 0-4.8-1.76-5.59-4.12H1.06v2.59A10 10 0 0 0 10 20z"/><path fill="#FBBC05" d="M4.41 11.9a5.99 5.99 0 0 1 0-3.8V5.5H1.06a10 10 0 0 0 0 9l3.35-2.6z"/><path fill="#EA4335" d="M10 3.98c1.47 0 2.79.5 3.82 1.5l2.87-2.87C14.95.99 12.7 0 10 0 6.09 0 2.72 2.24 1.06 5.5l3.35 2.6C5.2 5.75 7.4 3.98 10 3.98z"/></svg>';
     const ICON_FACEBOOK = '<svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path fill="#1877F2" d="M20 10a10 10 0 1 0-11.56 9.88v-6.99H5.9V10h2.54V7.8c0-2.5 1.49-3.89 3.77-3.89 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56V10h2.78l-.44 2.89h-2.34v6.99A10 10 0 0 0 20 10z"/></svg>';
     // The card is built once. Switching modes (including into/out of Reset
@@ -73,12 +75,12 @@ App.cloud = (function () {
                 <button type="button" class="cloud-auth-inline-link" id="cloudForgotLink">Forgot password?</button>
               </div>
               <div class="cloud-auth-input-wrap"><span class="cloud-auth-input-icon">${ICON_LOCK}</span>
-                <input id="cloudPassword" type="password" autocomplete="current-password" placeholder="Enter your password" required minlength="6"></div>
+                <input class="cloud-password-input" id="cloudPassword" type="password" autocomplete="current-password" placeholder="Enter your password" required minlength="6"><button type="button" class="cloud-password-toggle" data-password-toggle data-password-label="password" aria-label="Show password" aria-pressed="false">${ICON_EYE}</button></div>
             </div>
             <div class="cloud-auth-field" id="cloudConfirmField" hidden>
               <label for="cloudPasswordConfirm">Confirm password</label>
               <div class="cloud-auth-input-wrap"><span class="cloud-auth-input-icon">${ICON_LOCK}</span>
-                <input id="cloudPasswordConfirm" type="password" autocomplete="new-password" placeholder="Re-enter your password" minlength="6"></div>
+                <input class="cloud-password-input" id="cloudPasswordConfirm" type="password" autocomplete="new-password" placeholder="Re-enter your password" minlength="6"><button type="button" class="cloud-password-toggle" data-password-toggle data-password-label="confirm password" aria-label="Show confirm password" aria-pressed="false">${ICON_EYE}</button></div>
             </div>
             <button class="btn btn-primary cloud-auth-submit" id="cloudAuthSubmit" type="submit">Sign in</button>
             <p id="cloudAuthMessage" class="cloud-auth-message" aria-live="polite"></p>
@@ -86,7 +88,8 @@ App.cloud = (function () {
               <div class="cloud-auth-divider"><span>or continue with</span></div>
               <div class="cloud-auth-oauth-row">
                 <button type="button" class="cloud-auth-oauth-btn" id="cloudOAuthGoogle">${ICON_GOOGLE}<span>Continue with Google</span></button>
-                <button type="button" class="cloud-auth-oauth-btn" id="cloudOAuthFacebook">${ICON_FACEBOOK}<span>Continue with Facebook</span></button>
+                <!-- Facebook OAuth is wired below, but the provider is not enabled in Supabase yet, so this button ships disabled; remove the disabled attribute when the provider is turned on. -->
+                <button type="button" class="cloud-auth-oauth-btn" id="cloudOAuthFacebook" disabled title="Facebook sign-in is not available yet">${ICON_FACEBOOK}<span>Continue with Facebook</span></button>
               </div>
             </div>
             <p class="cloud-auth-switch"><span id="cloudAuthSwitchCopy"></span> <button id="cloudAuthSwitch" type="button"></button></p>
@@ -110,12 +113,12 @@ App.cloud = (function () {
             <div class="cloud-auth-field">
               <label for="cloudNewPassword">New password</label>
               <div class="cloud-auth-input-wrap"><span class="cloud-auth-input-icon">${ICON_LOCK}</span>
-                <input id="cloudNewPassword" type="password" autocomplete="new-password" placeholder="Enter your password" required minlength="6"></div>
+                <input class="cloud-password-input" id="cloudNewPassword" type="password" autocomplete="new-password" placeholder="Enter your password" required minlength="6"><button type="button" class="cloud-password-toggle" data-password-toggle data-password-label="new password" aria-label="Show new password" aria-pressed="false">${ICON_EYE}</button></div>
             </div>
             <div class="cloud-auth-field">
               <label for="cloudNewPasswordConfirm">Confirm new password</label>
               <div class="cloud-auth-input-wrap"><span class="cloud-auth-input-icon">${ICON_LOCK}</span>
-                <input id="cloudNewPasswordConfirm" type="password" autocomplete="new-password" placeholder="Re-enter your password" required minlength="6"></div>
+                <input class="cloud-password-input" id="cloudNewPasswordConfirm" type="password" autocomplete="new-password" placeholder="Re-enter your password" required minlength="6"><button type="button" class="cloud-password-toggle" data-password-toggle data-password-label="confirm new password" aria-label="Show confirm new password" aria-pressed="false">${ICON_EYE}</button></div>
             </div>
             <button class="btn btn-primary cloud-auth-submit" id="cloudUpdateSubmit" type="submit">Update password</button>
             <p id="cloudUpdateMessage" class="cloud-auth-message" aria-live="polite"></p>
@@ -127,7 +130,8 @@ App.cloud = (function () {
           </div>
           <p class="cloud-auth-illustration-label">REALTORCRM</p>
           <h2 class="cloud-auth-illustration-heading">Your real estate workspace</h2>
-          <p class="cloud-auth-illustration-desc">Organize deals, build relationships, and close with confidence.</p>
+          <p class="cloud-auth-illustration-desc">Organize contacts, manage deals, plan follow-ups and close with confidence.</p>
+          <div class="cloud-auth-illustration-features"><span class="cloud-auth-illustration-feature"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.4"/><path d="M3.5 19.5c.7-3.2 2.9-5 5.5-5s4.8 1.8 5.5 5"/></svg>Contacts</span><span class="cloud-auth-illustration-feature"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9 5-9 5-9-5 9-5z"/><path d="M3.6 13.4L12 18l8.4-4.6"/></svg>Deals</span><span class="cloud-auth-illustration-feature"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Follow-ups</span><span class="cloud-auth-illustration-feature"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.6"/><path d="M8.6 12.4l2.4 2.4 4.4-4.9"/></svg>Tasks</span></div>
         </div>
       </div>`;
 
@@ -285,6 +289,20 @@ App.cloud = (function () {
       // clean Sign in with their new password, never straight into the app.
       try { await initClient().auth.signOut(); } catch (err) { /* non-fatal */ }
       setTimeout(() => showMode("sign-in"), 1800);
+    });
+
+    // Password visibility: each toggle flips only the input inside its own
+    // field wrap. Values, validation and submission are untouched - the
+    // control changes the input type and its own pressed/label state.
+    root.querySelectorAll("[data-password-toggle]").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const input = btn.closest(".cloud-auth-input-wrap").querySelector("input");
+        const show = input.type === "password";
+        input.type = show ? "text" : "password";
+        btn.setAttribute("aria-pressed", String(show));
+        btn.setAttribute("aria-label", (show ? "Hide " : "Show ") + btn.dataset.passwordLabel);
+        btn.innerHTML = show ? ICON_EYE_OFF : ICON_EYE;
+      });
     });
 
     async function handleOAuth(provider, btn) {
