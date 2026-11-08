@@ -3080,6 +3080,14 @@ a:hover { text-decoration: underline; text-underline-offset: 2px; }
 .cloud-auth-message.success { color:var(--success)!important; }
 .cloud-auth-switch { margin:10px 0 0; color:var(--text-muted); font-family:var(--font-auth-ui); font-size:var(--font-size-sm); text-align:center; }
 .cloud-auth-switch button { appearance:none; border:0; padding:0; background:transparent; color:var(--accent); font-family:var(--font-auth-ui); font-size:var(--font-size-sm); font-weight:600; cursor:pointer; }
+.cloud-auth-confirm-email { margin:0 0 14px; font-family:var(--font-auth-ui); font-size:var(--font-size-md); font-weight:700; color:var(--text); overflow-wrap:anywhere; }
+.cloud-auth-pw-rules { margin:2px 0 4px; font-family:var(--font-auth-ui); font-size:var(--font-size-sm); color:var(--text-muted); }
+.cloud-auth-pw-rules p { margin:0 0 6px; }
+.cloud-auth-pw-rules ul { list-style:none; margin:0; padding:0; display:grid; gap:3px; }
+.cloud-auth-pw-rules li { position:relative; padding-left:20px; }
+.cloud-auth-pw-rules li::before { content:"\2022"; position:absolute; left:5px; }
+.cloud-auth-pw-rules li.met { color:var(--success); }
+.cloud-auth-pw-rules li.met::before { content:"\2713"; left:2px; }
 /* "or continue with" divider + Google/Facebook secondary buttons. Sign in
    mode only — applySignMode() hides #cloudOAuthBlock while creating. */
 .cloud-auth-divider { display:flex; align-items:center; gap:10px; margin:22px 0 12px; color:var(--text-soft); font-family:var(--font-auth-ui); font-size:var(--font-size-xs); font-weight:600; text-transform:uppercase; letter-spacing:.04em; }
