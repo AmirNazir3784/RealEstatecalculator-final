@@ -69,7 +69,7 @@ assert(!/Screenshot placeholder|Genuine preview pending|home-screenshot/.test(ht
 const footer = html.match(/<footer[\s\S]*?<\/footer>/)[0];
 assert(!/Before launch|Working name|brand pending|Static demonstration|finalized before public launch/.test(footer));
 assert(footer.includes('data-brand-name'));
-for (const href of ['tools/', 'tools/commission-calculator/', 'tools/mortgage-calculator/', 'tools/home-affordability-calculator/', 'tools/rent-vs-buy-calculator/', 'realtoros/', 'resources/', 'about/', 'contact/']) assert(footer.includes(`href="${href}"`));
+for (const href of ['tools/', 'tools/commission-calculator/', 'tools/mortgage-calculator/', 'tools/home-affordability-calculator/', 'tools/rent-vs-buy-calculator/', 'realtorcrm/', 'resources/', 'about/', 'contact/']) assert(footer.includes(`href="${href}"`));
 assert(css.includes('.home .footer .brand {display:inline-flex'));
 assert(css.includes('max-width:100%;white-space:normal'));
 assert(css.includes('max-height:calc(100dvh - 68px);overflow-y:auto'));

@@ -2,7 +2,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const assert = require('node:assert/strict');
 const root = path.resolve(__dirname, '..');
-const pages = ['index.html', 'tools/index.html', 'realtoros/index.html', 'about/index.html', 'resources/index.html', 'contact/index.html', 'tools/commission-calculator/index.html', 'tools/mortgage-calculator/index.html', 'tools/home-affordability-calculator/index.html', 'tools/rent-vs-buy-calculator/index.html', 'tools/cap-rate-calculator/index.html', 'tools/bridge-loan-calculator/index.html', 'tools/property-investment-calculator/index.html', 'tools/capital-gains-tax-calculator/index.html', 'tools/roi-calculator/index.html', 'tools/noi-calculator/index.html'];
+const pages = ['index.html', 'tools/index.html', 'realtorcrm/index.html', 'about/index.html', 'resources/index.html', 'contact/index.html', 'tools/commission-calculator/index.html', 'tools/mortgage-calculator/index.html', 'tools/home-affordability-calculator/index.html', 'tools/rent-vs-buy-calculator/index.html', 'tools/cap-rate-calculator/index.html', 'tools/bridge-loan-calculator/index.html', 'tools/property-investment-calculator/index.html', 'tools/capital-gains-tax-calculator/index.html', 'tools/roi-calculator/index.html', 'tools/noi-calculator/index.html'];
 const titles = new Set(), descriptions = new Set();
 for (const page of pages) {
   const html = fs.readFileSync(path.join(root, page), 'utf8');
@@ -30,13 +30,13 @@ for (const page of pages) {
 assert(fs.existsSync(path.join(root, 'sitemap.xml')), 'sitemap.xml required for production');
 assert(fs.existsSync(path.join(root, 'robots.txt')), 'robots.txt required for production');
 const contact = fs.readFileSync(path.join(root, 'contact/index.html'), 'utf8');
-assert(contact.includes('It does not send or save your enquiry.'));
+assert(contact.replace(/\s+/g, ' ').includes('It does not send or save your enquiry.'), 'contact page keeps its honest draft-only disclosure in the intro copy'); // whitespace-tolerant: the sentence sits in the intro paragraph (the delivery-note box was removed on request); the disclosure itself must remain
 assert(contact.includes('Your draft (not sent)'));
 assert(!/<form[^>]*action=/.test(contact));
 console.log('PASS: 16 unique titles/descriptions, matching social metadata, heading order, language/skip links, deferred scripts, configured canonical/sitemap URLs for everyrealestatecalculator.com, honest draft-only contact messaging.');
 
 // Regression: the header navigation's RealtorCRM item must open the
-// product details page (/realtoros/), never the CRM login app. The
+// product details page (/realtorcrm/), never the CRM login app. The
 // data-crm-link marker is what assets/site.js rewrites to the app URL,
 // so the nav item must not carry it - while the header's two
 // "Sign in to RealtorCRM" CTAs must keep it (they are login buttons).
@@ -46,7 +46,7 @@ for (const page of pages) {
   const navItem = [...header.matchAll(/<a [^>]*>RealtorCRM<\/a>/g)];
   assert.equal(navItem.length, 1, `${page}: exactly one header nav RealtorCRM item`);
   assert(!navItem[0][0].includes('data-crm-link'), `${page}: header nav RealtorCRM item must not be rewritten to the CRM app`);
-  assert(/href="((?:\.\.\/)*realtoros\/)"/.test(navItem[0][0]), `${page}: header nav RealtorCRM item must link to the details page`);
+  assert(/href="((?:\.\.\/)*realtorcrm\/)"/.test(navItem[0][0]), `${page}: header nav RealtorCRM item must link to the details page`);
   const signInCtas = [...header.matchAll(/<a [^>]*data-crm-link="login"[^>]*>\s*Sign in to RealtorCRM/g)];
   assert.equal(signInCtas.length, 2, `${page}: both header Sign in CTAs keep their CRM app wiring`);
 }
