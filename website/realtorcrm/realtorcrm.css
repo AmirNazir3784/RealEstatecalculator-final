@@ -1,62 +1,167 @@
-/* W3: product page only. Shared palette and other pages remain unchanged. */
+/* RealtorCRM product page only. Shared palette and other pages unchanged.
+   Design: warm ivory ground, navy serif headings, dark teal accents,
+   white cards with thin borders, subtle shadows, generous spacing. */
 .realtoros-page { overflow-wrap: anywhere; }
 .realtoros-page [id] { scroll-margin-top: 100px; }
-.realtoros-page .product-split {
-  display: grid;
-  grid-template-columns: minmax(0, 1.15fr) minmax(0, 1fr);
-  gap: 48px;
-  align-items: center;
-}
-.realtoros-page .product-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
-.realtoros-page .product-actions .btn { white-space: normal; text-align: center; min-height: 44px; }
+.realtoros-page .section { padding: 64px 0; }
 .realtoros-page .product-caption { color: var(--muted); font-size: .85rem; margin-top: 16px; }
-.realtoros-page .product-shot {
-  min-width: 0;
-  margin: 0;
-  padding: 20px;
-  border: 1px solid var(--line);
-  border-top: 3px solid var(--gold);
-  border-radius: var(--round);
-  background: var(--white);
+
+/* ---------- Section 1: hero ---------- */
+.realtoros-page .rc-hero {
+  padding: 64px 0 60px;
+  background: linear-gradient(168deg, #f0f8f5, var(--paper));
+  border-bottom: 1px solid var(--line);
 }
-.realtoros-page .product-shot-space {
-  aspect-ratio: 4 / 3;
-  padding: 24px;
-  display: flex;
-  flex-direction: column;
+.realtoros-page .rc-hero-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 48fr) minmax(0, 52fr);
+  gap: 52px;
   align-items: center;
-  justify-content: center;
-  text-align: center;
-  border: 1px dashed var(--muted);
-  border-radius: 10px;
-  background: var(--paper);
 }
-.realtoros-page .product-shot-space strong { color: var(--navy); font-size: 1.2rem; }
-.realtoros-page .product-shot-space p { font-size: .9rem; color: var(--muted); margin: 12px 0 0; }
+.realtoros-page .rc-hero h1 { font-size: clamp(2.6rem, 4.6vw, 4.2rem); max-width: 12.5em; }
+.realtoros-page .rc-accent {
+  background-image: linear-gradient(to right, rgba(8, 126, 128, .42), rgba(8, 126, 128, .42));
+  background-repeat: no-repeat;
+  background-size: 100% .1em;
+  background-position: 0 97%;
+}
+.realtoros-page .rc-lede { font-size: 1.13rem; color: #576b7b; max-width: 33rem; }
+.realtoros-page .rc-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 26px; }
+.realtoros-page .rc-actions .btn { min-height: 44px; }
+.realtoros-page .rc-trust {
+  list-style: none; margin: 28px 0 0; padding: 0;
+  display: flex; flex-wrap: wrap; gap: 10px 24px;
+}
+.realtoros-page .rc-trust li {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-weight: 650; font-size: .92rem; color: var(--navy);
+}
+.realtoros-page .rc-trust svg { color: var(--teal); flex: 0 0 auto; }
+
+/* Media placeholders (hero video frame + mobile frame share the language) */
+.realtoros-page .rc-media {
+  min-width: 0; margin: 0; padding: 18px;
+  background: var(--white); border: 1px solid var(--line);
+  border-radius: 24px; box-shadow: var(--shadow);
+}
+.realtoros-page .rc-media-frame {
+  aspect-ratio: 16 / 9; padding: 24px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 10px; text-align: center;
+  background: var(--mist); border: 1.5px dashed rgba(8, 126, 128, .5); border-radius: 16px;
+}
+.realtoros-page .rc-play {
+  width: 64px; height: 64px; border-radius: 50%;
+  background: var(--teal); color: #fff;
+  display: grid; place-items: center;
+  box-shadow: 0 10px 24px rgba(8, 126, 128, .3);
+  margin-bottom: 6px;
+}
+.realtoros-page .rc-media-title { color: var(--navy); font-size: 1.25rem; font-weight: 800; letter-spacing: -.02em; }
+.realtoros-page .rc-media-sub { color: var(--muted); font-size: .95rem; margin: 0; }
 .realtoros-page figcaption { font-size: .8rem; color: var(--muted); margin-top: 14px; }
-.realtoros-page .product-benefits { background: var(--mist); border-block: 1px solid var(--line); }
-.realtoros-page .product-steps { padding: 0; margin: 0; list-style: none; }
-.realtoros-page .step-n { display: block; }
-.realtoros-page .product-mobile { background: var(--white); border-top: 1px solid var(--line); }
-.realtoros-page .product-shot-mobile { width: min(100%, 330px); justify-self: center; }
-.realtoros-page .product-shot-mobile .product-shot-space { aspect-ratio: 3 / 4; }
-.realtoros-page .product-text-link { color: var(--teal); text-decoration: underline; text-underline-offset: 4px; display: inline-block; padding-block: 12px; }
-.realtoros-page .product-access-note { max-width: 700px; margin-top: 24px; padding: 20px; background: var(--paper); border-left: 3px solid var(--gold); color: var(--navy); }
-.realtoros-page .product-access-note p { margin: 8px 0 0; }
-/* Dark focus rings stay distinct on the light product backgrounds. */
-.realtoros-page a:focus-visible { outline: 3px solid var(--navy); outline-offset: 4px; }
-@media (max-width: 760px) {
-  .realtoros-page .product-split { grid-template-columns: minmax(0, 1fr); gap: 30px; }
-  .realtoros-page .product-shot { width: 100%; }
-  .realtoros-page .product-shot-mobile { max-width: 330px; }
+
+/* ---------- Section 2: core features ---------- */
+.realtoros-page .rc-cards { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; margin-top: 34px; }
+.realtoros-page .rc-card {
+  background: var(--white); border: 1px solid var(--line); border-radius: var(--round);
+  box-shadow: 0 6px 22px rgba(26, 58, 70, .035); padding: 26px;
 }
-@media (max-width: 520px) {
-  .realtoros-page .product-actions .btn { width: 100%; }
-  .realtoros-page .product-shot { padding: 16px; }
-  .realtoros-page .product-shot-space { padding: 18px; }
+.realtoros-page .rc-card h3 { margin: 16px 0 8px; }
+.realtoros-page .rc-card p { color: var(--muted); font-size: .95rem; margin: 0; }
+.realtoros-page .rc-icon {
+  width: 48px; height: 48px; border-radius: 13px;
+  background: #e6f4f1; color: var(--teal);
+  display: grid; place-items: center;
 }
 
-/* P2: standard section spacing for this page (was the shared 92px default). */
-.realtoros-page .section{padding:64px 0}
-@media(max-width:1000px){ .realtoros-page .section{padding:48px 0} }
-@media(max-width:760px){ .realtoros-page .section{padding:36px 0} }
+/* ---------- Section 3: how it works ---------- */
+.realtoros-page .rc-how-box {
+  background: var(--mist); border: 1px solid var(--line); border-radius: 24px;
+  padding: 44px; display: grid;
+  grid-template-columns: minmax(0, 35fr) minmax(0, 65fr);
+  gap: 44px; align-items: center;
+}
+.realtoros-page .rc-how-box h2 { margin-bottom: 0; }
+.realtoros-page .rc-steps {
+  list-style: none; margin: 0; padding: 0;
+  display: flex; align-items: stretch; gap: 14px;
+}
+.realtoros-page .rc-step { flex: 1 1 0; min-width: 0; }
+.realtoros-page .rc-step .rc-icon { background: var(--white); border: 1px solid var(--line); }
+.realtoros-page .rc-step h3 { font-size: 1.08rem; margin: 14px 0 6px; }
+.realtoros-page .rc-step p { color: var(--muted); font-size: .92rem; margin: 0; }
+.realtoros-page .rc-arrow { align-self: center; color: var(--teal); flex: 0 0 auto; }
+
+/* ---------- Section 4: mobile & PWA ---------- */
+.realtoros-page .rc-split { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr); gap: 52px; align-items: center; }
+.realtoros-page .rc-text-link {
+  color: var(--teal); text-decoration: underline; text-underline-offset: 4px;
+  display: inline-block; padding-block: 12px; font-weight: 650;
+}
+.realtoros-page .rc-phone {
+  width: min(100%, 300px); margin: 0; justify-self: center; padding: 14px;
+  background: var(--white); border: 1px solid var(--line);
+  border-radius: 38px; box-shadow: var(--shadow);
+}
+.realtoros-page .rc-phone-frame {
+  aspect-ratio: 3 / 4.6; padding: 22px;
+  display: flex; flex-direction: column; align-items: center; justify-content: center;
+  gap: 8px; text-align: center;
+  background: var(--mist); border: 1.5px dashed rgba(8, 126, 128, .5); border-radius: 26px;
+}
+.realtoros-page .rc-phone .rc-media-title { font-size: 1.05rem; }
+.realtoros-page .rc-phone .rc-media-sub { font-size: .88rem; }
+
+/* ---------- Section 5: final CTA ---------- */
+.realtoros-page .rc-cta {
+  background: var(--teal-dark); border-radius: 24px;
+  padding: 56px 48px; text-align: center; color: #fff;
+}
+.realtoros-page .rc-cta h2 { color: #fff; max-width: 22em; margin-inline: auto; }
+.realtoros-page .rc-cta p { color: #cfe6e3; max-width: 36rem; margin-inline: auto; }
+.realtoros-page .rc-cta-actions { justify-content: center; margin-top: 30px; }
+.realtoros-page .rc-btn-light { background: #fff; color: var(--teal-dark); border-color: #fff; }
+.realtoros-page .rc-btn-light:hover { background: #e9f5f3; }
+.realtoros-page .rc-btn-ghost { background: transparent; color: #fff; border-color: rgba(255, 255, 255, .65); }
+.realtoros-page .rc-btn-ghost:hover { border-color: #fff; }
+.realtoros-page .rc-access-note { font-size: .85rem; color: #a9cfcb !important; margin: 22px auto 0; }
+
+/* Focus stays visible on light and dark sections alike. */
+.realtoros-page a:focus-visible { outline: 3px solid var(--navy); outline-offset: 4px; }
+.realtoros-page .rc-cta a:focus-visible { outline-color: #fff; }
+
+/* ---------- Responsive ---------- */
+@media (max-width: 1100px) {
+  .realtoros-page .rc-cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 1000px) {
+  .realtoros-page .section { padding: 48px 0; }
+}
+@media (max-width: 960px) {
+  .realtoros-page .rc-hero-grid { grid-template-columns: minmax(0, 1fr); gap: 36px; }
+  .realtoros-page .rc-how-box { grid-template-columns: minmax(0, 1fr); gap: 30px; padding: 34px; }
+  .realtoros-page .rc-split { grid-template-columns: minmax(0, 1fr); gap: 36px; }
+}
+@media (max-width: 760px) {
+  .realtoros-page .section { padding: 36px 0; }
+  .realtoros-page .rc-hero { padding: 40px 0 36px; }
+  .realtoros-page .rc-steps { flex-direction: column; gap: 22px; }
+  .realtoros-page .rc-arrow { display: none; }
+  .realtoros-page .rc-cta { padding: 40px 24px; }
+}
+@media (max-width: 620px) {
+  .realtoros-page .rc-cards { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 520px) {
+  .realtoros-page .rc-actions .btn { width: 100%; }
+  .realtoros-page .rc-media { padding: 12px; }
+  .realtoros-page .rc-media-frame { padding: 18px; }
+}
+
+/* Reduced motion: no smooth-scroll or hover transitions on this page. */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .realtoros-page .btn { transition: none; }
+  .realtoros-page .btn:hover { transform: none; }
+}

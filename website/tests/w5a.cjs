@@ -50,3 +50,43 @@ for (const page of pages) {
   const signInCtas = [...header.matchAll(/<a [^>]*data-crm-link="login"[^>]*>\s*Sign in to RealtorCRM/g)];
   assert.equal(signInCtas.length, 2, `${page}: both header Sign in CTAs keep their CRM app wiring`);
 }
+
+// RealtorCRM product page: approved structure, exact copy, live CTAs,
+// media placeholders, and none of the retired sections.
+{
+  const page = fs.readFileSync(path.join(root, 'realtorcrm/index.html'), 'utf8');
+  assert(page.includes('<h1 id="product-title">Keep every lead, deal, and follow-up'), 'hero headline');
+  assert(page.includes('REALTORCRM · BUILT FOR REAL ESTATE AGENTS'), 'hero eyebrow');
+  assert(page.includes('Manage contacts, track deals, plan follow-ups, and stay organized'), 'hero description');
+  for (const t of ['All-in-one workspace', 'Simple and easy to use', 'Built for realtors']) assert(page.includes(t), `trust item: ${t}`);
+  assert(page.includes('RealtorCRM Product Demo') && page.includes('Add your product video or screenshots here'), 'hero media placeholder');
+  assert(page.includes('<h2 id="features-title">The essential tools to run your real estate business.</h2>'), 'features heading');
+  for (const c of ['Keep your clients and leads organized with their details and history.', 'Track opportunities, monitor progress, and manage your pipeline.', 'Plan your next actions and keep conversations moving.', 'Review your activity and understand what needs attention.']) assert(page.includes(c), `feature copy: ${c}`);
+  assert(page.includes('<h2 id="workflow-title">A simple workflow that keeps you ahead.</h2>'), 'workflow heading');
+  for (const s of ['Add a Contact', 'Plan a Follow-up', 'Move the Deal Forward']) assert(page.includes(`<h3>${s}</h3>`), `step: ${s}`);
+  assert(page.includes('<h2 id="mobile-title">Your workspace, wherever your day takes you.</h2>'), 'mobile heading');
+  assert(page.includes('RealtorCRM Mobile Preview') && page.includes('Add your real mobile screenshot here'), 'mobile placeholder');
+  assert(page.includes('href="#access">View access availability'), 'access link kept');
+  assert(page.includes('<h2 id="access-title">Your next opportunity starts with better follow-up.</h2>'), 'final CTA heading');
+  assert.equal([...page.matchAll(/data-crm-link="signup"[^>]*>Get Started with RealtorCRM/g)].length, 2, 'both Get Started CTAs use the signup app link');
+  assert.equal([...page.matchAll(/href="#features">Explore/g)].length, 2, 'both Explore CTAs scroll to the features section');
+  for (const gone of ['Relationships need attention', 'From first conversation to the next opportunity', 'A clear rhythm for your day', 'Make room for the relationships that matter', 'product-access-note', 'RealtorOS']) assert(!page.includes(gone), `retired content must not remain: ${gone}`);
+}
+
+// Browser-tab titles follow the approved concise patterns.
+{
+  const expected = new Map([
+    ['index.html', 'Every Real Estate Calculator | Tools &amp; Guides'],
+    ['realtorcrm/index.html', 'RealtorCRM | CRM for Real Estate Agents'],
+    ['about/index.html', 'About | Every Real Estate Calculator'],
+    ['contact/index.html', 'Contact | Every Real Estate Calculator'],
+    ['resources/index.html', 'Resources | Every Real Estate Calculator'],
+    ['tools/index.html', 'Real Estate Calculators | Free Online Tools'],
+  ]);
+  for (const page of pages) {
+    const html = fs.readFileSync(path.join(root, page), 'utf8');
+    const title = html.match(/<title>([^<]+)<\/title>/)[1];
+    if (expected.has(page)) assert.equal(title, expected.get(page), `${page} title`);
+    else assert(/ Calculator \| Every Real Estate Calculator$/.test(title), `${page} calculator title pattern: ${title}`);
+  }
+}
