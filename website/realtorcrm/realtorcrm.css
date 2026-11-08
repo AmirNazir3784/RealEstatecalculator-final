@@ -94,25 +94,28 @@
 .realtoros-page .rc-arrow { align-self: center; color: var(--teal); flex: 0 0 auto; }
 
 /* ---------- Section 4: mobile & PWA ---------- */
+.realtoros-page .rc-mobile { padding: 64px 0; }
 .realtoros-page .rc-split {
-  display: grid; grid-template-columns: minmax(0, 34rem) minmax(0, 21rem);
-  justify-content: space-between; gap: 40px; align-items: center;
-  max-width: 64rem; margin-inline: auto;
+  display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.7fr);
+  gap: 48px; align-items: center;
+  max-width: 1000px; margin-inline: auto;
 }
+.realtoros-page .rc-mobile h2 { font-size: clamp(2rem, 3vw, 2.625rem); line-height: 1.12; }
+.realtoros-page .rc-mobile p:not(.product-caption) { font-size: 1rem; line-height: 1.6; max-width: 520px; }
 .realtoros-page .rc-text-link {
   color: var(--teal); text-decoration: underline; text-underline-offset: 4px;
   display: inline-block; padding-block: 12px; font-weight: 650;
 }
 .realtoros-page .rc-phone {
-  width: min(100%, 270px); margin: 0; justify-self: center; padding: 12px;
+  width: min(100%, 250px); margin: 0; justify-self: center; padding: 10px;
   background: var(--white); border: 1px solid var(--line);
-  border-radius: 36px; box-shadow: var(--shadow);
+  border-radius: 32px; box-shadow: var(--shadow);
 }
 .realtoros-page .rc-phone-frame {
-  aspect-ratio: 9 / 16.5; padding: 22px;
+  aspect-ratio: 9 / 16; padding: 18px;
   display: flex; flex-direction: column; align-items: center; justify-content: center;
   gap: 8px; text-align: center;
-  background: var(--mist); border: 1.5px dashed rgba(8, 126, 128, .5); border-radius: 26px;
+  background: var(--mist); border: 1.5px dashed rgba(8, 126, 128, .5); border-radius: 22px;
 }
 .realtoros-page .rc-phone .rc-media-title { font-size: 1.05rem; }
 .realtoros-page .rc-phone .rc-media-sub { font-size: .88rem; }
@@ -148,10 +151,12 @@
 @media (max-width: 1000px) {
   .realtoros-page .section { padding: 48px 0; }
 }
+@media (max-width: 1199px) {
+  .realtoros-page .rc-split { gap: 30px; }
+}
 @media (max-width: 960px) {
   .realtoros-page .rc-hero-grid { grid-template-columns: minmax(0, 1fr); gap: 36px; }
   .realtoros-page .rc-how-box { grid-template-columns: minmax(0, 1fr); gap: 30px; padding: 34px; }
-  .realtoros-page .rc-split { grid-template-columns: minmax(0, 1fr); gap: 36px; }
 }
 @media (max-width: 760px) {
   .realtoros-page .section { padding: 36px 0; }
@@ -167,6 +172,11 @@
   .realtoros-page .rc-actions .btn { width: 100%; }
   .realtoros-page .rc-media { padding: 12px; }
   .realtoros-page .rc-media-frame { padding: 18px; }
+}
+
+@media (max-width: 768px) {
+  .realtoros-page .rc-mobile { padding: 40px 0; }
+  .realtoros-page .rc-split { grid-template-columns: minmax(0, 1fr); gap: 32px; }
 }
 
 /* Reduced motion: no smooth-scroll or hover transitions on this page. */
