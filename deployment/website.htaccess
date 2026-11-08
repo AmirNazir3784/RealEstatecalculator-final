@@ -7,6 +7,12 @@
   # http -> https
   RewriteCond %{HTTPS} off
   RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+  # Page addresses never expose the index.html filename: the homepage and
+  # every folder page have one canonical address - the folder itself.
+  # THE_REQUEST matches only genuine visitor requests, so the server's own
+  # directory-index serving is never redirected (no loop).
+  RewriteCond %{THE_REQUEST} \s/+(\S+/)?index\.html[\s?] [NC]
+  RewriteRule ^(.+/)?index\.html$ /$1 [R=301,L]
 </IfModule>
 
 # ============================================================================

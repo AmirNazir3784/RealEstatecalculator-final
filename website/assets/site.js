@@ -31,7 +31,7 @@
   base = String(base).replace(/\/+$/, '');
   document.querySelectorAll('[data-crm-link]').forEach(function (a) {
     var kind = a.getAttribute('data-crm-link');
-    if (kind === 'signup') a.href = base + '/index.html?mode=create';
-    else if (kind === 'login') a.href = base + '/index.html';
+    if (kind === 'signup') a.href = base + '/?mode=create';
+    else if (kind === 'login') a.href = base + '/';
   });
 })();
