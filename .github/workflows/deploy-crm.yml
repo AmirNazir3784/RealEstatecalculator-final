@@ -85,9 +85,46 @@ jobs:
           include-hidden-files: true
           retention-days: 14
 
+  verify-artifact:
+    name: Verify the uploaded artifact
+    needs: verify
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Download the uploaded artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: crm-production-output
+          path: artifact
+      - name: Verify the artifact contents
+        run: |
+          set -euo pipefail
+          # The artifact itself - not the build tree - must contain the
+          # files the publish job will ship, above all .htaccess:
+          # upload-artifact v4 used to drop hidden files silently, and
+          # only this download-side check sees that loss. Runs on pull
+          # requests, pushes to main and manual runs alike, and the
+          # publish job depends on it.
+          for required_file in artifact/.htaccess artifact/index.html artifact/sw.js artifact/manifest.webmanifest ; do
+            if [ ! -f "$required_file" ]; then
+              echo "::error::$required_file is missing from the uploaded artifact."
+              exit 1
+            fi
+          done
+          for required in \
+            'Strict-Transport-Security "max-age=300"' \
+            'X-Frame-Options "DENY"' \
+            'Content-Security-Policy-Report-Only' ; do
+            if ! grep -qF "$required" artifact/.htaccess ; then
+              echo "::error::The artifact .htaccess is missing required configuration: $required"
+              exit 1
+            fi
+          done
+          echo "Artifact verified: required files present, .htaccess carries the required security-header configuration."
+
   publish:
     name: Publish to deploy-crm
-    needs: verify
+    needs: [verify, verify-artifact]
     if: github.event_name == 'workflow_dispatch' && inputs.publish == true && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     timeout-minutes: 10
