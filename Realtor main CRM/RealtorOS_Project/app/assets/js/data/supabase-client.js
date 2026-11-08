@@ -77,11 +77,12 @@ App.cloud = (function () {
               <div class="cloud-auth-input-wrap"><span class="cloud-auth-input-icon">${ICON_LOCK}</span>
                 <input class="cloud-password-input" id="cloudPassword" type="password" autocomplete="current-password" placeholder="Enter your password" required minlength="6"><button type="button" class="cloud-password-toggle" data-password-toggle data-password-label="password" aria-label="Show password" aria-pressed="false">${ICON_EYE}</button></div>
             </div>
-            <div class="cloud-auth-pw-rules" id="cloudPwRules" hidden><p>Use a password with uppercase and lowercase letters, a number, and a symbol — at least 10 characters.</p><ul><li data-rule="length">10+ characters</li><li data-rule="upper">An uppercase letter</li><li data-rule="lower">A lowercase letter</li><li data-rule="number">A number</li><li data-rule="symbol">A symbol</li></ul></div>
+            <p class="cloud-auth-pw-line" id="cloudPwLine" hidden>10+ characters, including uppercase, lowercase, a number, and a symbol.</p>
             <div class="cloud-auth-field" id="cloudConfirmField" hidden>
               <label for="cloudPasswordConfirm">Confirm password</label>
               <div class="cloud-auth-input-wrap"><span class="cloud-auth-input-icon">${ICON_LOCK}</span>
                 <input class="cloud-password-input" id="cloudPasswordConfirm" type="password" autocomplete="new-password" placeholder="Re-enter your password" minlength="10"><button type="button" class="cloud-password-toggle" data-password-toggle data-password-label="confirm password" aria-label="Show confirm password" aria-pressed="false">${ICON_EYE}</button></div>
+              <p class="cloud-auth-confirm-line" id="cloudConfirmLine" hidden></p>
             </div>
             <button class="btn btn-primary cloud-auth-submit" id="cloudAuthSubmit" type="submit">Sign in</button>
             <p id="cloudAuthMessage" class="cloud-auth-message" aria-live="polite"></p>
@@ -120,8 +121,9 @@ App.cloud = (function () {
               <label for="cloudNewPasswordConfirm">Confirm new password</label>
               <div class="cloud-auth-input-wrap"><span class="cloud-auth-input-icon">${ICON_LOCK}</span>
                 <input class="cloud-password-input" id="cloudNewPasswordConfirm" type="password" autocomplete="new-password" placeholder="Re-enter your password" required minlength="10"><button type="button" class="cloud-password-toggle" data-password-toggle data-password-label="confirm new password" aria-label="Show confirm new password" aria-pressed="false">${ICON_EYE}</button></div>
+              <p class="cloud-auth-confirm-line" id="cloudUpdateConfirmLine" hidden></p>
             </div>
-            <div class="cloud-auth-pw-rules" id="cloudUpdatePwRules" hidden><p>Use a password with uppercase and lowercase letters, a number, and a symbol — at least 10 characters.</p><ul><li data-rule="length">10+ characters</li><li data-rule="upper">An uppercase letter</li><li data-rule="lower">A lowercase letter</li><li data-rule="number">A number</li><li data-rule="symbol">A symbol</li></ul></div>
+            <p class="cloud-auth-pw-line" id="cloudUpdatePwLine" hidden>10+ characters, including uppercase, lowercase, a number, and a symbol.</p>
             <button class="btn btn-primary cloud-auth-submit" id="cloudUpdateSubmit" type="submit">Update password</button>
             <p id="cloudUpdateMessage" class="cloud-auth-message" aria-live="polite"></p>
           </form>
@@ -177,8 +179,10 @@ App.cloud = (function () {
     const resendBtn = root.querySelector("#cloudResendBtn");
     const changeEmailBtn = root.querySelector("#cloudChangeEmailBtn");
     const confirmBackBtn = root.querySelector("#cloudConfirmBackBtn");
-    const pwRules = root.querySelector("#cloudPwRules");
-    const updatePwRules = root.querySelector("#cloudUpdatePwRules");
+    const pwLine = root.querySelector("#cloudPwLine");
+    const updatePwLine = root.querySelector("#cloudUpdatePwLine");
+    const confirmLine = root.querySelector("#cloudConfirmLine");
+    const updateConfirmLine = root.querySelector("#cloudUpdateConfirmLine");
     let pendingConfirmEmail = "";
     let resendCooldownUntil = 0;
     let resendTimer = null;
@@ -191,22 +195,45 @@ App.cloud = (function () {
     // Frontend-only guidance - the matching Supabase-side policy is a
     // dashboard setting, listed for the owner as an approval item.
     const PW_RULES = [
-      ["length", (v) => v.length >= 10, "10 or more characters"],
-      ["upper", (v) => /[A-Z]/.test(v), "an uppercase letter"],
-      ["lower", (v) => /[a-z]/.test(v), "a lowercase letter"],
-      ["number", (v) => /[0-9]/.test(v), "a number"],
-      ["symbol", (v) => /[^A-Za-z0-9\s]/.test(v), "a symbol"]
+      ["length", (v) => v.length >= 10, "10+ characters"],
+      ["upper", (v) => /[A-Z]/.test(v), "uppercase letter"],
+      ["lower", (v) => /[a-z]/.test(v), "lowercase letter"],
+      ["number", (v) => /[0-9]/.test(v), "number"],
+      ["symbol", (v) => /[^A-Za-z0-9\s]/.test(v), "symbol"]
     ];
     function pwMissing(v) { return PW_RULES.filter(([, t]) => !t(v)).map(([, , label]) => label); }
     function pwError(v) { const m = pwMissing(v); return m.length ? "Your password still needs: " + m.join(", ") + "." : ""; }
-    function paintPwRules(listEl, v) {
-      if (!listEl) return;
-      const missing = new Set(PW_RULES.filter(([, t]) => !t(v)).map(([k]) => k));
-      listEl.querySelectorAll("li[data-rule]").forEach((li) => {
-        const met = !missing.has(li.getAttribute("data-rule"));
-        li.classList.toggle("met", met);
-        li.setAttribute("aria-label", (met ? "Met: " : "Still needed: ") + li.textContent);
-      });
+    const ICON_PW_CHECK = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8.5 12.5l2.4 2.4 4.6-5.4"/></svg>';
+    const ICON_PW_WARN = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4L2.8 20h18.4L12 4z"/><path d="M12 10v4.4"/><circle cx="12" cy="17.2" r="0.7" fill="currentColor" stroke="none"/></svg>';
+    // ONE line under the password field, three states: neutral guidance
+    // before typing, the missing requirements only while incomplete, and
+    // a green confirmation once the rule is met. The labels interpolated
+    // here are the fixed PW_RULES strings, never user input.
+    function paintPwLine(lineEl, v) {
+      if (!lineEl) return;
+      if (!v) {
+        lineEl.className = "cloud-auth-pw-line";
+        lineEl.textContent = "10+ characters, including uppercase, lowercase, a number, and a symbol.";
+        return;
+      }
+      const missing = pwMissing(v);
+      if (!missing.length) {
+        lineEl.className = "cloud-auth-pw-line success";
+        lineEl.innerHTML = ICON_PW_CHECK + "<span>Password meets all requirements.</span>";
+      } else {
+        lineEl.className = "cloud-auth-pw-line error";
+        lineEl.innerHTML = ICON_PW_WARN + "<span>Still needed: " + missing.join(", ") + ".</span>";
+      }
+    }
+    // Confirm feedback appears only once something has been typed into
+    // the confirmation field - never a warning before the user starts.
+    function paintConfirmLine(lineEl, pw, confirm) {
+      if (!lineEl) return;
+      if (!confirm) { lineEl.hidden = true; lineEl.textContent = ""; return; }
+      const match = pw.length > 0 && confirm === pw;
+      lineEl.hidden = false;
+      lineEl.className = "cloud-auth-confirm-line " + (match ? "success" : "error");
+      lineEl.textContent = match ? "Passwords match." : "Passwords do not match.";
     }
     function emailError(input) {
       const v = input.value.trim();
@@ -228,8 +255,13 @@ App.cloud = (function () {
       if (!creating) confirmInput.value = "";
       passwordInput.setAttribute("autocomplete", creating ? "new-password" : "current-password");
       passwordInput.minLength = creating ? 10 : 6;
-      pwRules.hidden = !creating;
-      if (creating) paintPwRules(pwRules, passwordInput.value);
+      pwLine.hidden = !creating;
+      if (creating) {
+        paintPwLine(pwLine, passwordInput.value);
+        paintConfirmLine(confirmLine, passwordInput.value, confirmInput.value);
+      } else {
+        confirmLine.hidden = true;
+      }
       submitBtn.textContent = creating ? "Create account" : "Sign in";
       switchCopy.textContent = creating ? "Already have an account?" : "Don’t have an account?";
       switchBtn.textContent = creating ? "Sign in" : "Create one";
@@ -277,16 +309,30 @@ App.cloud = (function () {
         } else if (mode === "update-password") {
           newPasswordInput.value = "";
           newPasswordConfirmInput.value = "";
-          updatePwRules.hidden = false;
-          paintPwRules(updatePwRules, "");
+          updatePwLine.hidden = false;
+          paintPwLine(updatePwLine, "");
+          updateConfirmLine.hidden = true;
           setMessage("", null, "cloudUpdateMessage");
         }
       });
     }
     showAuthMode = showMode; // let the PASSWORD_RECOVERY handler drive this card once built
 
-    passwordInput.addEventListener("input", () => { if (creating) paintPwRules(pwRules, passwordInput.value); });
-    newPasswordInput.addEventListener("input", () => paintPwRules(updatePwRules, newPasswordInput.value));
+    passwordInput.addEventListener("input", () => {
+      if (!creating) return;
+      paintPwLine(pwLine, passwordInput.value);
+      paintConfirmLine(confirmLine, passwordInput.value, confirmInput.value);
+    });
+    confirmInput.addEventListener("input", () => {
+      if (creating) paintConfirmLine(confirmLine, passwordInput.value, confirmInput.value);
+    });
+    newPasswordInput.addEventListener("input", () => {
+      paintPwLine(updatePwLine, newPasswordInput.value);
+      paintConfirmLine(updateConfirmLine, newPasswordInput.value, newPasswordConfirmInput.value);
+    });
+    newPasswordConfirmInput.addEventListener("input", () => {
+      paintConfirmLine(updateConfirmLine, newPasswordInput.value, newPasswordConfirmInput.value);
+    });
 
     signInTab.addEventListener("click", () => showMode("sign-in"));
     createTab.addEventListener("click", () => showMode("create"));
@@ -384,7 +430,8 @@ App.cloud = (function () {
       // stays editable, and neither password is carried back.
       passwordInput.value = "";
       confirmInput.value = "";
-      paintPwRules(pwRules, "");
+      paintPwLine(pwLine, "");
+      confirmLine.hidden = true;
       setMessage("");
       showMode("create");
     });

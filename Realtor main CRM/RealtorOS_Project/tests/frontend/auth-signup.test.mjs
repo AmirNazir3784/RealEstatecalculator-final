@@ -21,14 +21,14 @@ async function gate(t, { resendImpl } = {}) {
   if (!window.matchMedia) {
     window.matchMedia = () => ({ matches: false, addEventListener() {}, addListener() {} });
   }
-  const calls = { signUp: [], resend: [], updateUser: [] };
+  const calls = { signUp: [], resend: [], updateUser: [], signIn: [] };
   let authCallback = null;
   const auth = {
     onAuthStateChange: (cb) => { authCallback = cb; return { data: { subscription: { unsubscribe() {} } } }; },
     getUser: async () => ({ data: { user: null }, error: null }),
     signUp: async (args) => { calls.signUp.push(args); return { data: { user: { id: "u1" }, session: null }, error: null }; },
     resend: async (args) => { calls.resend.push(args); return resendImpl ? resendImpl(args) : { data: {}, error: null }; },
-    signInWithPassword: async () => ({ data: {}, error: null }),
+    signInWithPassword: async (args) => { calls.signIn.push(args); return { data: {}, error: null }; },
     resetPasswordForEmail: async () => ({ data: {}, error: null }),
     updateUser: async (args) => { calls.updateUser.push(args); return { data: { user: {} }, error: null }; },
     signOut: async () => ({ error: null }),
@@ -166,24 +166,67 @@ test("change email keeps the name, drops the passwords; back returns to sign in"
   } finally { g.b.close(); }
 });
 
-test("the password checklist tracks the rules as the user types", async (t) => {
+test("one password line cycles neutral, missing and met states", async (t) => {
   const g = await gate(t);
   if (!g) return;
   try {
     const d = g.document;
     d.getElementById("cloudCreateTab").click();
-    const rules = d.getElementById("cloudPwRules");
-    assert.equal(rules.hidden, false, "the checklist shows in Create account mode");
+    const line = d.getElementById("cloudPwLine");
+    assert.equal(line.hidden, false, "the line shows in Create account mode");
+    assert.equal(d.getElementById("cloudPwRules"), null, "the five-item checklist is gone");
+    assert.equal(line.textContent, "10+ characters, including uppercase, lowercase, a number, and a symbol.",
+      "state A: neutral guidance before typing");
     const pw = d.getElementById("cloudPassword");
-    const met = () => rules.querySelectorAll("li.met").length;
-    pw.value = "abc";
-    pw.dispatchEvent(new g.window.Event("input", { bubbles: true }));
-    assert.equal(met(), 1, "only the lowercase rule is met");
-    pw.value = STRONG;
-    pw.dispatchEvent(new g.window.Event("input", { bubbles: true }));
-    assert.equal(met(), 5, "a compliant password meets every rule");
+    const type = (v) => { pw.value = v; pw.dispatchEvent(new g.window.Event("input", { bubbles: true })); };
+    type("abc");
+    assert.match(line.className, /error/, "state B is the warning state");
+    assert.equal(line.textContent, "Still needed: 10+ characters, uppercase letter, number, symbol.",
+      "and it names only what is missing");
+    type(STRONG);
+    assert.match(line.className, /success/, "state C is the success state");
+    assert.equal(line.textContent, "Password meets all requirements.");
     d.getElementById("cloudSignInTab").click();
-    assert.equal(rules.hidden, true, "and it hides again for Sign in");
+    assert.equal(line.hidden, true, "and the line hides again for Sign in");
+  } finally { g.b.close(); }
+});
+
+test("confirm feedback appears only after typing, then tracks the match", async (t) => {
+  const g = await gate(t);
+  if (!g) return;
+  try {
+    const d = g.document;
+    d.getElementById("cloudCreateTab").click();
+    const line = d.getElementById("cloudConfirmLine");
+    const pw = d.getElementById("cloudPassword");
+    const cf = d.getElementById("cloudPasswordConfirm");
+    const type = (el, v) => { el.value = v; el.dispatchEvent(new g.window.Event("input", { bubbles: true })); };
+    assert.equal(line.hidden, true, "nothing is shown before the user types a confirmation");
+    type(pw, STRONG);
+    assert.equal(line.hidden, true, "still nothing while the confirmation is empty");
+    type(cf, "Str0ng!Pas");
+    assert.equal(line.hidden, false);
+    assert.match(line.className, /error/);
+    assert.equal(line.textContent, "Passwords do not match.");
+    type(cf, STRONG);
+    assert.match(line.className, /success/);
+    assert.equal(line.textContent, "Passwords match.");
+    type(pw, "Str0ng!PassX");
+    assert.match(line.className, /error/, "editing the password re-evaluates the pair");
+    assert.equal(line.textContent, "Passwords do not match.");
+  } finally { g.b.close(); }
+});
+
+test("sign-in is never subjected to the signup password rules", async (t) => {
+  const g = await gate(t);
+  if (!g) return;
+  try {
+    const d = g.document;
+    d.getElementById("cloudEmail").value = "jane@example.com";
+    d.getElementById("cloudPassword").value = "weak";
+    await submit(g);
+    assert.equal(g.calls.signIn.length, 1, "an existing short password still signs in");
+    assert.equal(g.calls.signIn[0].password, "weak");
   } finally { g.b.close(); }
 });
 
@@ -209,7 +252,8 @@ test("update password enforces the same rule before calling the API", async (t) 
     await settle(g.window);
     const d = g.document;
     assert.equal(d.getElementById("cloudUpdateForm").hidden, false, "recovery lands on Update password");
-    assert.equal(d.getElementById("cloudUpdatePwRules").hidden, false, "with the checklist visible");
+    assert.equal(d.getElementById("cloudUpdatePwLine").hidden, false, "with the password line visible");
+    assert.match(d.getElementById("cloudUpdatePwLine").textContent, /10\+ characters, including/, "in its neutral state");
     d.getElementById("cloudNewPassword").value = "weak";
     d.getElementById("cloudNewPasswordConfirm").value = "weak";
     await submit(g, "cloudUpdateForm");
