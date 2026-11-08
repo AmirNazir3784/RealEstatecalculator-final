@@ -34,3 +34,19 @@ assert(contact.includes('It does not send or save your enquiry.'));
 assert(contact.includes('Your draft (not sent)'));
 assert(!/<form[^>]*action=/.test(contact));
 console.log('PASS: 16 unique titles/descriptions, matching social metadata, heading order, language/skip links, deferred scripts, configured canonical/sitemap URLs for everyrealestatecalculator.com, honest draft-only contact messaging.');
+
+// Regression: the header navigation's RealtorCRM item must open the
+// product details page (/realtoros/), never the CRM login app. The
+// data-crm-link marker is what assets/site.js rewrites to the app URL,
+// so the nav item must not carry it - while the header's two
+// "Sign in to RealtorCRM" CTAs must keep it (they are login buttons).
+for (const page of pages) {
+  const html = fs.readFileSync(path.join(root, page), 'utf8');
+  const header = html.slice(html.indexOf('<header'), html.indexOf('</header>'));
+  const navItem = [...header.matchAll(/<a [^>]*>RealtorCRM<\/a>/g)];
+  assert.equal(navItem.length, 1, `${page}: exactly one header nav RealtorCRM item`);
+  assert(!navItem[0][0].includes('data-crm-link'), `${page}: header nav RealtorCRM item must not be rewritten to the CRM app`);
+  assert(/href="((?:\.\.\/)*realtoros\/)"/.test(navItem[0][0]), `${page}: header nav RealtorCRM item must link to the details page`);
+  const signInCtas = [...header.matchAll(/<a [^>]*data-crm-link="login"[^>]*>\s*Sign in to RealtorCRM/g)];
+  assert.equal(signInCtas.length, 2, `${page}: both header Sign in CTAs keep their CRM app wiring`);
+}
