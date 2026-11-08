@@ -52,12 +52,15 @@
   Header always set Referrer-Policy "strict-origin-when-cross-origin"
   # The site uses no camera, microphone, geolocation, or payment APIs
   Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=()"
-  # Never allow the site to be framed (clickjacking defence)
-  # (frame-ancestors in CSP below is the primary control; this header
-  # is kept out deliberately because X-Frame-Options + CSP can conflict
-  # on some hosts — CSP frame-ancestors 'none' is sufficient.)
+  Header always set X-Frame-Options "DENY"
+  # Never allow the site to be framed (clickjacking defence).
+  # X-Frame-Options "DENY" above is the control currently ENFORCED.
+  # The CSP below also carries frame-ancestors 'none', but that policy
+  # is in Report-Only testing mode, so it does not block anything yet;
+  # it becomes a second enforced control only if the CSP returns to
+  # its enforcing header name.
   # Content Security Policy — see notes above before tightening
-  Header always set Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'none'"
+  Header always set Content-Security-Policy-Report-Only "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'none'"
   # Strict Transport Security — UNCOMMENT ONLY AFTER HTTPS IS VERIFIED
   Header always set Strict-Transport-Security "max-age=300"
 </IfModule>
