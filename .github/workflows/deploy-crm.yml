@@ -78,12 +78,17 @@ jobs:
         with:
           name: crm-production-output
           path: deployment/dist-crm/
+          # upload-artifact v4 excludes hidden files by default, which
+          # silently dropped the package's .htaccess (its only dotfile -
+          # it carries the redirects, security headers and caching
+          # rules) from every published deploy so far.
+          include-hidden-files: true
           retention-days: 14
 
   publish:
     name: Publish to deploy-crm
     needs: verify
-    if: github.event_name == 'workflow_dispatch' && inputs.publish == true
+    if: github.event_name == 'workflow_dispatch' && inputs.publish == true && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     environment: production-crm
@@ -95,6 +100,35 @@ jobs:
         with:
           name: crm-production-output
           path: out
+      - name: Verify the downloaded output
+        run: |
+          set -euo pipefail
+          # Never publish an app whose .htaccess was lost on the way
+          # through the artifact. Existence alone is not enough: the
+          # entry page, service worker and manifest must be present,
+          # and the .htaccess must carry the required security-header
+          # configuration. These markers mirror deployment/crm.htaccess;
+          # update them together with that file.
+          for required_file in out/index.html out/sw.js out/manifest.webmanifest ; do
+            if [ ! -f "$required_file" ]; then
+              echo "::error::$required_file is missing from the downloaded artifact - refusing to publish."
+              exit 1
+            fi
+          done
+          if [ ! -f out/.htaccess ]; then
+            echo "::error::out/.htaccess is missing from the downloaded artifact - refusing to publish."
+            exit 1
+          fi
+          for required in \
+            'Strict-Transport-Security "max-age=300"' \
+            'X-Frame-Options "DENY"' \
+            'Content-Security-Policy-Report-Only' ; do
+            if ! grep -qF "$required" out/.htaccess ; then
+              echo "::error::out/.htaccess is missing required configuration: $required - refusing to publish."
+              exit 1
+            fi
+          done
+          echo "Downloaded output verified: entry files present, .htaccess present with the required security-header configuration."
       - name: Commit the output to the deploy-crm branch
         env:
           SOURCE_SHA: ${{ github.sha }}
