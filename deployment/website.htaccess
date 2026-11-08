@@ -59,7 +59,7 @@
   # Content Security Policy — see notes above before tightening
   Header always set Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'none'"
   # Strict Transport Security — UNCOMMENT ONLY AFTER HTTPS IS VERIFIED
-  # Header always set Strict-Transport-Security "max-age=31536000; includeSubDomains; preload"
+  Header always set Strict-Transport-Security "max-age=300"
 </IfModule>
 
 # Conservative, tiered caching — NO versioned filenames exist, so NO long
