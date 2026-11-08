@@ -72,12 +72,17 @@ jobs:
         with:
           name: website-production-output
           path: out/
+          # upload-artifact v4 excludes hidden files by default, which
+          # silently dropped out/.htaccess (the output's only dotfile -
+          # it carries the redirects, security headers and caching
+          # rules) from every published deploy so far.
+          include-hidden-files: true
           retention-days: 14
 
   publish:
     name: Publish to deploy-website
     needs: verify
-    if: github.event_name == 'workflow_dispatch' && inputs.publish == true
+    if: github.event_name == 'workflow_dispatch' && inputs.publish == true && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     environment: production-website
@@ -89,6 +94,28 @@ jobs:
         with:
           name: website-production-output
           path: out
+      - name: Verify the downloaded output contains .htaccess
+        run: |
+          set -euo pipefail
+          # Never publish a site whose .htaccess was lost on the way
+          # through the artifact. Existence alone is not enough: the
+          # required security-header configuration must be present too.
+          # These markers mirror deployment/website.htaccess; update
+          # them together with that file.
+          if [ ! -f out/.htaccess ]; then
+            echo "::error::out/.htaccess is missing from the downloaded artifact - refusing to publish."
+            exit 1
+          fi
+          for required in \
+            'Strict-Transport-Security "max-age=300"' \
+            'X-Frame-Options "DENY"' \
+            'Content-Security-Policy-Report-Only' ; do
+            if ! grep -qF "$required" out/.htaccess ; then
+              echo "::error::out/.htaccess is missing required configuration: $required - refusing to publish."
+              exit 1
+            fi
+          done
+          echo ".htaccess present with the required security-header configuration."
       - name: Commit the output to the deploy-website branch
         env:
           SOURCE_SHA: ${{ github.sha }}
