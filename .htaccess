@@ -1,0 +1,53 @@
+# RealtorOS CRM — Hostinger / LiteSpeed / Apache headers.
+# The CRM is a static SPA backed by Supabase cloud. Its browser connections:
+#   - https://cdn.jsdelivr.net            (supabase-js library script)
+#   - https://yanasorwmaybnabfuepn.supabase.co  (REST/Auth/Storage + realtime wss)
+# Hash-based routing is used, so no server-side SPA fallback is required.
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  # http -> https
+  RewriteCond %{HTTPS} off
+  RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+  # The app's address is the domain root; the entry filename is never
+  # exposed. THE_REQUEST keeps the server's own index serving loop-free.
+  RewriteCond %{THE_REQUEST} \s/+index\.html[\s?] [NC]
+  RewriteRule ^index\.html$ / [R=301,L]
+</IfModule>
+
+<IfModule mod_headers.c>
+  Header always set X-Content-Type-Options "nosniff"
+  Header always set Referrer-Policy "strict-origin-when-cross-origin"
+  Header always set Permissions-Policy "camera=(), microphone=(), geolocation=(), payment=()"
+  Header always set X-Frame-Options "DENY"
+  # Framing protection: X-Frame-Options "DENY" above is the control
+  # currently ENFORCED. The CSP below also carries frame-ancestors
+  # 'none', but that policy is in Report-Only testing mode, so it does
+  # not block anything yet.
+  Header always set Content-Security-Policy-Report-Only "default-src 'self'; script-src 'self' https://cdn.jsdelivr.net; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data: blob: https://yanasorwmaybnabfuepn.supabase.co; connect-src 'self' https://yanasorwmaybnabfuepn.supabase.co wss://yanasorwmaybnabfuepn.supabase.co; worker-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self'"
+  # Strict Transport Security - short max-age while the policy is
+  # being proven; no includeSubDomains or preload.
+  Header always set Strict-Transport-Security "max-age=300"
+</IfModule>
+
+# Application-update safety: the entry page, the service worker and the
+# runtime config must never be cached, so a new deployment takes effect on
+# the next visit. Static assets are unversioned, so they get a short
+# must-revalidate cache only (no immutable, no long TTLs).
+<IfModule mod_headers.c>
+  <FilesMatch "(^index\.html$|^sw\.js$|config\.js$|\.webmanifest$)">
+    Header always set Cache-Control "no-cache, must-revalidate"
+  </FilesMatch>
+  # The generic rule must not match sw.js or config.js: both also match
+  # the rule above, and the later matching rule wins in mod_headers, which
+  # silently gave the service worker and the runtime config a day-long
+  # cache instead of no-cache. The lookahead keeps the two rules disjoint.
+  <FilesMatch "^(?!sw\.js$|config\.js$).+\.(css|js|png|jpe?g|svg|webp|avif|woff2?)$">
+    Header always set Cache-Control "public, max-age=86400, must-revalidate"
+  </FilesMatch>
+</IfModule>
+
+# Never serve internal files even if accidentally uploaded.
+<FilesMatch "(\.md$|\.example$|\.cjs$)">
+  Require all denied
+</FilesMatch>
