@@ -40,12 +40,22 @@ App.responseStats = (function () {
    * The four numbers, over the last 30 days of NEW contacts.
    *
    * `todayIso` is passed in rather than read here so a caller (and a test)
-   * decides what "today" means.
+   * decides what "today" means. The 30-day window is anchored to that
+   * same today - the 30 calendar days ending on it - so all four numbers
+   * describe one period. It must not be anchored to a separately read
+   * clock: when the window came from Date.now() while `todayIso` came
+   * from the app's clock, the two disagreed (a pinned test date made the
+   * window slide away from the fixtures as real time passed, and around
+   * midnight the live card mixed two different "nows"). `nowMs` is still
+   * accepted for signature compatibility and is only the fallback for a
+   * caller that passes no usable `todayIso`.
    */
   function compute(contacts, todayIso, nowMs) {
     const list = Array.isArray(contacts) ? contacts : [];
-    const now = Number.isFinite(nowMs) ? nowMs : Date.now();
-    const since = now - WINDOW_DAYS * DAY_MS;
+    const todayStart = ms(todayIso);
+    const since = todayStart !== null
+      ? todayStart - (WINDOW_DAYS - 1) * DAY_MS
+      : (Number.isFinite(nowMs) ? nowMs : Date.now()) - WINDOW_DAYS * DAY_MS;
 
     const recent = list.filter((c) => {
       const created = ms(c.createdAt);
