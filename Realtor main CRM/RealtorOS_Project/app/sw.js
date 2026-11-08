@@ -32,7 +32,7 @@
 // Bump this when the shell changes. The cache name carries it, so a new
 // version installs beside the old one and the old one is deleted on
 // activate - never a half-old, half-new shell.
-const VERSION = "u9-signup-pwa-20261108";
+const VERSION = "u10-auth-compact-20261108";
 const CACHE = "realtoros-shell-" + VERSION;
 
 // Everything the app needs to render its first screen without a network.
