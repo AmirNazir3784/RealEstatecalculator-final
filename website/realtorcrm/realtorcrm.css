@@ -18,7 +18,7 @@
   gap: 52px;
   align-items: center;
 }
-.realtoros-page .rc-hero h1 { font-size: clamp(2.6rem, 4.6vw, 4.2rem); max-width: 12.5em; }
+.realtoros-page .rc-hero h1 { font-size: clamp(2.37rem, 4.19vw, 3.82rem); max-width: 12.5em; } /* ~9% smaller than the first redesign pass, per review */
 .realtoros-page .rc-accent {
   background-image: linear-gradient(to right, rgba(8, 126, 128, .42), rgba(8, 126, 128, .42));
   background-repeat: no-repeat;
@@ -94,18 +94,22 @@
 .realtoros-page .rc-arrow { align-self: center; color: var(--teal); flex: 0 0 auto; }
 
 /* ---------- Section 4: mobile & PWA ---------- */
-.realtoros-page .rc-split { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(0, .95fr); gap: 52px; align-items: center; }
+.realtoros-page .rc-split {
+  display: grid; grid-template-columns: minmax(0, 34rem) minmax(0, 21rem);
+  justify-content: space-between; gap: 40px; align-items: center;
+  max-width: 64rem; margin-inline: auto;
+}
 .realtoros-page .rc-text-link {
   color: var(--teal); text-decoration: underline; text-underline-offset: 4px;
   display: inline-block; padding-block: 12px; font-weight: 650;
 }
 .realtoros-page .rc-phone {
-  width: min(100%, 300px); margin: 0; justify-self: center; padding: 14px;
+  width: min(100%, 270px); margin: 0; justify-self: center; padding: 12px;
   background: var(--white); border: 1px solid var(--line);
-  border-radius: 38px; box-shadow: var(--shadow);
+  border-radius: 36px; box-shadow: var(--shadow);
 }
 .realtoros-page .rc-phone-frame {
-  aspect-ratio: 3 / 4.6; padding: 22px;
+  aspect-ratio: 9 / 16.5; padding: 22px;
   display: flex; flex-direction: column; align-items: center; justify-content: center;
   gap: 8px; text-align: center;
   background: var(--mist); border: 1.5px dashed rgba(8, 126, 128, .5); border-radius: 26px;
@@ -130,6 +134,12 @@
 /* Focus stays visible on light and dark sections alike. */
 .realtoros-page a:focus-visible { outline: 3px solid var(--navy); outline-offset: 4px; }
 .realtoros-page .rc-cta a:focus-visible { outline-color: #fff; }
+
+/* Desktop: the three hero benefit items stay on one row. */
+@media (min-width: 1200px) {
+  .realtoros-page .rc-trust { flex-wrap: nowrap; gap: 18px; }
+  .realtoros-page .rc-trust li { white-space: nowrap; }
+}
 
 /* ---------- Responsive ---------- */
 @media (max-width: 1100px) {
