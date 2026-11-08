@@ -36,6 +36,7 @@ App.pwa = (function () {
   // somebody presses a button.
   let deferredPrompt = null;
   let onStateChange = null;
+  let captureWiredFor = null;
 
   /* ---------- WHAT STATE ARE WE IN ---------- */
 
@@ -78,6 +79,13 @@ App.pwa = (function () {
       canPrompt: !!deferredPrompt,
       ios: isIos(w)
     };
+  }
+
+  /** Wire captureInstallPrompt at most once per window. */
+  function wireInstallCapture(w) {
+    if (!w || captureWiredFor === w) return;
+    captureWiredFor = w;
+    captureInstallPrompt(w);
   }
 
   /** The browser's offer, kept for the button. */
@@ -211,19 +219,20 @@ App.pwa = (function () {
     const w = win || window;
     const state = installState(w);
 
+    const chromium = /Chrome|Edg|Chromium/.test(String((w.navigator || {}).userAgent || ""));
     const body = state.installed
-      ? `<p class="form-help" id="pwaInstalled">RealtorCRM is installed on this device. Open it from your home screen or app list.</p>`
+      ? `<p class="form-help" id="pwaInstalled">RealtorCRM is installed on this device.</p>`
       : state.canPrompt
-        ? `<p class="form-help">Install it and RealtorCRM opens like any other app — its own window, its own icon, and the screens you have already visited open without waiting for the network.</p>
+        ? `<p class="form-help">Install RealtorCRM for quick access from your device.</p>
            <button type="button" class="btn btn-primary" id="pwaInstallBtn">Install</button>`
         : state.ios
           ? `<p class="form-help">Safari installs an app from the Share menu rather than a button:</p>
              <ol class="pwa-steps" id="pwaIosSteps">${IOS_STEPS.map((s) => `<li>${U().esc(s)}</li>`).join("")}</ol>`
-          : `<p class="form-help" id="pwaNotYet">Your browser has not offered to install this yet. Chrome, Edge and Safari can; in Chrome and Edge the offer appears once you have used the app for a moment, and this card will show an Install button when it does.</p>`;
+          : `<p class="form-help" id="pwaNotYet">You can add RealtorCRM to your device from your browser’s menu. Installation options depend on your browser and device.</p>${chromium ? `<p class="form-help">In Chrome or Edge, look in the browser menu for “Install app”.</p>` : ""}`;
 
     el.innerHTML = `
       <section class="card" id="pwaInstallCard">
-        <div class="card-header"><div class="card-title">Install the app</div></div>
+        <div class="card-header"><div class="card-title">Install RealtorCRM</div></div>
         <div class="card-body">${body}</div>
       </section>`;
 
@@ -300,10 +309,25 @@ App.pwa = (function () {
         if (App.app && App.app.navigate) App.app.navigate(data.url);
       });
     }
-    captureInstallPrompt(w);
+    wireInstallCapture(w);
     mountBanner(doc || document, w);
     registerServiceWorker({ window: w });
   }
+
+  // Wire the install listener and the service worker the moment this
+  // module loads. Both used to wait for App.pwa.init(), which only runs
+  // once the signed-in shell mounts - so a beforeinstallprompt fired
+  // during the sign-in phase was lost for that page load, no service
+  // worker existed pre-login for the browser to evaluate, and the
+  // Settings card reported "not offered yet" even when the browser was
+  // ready. Capturing early is safe pre-login: the event carries no user
+  // data, and the worker only ever caches the public shell (see sw.js).
+  try {
+    if (typeof window !== "undefined" && window && typeof window.addEventListener === "function") {
+      wireInstallCapture(window);
+      registerServiceWorker({ window });
+    }
+  } catch (e) { /* test doubles and non-browser scopes */ }
 
   return {
     init, registerServiceWorker, captureInstallPrompt, promptInstall,
@@ -312,6 +336,6 @@ App.pwa = (function () {
     IOS_STEPS, BANNER_DISMISSED_KEY,
     // For the tests: the deferred event is private, and resetting it
     // between cases is not something the app ever needs to do.
-    _reset: () => { deferredPrompt = null; onStateChange = null; updateOffered = false; }
+    _reset: () => { deferredPrompt = null; onStateChange = null; updateOffered = false; captureWiredFor = null; }
   };
 })();
