@@ -15,6 +15,7 @@ body { background: #F6F5F0; color: #0B1F33; }
 }
 .section { padding: 26px 0 40px; }
 .calculator-layout { align-items: start; gap: 24px; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
+.calculator-layout > * { min-width: 0; } /* year-by-year table min-content must not stretch the single-column mobile layout (same guard as property-investment) */
 
 /* Input panel: the site's own card treatment */
 .panel { background: #fff; border: 1px solid #E5E2DB; border-radius: 17px; box-shadow: 0 6px 22px rgba(26, 58, 70, .035); padding: 24px; }

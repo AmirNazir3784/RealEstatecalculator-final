@@ -23,4 +23,10 @@ for (const file of pages) {
   assert(footer.includes('Tools for the work behind every property.'), `${label}: footer closing line is not the approved wording`);
   assert(footer.includes('Explore the CRM'), `${label}: footer RealtorCRM column missing`);
 }
-console.log(`PASS: ${pages.length} pages share the approved footer; no pre-launch wording remains.`);
+// Responsive guard: the ROI results column holds a year-by-year table whose
+// min-content otherwise stretches the single-column mobile grid and forces
+// horizontal page overflow (found at 390px in the launch audit; the sibling
+// property-investment stylesheet carries the same rule).
+const roiCss = fs.readFileSync(path.join(root, 'tools/roi-calculator/calculator.css'), 'utf8');
+assert(/\.calculator-layout > \* \{ min-width: 0; \}/.test(roiCss), 'roi calculator.css lost the .calculator-layout > * { min-width: 0 } overflow guard');
+console.log(`PASS: ${pages.length} pages share the approved footer; no pre-launch wording remains; ROI mobile-overflow guard present.`);
