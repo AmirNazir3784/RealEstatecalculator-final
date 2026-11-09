@@ -414,6 +414,26 @@ domTest("the install card has one shape per browser, and none when installed", a
   assert.equal(slot.querySelector("#pwaInstallBtn"), null);
 });
 
+domTest("the install offer is captured from page load, before init runs", async () => {
+  // Regression (2026-11-08): capture used to wait for App.pwa.init(),
+  // which only runs once the signed-in shell mounts, so an offer fired
+  // during the sign-in phase was lost for that page load and Settings
+  // reported "not offered yet". app() loads the module (which now wires
+  // capture at load) and then _reset() clears the module state - but
+  // the load-time listener is on the window, so the offer must still be
+  // picked up with no captureInstallPrompt() or init() call at all.
+  const p = await app();
+  const win = p.window;
+  assert.equal(p.window.App.pwa.installState(win).canPrompt, false);
+  const event = new win.Event("beforeinstallprompt");
+  event.prompt = () => {};
+  event.userChoice = Promise.resolve({ outcome: "dismissed" });
+  win.dispatchEvent(event);
+  await settle(win);
+  assert.equal(p.window.App.pwa.installState(win).canPrompt, true,
+    "an offer fired before init is still captured");
+});
+
 domTest("the install banner shows once on mobile and remembers being dismissed", async () => {
   const p = await app();
   const win = p.window;
