@@ -58,3 +58,14 @@
 /* P2: directory card padding tiers (24/20/16). */
 @media (max-width: 1024px) { .listing-card { padding: 20px; } }
 @media (max-width: 640px) { .listing-card { padding: 16px; } }
+
+/* Static directory: indexable descriptions under the card grid (Phase 2). */
+.tools-directory { padding-top: 8px; }
+.tools-directory h3 { margin: 26px 0 10px; font-size: 1.05rem; color: #102131; }
+.directory-intro { color: #5E6C79; max-width: 65ch; }
+.directory-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px 28px; }
+.directory-list li { border-top: 1px solid #E5E2DB; padding-top: 10px; min-width: 0; }
+.directory-list a { font-weight: 600; color: #0F766E; text-decoration: none; }
+.directory-list a:hover { text-decoration: underline; }
+.directory-list p { margin: 4px 0 0; color: #5E6C79; font-size: 0.95rem; }
+@media (max-width: 700px) { .directory-list { grid-template-columns: 1fr; } }
