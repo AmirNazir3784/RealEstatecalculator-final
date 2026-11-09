@@ -15,7 +15,7 @@ window.realEstateTools = Object.freeze([
     slug: 'mortgage-calculator',
     title: 'Mortgage Calculator',
     category: 'Finance & numbers',
-    description: 'Estimate monthly mortgage principal and interest from home price and loan terms.',
+    description: 'Estimate the full monthly mortgage payment — principal and interest plus tax, insurance, HOA and PMI — from home price and loan terms.',
     keywords: 'home loan principal and interest monthly payment amortization borrow',
     status: 'published',
     publicUrl: 'mortgage-calculator/',
