@@ -7,6 +7,13 @@
   # http -> https
   RewriteCond %{HTTPS} off
   RewriteRule ^(.*)$ https://%{HTTP_HOST}%{REQUEST_URI} [R=301,L]
+  # The RealtorCRM product page moved: /realtoros/ -> /realtorcrm/
+  # (permanent). The index.html form is handled first, guarded like the
+  # rule below so the server's own index serving can never loop; the
+  # folder form cannot loop because the target never re-matches.
+  RewriteCond %{THE_REQUEST} \s/+realtoros/index\.html[\s?] [NC]
+  RewriteRule ^realtoros/index\.html$ /realtorcrm/ [R=301,L]
+  RewriteRule ^realtoros/?$ /realtorcrm/ [R=301,L]
   # Page addresses never expose the index.html filename: the homepage and
   # every folder page have one canonical address - the folder itself.
   # THE_REQUEST matches only genuine visitor requests, so the server's own
