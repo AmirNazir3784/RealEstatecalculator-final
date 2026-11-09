@@ -3081,6 +3081,7 @@ a:hover { text-decoration: underline; text-underline-offset: 2px; }
 .cloud-auth-switch { margin:8px 0 0; color:var(--text-muted); font-family:var(--font-auth-ui); font-size:var(--font-size-sm); text-align:center; }
 .cloud-auth-switch button { appearance:none; border:0; padding:0; background:transparent; color:var(--accent); font-family:var(--font-auth-ui); font-size:var(--font-size-sm); font-weight:600; cursor:pointer; }
 .cloud-auth-confirm-email { margin:0 0 10px; font-family:var(--font-auth-ui); font-size:var(--font-size-md); font-weight:700; color:var(--text); overflow-wrap:anywhere; }
+.cloud-auth-pw-line[hidden] { display:none; }
 .cloud-auth-pw-line { display:flex; align-items:center; gap:6px; margin:8px 0 0; font-family:var(--font-auth-ui); font-size:var(--font-size-sm); color:var(--text-muted); }
 .cloud-auth-pw-line svg { flex:0 0 auto; }
 .cloud-auth-pw-line.error { color:var(--danger); }
