@@ -2,8 +2,8 @@
 //
 // The things worth pinning: the sections an agent sees and the order they
 // are worked through, the links the buttons build (a wrong tel: or wa.me
-// number means a call to a stranger), and that the quick log writes exactly
-// three things on save and nothing at all on cancel.
+// number means a call to a stranger), and that the quick log saves through
+// ONE atomic completeFollowUp call and writes nothing at all on cancel.
 //
 // Nothing here sends a message. Every button is a link handed to the
 // agent's own phone, and the tests assert the URL rather than any delivery.
@@ -50,6 +50,18 @@ function world(overrides = {}) {
       },
       activities: {
         create: async (model) => { writes.push(["activities.create", model]); return { id: "ac_1", ...model }; },
+      },
+      // The atomic follow-up completion (realtoros_complete_followup via
+      // the data service): one call that records the activity AND resolves
+      // the contact's dates. Applies its effects to the world like the
+      // real RPC's return would.
+      completeFollowUp: async (model, contactId, lastContact, nextFollowUp) => {
+        writes.push(["completeFollowUp", model, contactId, lastContact, nextFollowUp]);
+        const activity = { id: model.id || "ac_1", ...model };
+        activities.push(activity);
+        const c = contacts.find((x) => x.id === contactId);
+        if (c) { c.lastContact = lastContact; c.nextFollowUp = nextFollowUp; }
+        return { activity, contact: c };
       },
       tasks: { get: async (id) => tasks.find((t) => t.id === id) || null },
     },
@@ -305,17 +317,19 @@ domTest("saving the quick log writes one activity and moves the contact on", asy
   m.querySelector('[data-role="save"]').click();
   await settle(p.window);
 
-  const created = p.writes.find((w) => w[0] === "activities.create");
-  assert.ok(created, "an activity is recorded");
-  assert.equal(created[1].type, "Call", "a voicemail is a call in the timeline");
-  assert.equal(created[1].outcome, "Left voicemail");
-  assert.equal(created[1].contactId, "a");
-  assert.equal(created[1].notes, "Left a message about the viewing");
-
-  const updated = p.writes.find((w) => w[0] === "contacts.update");
-  assert.ok(updated, "the contact moves on");
-  assert.equal(updated[2].lastContact, TODAY);
-  assert.equal(updated[2].nextFollowUp, "2026-10-18", "3 days from today");
+  // ONE atomic write: the activity and the date change travel together
+  // through completeFollowUp — never an activities.create followed by a
+  // contacts.update that could strand one without the other.
+  assert.equal(p.writes.length, 1, "exactly one write: " + JSON.stringify(p.writes.map((w) => w[0])));
+  const done = p.writes[0];
+  assert.equal(done[0], "completeFollowUp");
+  assert.equal(done[1].type, "Call", "a voicemail is a call in the timeline");
+  assert.equal(done[1].outcome, "Left voicemail");
+  assert.equal(done[1].contactId, "a");
+  assert.equal(done[1].notes, "Left a message about the viewing");
+  assert.equal(done[2], "a");
+  assert.equal(done[3], TODAY, "last-contact is today");
+  assert.equal(done[4], "2026-10-18", "next follow-up is 3 days from today");
 
   // The list redrew, and the row left the overdue section because it is no
   // longer overdue — the agent sees the effect of what they just logged.
@@ -325,7 +339,7 @@ domTest("saving the quick log writes one activity and moves the contact on", asy
     "and with nothing else overdue the section is gone: " + JSON.stringify(sectionTitles(p)));
 });
 
-domTest("'None' records the call without inventing a follow-up date", async () => {
+domTest("'None' clears the follow-up date instead of leaving it behind", async () => {
   const p = await today({
     contacts: [contact({ id: "a", name: "Pat Lee", nextFollowUp: "2026-10-12", phone: "5551234567" })],
   });
@@ -335,9 +349,15 @@ domTest("'None' records the call without inventing a follow-up date", async () =
   m.querySelector('[data-role="save"]').click();   // None is the default
   await settle(p.window);
 
-  const updated = p.writes.find((w) => w[0] === "contacts.update");
-  assert.deepEqual(Object.keys(updated[2]), ["lastContact"],
-    "only the last-contact date is touched; whatever follow-up was set stays");
+  assert.equal(p.writes.length, 1, "exactly one write");
+  const done = p.writes[0];
+  assert.equal(done[0], "completeFollowUp");
+  assert.strictEqual(done[4], null,
+    "None is passed as an explicit null: the stored follow-up date is cleared, not kept");
+  assert.equal(done[3], TODAY, "last-contact still advances");
+  assert.strictEqual(p.store.getState().contacts[0].nextFollowUp, null);
+  assert.ok(!rowNames(p, "overdue").includes("Pat Lee"),
+    "with the date cleared the contact leaves the overdue section");
 });
 
 domTest("cancelling the quick log writes nothing at all", async () => {
