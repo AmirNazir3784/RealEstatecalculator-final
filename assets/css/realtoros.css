@@ -3050,18 +3050,18 @@ a:hover { text-decoration: underline; text-underline-offset: 2px; }
    sides between Sign in and Create account via the .is-create mode class,
    toggled only by the existing tab/switch handlers — no duplicated markup.
    position/z-index keeps the card above the page-level decoration above. */
-.cloud-auth-card { position:relative; z-index:1; width:min(100%,960px); max-width:100%; display:flex; align-items:stretch; background:var(--card); border:1px solid var(--border); border-radius:var(--radius-lg); box-shadow:var(--shadow-lg); overflow:hidden; font-family:var(--font-auth-ui); }
-.cloud-auth-form-panel { flex:1 1 54%; min-width:0; max-width:480px; padding:48px 48px 36px; display:flex; flex-direction:column; justify-content:center; order:1; }
-.cloud-auth-form-panel h1 { font-family:var(--font-auth-display); font-size:44px; font-weight:700; line-height:1.12; letter-spacing:-0.025em; margin:0 0 10px; }
-.cloud-auth-intro { color:var(--text-muted); margin:0 0 22px; font-size:var(--font-size-md); }
-.cloud-auth-subheading { margin:0 0 6px; font-family:var(--font-auth-ui); font-size:var(--font-size-lg); font-weight:700; color:var(--text); }
-.cloud-auth-tabs { display:flex; gap:3px; padding:3px; margin:0 0 22px; border:1px solid var(--border); border-radius:var(--radius-sm); background:var(--surface-sunk); }
-.cloud-auth-tab { flex:1; border:0; border-radius:calc(var(--radius-sm) - 2px); padding:9px 10px; background:transparent; color:var(--text-muted); font-family:var(--font-auth-ui); font-size:var(--font-size-md); font-weight:600; cursor:pointer; }
+.cloud-auth-card { position:relative; z-index:1; width:min(100%,1000px); max-width:100%; display:flex; align-items:stretch; background:var(--card); border:1px solid var(--border); border-radius:var(--radius-lg); box-shadow:var(--shadow-lg); overflow:hidden; font-family:var(--font-auth-ui); }
+.cloud-auth-form-panel { flex:1 1 55%; min-width:0; max-width:560px; padding:32px 36px 28px; display:flex; flex-direction:column; justify-content:center; order:1; }
+.cloud-auth-form-panel h1 { font-family:var(--font-auth-display); font-size:44px; font-weight:700; line-height:1.12; letter-spacing:-0.025em; margin:0 0 8px; }
+.cloud-auth-intro { color:var(--text-muted); margin:0 0 14px; font-size:var(--font-size-md); }
+.cloud-auth-subheading { margin:0 0 4px; font-family:var(--font-auth-ui); font-size:var(--font-size-lg); font-weight:700; color:var(--text); }
+.cloud-auth-tabs { display:flex; gap:3px; padding:3px; margin:0 0 16px; border:1px solid var(--border); border-radius:var(--radius-sm); background:var(--surface-sunk); }
+.cloud-auth-tab { flex:1; border:0; border-radius:calc(var(--radius-sm) - 2px); padding:8px 10px; background:transparent; color:var(--text-muted); font-family:var(--font-auth-ui); font-size:var(--font-size-md); font-weight:600; cursor:pointer; }
 .cloud-auth-tab[aria-selected="true"] { background:var(--card); color:var(--accent); box-shadow:var(--shadow-sm); }
-.cloud-auth-field { margin:0 0 16px; }
-.cloud-auth-form-panel label { display:block; color:var(--text-muted); font-family:var(--font-auth-ui); font-size: var(--font-size-xs); font-weight:700; letter-spacing:.06em; text-transform:uppercase; margin:0 0 7px; }
+.cloud-auth-field { margin:0 0 14px; }
+.cloud-auth-form-panel label { display:block; color:var(--text-muted); font-family:var(--font-auth-ui); font-size: var(--font-size-xs); font-weight:700; letter-spacing:.06em; text-transform:uppercase; margin:0 0 6px; }
 .cloud-auth-label-row { display:flex; align-items:center; justify-content:space-between; gap:10px; }
-.cloud-auth-label-row label { margin:0 0 7px; }
+.cloud-auth-label-row label { margin:0 0 6px; }
 .cloud-auth-inline-link { appearance:none; border:0; padding:0; background:transparent; color:var(--accent); font-family:var(--font-auth-ui); font-size:var(--font-size-xs); font-weight:700; letter-spacing:.02em; cursor:pointer; }
 .cloud-auth-inline-link:hover { text-decoration:underline; }
 .cloud-auth-inline-link:focus-visible { outline:none; box-shadow:0 0 0 2px color-mix(in srgb, var(--accent) 35%, transparent); border-radius:2px; }
@@ -3071,18 +3071,27 @@ a:hover { text-decoration: underline; text-underline-offset: 2px; }
 .cloud-password-toggle { position:absolute; right:6px; top:50%; transform:translateY(-50%); width:44px; height:44px; display:flex; align-items:center; justify-content:center; border:0; border-radius:8px; background:transparent; color:var(--text-soft); cursor:pointer; }
 .cloud-password-toggle:hover { color:var(--accent); }
 .cloud-password-toggle:focus-visible { outline:none; color:var(--accent); box-shadow:0 0 0 2px color-mix(in srgb, var(--accent) 35%, transparent); }
-.cloud-auth-form-panel input { width:100%; min-height:52px; padding:12px 14px 12px 42px; border:1px solid var(--border); border-radius:var(--radius-lg); background:var(--surface-sunk); color:var(--text); font-family:var(--font-auth-ui); font-size:var(--font-size-md); font-weight:500; line-height:1.4; transition:border-color .15s, box-shadow .15s, background-color .15s; }
+.cloud-auth-form-panel input { width:100%; min-height:50px; padding:11px 14px 11px 42px; border:1px solid var(--border); border-radius:var(--radius-lg); background:var(--surface-sunk); color:var(--text); font-family:var(--font-auth-ui); font-size:var(--font-size-md); font-weight:500; line-height:1.4; transition:border-color .15s, box-shadow .15s, background-color .15s; }
 .cloud-auth-form-panel input:focus { outline:none; border-color:var(--accent); background:var(--card); box-shadow:var(--shadow-focus); }
 .cloud-auth-form-panel input::placeholder { color:var(--text-soft); font-family:var(--font-auth-ui); font-size:var(--font-size-md); font-weight:500; opacity:1; }
-.cloud-auth-submit { width:100%; margin-top:20px; display:flex; align-items:center; justify-content:center; text-align:center; font-family:var(--font-auth-ui); font-size:var(--font-size-md); font-weight:700; }
-.cloud-auth-message { min-height:0; margin:8px 0 0!important; font-family:var(--font-auth-ui); font-size: var(--font-size-md); }
+.cloud-auth-submit { width:100%; margin-top:16px; display:flex; align-items:center; justify-content:center; text-align:center; font-family:var(--font-auth-ui); font-size:var(--font-size-md); font-weight:700; }
+.cloud-auth-message { min-height:0; margin:6px 0 0!important; font-family:var(--font-auth-ui); font-size: var(--font-size-md); }
 .cloud-auth-message.error { color:var(--danger)!important; }
 .cloud-auth-message.success { color:var(--success)!important; }
-.cloud-auth-switch { margin:10px 0 0; color:var(--text-muted); font-family:var(--font-auth-ui); font-size:var(--font-size-sm); text-align:center; }
+.cloud-auth-switch { margin:8px 0 0; color:var(--text-muted); font-family:var(--font-auth-ui); font-size:var(--font-size-sm); text-align:center; }
 .cloud-auth-switch button { appearance:none; border:0; padding:0; background:transparent; color:var(--accent); font-family:var(--font-auth-ui); font-size:var(--font-size-sm); font-weight:600; cursor:pointer; }
+.cloud-auth-confirm-email { margin:0 0 10px; font-family:var(--font-auth-ui); font-size:var(--font-size-md); font-weight:700; color:var(--text); overflow-wrap:anywhere; }
+.cloud-auth-pw-line[hidden] { display:none; }
+.cloud-auth-pw-line { display:flex; align-items:center; gap:6px; margin:8px 0 0; font-family:var(--font-auth-ui); font-size:var(--font-size-sm); color:var(--text-muted); }
+.cloud-auth-pw-line svg { flex:0 0 auto; }
+.cloud-auth-pw-line.error { color:var(--danger); }
+.cloud-auth-pw-line.success { color:var(--success); }
+.cloud-auth-confirm-line { margin:8px 0 0; font-family:var(--font-auth-ui); font-size:var(--font-size-sm); }
+.cloud-auth-confirm-line.error { color:var(--danger); }
+.cloud-auth-confirm-line.success { color:var(--success); }
 /* "or continue with" divider + Google/Facebook secondary buttons. Sign in
    mode only — applySignMode() hides #cloudOAuthBlock while creating. */
-.cloud-auth-divider { display:flex; align-items:center; gap:10px; margin:22px 0 12px; color:var(--text-soft); font-family:var(--font-auth-ui); font-size:var(--font-size-xs); font-weight:600; text-transform:uppercase; letter-spacing:.04em; }
+.cloud-auth-divider { display:flex; align-items:center; gap:10px; margin:16px 0 10px; color:var(--text-soft); font-family:var(--font-auth-ui); font-size:var(--font-size-xs); font-weight:600; text-transform:uppercase; letter-spacing:.04em; }
 .cloud-auth-divider::before, .cloud-auth-divider::after { content:""; flex:1; height:1px; background:var(--border); }
 /* flex-wrap (not a width breakpoint) is what makes the two buttons stack:
    each button's default flex min-width is its own content size (no
@@ -3095,7 +3104,7 @@ a:hover { text-decoration: underline; text-underline-offset: 2px; }
 .cloud-auth-oauth-btn:focus-visible { outline:none; border-color:var(--accent); box-shadow:var(--shadow-focus); }
 .cloud-auth-oauth-btn:disabled { opacity:.6; cursor:default; }
 /* Illustration side — visual only, light teal panel using existing tokens. */
-.cloud-auth-illustration { flex:1 1 46%; min-width:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; text-align:center; padding:40px 36px; background:var(--accent-softer); border-left:1px solid var(--border); order:2; }
+.cloud-auth-illustration { flex:1 1 45%; min-width:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; text-align:center; padding:32px 28px; background:var(--accent-softer); border-left:1px solid var(--border); order:2; }
 .cloud-auth-illustration-art { position:relative; display:flex; align-items:center; justify-content:center; width:100%; }
 /* Subtle decoration behind the SVG only — a soft teal glow, a faint grid
    evoking property lines, and a small green accent ring. Existing tokens
@@ -3111,11 +3120,11 @@ a:hover { text-decoration: underline; text-underline-offset: 2px; }
   content:""; position:absolute; z-index:0; left:6%; bottom:2%; width:56px; height:56px; border-radius:50%;
   border:3px solid color-mix(in srgb, var(--sidebar-accent) 35%, transparent); pointer-events:none;
 }
-.cloud-auth-illustration-img { position:relative; z-index:1; width:100%; max-width:248px; height:auto; }
+.cloud-auth-illustration-img { position:relative; z-index:1; width:100%; max-width:224px; height:auto; }
 .cloud-auth-illustration-label { margin:0; font-family:var(--font-auth-ui); font-size:var(--font-size-xs); font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--accent); }
 .cloud-auth-illustration-heading { margin:0; font-family:var(--font-auth-display); font-size:30px; line-height:1.2; color:var(--text); }
 .cloud-auth-illustration-desc { margin:0; max-width:280px; font-family:var(--font-auth-ui); font-size:var(--font-size-md); color:var(--text-muted); }
-.cloud-auth-illustration-features { display:flex; flex-wrap:wrap; justify-content:center; margin-top:10px; }
+.cloud-auth-illustration-features { display:flex; flex-wrap:wrap; justify-content:center; margin-top:6px; }
 .cloud-auth-illustration-feature { display:inline-flex; align-items:center; gap:6px; padding:2px 12px; font-family:var(--font-auth-ui); font-size:13px; font-weight:600; color:var(--text-muted); }
 .cloud-auth-illustration-feature + .cloud-auth-illustration-feature { border-left:1px solid var(--border); }
 .cloud-auth-illustration-feature svg { color:var(--accent); flex-shrink:0; }
@@ -3137,7 +3146,7 @@ a:hover { text-decoration: underline; text-underline-offset: 2px; }
   .cloud-auth { padding:16px; }
   .cloud-auth::before, .cloud-auth::after { display:none; }
   .cloud-auth-card { flex-direction:column; width:100%; }
-  .cloud-auth-form-panel { padding:28px 24px; max-width:none; }
+  .cloud-auth-form-panel { padding:24px 20px; max-width:none; }
   .cloud-auth-illustration { border-left:0; border-top:1px solid var(--border); padding:24px 20px; gap:8px; }
   .cloud-auth-illustration-img { max-width:130px; }
   .cloud-auth-illustration-heading { font-size:var(--font-size-lg); }

@@ -32,7 +32,7 @@
 // Bump this when the shell changes. The cache name carries it, so a new
 // version installs beside the old one and the old one is deleted on
 // activate - never a half-old, half-new shell.
-const VERSION = "u8-auth-branding-20261104";
+const VERSION = "u11-auth-line-fix-20261109";
 const CACHE = "realtoros-shell-" + VERSION;
 
 // Everything the app needs to render its first screen without a network.
