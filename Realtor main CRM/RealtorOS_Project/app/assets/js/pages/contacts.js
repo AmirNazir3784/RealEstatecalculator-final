@@ -1409,6 +1409,10 @@ App.pages.contacts = (function () {
     await S().ensureLoaded(["contacts"]);
     const contact = S().getState().contacts.find(c => c.id === contactId);
     if (!contact) { App.app.toast("This contact no longer exists.", "danger"); return; }
+    // One activity id per opening of this modal, reused by every save
+    // attempt from it: a retry after a lost response fails on the
+    // activity's primary key instead of writing a duplicate.
+    const attemptId = U().uid("ac");
 
     const s = S().getState();
     const status = D().contactFollowUpStatus(contact);
@@ -1531,6 +1535,7 @@ App.pages.contacts = (function () {
           else if (nextChoice === "custom") nextFollowUp = customDate;
 
           const patch = {
+            id: attemptId,
             type: modal.querySelector("#fuType").value,
             date: activityDateISO,
             subject,
