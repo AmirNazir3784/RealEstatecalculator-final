@@ -10,8 +10,10 @@ add per-article CSS or JS.
    `resources/mortgage-payments/`) to `resources/<new-slug>/` and replace the
    content. Keep the shared header, mega menu, footer and script tags exactly
    as they are (paths are `../../assets/…` at this depth), and keep the
-   breadcrumb, category chip, title, lede, table of contents, article body,
-   calculator CTA, references and "Keep reading" sections.
+   title, lede, table of contents, article body,
+   calculator CTA, references and "Keep reading" sections. Start the article
+   with its H1; do not add breadcrumbs, a category badge or a reading-time
+   row above it. The shared stylesheet sets the article's top spacing.
 2. **Set the SEO fields.** Unique `<title>` and meta description, and the
    canonical `https://everyrealestatecalculator.com/resources/<new-slug>/`.
    Exactly one `<h1>`. No publication date is shown unless a real one exists.
@@ -24,8 +26,8 @@ add per-article CSS or JS.
    `<span class="card-date"><svg …calendar icon…></svg> Month D, YYYY</span>`;
    otherwise omit it — never invent a date.
 4. **Reading time.** Count the words in the article body and divide by 200
-   (round to the nearest minute, minimum 1). Use the same "X min read" on the
-   hub card and in the article's `.article-meta` row.
+   (round to the nearest minute, minimum 1). Show "X min read" only on the
+   hub card. Category badges also belong on cards, not above article headings.
 5. **Sitemap.** Add one `<url>` entry to `website/sitemap.xml` and update the
    URL counts pinned in `tests/w7.cjs` and `tests/w9-resources.cjs`.
 6. **Verify.** Run every suite in `website/tests/` (`h1`, `resources`, `w2`,

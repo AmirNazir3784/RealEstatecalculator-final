@@ -24,7 +24,7 @@ for (const name of ['commission', 'mortgage']) {
   }
 }
 assert(html.includes('<h1>Real Estate Resources</h1>'));
-assert(html.includes('<span class="eyebrow">Resources</span>'));
+assert(!html.includes('<span class="eyebrow">Resources</span>'));
 assert(html.includes('Practical guides to buying, selling, financing and investing in real estate.'));
 assert(articles.mortgage.includes('At 0% interest'));
 assert(articles.mortgage.includes('HOA dues'));

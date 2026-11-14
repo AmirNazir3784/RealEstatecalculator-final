@@ -1,0 +1,18 @@
+{
+  "base": "289ce4dc29bb2ebf5ea5112d5944b556b2a2ac23",
+  "hubOnlyEyebrowRemoved": true,
+  "hubCardsUnchanged": true,
+  "articles": [
+    {
+      "page": "website/resources/mortgage-payments/index.html",
+      "articleContentAndSEOUnchanged": true,
+      "headerAndFooterUnchanged": true
+    },
+    {
+      "page": "website/resources/real-estate-commission/index.html",
+      "articleContentAndSEOUnchanged": true,
+      "headerAndFooterUnchanged": true
+    }
+  ],
+  "calculatorsSharedAssetsNavigationSitemapAndWorkflowsUnchanged": true
+}
