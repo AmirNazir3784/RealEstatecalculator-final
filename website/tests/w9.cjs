@@ -6,7 +6,7 @@
 // per-page CSS; no inline panel-heading styles remain.
 const fs = require('node:fs');
 const path = require('node:path');
-const { execFileSync } = require('node:child_process');
+const crypto = require('node:crypto');
 const ROOT = path.join(__dirname, '..');
 let passed = 0; const failures = [];
 function check(name, cond) { if (cond) { passed++; } else { failures.push(name); } }
@@ -60,25 +60,23 @@ for (const slug of SLUGS) {
     !read(`tools/${slug}/index.html`).includes('style="'));
 }
 
-// 5. calculator.js is byte-identical to main, except CGT's two sticky lines.
-function mainJs(slug) {
-  return execFileSync('git', ['show','origin/main:website/tools/'+slug+'/calculator.js'],
-    {cwd:path.resolve(ROOT,'..'), encoding:'utf8', stdio:['ignore','pipe','pipe']}).replaceAll('\r\n','\n');
-}
+// 5. Financial code matches the captured contracts. Fixed fixtures keep this
+// guard effective after merges and in shallow CI checkouts, without depending
+// on a moving origin/main ref. Only CGT's two display updates are excluded.
+const contracts = JSON.parse(read('tests/fixtures/calculator-contracts.json')).calculators;
+const hash = text => crypto.createHash('sha256').update(text).digest('hex');
 for (const slug of SLUGS) {
-  let main;
-  try { main=mainJs(slug); } catch(e) { check(slug+' calculator.js readable from main',false); continue; }
   let current=read('tools/'+slug+'/calculator.js').replaceAll('\r\n','\n');
   if(slug==='capital-gains-tax-calculator') {
     const lines=current.split('\n').filter(l=>l.includes("set('sticky-value'"));
     check('CGT has exactly two sticky display updates',lines.length===2);
     current=current.replace(/^.*set\('sticky-value',[^\n]+\n/gm,'');
-    check('CGT financial code is unchanged',current===main);
+    check('CGT financial code is unchanged',hash(current)===contracts[slug].engineHash);
   } else if(slug==='commission-calculator') {
     const block=s=>s.match(/    var total = price \* rate \/ 100;[\s\S]+?    var sellerNet = price - total - otherCosts - payoff;/)[0];
-    check('Commission financial arithmetic unchanged',block(current)===block(main));
+    check('Commission financial arithmetic unchanged',hash(block(current))===contracts[slug].arithmeticHash);
     check('Commission retains three mode controls',['quick','agent','seller'].every(mode=>read('tools/'+slug+'/index.html').includes('id="mode-'+mode+'"')));
-  } else check(slug+' calculator.js byte-identical to main after checkout line-ending normalization',current===main);
+  } else check(slug+' calculator.js matches captured engine after checkout line-ending normalization',hash(current)===contracts[slug].engineHash);
 }
 
 // 6. Dead per-page classes from the audit are gone from calculator.css.

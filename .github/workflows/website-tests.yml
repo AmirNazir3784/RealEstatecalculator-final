@@ -38,6 +38,13 @@ jobs:
       - name: w5a - metadata, accessibility and shared navigation
         run: node website/tests/w5a.cjs
 
+      - name: Remaining website, calculator and Resources regression suites
+        run: |
+          set -euo pipefail
+          for suite in w6 w7 w8 w9 w9-resources commission; do
+            node "website/tests/$suite.cjs"
+          done
+
   package:
     runs-on: ubuntu-latest
     timeout-minutes: 10

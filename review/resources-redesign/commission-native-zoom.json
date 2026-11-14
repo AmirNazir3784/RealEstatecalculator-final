@@ -1,0 +1,30 @@
+{
+  "method": "Fresh Chromium profile; chrome.settingsPrivate.setDefaultZoom(2) through chrome://settings/appearance; no device emulation or CSS zoom.",
+  "assertions": 9,
+  "measurements": [
+    {
+      "mode": "quick",
+      "outerWidth": 1440,
+      "innerWidth": 709,
+      "dpr": 2,
+      "overflow": false,
+      "result": "$13,500.00"
+    },
+    {
+      "mode": "agent",
+      "outerWidth": 1440,
+      "innerWidth": 709,
+      "dpr": 2,
+      "overflow": false,
+      "result": "$9,155.00"
+    },
+    {
+      "mode": "seller",
+      "outerWidth": 1440,
+      "innerWidth": 709,
+      "dpr": 2,
+      "overflow": false,
+      "result": "$436,500.00"
+    }
+  ]
+}

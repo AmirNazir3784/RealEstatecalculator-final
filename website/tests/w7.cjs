@@ -74,11 +74,12 @@ check('mobile placeholder untouched', rc.includes('RealtorCRM Mobile Preview') &
 const about = read('about/index.html');
 check('about chip renamed', about.includes('<li>Follow-ups</li>') && !about.includes('<li>Follow-up Plans</li>'));
 check('about methodology', about.includes('How the calculators work'));
-// 10. No legal pages published; sitemap still exactly 16 URLs.
+// 10. No legal pages published; sitemap exactly 18 URLs (16 site pages + the
+// two standalone Resources guides added by the resources redesign).
 check('no privacy page in website tree', !fs.existsSync(path.join(ROOT, 'privacy-policy')));
 check('no terms page in website tree', !fs.existsSync(path.join(ROOT, 'terms')));
 const sm = read('sitemap.xml');
-check('sitemap still 16 URLs', (sm.match(/<loc>/g) || []).length === 16);
+check('sitemap still 18 URLs', (sm.match(/<loc>/g) || []).length === 18);
 console.log(`W7: ${passed} passed, ${failures.length} failed`);
 for (const f of failures) console.log('  FAIL:', f);
 process.exit(failures.length ? 1 : 0);

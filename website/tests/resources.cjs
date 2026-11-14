@@ -2,6 +2,9 @@ const fs = require('node:fs'), path = require('node:path'), vm = require('node:v
 const root = path.resolve(__dirname, '..');
 const read = file => fs.readFileSync(path.join(root, file), 'utf8');
 const html = read('resources/index.html');
+// The two guides now live on standalone article pages; the worked examples
+// are verified there, still against actual calculator execution.
+const articles = { commission: read('resources/real-estate-commission/index.html'), mortgage: read('resources/mortgage-payments/index.html') };
 for (const name of ['commission', 'mortgage']) {
   const page = read(`tools/${name}-calculator/index.html`), nodes = {};
   for (const match of page.matchAll(/<[^>]+\bid="([^"]+)"[^>]*>/g)) {
@@ -16,21 +19,22 @@ for (const name of ['commission', 'mortgage']) {
   } });
   const keys = name === 'commission' ? ['commission-total','commission-agent','commission-net'] : ['loan-amount','monthly-payment'];
   for (const key of keys) {
-    const displayed = html.match(new RegExp(`data-example="${key}">([^<]+)`))?.[1];
+    const displayed = articles[name].match(new RegExp(`data-example="${key}">([^<]+)`))?.[1];
     assert.equal(displayed, nodes[key].textContent, `Example differs from calculator: ${key}`);
   }
 }
-assert(html.includes('Understand real estate numbers with confidence.'));
-assert(html.includes('Resources &amp; Learning'));
-assert(html.includes('At 0% interest'));
-assert(html.includes('HOA fees'));
-assert(html.includes('taxes, referral payments'));
+assert(html.includes('<h1>Real Estate Resources</h1>'));
+assert(html.includes('<span class="eyebrow">Resources</span>'));
+assert(html.includes('Practical guides to buying, selling, financing and investing in real estate.'));
+assert(articles.mortgage.includes('At 0% interest'));
+assert(articles.mortgage.includes('HOA dues'));
+assert(articles.commission.includes('taxes, referral payments'));
 assert(!/No standalone guides|Before launch|Working name|Static demonstration/.test(html));
 for (const slug of ['commission-calculator', 'mortgage-calculator']) assert(html.includes(`href="../tools/${slug}/"`));
 const footer = html.match(/<footer[\s\S]*?<\/footer>/)[0];
 assert(footer.includes('data-brand-name'));
 assert(footer.includes('href="../about/"'));
-assert(html.includes('<summary>See the payment formula</summary>'));
-assert(read('resources/resources.css').includes('font-family:var(--font-display)'));
+assert(articles.mortgage.includes('<summary>See the payment formula</summary>'));
+assert(read('assets/resources.css').includes('font-family:var(--font-display)'));
 console.log('PASS: five worked-example outputs match actual calculator execution; educational limitations, native formula disclosure, font tokens, branding and calculator links checked.');
 console.log('Visual rendering and overflow require browser review; these are script/static checks.');
