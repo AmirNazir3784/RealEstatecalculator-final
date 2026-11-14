@@ -189,3 +189,43 @@ h3 {letter-spacing:-.025em;}
 
 /* P2 Batch 4: mobile form typography — no iOS focus zoom (inputs >= 16px). */
 @media(max-width:760px){ .field, .search-field { font-size:16px; } }
+
+/* W8: shared All Tools disclosure. No calculator-specific styles. */
+.header .tools-menu { position: static; }
+.header .tools-menu-toggle { display: inline-flex; align-items: center; justify-content: space-between; gap: 6px; min-height: 44px; padding: 8px 0; border: 0; background: transparent; color: #4A5968; font: inherit; white-space: nowrap; }
+.header .tools-menu-toggle:hover, .header .tools-menu-toggle[aria-expanded="true"] { color: var(--teal); }
+.header .tools-menu-toggle svg { transition: transform 150ms ease; }
+.header .tools-menu-toggle[aria-expanded="true"] svg { transform: rotate(180deg); }
+.header .tools-mega-menu[hidden], .tools-menu-overlay[hidden] { display: none !important; }
+.header .tools-mega-menu { position: absolute; top: 100%; left: 0; right: 0; width: min(1200px, calc(100vw - 48px)); margin-inline: auto; padding: 24px; border: 1px solid var(--line); border-radius: 0 0 16px 16px; background: var(--white); box-shadow: var(--shadow); max-height: calc(100dvh - 100px); overflow-y: auto; overscroll-behavior: contain; font-family: var(--font-body); }
+.header .tools-menu-heading { display: flex; align-items: center; justify-content: space-between; gap: 16px; border-bottom: 1px solid var(--line); padding-bottom: 16px; margin-bottom: 20px; }
+.header .tools-menu-heading p { margin: 0; color: var(--navy); font-size: 17px; font-weight: 600; }
+.header .nav .tools-menu .tools-view-all { display: inline-flex; align-items: center; gap: 8px; min-height: 44px; color: var(--teal); font-size: 14px; font-weight: 600; }
+.header .tools-menu-columns { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; }
+.header .tools-menu-group { min-width: 0; }
+.header .tools-menu-title { color: var(--navy); font-size: 13px; font-weight: 600; margin: 0 0 12px; }
+.header .tools-menu-group ul { list-style: none; padding: 0; margin: 0; display: grid; gap: 4px; }
+.header .nav .tools-menu .tools-menu-link { display: flex; align-items: start; gap: 12px; min-height: 64px; padding: 12px; border-radius: 10px; color: var(--navy); text-decoration: none; line-height: 1.5; }
+.header .nav .tools-menu .tools-menu-link:hover, .header .nav .tools-menu .tools-menu-link:focus-visible { background: var(--mist); color: var(--teal); }
+.header .tools-menu-icon { display: grid; place-items: center; width: 36px; height: 36px; flex: 0 0 36px; border-radius: 8px; background: var(--mist); color: var(--teal); font-size: 19px; font-weight: 600; }
+.header .tools-menu-copy { display: grid; gap: 4px; min-width: 0; }
+.header .tools-menu-name { font-size: 14px; font-weight: 600; }
+.header .tools-menu-description { color: var(--muted); font-size: 12px; font-weight: 400; line-height: 1.55; }
+.tools-menu-overlay { position: fixed; inset: 0; z-index: 19; background: rgba(16, 33, 49, .28); }
+@media (max-width: 1000px) and (min-width: 761px) {
+  .header .tools-mega-menu { padding: 20px; }
+  .header .tools-menu-columns { gap: 12px; }
+  .header .nav .tools-menu .tools-menu-link { gap: 8px; padding: 10px; }
+}
+@media (max-width: 760px) {
+  .header .nav.is-open { max-height: calc(100dvh - 64px); overflow-y: auto; overscroll-behavior: contain; }
+  .header .tools-menu-toggle { width: 100%; padding: 12px; border-radius: 9px; text-align: left; }
+  .header .tools-menu-toggle[aria-expanded="true"] { background: var(--mist); }
+  .header .tools-mega-menu { position: static; width: 100%; max-height: none; padding: 12px; border-radius: 12px; box-shadow: none; }
+  .header .tools-menu-heading { align-items: start; flex-direction: column; gap: 4px; margin-bottom: 16px; padding-bottom: 12px; }
+  .header .tools-menu-heading p { font-size: 15px; }
+  .header .tools-menu-columns { grid-template-columns: 1fr; gap: 20px; }
+  .header .nav .tools-menu .tools-menu-link { padding: 10px 8px; }
+}
+@media (prefers-reduced-motion: reduce) { .header .tools-menu-toggle svg { transition: none; } }
+@media print { .tools-menu-overlay { display: none !important; } }

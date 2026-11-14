@@ -5,10 +5,10 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#102131">
-<meta name="description" content="Work out a rental property's net operating income from rent, vacancy and operating expenses.">
+<meta name="description" content="Calculate net operating income (NOI) for a rental property from rent, vacancy and operating expenses — the formula, a worked example, and why the mortgage stays out.">
 <title>NOI Calculator | Every Real Estate Calculator</title>
 <link rel="stylesheet" href="../../assets/site.css?v=fc38e96bda">
-<link rel="stylesheet" href="../../assets/theme.css?v=8444bfe8db">
+<link rel="stylesheet" href="../../assets/theme.css?v=9d0ab6df2e">
 <link rel="stylesheet" href="calculator.css?v=25d4ae7010">
 <link rel="icon" href="../../assets/favicon.ico?v=14b36f79cd" sizes="any">
 <link rel="icon" type="image/png" sizes="32x32" href="../../assets/favicon-32x32.png?v=7c5ad7ec94">
@@ -16,10 +16,10 @@
 <link rel="apple-touch-icon" sizes="180x180" href="../../assets/apple-touch-icon.png?v=0f5540f27a">
 <meta property="og:type" content="website">
 <meta property="og:title" content="NOI Calculator | Every Real Estate Calculator">
-<meta property="og:description" content="Work out a rental property's net operating income from rent, vacancy and operating expenses."><link rel="canonical" href="https://everyrealestatecalculator.com/tools/noi-calculator/"><meta property="og:url" content="https://everyrealestatecalculator.com/tools/noi-calculator/"><meta property="og:image" content="https://everyrealestatecalculator.com/assets/home-architecture.jpg"><meta name="twitter:image" content="https://everyrealestatecalculator.com/assets/home-architecture.jpg">
+<meta property="og:description" content="Calculate net operating income (NOI) for a rental property from rent, vacancy and operating expenses — the formula, a worked example, and why the mortgage stays out."><link rel="canonical" href="https://everyrealestatecalculator.com/tools/noi-calculator/"><meta property="og:url" content="https://everyrealestatecalculator.com/tools/noi-calculator/"><meta property="og:image" content="https://everyrealestatecalculator.com/assets/home-architecture.jpg"><meta name="twitter:image" content="https://everyrealestatecalculator.com/assets/home-architecture.jpg">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="NOI Calculator | Every Real Estate Calculator">
-<meta name="twitter:description" content="Work out a rental property's net operating income from rent, vacancy and operating expenses.">
+<meta name="twitter:description" content="Calculate net operating income (NOI) for a rental property from rent, vacancy and operating expenses — the formula, a worked example, and why the mortgage stays out.">
 </head>
 <body>
 <a class="skip-link" href="#main">Skip to content</a>
@@ -33,7 +33,21 @@
       </span>
     </a>
     <nav class="nav" id="site-menu" aria-label="Main navigation">
-      <a href="../../tools/" class="current" aria-current="page">All Tools</a>
+      <div class="tools-menu" id="tools-menu">
+<button class="tools-menu-toggle" id="tools-menu-toggle" type="button" aria-expanded="false" aria-controls="tools-mega-menu">All Tools <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg></button>
+<div class="tools-mega-menu" id="tools-mega-menu" hidden>
+<div class="tools-menu-heading"><p>Find the right calculator</p><a class="tools-view-all" href="../../tools/">View all 10 calculators <span aria-hidden="true">↗</span></a></div>
+<div class="tools-menu-columns"><div class="tools-menu-group" aria-labelledby="tools-group-0"><p class="tools-menu-title" id="tools-group-0">Buying &amp; Financing</p><ul><li><a class="tools-menu-link" data-menu-tool="mortgage-calculator" href="../../tools/mortgage-calculator/"><span class="tools-menu-icon" aria-hidden="true">$</span><span class="tools-menu-copy"><span class="tools-menu-name">Mortgage Calculator</span><span class="tools-menu-description">Estimate the full monthly mortgage payment — principal and interest plus tax, insurance, HOA and PMI — from home price and loan terms.</span></span></a></li>
+<li><a class="tools-menu-link" data-menu-tool="home-affordability-calculator" href="../../tools/home-affordability-calculator/"><span class="tools-menu-icon" aria-hidden="true">⌂</span><span class="tools-menu-copy"><span class="tools-menu-name">Home Affordability Calculator</span><span class="tools-menu-description">Estimate the maximum home price from the monthly payment you can afford.</span></span></a></li>
+<li><a class="tools-menu-link" data-menu-tool="rent-vs-buy-calculator" href="../../tools/rent-vs-buy-calculator/"><span class="tools-menu-icon" aria-hidden="true">⇄</span><span class="tools-menu-copy"><span class="tools-menu-name">Rent vs Buy Calculator</span><span class="tools-menu-description">Compare renting vs buying: full multi-year costs and the breakeven year.</span></span></a></li>
+<li><a class="tools-menu-link" data-menu-tool="bridge-loan-calculator" href="../../tools/bridge-loan-calculator/"><span class="tools-menu-icon" aria-hidden="true">⇋</span><span class="tools-menu-copy"><span class="tools-menu-name">Bridge Loan Calculator</span><span class="tools-menu-description">Estimate a bridge loan from your current home equity, its interest-only cost, and the cash left after sale.</span></span></a></li></ul></div>
+<div class="tools-menu-group" aria-labelledby="tools-group-1"><p class="tools-menu-title" id="tools-group-1">Property Investment</p><ul><li><a class="tools-menu-link" data-menu-tool="cap-rate-calculator" href="../../tools/cap-rate-calculator/"><span class="tools-menu-icon" aria-hidden="true">÷</span><span class="tools-menu-copy"><span class="tools-menu-name">Cap Rate Calculator</span><span class="tools-menu-description">Estimate a rental property cap rate from rent, vacancy and operating expenses.</span></span></a></li>
+<li><a class="tools-menu-link" data-menu-tool="noi-calculator" href="../../tools/noi-calculator/"><span class="tools-menu-icon" aria-hidden="true">∑</span><span class="tools-menu-copy"><span class="tools-menu-name">NOI Calculator</span><span class="tools-menu-description">Work out a rental property's net operating income from rent, vacancy and operating expenses.</span></span></a></li>
+<li><a class="tools-menu-link" data-menu-tool="roi-calculator" href="../../tools/roi-calculator/"><span class="tools-menu-icon" aria-hidden="true">▲</span><span class="tools-menu-copy"><span class="tools-menu-name">ROI Calculator</span><span class="tools-menu-description">Project a rental's total return over your hold period: cash flow, appreciation, loan paydown and annualized ROI.</span></span></a></li>
+<li><a class="tools-menu-link" data-menu-tool="property-investment-calculator" href="../../tools/property-investment-calculator/"><span class="tools-menu-icon" aria-hidden="true">◈</span><span class="tools-menu-copy"><span class="tools-menu-name">Property Investment Calculator</span><span class="tools-menu-description">Analyze a rental property: monthly cash flow, cash-on-cash return, cap rate and break-even rent.</span></span></a></li></ul></div>
+<div class="tools-menu-group" aria-labelledby="tools-group-2"><p class="tools-menu-title" id="tools-group-2">Selling, Tax &amp; Agent Tools</p><ul><li><a class="tools-menu-link" data-menu-tool="commission-calculator" href="../../tools/commission-calculator/"><span class="tools-menu-icon" aria-hidden="true">%</span><span class="tools-menu-copy"><span class="tools-menu-name">Commission Calculator</span><span class="tools-menu-description">Estimate commission income, earnings, agent splits and transaction fees.</span></span></a></li>
+<li><a class="tools-menu-link" data-menu-tool="capital-gains-tax-calculator" href="../../tools/capital-gains-tax-calculator/"><span class="tools-menu-icon" aria-hidden="true">§</span><span class="tools-menu-copy"><span class="tools-menu-name">Capital Gains Tax Calculator</span><span class="tools-menu-description">Estimate the tax on a property sale: capital gain, primary-residence exclusion, depreciation recapture and net proceeds.</span></span></a></li></ul></div></div>
+</div></div>
       <a href="../../realtorcrm/">RealtorCRM</a>
       <a href="../../resources/">Resources</a>
       <a href="../../about/">About</a>
@@ -54,6 +68,7 @@
     </button>
   </div>
 </header>
+<div class="tools-menu-overlay" id="tools-menu-overlay" hidden aria-hidden="true"></div>
 
 <main id="main">
 <section class="page-hero" aria-labelledby="page-title">
@@ -369,7 +384,7 @@
 <h2>Worked example</h2>
 <p>With the values already filled in — $2,200 monthly rent, 5% vacancy, no other income, $4,200 tax, $1,800 insurance, $1,500 maintenance, an 8% management fee and no HOA or other costs — gross rent is $26,400, vacancy loss is $1,320, effective gross income is $25,080, total operating expenses are $9,506.40, and net operating income is $15,573.60 a year. The expense ratio, expenses divided by effective income, is 37.90%. The management fee is a percentage of effective income, so it moves with the rent actually collected, not the rent hoped for.</p>
 
-<h2>Key takeaways</h2>
+<h2>Reading the expense side of the example</h2><p>In the worked example above, the $11,546.40 of operating expenses absorbs 42.6% of the property’s effective gross income — the operating expense ratio. Property tax is the largest single line at $4,200, about 36% of all expenses, ahead of the management fee ($2,006.40), insurance ($1,800) and maintenance ($1,500). Watching that ratio, and which line drives it, is how owners spot a property whose costs are creeping up faster than its rent.</p><p>Notice what is missing from the list: the mortgage. Principal and interest are excluded from NOI on purpose. NOI measures how the <em>property</em> performs, not how it was financed, which is why a lender or appraiser can compare two buildings with completely different loans on the same basis — and why this figure feeds directly into the <a href="../cap-rate-calculator/">Cap Rate Calculator</a>.</p><h2>Key takeaways</h2>
 <ul>
 <li>NOI equals effective gross income minus every operating expense. Mortgage, depreciation and income tax are excluded.</li>
 <li>Divide NOI by price to get cap rate; divide it by annual debt service to get DSCR, where most lenders look for 1.25 or better.</li>
@@ -402,7 +417,7 @@
 <footer class="footer"><div class="wrap"><div class="footer-top"><div class="home-footer-brand"><a class="brand" href="../../" aria-label="Every Real Estate Calculator, homepage"><span class="brand-mark" aria-hidden="true"><img src="../../assets/logo.png?v=3279907f8e" alt="" width="192" height="189"></span><span class="brand-name"><span data-brand-name>Every Real Estate Calculator</span><em>Tools &middot; Software &middot; Guides</em></span></a><p>Practical tools for everyday decisions. RealtorCRM for the relationships behind them.</p></div><div class="footer-tools"><h2 class="footer-heading">Tools</h2><a href="../../tools/">All tools</a><a href="../../tools/commission-calculator/">Commission calculator</a><a href="../../tools/mortgage-calculator/">Mortgage calculator</a><a href="../../tools/home-affordability-calculator/">Home affordability calculator</a><a href="../../tools/rent-vs-buy-calculator/">Rent vs buy calculator</a><a href="../../tools/cap-rate-calculator/">Cap rate calculator</a><a href="../../tools/bridge-loan-calculator/">Bridge loan calculator</a><a href="../../tools/property-investment-calculator/">Property investment calculator</a><a href="../../tools/capital-gains-tax-calculator/">Capital gains tax calculator</a><a href="../../tools/roi-calculator/">ROI calculator</a><a href="../../tools/noi-calculator/">NOI calculator</a></div><div><h2 class="footer-heading">RealtorCRM</h2><a href="../../realtorcrm/">Explore the CRM</a><a href="../../realtorcrm/#how-it-works">How it works</a><a href="../../realtorcrm/#access">Access availability</a></div><div><h2 class="footer-heading">Platform</h2><a href="../../resources/">Resources</a><a href="../../about/">About</a><a href="../../contact/">Contact</a></div></div><div class="foot-bottom"><span>&copy; 2026 <span data-brand-name>Every Real Estate Calculator</span></span><span>Tools for the work behind every property.</span></div></div></footer>
 
 <script src="../../assets/site-config.js?v=92d0f383e1" defer></script>
-<script src="../../assets/site.js?v=5a6b6cc07a" defer></script>
+<script src="../../assets/site.js?v=ea679f9b51" defer></script>
 <script src="calculator.js?v=22341a1e68" defer></script>
 </body>
 </html>
