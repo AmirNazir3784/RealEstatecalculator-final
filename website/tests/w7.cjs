@@ -38,7 +38,7 @@ for (const slug of ['mortgage-calculator','home-affordability-calculator','rent-
   'capital-gains-tax-calculator','commission-calculator']) {
   check(`tools directory links ${slug}`, tools.includes(`<li><a href="${slug}/">`));
 }
-check('tools meta updated', tools.includes('ten free real estate calculators'));
+check('tools meta updated', tools.includes('Explore 10 free real estate calculators'));
 // 5. CGT sources + mistakes.
 const cgt = read('tools/capital-gains-tax-calculator/index.html');
 for (const u of ['irs.gov/publications/p523', 'irs.gov/taxtopics/tc409', 'irs.gov/publications/p544',

@@ -69,3 +69,19 @@
 .directory-list a:hover { text-decoration: underline; }
 .directory-list p { margin: 4px 0 0; color: #5E6C79; font-size: 0.95rem; }
 @media (max-width: 700px) { .directory-list { grid-template-columns: 1fr; } }
+
+/* W8: compact two-column intro; the existing cards/directory are unchanged. */
+.tools-intro { display: grid; grid-template-columns: minmax(0, 1fr) auto; align-items: center; gap: 24px; }
+.tools-intro-copy h1 { font-family: var(--font-display); font-size: 40px; line-height: 1.15; margin: 0 0 12px; }
+.tools-intro-copy p { max-width: 68ch; margin: 0; font-size: 16px; line-height: 1.6; }
+.tools-intro .trust-chips { display: grid; justify-items: start; gap: 6px; margin: 0; }
+.listing-search-wrap { position: relative; }
+.listing-search-icon { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: var(--muted); pointer-events: none; }
+.listing-search-wrap .listing-search { padding-left: 46px; min-height: 48px; font-size: 16px; }
+@media (max-width: 900px) {
+  .tools-intro { grid-template-columns: 1fr; gap: 16px; }
+  .tools-intro .trust-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+}
+@media (max-width: 760px) {
+  .tools-intro-copy h1 { font-size: 32px; }
+}

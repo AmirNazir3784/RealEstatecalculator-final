@@ -81,7 +81,7 @@ for (const page of pages) {
     ['about/index.html', 'About | Every Real Estate Calculator'],
     ['contact/index.html', 'Contact | Every Real Estate Calculator'],
     ['resources/index.html', 'Resources | Every Real Estate Calculator'],
-    ['tools/index.html', 'Real Estate Calculators | Free Online Tools'],
+    ['tools/index.html', 'Free Real Estate Calculators | 10 Online Tools'],
   ]);
   for (const page of pages) {
     const html = fs.readFileSync(path.join(root, page), 'utf8');
