@@ -8,8 +8,8 @@
 <title>Bridge Loan Calculator | Every Real Estate Calculator</title>
 <link rel="stylesheet" href="../../assets/site.css?v=fc38e96bda">
 <link rel="stylesheet" href="../../assets/theme.css?v=9d0ab6df2e">
-<link rel="stylesheet" href="../../assets/tools.css?v=dfb7efc7c3">
-<link rel="stylesheet" href="calculator.css?v=ff77e5926a">
+<link rel="stylesheet" href="../../assets/tools.css?v=462a99db0c">
+<link rel="stylesheet" href="calculator.css?v=c9950142fa">
 <link rel="icon" href="../../assets/favicon.ico?v=14b36f79cd" sizes="any">
 <link rel="icon" type="image/png" sizes="32x32" href="../../assets/favicon-32x32.png?v=7c5ad7ec94">
 <link rel="icon" type="image/png" sizes="16x16" href="../../assets/favicon-16x16.png?v=193488d84d">
@@ -44,11 +44,11 @@
 <button class="menu-toggle" type="button" aria-controls="site-menu" aria-expanded="false" aria-label="Open navigation"><span aria-hidden="true">☰</span></button>
 </div></header>
 <div class="tools-menu-overlay" id="tools-menu-overlay" hidden aria-hidden="true"></div>
-<main id="main"><div class="sticky-result" id="sticky-result"><span>Max bridge loan</span><b id="sticky-value">—</b></div>
+<main id="main" class="calc-page"><div class="sticky-result" id="sticky-result"><span>Max bridge loan</span><b id="sticky-value">—</b></div>
 <section class="page-hero"><div class="wrap"><h1>Bridge Loan Calculator</h1><p>Buying before you sell? Enter your current home's value and mortgage, the new home's price and the bridge terms — we'll work out how much you can borrow, what it costs, and whether it covers your down payment.</p></div>
 <div class="wrap calculator-layout">
 <div class="panel">
-<h2 style="font-size:1.7rem">Enter your figures</h2>
+<h2>Enter your figures</h2>
 <p class="muted">Adjust the sample values below to calculate an estimate instantly.</p>
 <form id="bridge-loan-form"><div class="form-grid">
 <div class="form-field"><label for="current-value">Current home value (USD)</label><span class="input-unit"><span class="unit-affix" aria-hidden="true">$</span><input class="field" id="current-value" type="number" min="0" max="1000000000000" step="5000" value="450000"></span><input class="field-slider" id="current-value-slider" type="range" min="0" max="2000000" step="5000" value="450000" aria-label="Current home value (USD) slider"></div>
@@ -98,12 +98,15 @@
 <p class="hidden-row-note" id="hidden-rows-note"></p>
 <div class="copy-row"><button class="tool-btn tool-btn-primary" id="copy-results" type="button">Copy results</button><button class="tool-btn tool-btn-outline" id="print-results" type="button">Print</button></div>
 <p class="copy-note" id="copy-note"></p></div>
-<div style="margin-top:26px"><a class="btn btn-outline" href="../../tools/mortgage-calculator/" style="white-space:normal">See the payment on the mortgage calculator ↗</a></div>
+<a class="tool-btn tool-btn-outline result-cta" href="../../tools/mortgage-calculator/">See the payment on the mortgage calculator ↗</a>
 </aside>
 </div></section>
 <section class="section"><div class="wrap content">
+<div class="note"><strong>How to use:</strong> Enter the current home value and mortgage, the new home price and down payment, then the bridge rate and months to sale. The bridge amount, monthly cost and cash after the sale update as you type.</div>
 <h2>How a bridge loan works</h2>
+<div class="formula-box">
 <p>A bridge loan lets you buy the new home before the old one sells, using the equity in your current home as security. The maximum you can borrow is your current home's value times the lender's loan limit, minus your existing mortgage balance. Payments are interest-only — you pay just the monthly interest while the loan runs, and the full principal comes due when your current home sells or the term ends, whichever comes first. Rates run higher than a conventional mortgage because the loan is short and the lender carries two properties' worth of risk at once.</p>
+</div>
 <h2>What moves the answer</h2>
 <p>Two inputs decide almost everything: the loan limit and your existing mortgage. If your mortgage already sits near the limit, little or no bridge loan is available at all — the panel says so plainly instead of showing a negative loan. After that, time is the cost: every extra month until the sale adds one more interest-only payment, so a 12-month sale costs roughly twice the interest of a 6-month one while the fees stay fixed. That is why fees weigh heaviest on small, short bridge loans.</p>
 <h2>Important note</h2>
@@ -111,8 +114,7 @@
 </div></section>
 
 <section class="section"><div class="wrap content">
-<h2>Bridge loan calculator: quick answer</h2>
-<p><strong>Quick answer:</strong> A bridge loan calculator estimates how much you can borrow against your current home’s equity to buy before you sell, what it costs, and whether it covers your new down payment. On this page’s defaults, a $450,000 home with a $200,000 mortgage supports a maximum bridge loan of $160,000.</p>
+
 <p>Buying before selling solves a timing problem, but it creates a short, usually interest-only loan that must be repaid when the old home sells or the term ends. The key question is not just how much you can borrow, but how much it costs for every month the sale takes.</p>
 <h2>Worked example</h2>
 <p>With the values already filled in — a $450,000 current value, a $200,000 mortgage, a $600,000 new price, a 20% down payment, an 80% bridge limit, a 9% rate, 6 months until sale, a 1% origination fee, $3,000 other closing costs and 6% selling costs — equity is $250,000, the maximum bridge loan is $160,000, the interest-only payment is $1,200 a month, and total bridge cost is $11,800, made up of $7,200 interest, $1,600 origination and $3,000 other closing costs. The down payment needed is $120,000, fully covered by the bridge loan, and cash left after the current home sells is $63,000.</p>
@@ -124,21 +126,29 @@
 <li>If your mortgage already sits near the limit, little or no bridge loan may be available — the calculator says so plainly instead of showing a negative loan.</li>
 </ul>
 <h2>Bridge loan, HELOC, or home-equity loan?</h2><p>All three borrow against the home you already own, but they are built for different jobs:</p><ul><li><strong>Bridge loan</strong> — a short-term loan, commonly 6–24 months, secured on your current home and usually interest-only, designed to be repaid in full when that home sells. Best fit: you have found the next home and need to buy before your sale completes.</li><li><strong>HELOC</strong> — a revolving credit line secured on your home: draw what you need, repay it, and draw again during the draw period. Rates are typically variable. Best fit: ongoing or uncertain costs — renovations, deposits, staged expenses — rather than one fixed purchase.</li><li><strong>Home-equity loan</strong> — a fixed lump sum repaid in set monthly payments of principal and interest over a period of years. Best fit: a known, one-off cost you want to repay steadily, not a purchase you expect a sale to clear within months.</li></ul><p>The practical difference is the exit. A bridge loan is repaid from a sale and priced for speed over a short window; a HELOC gives flexible access but a variable rate and no fixed end date; a home-equity loan is the most predictable but the slowest to clear. Lenders’ criteria, costs and timelines vary, so compare written offers — including fees, and what happens if your sale takes longer than planned.</p><h2>Frequently asked questions</h2>
-<h3>How does a bridge loan work?</h3>
-<p>You borrow against the equity in your current home to buy the new home before the old one sells. Payments are usually interest-only while the loan runs, and the full principal comes due when the current home sells or the term ends, whichever comes first.</p>
-<h3>How is the maximum bridge loan calculated?</h3>
-<p>Current home value multiplied by the bridge loan limit, minus the existing mortgage balance. In the worked example, $450,000 at 80% is $360,000, minus a $200,000 mortgage, giving $160,000.</p>
-<h3>What does a bridge loan cost?</h3>
-<p>Monthly interest on the loan, plus origination and other closing costs. Rates run higher than a conventional mortgage because the loan is short and the lender carries two properties’ worth of risk at once.</p>
-<h3>Will the bridge loan cover my new down payment?</h3>
-<p>That depends on the loan amount against the down payment needed. Here a $120,000 down payment is fully covered by a $160,000 bridge loan; in other cases cash may still be needed, and the calculator shows that amount.</p>
-<h3>What happens if my current home does not sell in time?</h3>
-<p>You may need an extension or a refinance, both usually costing more. Confirm terms with your lender before relying on a bridge loan to close.</p>
-<h3>Is this a loan offer?</h3>
-<p>No. This is an informational estimate, not a loan offer or financial advice. Lender limits, rates and fees vary.</p>
+<details class="faq"><summary>How does a bridge loan work?</summary>
+<p>You borrow against the equity in your current home to buy the new home before the old one sells. Payments are usually interest-only while the loan runs, and the full principal comes due when the current home sells or the term ends, whichever comes first.</p></details>
+<details class="faq"><summary>How is the maximum bridge loan calculated?</summary>
+<p>Current home value multiplied by the bridge loan limit, minus the existing mortgage balance. In the worked example, $450,000 at 80% is $360,000, minus a $200,000 mortgage, giving $160,000.</p></details>
+<details class="faq"><summary>What does a bridge loan cost?</summary>
+<p>Monthly interest on the loan, plus origination and other closing costs. Rates run higher than a conventional mortgage because the loan is short and the lender carries two properties’ worth of risk at once.</p></details>
+<details class="faq"><summary>Will the bridge loan cover my new down payment?</summary>
+<p>That depends on the loan amount against the down payment needed. Here a $120,000 down payment is fully covered by a $160,000 bridge loan; in other cases cash may still be needed, and the calculator shows that amount.</p></details>
+<details class="faq"><summary>What happens if my current home does not sell in time?</summary>
+<p>You may need an extension or a refinance, both usually costing more. Confirm terms with your lender before relying on a bridge loan to close.</p></details>
+<details class="faq"><summary>Is this a loan offer?</summary>
+<p>No. This is an informational estimate, not a loan offer or financial advice. Lender limits, rates and fees vary.</p></details>
 <h2>Limitations and next steps</h2>
 <p>This estimate does not model credit, loan type, servicer rules or property-value changes, and it assumes the sale price equals the current value entered. Confirm terms with your lender before relying on a bridge loan.</p>
 <p>Next steps: check the long-term payment on the new home in the <a href="../mortgage-calculator/">Mortgage Calculator</a>, and test what price fits your budget in the <a href="../home-affordability-calculator/">Home Affordability Calculator</a>.</p>
+</div></section>
+<section class="section"><div class="wrap content">
+<h2>Related calculators</h2>
+<div class="related-cards">
+<a class="related-card" href="../mortgage-calculator/"><h3>Mortgage Calculator</h3><p>Full monthly payment with tax, insurance, HOA and PMI.</p><span class="open">Open calculator ↗</span></a>
+<a class="related-card" href="../home-affordability-calculator/"><h3>Home Affordability Calculator</h3><p>Maximum price from the payment you can afford.</p><span class="open">Open calculator ↗</span></a>
+<a class="related-card" href="../rent-vs-buy-calculator/"><h3>Rent vs Buy Calculator</h3><p>Breakeven year for renting against buying.</p><span class="open">Open calculator ↗</span></a>
+</div>
 </div></section>
 </main>
 <footer class="footer"><div class="wrap"><div class="footer-top"><div class="home-footer-brand"><a class="brand" href="../../" aria-label="Every Real Estate Calculator, homepage"><span class="brand-mark" aria-hidden="true"><img src="../../assets/logo.png?v=3279907f8e" alt="" width="192" height="189"></span><span class="brand-name"><span data-brand-name>Every Real Estate Calculator</span><em>Tools &middot; Software &middot; Guides</em></span></a><p>Practical tools for everyday decisions. RealtorCRM for the relationships behind them.</p></div><div class="footer-tools"><h2 class="footer-heading">Tools</h2><a href="../../tools/">All tools</a><a href="../../tools/commission-calculator/">Commission calculator</a><a href="../../tools/mortgage-calculator/">Mortgage calculator</a><a href="../../tools/home-affordability-calculator/">Home affordability calculator</a><a href="../../tools/rent-vs-buy-calculator/">Rent vs buy calculator</a><a href="../../tools/cap-rate-calculator/">Cap rate calculator</a><a href="../../tools/bridge-loan-calculator/">Bridge loan calculator</a><a href="../../tools/property-investment-calculator/">Property investment calculator</a><a href="../../tools/capital-gains-tax-calculator/">Capital gains tax calculator</a><a href="../../tools/roi-calculator/">ROI calculator</a><a href="../../tools/noi-calculator/">NOI calculator</a></div><div><h2 class="footer-heading">RealtorCRM</h2><a href="../../realtorcrm/">Explore the CRM</a><a href="../../realtorcrm/#how-it-works">How it works</a><a href="../../realtorcrm/#access">Access availability</a></div><div><h2 class="footer-heading">Platform</h2><a href="../../resources/">Resources</a><a href="../../about/">About</a><a href="../../contact/">Contact</a></div></div><div class="foot-bottom"><span>&copy; 2026 <span data-brand-name>Every Real Estate Calculator</span></span><span>Tools for the work behind every property.</span></div></div></footer>
