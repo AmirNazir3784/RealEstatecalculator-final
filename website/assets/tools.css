@@ -20,13 +20,15 @@ body { background: #F6F4EF; color: #14202B; }
 .result small, .result .muted, .result-row span { color: #C9D6E0; }
 .result-row { border-color: #254055; }
 .result-row b { color: #fff; font-weight: 600; }
-.result-number { font-family: 'Fraunces', 'Source Serif 4', Georgia, serif; font-size: clamp(2.4rem, 4vw, 3.4rem); color: #fff; }
-.result-label { color: #9FB3C4; font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; margin: 0; }
-.result-hero-sub { color: #C9D6E0; margin-top: 10px; font-size: .95rem; }
-.result-hero-sub b { color: #fff; }
-.result-group { color: #9FB3C4; font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; margin: 24px 0 4px; padding-top: 20px; border-top: 1px solid #254055; }
-.result-group:first-of-type { margin-top: 8px; padding-top: 0; border-top: 0; }
-.result-empty { color: #C9D6E0; margin: 20px 0 0; font-size: 1rem; line-height: 1.5; }
+/* Qualified with .result so these win over the shared .page-hero p rule,
+   which would otherwise render them dark on the navy panel. */
+.result .result-number { font-family: 'Fraunces', 'Source Serif 4', Georgia, serif; font-size: clamp(2.4rem, 4vw, 3.4rem); color: #fff; margin: 12px 0 0; letter-spacing: .01em; }
+.result .result-label { color: #9FB3C4; font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; margin: 0; }
+.result .result-hero-sub { color: #C9D6E0; margin-top: 10px; font-size: .95rem; }
+.result .result-hero-sub b { color: #fff; }
+.result .result-group { color: #9FB3C4; font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; margin: 24px 0 4px; padding-top: 20px; border-top: 1px solid #254055; }
+.result .result-group:first-of-type { margin-top: 8px; padding-top: 0; border-top: 0; }
+.result .result-empty { color: #C9D6E0; margin: 20px 0 0; font-size: 1rem; line-height: 1.5; }
 .result .btn { max-width: 100%; white-space: normal; text-align: center; min-height: 48px; }
 .result .btn-outline { background: transparent; border-color: #9FB3C4; color: #fff; }
 .result .btn-outline:hover { background: #16384A; border-color: #9FB3C4; color: #fff; }
@@ -58,8 +60,9 @@ body { background: #F6F4EF; color: #14202B; }
 .advanced .form-grid { margin-top: 14px; }
 .validation-note { color: #8A5A00; font-weight: 600; font-size: .9rem; }
 .validation-note:empty { display: none; }
-.hidden-row-note { color: #C9D6E0; font-size: .88rem; }
-.hidden-row-note:empty { display: none; }
+/* See the .result/.panel-qualified validation-note rules below. */
+.result .hidden-row-note { color: #C9D6E0; font-size: .88rem; }
+.result .hidden-row-note:empty { display: none; }
 
 /* Buttons */
 /* Buttons: on the dark panel, Copy is the primary action (teal bg, navy
@@ -71,13 +74,13 @@ body { background: #F6F4EF; color: #14202B; }
 .tool-btn-outline { background: transparent; border: 1px solid #9FB3C4; color: #FFFFFF; padding: 10px 18px; }
 .tool-btn-outline:hover { background: #16384A; border-color: #9FB3C4; color: #FFFFFF; }
 .copy-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 22px; }
-.copy-note { color: #C9D6E0; font-size: .85rem; min-height: 1.2em; }
-.copy-note:empty { display: none; }
+.result .copy-note { color: #C9D6E0; font-size: .85rem; min-height: 1.2em; }
+.result .copy-note:empty { display: none; }
 
 /* Breakdown bars and legends on the dark panel */
 .breakdown-track { display: flex; height: 12px; border-radius: 999px; overflow: hidden; background: #254055; }
 .breakdown-track > div { height: 100%; }
-.breakdown-legend { list-style: none; padding: 0; margin: 12px 0 0; display: grid; gap: 6px; font-size: .9rem; color: #C9D6E0; }
+.breakdown-legend { list-style: none; padding: 10px 12px; margin: 12px 0 0; display: grid; gap: 6px; font-size: .9rem; color: #C9D6E0; background: rgba(255, 255, 255, .04); border-radius: 10px; }
 @media (min-width: 700px) { .breakdown-legend { grid-template-columns: 1fr 1fr; } }
 .breakdown-legend span.swatch { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 6px; }
 .breakdown-legend b { color: #fff; font-weight: 600; }
@@ -135,6 +138,150 @@ body { background: #F6F4EF; color: #14202B; }
 }
 
 /* P2 Batch 4: calculator panel padding tiers 24/20/16 (form + result panels). */
-.calculator-layout .panel, .calculator-layout .result, .calculator-layout .cgt-results, .calculator-layout .inv-results { padding: 24px; }
-@media (max-width: 1000px) { .calculator-layout .panel, .calculator-layout .result, .calculator-layout .cgt-results, .calculator-layout .inv-results { padding: 20px; } }
-@media (max-width: 760px) { .calculator-layout .panel, .calculator-layout .result, .calculator-layout .cgt-results, .calculator-layout .inv-results { padding: 16px; } }
+.calculator-layout .panel, .calculator-layout .result { padding: 24px; }
+@media (max-width: 1000px) { .calculator-layout .panel, .calculator-layout .result { padding: 20px; } }
+@media (max-width: 760px) { .calculator-layout .panel, .calculator-layout .result { padding: 16px; } }
+
+/* ============================================================
+   Centralized calculator design system — 2026-11-14
+   One layout, one results panel and one component set for all ten
+   calculators. This file loads after site.css and theme.css, so
+   these rules win ties. Calculator pages keep only genuinely
+   unique rules in their own calculator.css.
+   ============================================================ */
+
+/* One two-column layout: inputs left, results right. */
+.calculator-layout { grid-template-columns: minmax(0, 1.25fr) minmax(290px, .75fr); }
+/* Single column on mobile. This must live here (after site.css): the
+   unconditional rule above would otherwise win over site.css's own
+   collapse at the same specificity. */
+@media (max-width: 760px) {
+  .calculator-layout { grid-template-columns: minmax(0, 1fr); }
+}
+/* Mobile overflow guard: a wide table inside the results column must
+   not stretch the single-column mobile grid. */
+.calculator-layout > * { min-width: 0; }
+
+/* One hero rhythm for calculator pages. (The tools listing page
+   overrides this in tool-listing.css, which loads later.) */
+.page-hero { padding: 24px 0 30px; }
+.page-hero h1 { font-size: clamp(2.2rem, 4vw, 2.9rem); }
+
+/* One content rhythm, scoped to calculator pages so the tools
+   listing keeps its own section padding. */
+.calc-page .section { padding: 26px 0 40px; }
+@media (max-width: 1000px) { .calc-page .section { padding: 20px 0 32px; } }
+@media (max-width: 760px) { .calc-page .section { padding: 16px 0 28px; } }
+.calc-page .content { max-width: 800px; }
+
+/* Panel headings: one size on every calculator (replaces the inline
+   style="font-size:1.7rem" the pages used to carry). */
+.calculator-layout .panel > h2 { font-size: 1.7rem; }
+
+/* One form-group legend style. */
+.form-group { border: 0; padding: 0; margin: 24px 0 0; min-width: 0; }
+.form-group:first-of-type { margin-top: 4px; }
+.form-group legend { font-weight: 800; color: #102131; font-size: .95rem; padding: 0 0 8px; margin-bottom: 16px; width: 100%; border-bottom: 1px solid #E2DED5; }
+
+/* Bottom-aligned inputs: labels may wrap to one or two lines, but
+   the inputs in a row always start at the same height. */
+.form-field { display: flex; flex-direction: column; }
+.form-field > .input-unit, .form-field > .field, .form-field > select, .form-field > .seg-control { margin-top: auto; }
+.form-field-full { grid-column: 1 / -1; }
+
+/* Invalid input state (NOI validation): amber, shared. */
+.input-unit.invalid { border-color: #C17932; background: #FFFAF1; box-shadow: 0 0 0 3px rgba(193, 121, 50, .18); }
+
+/* Validation messages inside the dark results panel need the light
+   amber; on white panels the base color applies. Both are qualified
+   so they win over the shared .page-hero p rule. */
+.result .validation-note { color: #F2C14E; }
+.panel .validation-note { color: #8A5A00; }
+
+/* Hidden elements stay hidden even when a display rule would
+   otherwise show them (results rows, notes, empty states). */
+[hidden] { display: none !important; }
+
+/* ---- Results: shared tiles ---- */
+.result-tiles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 6px; }
+.result-tiles.tiles-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+@media (max-width: 520px) { .result-tiles.tiles-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.result-tile { background: #16384A; border: 1px solid #254055; border-radius: 12px; padding: 12px 14px; min-width: 0; }
+.result-tile > span { display: block; font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: #9FB3C4; margin-bottom: 4px; }
+.result-tile > b { color: #fff; font-size: 1.05rem; font-weight: 600; overflow-wrap: anywhere; }
+/* Three-across tiles are narrow (~96px of value room in the shared results
+   column): the widest 11-character currency values ($233,000.00 — all wide
+   digits, unlike $194,670.00 with its narrow 1) only fit at 0.9rem with
+   tighter tiles, so they drop a size instead of breaking mid-number. */
+.result-tiles.tiles-3 { gap: 8px; }
+.result-tiles.tiles-3 .result-tile { padding: 10px 12px; }
+.result-tiles.tiles-3 .result-tile > b { font-size: .9rem; }
+.result-tile > small { display: block; color: #9FB3C4; font-size: .8rem; margin-top: 2px; }
+/* Total rows inside the results panel. */
+.result-row-total { border-top: 2px solid #9FB3C4; }
+.result-row-total span, .result-row-total b { font-weight: 700; }
+/* Amber note inside the results panel (warnings, negative states). */
+.result .result-note { color: #F2C14E; font-size: .9rem; font-weight: 600; margin-top: 10px; }
+.inv-verdict .result-note { display: none; }
+.inv-verdict.is-negative .result-note { display: block; }
+.inv-verdict.is-negative .result-number { color: #F2C14E; }
+/* Disclaimer text inside the dark results panel. */
+.result .disclaimer { color: #C9D6E0; }
+/* Buttons: work on <button> and <a> alike; the in-panel link CTA. */
+.tool-btn { display: inline-flex; align-items: center; justify-content: center; text-align: center; }
+.panel .tool-btn-primary { background: #0F766E; border-color: #0F766E; color: #fff; }
+.panel .tool-btn-primary:hover { background: #095E58; border-color: #095E58; }
+.panel .tool-btn-outline { border-color: #D9DEDB; color: #14202B; }
+.panel .tool-btn-outline:hover { background: #F6F5F0; border-color: #0F766E; color: #14202B; }
+.tool-btn-dark { background: #102131; border: 1px solid #102131; color: #fff; }
+.tool-btn-dark:hover { background: #223E51; border-color: #223E51; }
+.result-cta { display: flex; width: 100%; margin-top: 22px; }
+
+/* ---- Content components ---- */
+/* Formula box: the calculator's defining formula, set apart. */
+.formula-box { background: #F6F5F0; border: 1px solid #E2DED5; border-left: 3px solid #0F766E; border-radius: 0 12px 12px 0; padding: 16px 18px; margin: 18px 0; }
+.formula-box p { margin: 0; color: #14202B; }
+.formula-box .formula { font-family: 'Source Serif 4', Georgia, serif; font-size: 1.15rem; font-weight: 700; }
+/* FAQ accordion: native <details>, one style everywhere. */
+.faq { border: 1px solid #E2DED5; border-radius: 12px; background: #fff; margin: 0 0 10px; }
+.faq summary { cursor: pointer; font-weight: 700; color: #14202B; padding: 14px 16px; list-style: none; }
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::marker { content: none; }
+.faq summary::after { content: "+"; float: right; color: #0F766E; font-weight: 800; }
+.faq[open ] summary::after { content: "\2212"; }
+.faq summary:focus-visible { outline: 3px solid #0F766E; outline-offset: 2px; }
+.faq p { padding: 0 16px 14px; margin: 0; color: #4B5B6B; }
+/* Answer + note boxes (how-it-works answers, important notes). */
+.answer-box { background: #EBF3EF; border: 1px solid #B7D6CC; border-radius: 12px; padding: 16px 18px; margin: 16px 0; }
+.answer-box p { margin: 0; color: #14202B; }
+.note-box { background: #F6F5F0; border: 1px solid #E2DED5; border-radius: 12px; padding: 16px 18px; margin: 16px 0; }
+.note-box p { margin: 0; color: #465F65; }
+/* Numbered steps (formula derivations). Overrides site.css's
+   three-column homepage .steps grid inside calculator content. */
+.content .steps, .article-main .steps { display: block; list-style: none; counter-reset: calc-step; padding: 0; margin: 16px 0; }
+.content .steps li, .article-main .steps li { counter-increment: calc-step; position: relative; padding-left: 40px; margin: 12px 0; color: #14202B; }
+.content .steps li::before, .article-main .steps li::before { content: counter(calc-step); position: absolute; left: 0; top: 0; width: 28px; height: 28px; border-radius: 50%; background: #0F766E; color: #fff; font-weight: 700; font-size: .85rem; display: grid; place-items: center; }
+/* Content tables: one treatment for worked examples, schedules
+   and comparisons. */
+.content table { width: 100%; border-collapse: collapse; font-size: .92rem; margin: 14px 0; }
+.content th, .content td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #E5E2DB; vertical-align: top; }
+.content th { font-size: .78rem; text-transform: uppercase; letter-spacing: .06em; color: #4B5B6B; }
+.content td:last-child, .content th:last-child { text-align: right; font-variant-numeric: tabular-nums; }
+.content td:first-child, .content th:first-child { text-align: left; }
+/* Tables inside the dark results panel (ROI year table). */
+.result table { width: 100%; border-collapse: collapse; font-size: .86rem; margin-top: 16px; }
+.result th, .result td { text-align: right; padding: 9px 10px; border-bottom: 1px solid #254055; color: #fff; font-variant-numeric: tabular-nums; }
+.result th:first-child, .result td:first-child { text-align: left; }
+.result th { font-size: .72rem; text-transform: uppercase; letter-spacing: .06em; color: #9FB3C4; }
+/* Prose links inside calculator content. */
+.content p a, .content li a { color: #0F766E; text-decoration: underline; text-underline-offset: 3px; }
+/* RealtorCRM link below the calculator (light context). */
+.realtoros-link { color: #0F766E; text-decoration: underline; text-underline-offset: 3px; font-weight: 600; }
+/* Related calculator cards. */
+.related-cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-top: 16px; }
+.related-card { display: block; background: #fff; border: 1px solid #E2DED5; border-radius: 14px; padding: 18px; color: inherit; text-decoration: none; }
+.related-card:hover { border-color: #0F766E; transform: translateY(-2px); box-shadow: 0 12px 28px rgba(20, 32, 43, .08); }
+.related-card h3 { font-size: 1rem; margin: 0 0 6px; color: #14202B; }
+.related-card p { font-size: .88rem; line-height: 1.5; color: #4B5B6B; margin: 0; }
+.related-card .open { display: block; margin-top: 10px; color: #0F766E; font-weight: 700; font-size: .85rem; }
+@media (max-width: 760px) { .related-cards { grid-template-columns: 1fr; } }
