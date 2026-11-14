@@ -26,6 +26,7 @@ async function top(page) {
         console.log('Review', width, route);
         const response = await page.goto(base + route, { waitUntil: 'load' });
         await page.evaluate(() => document.fonts.ready);
+        await top(page);
         check(route + width + ' HTTP 200', response.status() === 200);
         check(route + width + ' one H1', await page.locator('h1').count() === 1);
         check(route + width + ' canonical', await page.locator('link[rel=canonical]').getAttribute('href') === 'https://everyrealestatecalculator.com/' + route);
@@ -43,6 +44,9 @@ async function top(page) {
         check(route + width + ' valid ARIA references', metrics.missingRefs.length === 0);
         check(route + width + ' centralized display font', metrics.displayFont.includes('Source Serif 4'));
         if (route === 'resources/') {
+          check(width + ' no hub eyebrow', await page.locator('.res-intro .eyebrow').count() === 0);
+          check(width + ' card badges retained', await page.locator('.article-card .chip').count() === 2);
+          check(width + ' card reading times retained', await page.locator('.article-card .read-time').count() === 2);
           check(width + ' card grid columns', metrics.gridColumns === (width >= 1024 ? 3 : width >= 640 ? 2 : 1));
           check(width + ' exactly two guides', metrics.cards.length === 2);
           check(width + ' all ten directory links', await page.locator('.dir-links a').count() === 10);
@@ -71,6 +75,10 @@ async function top(page) {
           check(width + ' keyboard opens article', page.url() === base + pages[1]);
           await page.goto(base + route, { waitUntil: 'load' });
         } else {
+          check(route + width + ' no article breadcrumb or header metadata', await page.locator('main .breadcrumbs, main .article-meta, main .article-readtime, main .chip').count() === 0);
+          check(route + width + ' article starts with heading', await page.locator('.article').evaluate(e => e.firstElementChild.tagName === 'H1'));
+          const headerBottom = await page.locator('header').evaluate(e => e.getBoundingClientRect().bottom);
+          check(route + width + ' balanced shared top spacing', Math.abs(metrics.h1.y - headerBottom - 32) < 1);
           check(route + width + ' reading column fits', metrics.article.width <= 816 && metrics.article.x >= 0);
           const toc = page.locator('.article-toc a');
           for (let i = 0; i < await toc.count(); i++) {

@@ -2,7 +2,7 @@
 // Locks the CaptionX-style Resources hub and the standalone guide articles:
 // exactly two real guide cards (no invented dates), the legacy hub anchors
 // still resolve, both articles exist with correct canonicals and matching
-// reading times, the calculator directory is intact, and the shared
+// card metadata, the calculator directory is intact, and the shared
 // stylesheet lives in assets/. Dependency-free. Run: node website/tests/w9-resources.cjs
 const fs = require('node:fs'), path = require('node:path'), assert = require('node:assert/strict');
 const root = path.resolve(__dirname, '..');
@@ -52,7 +52,7 @@ for (const [name, page, slug, title] of [
   check(`${name} H1 text`, page.includes(`<h1>${title}</h1>`));
   check(`${name} canonical`, page.includes(`rel="canonical" href="https://everyrealestatecalculator.com/resources/${slug}/"`));
   check(`${name} shared stylesheet`, page.includes('href="../../assets/resources.css"'));
-  check(`${name} breadcrumbs`, page.includes('aria-label="Breadcrumb"') && page.includes('href="../">Resources</a>'));
+  check(`${name} no article breadcrumbs or metadata row`, !/class="(?:breadcrumbs|article-meta|article-readtime|chip)"/.test(page));
   check(`${name} no inline scripts`, !/<script(?![^>]*\bsrc=)/i.test(page));
   check(`${name} no inline handlers`, !/<[^>]*\son[a-z]+\s*=/i.test(page));
   check(`${name} no invented date`, !/<time[\s>]/.test(page) && !page.includes('Last updated'));
@@ -70,11 +70,11 @@ for (const title of ['Understanding Mortgage Payments', 'Understanding Real Esta
   check(title + ' card link has a distinct accessible name', hub.includes('aria-label="Read article: ' + title + '"'));
 }
 
-// Reading times agree between each hub card and its article page.
-for (const [name, page, id] of [['mortgage', mortgage, 'mortgage-guide'], ['commission', commission, 'commission-guide']]) {
-  const card = hub.match(new RegExp(`<article class="article-card" id="${id}">[\\s\\S]*?</article>`))[0];
-  const cardMin = card.match(/(\d+) min read/)[1], pageMin = page.match(/(\d+) min read/)[1];
-  equal(`${name} reading time consistent`, cardMin, pageMin);
+// Card metadata remains part of the directory; article headers start at H1.
+for (const [id, category, minutes] of [['mortgage-guide', 'Mortgage', '3'], ['commission-guide', 'For agents', '2']]) {
+  const card = hub.match(new RegExp('<article class="article-card" id="' + id + '">[\\s\\S]*?</article>'))[0];
+  check(id + ' card badge unchanged', card.includes('<span class="chip">' + category + '</span>'));
+  check(id + ' card reading time unchanged', card.includes('<span class="read-time">' + minutes + ' min read</span>'));
 }
 
 // Sitemap carries both articles; 18 URLs in total.

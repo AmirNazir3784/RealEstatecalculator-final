@@ -56,8 +56,7 @@
   gap: 10px;
   margin-bottom: 14px;
 }
-.resources-page .chip,
-.article-page .chip {
+.resources-page .chip {
   display: inline-block;
   background: var(--mist);
   color: var(--teal-dark);
@@ -176,26 +175,8 @@
 .article-page .article-col { width: min(calc(100% - 48px), 816px); margin-inline: auto; }
 .article-page main [id] { scroll-margin-top: 110px; }
 
-.article-page .breadcrumbs {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 8px;
-  align-items: center;
-  font-size: 13px;
-  color: var(--muted);
-  padding-top: 26px;
-}
-.article-page .breadcrumbs a { color: var(--muted); text-decoration: none; }
-.article-page .breadcrumbs a:hover { color: var(--teal); text-decoration: underline; text-underline-offset: 3px; }
-.article-page .breadcrumbs [aria-current] { color: var(--navy); font-weight: 600; }
+.article-page .article { padding-top: 32px; }
 
-.article-page .article-meta {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  margin: 20px 0 14px;
-}
-.article-page .article-readtime { font-size: 12.5px; color: var(--muted); }
 .article-page .article h1 {
   font-family:var(--font-display);
   font-size: clamp(32px, 4.5vw, 40px);
