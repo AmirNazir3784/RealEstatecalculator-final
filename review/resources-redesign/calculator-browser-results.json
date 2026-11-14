@@ -1,0 +1,2969 @@
+{
+  "assertions": 635,
+  "problems": [],
+  "errors": [],
+  "outputChecks": [
+    {
+      "slug": "mortgage-calculator",
+      "before": "$2,572.62",
+      "after": "$2,572.62",
+      "expected": "$2,572.62"
+    },
+    {
+      "slug": "commission-calculator",
+      "before": "$13,500.00",
+      "after": "$13,500.00",
+      "expected": "$13,500.00"
+    },
+    {
+      "slug": "home-affordability-calculator",
+      "before": "$330,118.43",
+      "after": "$330,118.43",
+      "expected": "$330,118.43"
+    },
+    {
+      "slug": "rent-vs-buy-calculator",
+      "before": "Renting wins for your 7-year stay",
+      "after": "Renting wins for your 7-year stay",
+      "expected": "Renting wins for your 7-year stay"
+    },
+    {
+      "slug": "cap-rate-calculator",
+      "before": "4.45%",
+      "after": "4.45%",
+      "expected": "4.45%"
+    },
+    {
+      "slug": "bridge-loan-calculator",
+      "before": "$160,000.00",
+      "after": "$160,000.00",
+      "expected": "$160,000.00"
+    },
+    {
+      "slug": "property-investment-calculator",
+      "before": "$177.00",
+      "after": "$177.00",
+      "expected": "$177.00"
+    },
+    {
+      "slug": "capital-gains-tax-calculator",
+      "before": "$551,346.00",
+      "after": "$551,346.00",
+      "expected": "$551,346.00"
+    },
+    {
+      "slug": "roi-calculator",
+      "before": "201.58%",
+      "after": "201.58%",
+      "expected": "201.58%"
+    },
+    {
+      "slug": "noi-calculator",
+      "before": "$15,573.60",
+      "after": "$15,573.60",
+      "expected": "$15,573.60"
+    }
+  ],
+  "measurements": [
+    {
+      "slug": "mortgage-calculator",
+      "viewport": 1440,
+      "overflow": false,
+      "inputPanel": {
+        "x": 120,
+        "y": 245.984375,
+        "width": 735,
+        "height": 897.96875,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(11, 31, 51)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "resultPanel": {
+        "x": 879,
+        "y": 245.984375,
+        "width": 441,
+        "height": 957.34375,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgb(15, 34, 48)"
+      },
+      "input": {
+        "x": 167.578125,
+        "y": 427.875,
+        "width": 310.921875,
+        "height": 51.59375,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "h1": {
+        "x": 120,
+        "y": 108,
+        "width": 1200,
+        "height": 52.796875,
+        "font": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "44px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "result": {
+        "x": 903,
+        "y": 299.171875,
+        "width": 393,
+        "height": 50.390625,
+        "font": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "42px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "duplicateParagraphs": [],
+      "visibleInputs": 8,
+      "bodyWords": 1432
+    },
+    {
+      "slug": "mortgage-calculator",
+      "viewport": 1024,
+      "overflow": false,
+      "inputPanel": {
+        "x": 24,
+        "y": 226.953125,
+        "width": 595,
+        "height": 918.96875,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(11, 31, 51)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "resultPanel": {
+        "x": 643,
+        "y": 226.953125,
+        "width": 357,
+        "height": 989.75,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgb(15, 34, 48)"
+      },
+      "input": {
+        "x": 71.578125,
+        "y": 408.84375,
+        "width": 240.921875,
+        "height": 51.59375,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "h1": {
+        "x": 24,
+        "y": 100,
+        "width": 976,
+        "height": 41.765625,
+        "font": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "34.816px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "result": {
+        "x": 667,
+        "y": 280.140625,
+        "width": 309,
+        "height": 40.796875,
+        "font": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "34px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "duplicateParagraphs": [],
+      "visibleInputs": 8,
+      "bodyWords": 1432
+    },
+    {
+      "slug": "mortgage-calculator",
+      "viewport": 768,
+      "overflow": false,
+      "inputPanel": {
+        "x": 24,
+        "y": 223.578125,
+        "width": 720,
+        "height": 889.96875,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(11, 31, 51)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "resultPanel": {
+        "x": 24,
+        "y": 1137.546875,
+        "width": 720,
+        "height": 889.0625,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgb(15, 34, 48)"
+      },
+      "input": {
+        "x": 67.578125,
+        "y": 401.46875,
+        "width": 307.421875,
+        "height": 51.59375,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "h1": {
+        "x": 24,
+        "y": 100,
+        "width": 720,
+        "height": 38.390625,
+        "font": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "32px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "result": {
+        "x": 44,
+        "y": 1186.734375,
+        "width": 680,
+        "height": 40.796875,
+        "font": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "34px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "duplicateParagraphs": [],
+      "visibleInputs": 8,
+      "bodyWords": 1432
+    },
+    {
+      "slug": "mortgage-calculator",
+      "viewport": 390,
+      "overflow": false,
+      "inputPanel": {
+        "x": 16,
+        "y": 356.828125,
+        "width": 358,
+        "height": 1402.734375,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(11, 31, 51)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "resultPanel": {
+        "x": 16,
+        "y": 1783.5625,
+        "width": 358,
+        "height": 1008.796875,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgb(15, 34, 48)"
+      },
+      "input": {
+        "x": 55.578125,
+        "y": 553.109375,
+        "width": 300.421875,
+        "height": 51.59375,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "h1": {
+        "x": 16,
+        "y": 169.265625,
+        "width": 358,
+        "height": 76.78125,
+        "font": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "32px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "result": {
+        "x": 32,
+        "y": 1828.75,
+        "width": 326,
+        "height": 40.796875,
+        "font": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "34px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "duplicateParagraphs": [],
+      "visibleInputs": 8,
+      "bodyWords": 1436
+    },
+    {
+      "slug": "mortgage-calculator",
+      "viewport": 375,
+      "overflow": false,
+      "inputPanel": {
+        "x": 16,
+        "y": 356.828125,
+        "width": 343,
+        "height": 1402.734375,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(11, 31, 51)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "resultPanel": {
+        "x": 16,
+        "y": 1783.5625,
+        "width": 343,
+        "height": 1008.796875,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgb(15, 34, 48)"
+      },
+      "input": {
+        "x": 55.578125,
+        "y": 553.109375,
+        "width": 285.421875,
+        "height": 51.59375,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "h1": {
+        "x": 16,
+        "y": 169.265625,
+        "width": 343,
+        "height": 76.78125,
+        "font": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "32px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "result": {
+        "x": 32,
+        "y": 1828.75,
+        "width": 311,
+        "height": 40.796875,
+        "font": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "34px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "duplicateParagraphs": [],
+      "visibleInputs": 8,
+      "bodyWords": 1436
+    },
+    {
+      "slug": "commission-calculator",
+      "viewport": 1440,
+      "overflow": false,
+      "inputPanel": {
+        "x": 120,
+        "y": 325.984375,
+        "width": 735,
+        "height": 350.359375,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(11, 31, 51)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "resultPanel": {
+        "x": 879,
+        "y": 325.984375,
+        "width": 441,
+        "height": 459.625,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgb(15, 34, 48)"
+      },
+      "input": {
+        "x": 167.578125,
+        "y": 458.5625,
+        "width": 310.921875,
+        "height": 51.59375,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "h1": {
+        "x": 120,
+        "y": 108,
+        "width": 1200,
+        "height": 52.796875,
+        "font": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "44px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "result": {
+        "x": 903,
+        "y": 379.171875,
+        "width": 393,
+        "height": 50.390625,
+        "font": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "42px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "duplicateParagraphs": [],
+      "visibleInputs": 2,
+      "bodyWords": 1109
+    },
+    {
+      "slug": "commission-calculator",
+      "viewport": 1024,
+      "overflow": false,
+      "inputPanel": {
+        "x": 24,
+        "y": 306.953125,
+        "width": 595,
+        "height": 368.359375,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(11, 31, 51)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "resultPanel": {
+        "x": 643,
+        "y": 306.953125,
+        "width": 357,
+        "height": 450.03125,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgb(15, 34, 48)"
+      },
+      "input": {
+        "x": 71.578125,
+        "y": 439.53125,
+        "width": 240.921875,
+        "height": 51.59375,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "h1": {
+        "x": 24,
+        "y": 100,
+        "width": 976,
+        "height": 41.765625,
+        "font": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "34.816px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "result": {
+        "x": 667,
+        "y": 360.140625,
+        "width": 309,
+        "height": 40.796875,
+        "font": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "34px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "duplicateParagraphs": [],
+      "visibleInputs": 2,
+      "bodyWords": 1109
+    },
+    {
+      "slug": "commission-calculator",
+      "viewport": 768,
+      "overflow": false,
+      "inputPanel": {
+        "x": 24,
+        "y": 303.578125,
+        "width": 720,
+        "height": 342.359375,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(11, 31, 51)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "resultPanel": {
+        "x": 24,
+        "y": 669.9375,
+        "width": 720,
+        "height": 420.59375,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgb(15, 34, 48)"
+      },
+      "input": {
+        "x": 67.578125,
+        "y": 432.15625,
+        "width": 307.421875,
+        "height": 51.59375,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "h1": {
+        "x": 24,
+        "y": 100,
+        "width": 720,
+        "height": 38.390625,
+        "font": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "32px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "result": {
+        "x": 44,
+        "y": 719.125,
+        "width": 680,
+        "height": 40.796875,
+        "font": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "34px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "duplicateParagraphs": [],
+      "visibleInputs": 2,
+      "bodyWords": 1109
+    },
+    {
+      "slug": "commission-calculator",
+      "viewport": 390,
+      "overflow": false,
+      "inputPanel": {
+        "x": 16,
+        "y": 472.796875,
+        "width": 358,
+        "height": 507.34375,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(11, 31, 51)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "resultPanel": {
+        "x": 16,
+        "y": 1004.140625,
+        "width": 358,
+        "height": 434.03125,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgb(15, 34, 48)"
+      },
+      "input": {
+        "x": 55.578125,
+        "y": 619.765625,
+        "width": 300.421875,
+        "height": 51.59375,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "h1": {
+        "x": 16,
+        "y": 169.265625,
+        "width": 358,
+        "height": 76.78125,
+        "font": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "32px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "result": {
+        "x": 32,
+        "y": 1049.328125,
+        "width": 326,
+        "height": 40.796875,
+        "font": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "34px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "duplicateParagraphs": [],
+      "visibleInputs": 2,
+      "bodyWords": 1112
+    },
+    {
+      "slug": "commission-calculator",
+      "viewport": 375,
+      "overflow": false,
+      "inputPanel": {
+        "x": 16,
+        "y": 472.796875,
+        "width": 343,
+        "height": 507.34375,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(11, 31, 51)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "resultPanel": {
+        "x": 16,
+        "y": 1004.140625,
+        "width": 343,
+        "height": 434.03125,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgb(15, 34, 48)"
+      },
+      "input": {
+        "x": 55.578125,
+        "y": 619.765625,
+        "width": 285.421875,
+        "height": 51.59375,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "h1": {
+        "x": 16,
+        "y": 169.265625,
+        "width": 343,
+        "height": 76.78125,
+        "font": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "32px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "result": {
+        "x": 32,
+        "y": 1049.328125,
+        "width": 311,
+        "height": 40.796875,
+        "font": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "34px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "duplicateParagraphs": [],
+      "visibleInputs": 2,
+      "bodyWords": 1112
+    },
+    {
+      "slug": "home-affordability-calculator",
+      "viewport": 1440,
+      "overflow": false,
+      "inputPanel": {
+        "x": 120,
+        "y": 245.984375,
+        "width": 735,
+        "height": 1287.875,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(11, 31, 51)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "resultPanel": {
+        "x": 879,
+        "y": 245.984375,
+        "width": 441,
+        "height": 603.609375,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgb(15, 34, 48)"
+      },
+      "input": {
+        "x": 167.578125,
+        "y": 427.875,
+        "width": 236.171875,
+        "height": 51.59375,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "h1": {
+        "x": 120,
+        "y": 108,
+        "width": 1200,
+        "height": 52.796875,
+        "font": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "44px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "result": {
+        "x": 903,
+        "y": 299.171875,
+        "width": 393,
+        "height": 50.390625,
+        "font": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "42px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "duplicateParagraphs": [],
+      "visibleInputs": 12,
+      "bodyWords": 1166
+    },
+    {
+      "slug": "home-affordability-calculator",
+      "viewport": 1024,
+      "overflow": false,
+      "inputPanel": {
+        "x": 24,
+        "y": 226.953125,
+        "width": 595,
+        "height": 1357.515625,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(11, 31, 51)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "resultPanel": {
+        "x": 643,
+        "y": 226.953125,
+        "width": 357,
+        "height": 594.015625,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgb(15, 34, 48)"
+      },
+      "input": {
+        "x": 71.578125,
+        "y": 429.84375,
+        "width": 166.171875,
+        "height": 51.59375,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "h1": {
+        "x": 24,
+        "y": 100,
+        "width": 976,
+        "height": 41.765625,
+        "font": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "34.816px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "result": {
+        "x": 667,
+        "y": 280.140625,
+        "width": 309,
+        "height": 40.796875,
+        "font": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "34px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "duplicateParagraphs": [],
+      "visibleInputs": 12,
+      "bodyWords": 1166
+    },
+    {
+      "slug": "home-affordability-calculator",
+      "viewport": 768,
+      "overflow": false,
+      "inputPanel": {
+        "x": 24,
+        "y": 223.578125,
+        "width": 720,
+        "height": 1279.875,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(11, 31, 51)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "resultPanel": {
+        "x": 24,
+        "y": 1527.453125,
+        "width": 720,
+        "height": 539.921875,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgb(15, 34, 48)"
+      },
+      "input": {
+        "x": 67.578125,
+        "y": 401.46875,
+        "width": 232.671875,
+        "height": 51.59375,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "h1": {
+        "x": 24,
+        "y": 100,
+        "width": 720,
+        "height": 38.390625,
+        "font": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "32px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "result": {
+        "x": 44,
+        "y": 1576.640625,
+        "width": 680,
+        "height": 40.796875,
+        "font": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "34px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "duplicateParagraphs": [],
+      "visibleInputs": 12,
+      "bodyWords": 1166
+    },
+    {
+      "slug": "home-affordability-calculator",
+      "viewport": 390,
+      "overflow": false,
+      "inputPanel": {
+        "x": 16,
+        "y": 408.015625,
+        "width": 358,
+        "height": 2037.546875,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(11, 31, 51)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "resultPanel": {
+        "x": 16,
+        "y": 2469.5625,
+        "width": 358,
+        "height": 590.015625,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgb(15, 34, 48)"
+      },
+      "input": {
+        "x": 55.578125,
+        "y": 604.296875,
+        "width": 225.671875,
+        "height": 51.59375,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "h1": {
+        "x": 16,
+        "y": 169.265625,
+        "width": 358,
+        "height": 76.78125,
+        "font": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "32px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "result": {
+        "x": 32,
+        "y": 2514.75,
+        "width": 326,
+        "height": 40.796875,
+        "font": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "34px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "duplicateParagraphs": [],
+      "visibleInputs": 12,
+      "bodyWords": 1169
+    },
+    {
+      "slug": "home-affordability-calculator",
+      "viewport": 375,
+      "overflow": false,
+      "inputPanel": {
+        "x": 16,
+        "y": 408.015625,
+        "width": 343,
+        "height": 2086.1875,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(11, 31, 51)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "resultPanel": {
+        "x": 16,
+        "y": 2518.203125,
+        "width": 343,
+        "height": 590.015625,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgb(15, 34, 48)"
+      },
+      "input": {
+        "x": 55.578125,
+        "y": 625.296875,
+        "width": 210.671875,
+        "height": 51.59375,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "h1": {
+        "x": 16,
+        "y": 169.265625,
+        "width": 343,
+        "height": 76.78125,
+        "font": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "32px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "result": {
+        "x": 32,
+        "y": 2563.390625,
+        "width": 311,
+        "height": 40.796875,
+        "font": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "34px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "duplicateParagraphs": [],
+      "visibleInputs": 12,
+      "bodyWords": 1169
+    },
+    {
+      "slug": "rent-vs-buy-calculator",
+      "viewport": 1440,
+      "overflow": false,
+      "inputPanel": {
+        "x": 120,
+        "y": 245.984375,
+        "width": 735,
+        "height": 1013.21875,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(11, 31, 51)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "resultPanel": {
+        "x": 879,
+        "y": 245.984375,
+        "width": 441,
+        "height": 889.78125,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgb(15, 34, 48)"
+      },
+      "input": {
+        "x": 167.578125,
+        "y": 378.5625,
+        "width": 236.171875,
+        "height": 51.59375,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "h1": {
+        "x": 120,
+        "y": 108,
+        "width": 1200,
+        "height": 52.796875,
+        "font": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "44px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "result": {
+        "x": 922,
+        "y": 286.984375,
+        "width": 355,
+        "height": 26,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "20px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "duplicateParagraphs": [],
+      "visibleInputs": 8,
+      "bodyWords": 930
+    },
+    {
+      "slug": "rent-vs-buy-calculator",
+      "viewport": 1024,
+      "overflow": false,
+      "inputPanel": {
+        "x": 24,
+        "y": 226.953125,
+        "width": 595,
+        "height": 1040.859375,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(11, 31, 51)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "resultPanel": {
+        "x": 643,
+        "y": 226.953125,
+        "width": 357,
+        "height": 943.421875,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgb(15, 34, 48)"
+      },
+      "input": {
+        "x": 71.578125,
+        "y": 359.53125,
+        "width": 166.171875,
+        "height": 51.59375,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "h1": {
+        "x": 24,
+        "y": 100,
+        "width": 976,
+        "height": 41.765625,
+        "font": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "34.816px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "result": {
+        "x": 686,
+        "y": 267.953125,
+        "width": 271,
+        "height": 52,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "20px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "duplicateParagraphs": [],
+      "visibleInputs": 8,
+      "bodyWords": 930
+    },
+    {
+      "slug": "rent-vs-buy-calculator",
+      "viewport": 768,
+      "overflow": false,
+      "inputPanel": {
+        "x": 24,
+        "y": 223.578125,
+        "width": 720,
+        "height": 1005.21875,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(11, 31, 51)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "resultPanel": {
+        "x": 24,
+        "y": 1252.796875,
+        "width": 720,
+        "height": 856.59375,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgb(15, 34, 48)"
+      },
+      "input": {
+        "x": 67.578125,
+        "y": 352.15625,
+        "width": 232.671875,
+        "height": 51.59375,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "h1": {
+        "x": 24,
+        "y": 100,
+        "width": 720,
+        "height": 38.390625,
+        "font": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "32px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "result": {
+        "x": 63,
+        "y": 1289.796875,
+        "width": 642,
+        "height": 26,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "20px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "duplicateParagraphs": [],
+      "visibleInputs": 8,
+      "bodyWords": 930
+    },
+    {
+      "slug": "rent-vs-buy-calculator",
+      "viewport": 390,
+      "overflow": false,
+      "inputPanel": {
+        "x": 16,
+        "y": 344.03125,
+        "width": 358,
+        "height": 1433.859375,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(11, 31, 51)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "resultPanel": {
+        "x": 16,
+        "y": 1801.890625,
+        "width": 358,
+        "height": 927.421875,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgb(15, 34, 48)"
+      },
+      "input": {
+        "x": 55.578125,
+        "y": 491,
+        "width": 225.671875,
+        "height": 51.59375,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "h1": {
+        "x": 16,
+        "y": 169.265625,
+        "width": 358,
+        "height": 38.390625,
+        "font": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "32px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "result": {
+        "x": 51,
+        "y": 1834.890625,
+        "width": 288,
+        "height": 52,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "20px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "duplicateParagraphs": [],
+      "visibleInputs": 8,
+      "bodyWords": 934
+    },
+    {
+      "slug": "rent-vs-buy-calculator",
+      "viewport": 375,
+      "overflow": false,
+      "inputPanel": {
+        "x": 16,
+        "y": 344.03125,
+        "width": 343,
+        "height": 1461.5,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(11, 31, 51)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "resultPanel": {
+        "x": 16,
+        "y": 1829.53125,
+        "width": 343,
+        "height": 927.421875,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgb(15, 34, 48)"
+      },
+      "input": {
+        "x": 55.578125,
+        "y": 491,
+        "width": 210.671875,
+        "height": 51.59375,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "h1": {
+        "x": 16,
+        "y": 169.265625,
+        "width": 343,
+        "height": 38.390625,
+        "font": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "32px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "result": {
+        "x": 51,
+        "y": 1862.53125,
+        "width": 273,
+        "height": 52,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "20px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "duplicateParagraphs": [],
+      "visibleInputs": 8,
+      "bodyWords": 934
+    },
+    {
+      "slug": "cap-rate-calculator",
+      "viewport": 1440,
+      "overflow": false,
+      "inputPanel": {
+        "x": 120,
+        "y": 245.984375,
+        "width": 735,
+        "height": 948.078125,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(11, 31, 51)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "resultPanel": {
+        "x": 879,
+        "y": 245.984375,
+        "width": 441,
+        "height": 822.6875,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgb(15, 34, 48)"
+      },
+      "input": {
+        "x": 167.578125,
+        "y": 427.875,
+        "width": 310.921875,
+        "height": 51.59375,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "h1": {
+        "x": 120,
+        "y": 108,
+        "width": 1200,
+        "height": 52.796875,
+        "font": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "44px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "result": {
+        "x": 903,
+        "y": 299.171875,
+        "width": 393,
+        "height": 50.390625,
+        "font": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "42px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "duplicateParagraphs": [],
+      "visibleInputs": 10,
+      "bodyWords": 1117
+    },
+    {
+      "slug": "cap-rate-calculator",
+      "viewport": 1024,
+      "overflow": false,
+      "inputPanel": {
+        "x": 24,
+        "y": 226.953125,
+        "width": 595,
+        "height": 969.078125,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(11, 31, 51)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "resultPanel": {
+        "x": 643,
+        "y": 226.953125,
+        "width": 357,
+        "height": 909.109375,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgb(15, 34, 48)"
+      },
+      "input": {
+        "x": 71.578125,
+        "y": 408.84375,
+        "width": 240.921875,
+        "height": 51.59375,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "h1": {
+        "x": 24,
+        "y": 100,
+        "width": 976,
+        "height": 41.765625,
+        "font": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "34.816px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "result": {
+        "x": 667,
+        "y": 280.140625,
+        "width": 309,
+        "height": 40.796875,
+        "font": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "34px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "duplicateParagraphs": [],
+      "visibleInputs": 10,
+      "bodyWords": 1117
+    },
+    {
+      "slug": "cap-rate-calculator",
+      "viewport": 768,
+      "overflow": false,
+      "inputPanel": {
+        "x": 24,
+        "y": 249.171875,
+        "width": 720,
+        "height": 940.078125,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(11, 31, 51)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "resultPanel": {
+        "x": 24,
+        "y": 1213.25,
+        "width": 720,
+        "height": 759.859375,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgb(15, 34, 48)"
+      },
+      "input": {
+        "x": 67.578125,
+        "y": 427.0625,
+        "width": 307.421875,
+        "height": 51.59375,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "h1": {
+        "x": 24,
+        "y": 100,
+        "width": 720,
+        "height": 38.390625,
+        "font": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "32px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "result": {
+        "x": 44,
+        "y": 1262.4375,
+        "width": 680,
+        "height": 40.796875,
+        "font": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "34px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "duplicateParagraphs": [],
+      "visibleInputs": 10,
+      "bodyWords": 1117
+    },
+    {
+      "slug": "cap-rate-calculator",
+      "viewport": 390,
+      "overflow": false,
+      "inputPanel": {
+        "x": 16,
+        "y": 369.625,
+        "width": 358,
+        "height": 1375.84375,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(11, 31, 51)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "resultPanel": {
+        "x": 16,
+        "y": 1769.46875,
+        "width": 358,
+        "height": 944.703125,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgb(15, 34, 48)"
+      },
+      "input": {
+        "x": 55.578125,
+        "y": 565.90625,
+        "width": 300.421875,
+        "height": 51.59375,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "h1": {
+        "x": 16,
+        "y": 169.265625,
+        "width": 358,
+        "height": 38.390625,
+        "font": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "32px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "result": {
+        "x": 32,
+        "y": 1814.65625,
+        "width": 326,
+        "height": 40.796875,
+        "font": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "34px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "duplicateParagraphs": [],
+      "visibleInputs": 10,
+      "bodyWords": 1120
+    },
+    {
+      "slug": "cap-rate-calculator",
+      "viewport": 375,
+      "overflow": false,
+      "inputPanel": {
+        "x": 16,
+        "y": 369.625,
+        "width": 343,
+        "height": 1375.84375,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(11, 31, 51)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "resultPanel": {
+        "x": 16,
+        "y": 1769.46875,
+        "width": 343,
+        "height": 944.703125,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgb(15, 34, 48)"
+      },
+      "input": {
+        "x": 55.578125,
+        "y": 565.90625,
+        "width": 285.421875,
+        "height": 51.59375,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "h1": {
+        "x": 16,
+        "y": 169.265625,
+        "width": 343,
+        "height": 38.390625,
+        "font": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "32px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "result": {
+        "x": 32,
+        "y": 1814.65625,
+        "width": 311,
+        "height": 40.796875,
+        "font": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "34px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "duplicateParagraphs": [],
+      "visibleInputs": 10,
+      "bodyWords": 1120
+    },
+    {
+      "slug": "bridge-loan-calculator",
+      "viewport": 1440,
+      "overflow": false,
+      "inputPanel": {
+        "x": 120,
+        "y": 271.578125,
+        "width": 735,
+        "height": 931.875,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(11, 31, 51)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "resultPanel": {
+        "x": 879,
+        "y": 271.578125,
+        "width": 441,
+        "height": 1182.71875,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgb(15, 34, 48)"
+      },
+      "input": {
+        "x": 167.578125,
+        "y": 404.15625,
+        "width": 310.921875,
+        "height": 51.59375,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "h1": {
+        "x": 120,
+        "y": 108,
+        "width": 1200,
+        "height": 52.796875,
+        "font": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "44px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "result": {
+        "x": 903,
+        "y": 324.765625,
+        "width": 393,
+        "height": 50.390625,
+        "font": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "42px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "duplicateParagraphs": [],
+      "visibleInputs": 7,
+      "bodyWords": 1129
+    },
+    {
+      "slug": "bridge-loan-calculator",
+      "viewport": 1024,
+      "overflow": false,
+      "inputPanel": {
+        "x": 24,
+        "y": 252.546875,
+        "width": 595,
+        "height": 959.515625,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(11, 31, 51)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "resultPanel": {
+        "x": 643,
+        "y": 252.546875,
+        "width": 357,
+        "height": 1197.4375,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgb(15, 34, 48)"
+      },
+      "input": {
+        "x": 71.578125,
+        "y": 385.125,
+        "width": 240.921875,
+        "height": 51.59375,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "h1": {
+        "x": 24,
+        "y": 100,
+        "width": 976,
+        "height": 41.765625,
+        "font": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "34.816px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "result": {
+        "x": 667,
+        "y": 305.734375,
+        "width": 309,
+        "height": 40.796875,
+        "font": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "34px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "duplicateParagraphs": [],
+      "visibleInputs": 7,
+      "bodyWords": 1129
+    },
+    {
+      "slug": "bridge-loan-calculator",
+      "viewport": 768,
+      "overflow": false,
+      "inputPanel": {
+        "x": 24,
+        "y": 249.171875,
+        "width": 720,
+        "height": 923.875,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(11, 31, 51)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "resultPanel": {
+        "x": 24,
+        "y": 1197.046875,
+        "width": 720,
+        "height": 1116.890625,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgb(15, 34, 48)"
+      },
+      "input": {
+        "x": 67.578125,
+        "y": 377.75,
+        "width": 307.421875,
+        "height": 51.59375,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "h1": {
+        "x": 24,
+        "y": 100,
+        "width": 720,
+        "height": 38.390625,
+        "font": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "32px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "result": {
+        "x": 44,
+        "y": 1246.234375,
+        "width": 680,
+        "height": 40.796875,
+        "font": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "34px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "duplicateParagraphs": [],
+      "visibleInputs": 7,
+      "bodyWords": 1129
+    },
+    {
+      "slug": "bridge-loan-calculator",
+      "viewport": 390,
+      "overflow": false,
+      "inputPanel": {
+        "x": 16,
+        "y": 369.625,
+        "width": 358,
+        "height": 1484.96875,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(11, 31, 51)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "resultPanel": {
+        "x": 16,
+        "y": 1878.59375,
+        "width": 358,
+        "height": 1163.125,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgb(15, 34, 48)"
+      },
+      "input": {
+        "x": 55.578125,
+        "y": 516.59375,
+        "width": 300.421875,
+        "height": 51.59375,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "h1": {
+        "x": 16,
+        "y": 169.265625,
+        "width": 358,
+        "height": 38.390625,
+        "font": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "32px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "result": {
+        "x": 32,
+        "y": 1923.78125,
+        "width": 326,
+        "height": 40.796875,
+        "font": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "34px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "duplicateParagraphs": [],
+      "visibleInputs": 7,
+      "bodyWords": 1133
+    },
+    {
+      "slug": "bridge-loan-calculator",
+      "viewport": 375,
+      "overflow": false,
+      "inputPanel": {
+        "x": 16,
+        "y": 369.625,
+        "width": 343,
+        "height": 1484.96875,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(11, 31, 51)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "resultPanel": {
+        "x": 16,
+        "y": 1878.59375,
+        "width": 343,
+        "height": 1187.4375,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgb(15, 34, 48)"
+      },
+      "input": {
+        "x": 55.578125,
+        "y": 516.59375,
+        "width": 285.421875,
+        "height": 51.59375,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "h1": {
+        "x": 16,
+        "y": 169.265625,
+        "width": 343,
+        "height": 38.390625,
+        "font": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "32px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "result": {
+        "x": 32,
+        "y": 1923.78125,
+        "width": 311,
+        "height": 40.796875,
+        "font": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "34px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "duplicateParagraphs": [],
+      "visibleInputs": 7,
+      "bodyWords": 1133
+    },
+    {
+      "slug": "property-investment-calculator",
+      "viewport": 1440,
+      "overflow": false,
+      "inputPanel": {
+        "x": 120,
+        "y": 245.984375,
+        "width": 735,
+        "height": 1335.421875,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(11, 31, 51)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "resultPanel": {
+        "x": 879,
+        "y": 245.984375,
+        "width": 441,
+        "height": 796.234375,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgb(15, 34, 48)"
+      },
+      "input": {
+        "x": 167.578125,
+        "y": 427.875,
+        "width": 310.921875,
+        "height": 51.59375,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "h1": {
+        "x": 120,
+        "y": 108,
+        "width": 1200,
+        "height": 52.796875,
+        "font": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "44px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "result": {
+        "x": 903,
+        "y": 299.171875,
+        "width": 393,
+        "height": 50.390625,
+        "font": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "42px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "duplicateParagraphs": [],
+      "visibleInputs": 14,
+      "bodyWords": 1123
+    },
+    {
+      "slug": "property-investment-calculator",
+      "viewport": 1024,
+      "overflow": false,
+      "inputPanel": {
+        "x": 24,
+        "y": 226.953125,
+        "width": 595,
+        "height": 1335.421875,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(11, 31, 51)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "resultPanel": {
+        "x": 643,
+        "y": 226.953125,
+        "width": 357,
+        "height": 901.609375,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgb(15, 34, 48)"
+      },
+      "input": {
+        "x": 71.578125,
+        "y": 408.84375,
+        "width": 240.921875,
+        "height": 51.59375,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "h1": {
+        "x": 24,
+        "y": 100,
+        "width": 976,
+        "height": 41.765625,
+        "font": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "34.816px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "result": {
+        "x": 667,
+        "y": 280.140625,
+        "width": 309,
+        "height": 40.796875,
+        "font": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "34px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "duplicateParagraphs": [],
+      "visibleInputs": 14,
+      "bodyWords": 1123
+    },
+    {
+      "slug": "property-investment-calculator",
+      "viewport": 768,
+      "overflow": false,
+      "inputPanel": {
+        "x": 24,
+        "y": 223.578125,
+        "width": 720,
+        "height": 1327.421875,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(11, 31, 51)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "resultPanel": {
+        "x": 24,
+        "y": 1575,
+        "width": 720,
+        "height": 717.53125,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgb(15, 34, 48)"
+      },
+      "input": {
+        "x": 67.578125,
+        "y": 401.46875,
+        "width": 307.421875,
+        "height": 51.59375,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "h1": {
+        "x": 24,
+        "y": 100,
+        "width": 720,
+        "height": 38.390625,
+        "font": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "32px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "result": {
+        "x": 44,
+        "y": 1624.1875,
+        "width": 680,
+        "height": 40.796875,
+        "font": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "34px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "duplicateParagraphs": [],
+      "visibleInputs": 14,
+      "bodyWords": 1123
+    },
+    {
+      "slug": "property-investment-calculator",
+      "viewport": 390,
+      "overflow": false,
+      "inputPanel": {
+        "x": 16,
+        "y": 408.015625,
+        "width": 358,
+        "height": 1985.21875,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(11, 31, 51)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "resultPanel": {
+        "x": 16,
+        "y": 2417.234375,
+        "width": 358,
+        "height": 894.015625,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgb(15, 34, 48)"
+      },
+      "input": {
+        "x": 55.578125,
+        "y": 604.296875,
+        "width": 300.421875,
+        "height": 51.59375,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "h1": {
+        "x": 16,
+        "y": 169.265625,
+        "width": 358,
+        "height": 76.78125,
+        "font": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "32px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "result": {
+        "x": 32,
+        "y": 2462.421875,
+        "width": 326,
+        "height": 40.796875,
+        "font": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "34px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "duplicateParagraphs": [],
+      "visibleInputs": 14,
+      "bodyWords": 1127
+    },
+    {
+      "slug": "property-investment-calculator",
+      "viewport": 375,
+      "overflow": false,
+      "inputPanel": {
+        "x": 16,
+        "y": 408.015625,
+        "width": 343,
+        "height": 1985.21875,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(11, 31, 51)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "resultPanel": {
+        "x": 16,
+        "y": 2417.234375,
+        "width": 343,
+        "height": 894.015625,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgb(15, 34, 48)"
+      },
+      "input": {
+        "x": 55.578125,
+        "y": 604.296875,
+        "width": 285.421875,
+        "height": 51.59375,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "h1": {
+        "x": 16,
+        "y": 169.265625,
+        "width": 343,
+        "height": 76.78125,
+        "font": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "32px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "result": {
+        "x": 32,
+        "y": 2462.421875,
+        "width": 311,
+        "height": 40.796875,
+        "font": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "34px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "duplicateParagraphs": [],
+      "visibleInputs": 14,
+      "bodyWords": 1127
+    },
+    {
+      "slug": "capital-gains-tax-calculator",
+      "viewport": 1440,
+      "overflow": false,
+      "inputPanel": {
+        "x": 120,
+        "y": 245.984375,
+        "width": 735,
+        "height": 1037.234375,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(11, 31, 51)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "resultPanel": {
+        "x": 879,
+        "y": 245.984375,
+        "width": 441,
+        "height": 1195.25,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgb(15, 34, 48)"
+      },
+      "input": {
+        "x": 167.578125,
+        "y": 427.875,
+        "width": 310.921875,
+        "height": 51.59375,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "h1": {
+        "x": 120,
+        "y": 108,
+        "width": 1200,
+        "height": 52.796875,
+        "font": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "44px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "result": {
+        "x": 903,
+        "y": 299.171875,
+        "width": 393,
+        "height": 50.390625,
+        "font": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "42px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "duplicateParagraphs": [],
+      "visibleInputs": 4,
+      "bodyWords": 1756
+    },
+    {
+      "slug": "capital-gains-tax-calculator",
+      "viewport": 1024,
+      "overflow": false,
+      "inputPanel": {
+        "x": 24,
+        "y": 226.953125,
+        "width": 595,
+        "height": 1037.234375,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(11, 31, 51)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "resultPanel": {
+        "x": 643,
+        "y": 226.953125,
+        "width": 357,
+        "height": 1347.03125,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgb(15, 34, 48)"
+      },
+      "input": {
+        "x": 71.578125,
+        "y": 408.84375,
+        "width": 240.921875,
+        "height": 51.59375,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "h1": {
+        "x": 24,
+        "y": 100,
+        "width": 976,
+        "height": 41.765625,
+        "font": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "34.816px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "result": {
+        "x": 667,
+        "y": 280.140625,
+        "width": 309,
+        "height": 40.796875,
+        "font": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "34px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "duplicateParagraphs": [],
+      "visibleInputs": 4,
+      "bodyWords": 1756
+    },
+    {
+      "slug": "capital-gains-tax-calculator",
+      "viewport": 768,
+      "overflow": false,
+      "inputPanel": {
+        "x": 24,
+        "y": 249.171875,
+        "width": 720,
+        "height": 1029.234375,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(11, 31, 51)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "resultPanel": {
+        "x": 24,
+        "y": 1302.40625,
+        "width": 720,
+        "height": 1068.65625,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgb(15, 34, 48)"
+      },
+      "input": {
+        "x": 67.578125,
+        "y": 427.0625,
+        "width": 307.421875,
+        "height": 51.59375,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "h1": {
+        "x": 24,
+        "y": 100,
+        "width": 720,
+        "height": 38.390625,
+        "font": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "32px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "result": {
+        "x": 44,
+        "y": 1351.59375,
+        "width": 680,
+        "height": 40.796875,
+        "font": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "34px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "duplicateParagraphs": [],
+      "visibleInputs": 4,
+      "bodyWords": 1756
+    },
+    {
+      "slug": "capital-gains-tax-calculator",
+      "viewport": 390,
+      "overflow": false,
+      "inputPanel": {
+        "x": 16,
+        "y": 408.015625,
+        "width": 358,
+        "height": 1276.8125,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(11, 31, 51)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "resultPanel": {
+        "x": 16,
+        "y": 1708.828125,
+        "width": 358,
+        "height": 1383.03125,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgb(15, 34, 48)"
+      },
+      "input": {
+        "x": 55.578125,
+        "y": 604.296875,
+        "width": 300.421875,
+        "height": 51.59375,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "h1": {
+        "x": 16,
+        "y": 169.265625,
+        "width": 358,
+        "height": 76.78125,
+        "font": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "32px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "result": {
+        "x": 32,
+        "y": 1754.015625,
+        "width": 326,
+        "height": 40.796875,
+        "font": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "34px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "duplicateParagraphs": [],
+      "visibleInputs": 4,
+      "bodyWords": 1752
+    },
+    {
+      "slug": "capital-gains-tax-calculator",
+      "viewport": 375,
+      "overflow": false,
+      "inputPanel": {
+        "x": 16,
+        "y": 408.015625,
+        "width": 343,
+        "height": 1276.8125,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(11, 31, 51)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "resultPanel": {
+        "x": 16,
+        "y": 1708.828125,
+        "width": 343,
+        "height": 1400.625,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgb(15, 34, 48)"
+      },
+      "input": {
+        "x": 55.578125,
+        "y": 604.296875,
+        "width": 285.421875,
+        "height": 51.59375,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "h1": {
+        "x": 16,
+        "y": 169.265625,
+        "width": 343,
+        "height": 76.78125,
+        "font": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "32px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "result": {
+        "x": 32,
+        "y": 1754.015625,
+        "width": 311,
+        "height": 40.796875,
+        "font": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "34px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "duplicateParagraphs": [],
+      "visibleInputs": 4,
+      "bodyWords": 1752
+    },
+    {
+      "slug": "roi-calculator",
+      "viewport": 1440,
+      "overflow": false,
+      "inputPanel": {
+        "x": 120,
+        "y": 245.984375,
+        "width": 735,
+        "height": 1239.703125,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(11, 31, 51)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "resultPanel": {
+        "x": 879,
+        "y": 245.984375,
+        "width": 441,
+        "height": 1944.5625,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgb(15, 34, 48)"
+      },
+      "input": {
+        "x": 167.578125,
+        "y": 378.5625,
+        "width": 310.921875,
+        "height": 51.59375,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "h1": {
+        "x": 120,
+        "y": 108,
+        "width": 1200,
+        "height": 52.796875,
+        "font": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "44px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "result": {
+        "x": 903,
+        "y": 299.171875,
+        "width": 393,
+        "height": 50.390625,
+        "font": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "42px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "duplicateParagraphs": [],
+      "visibleInputs": 11,
+      "bodyWords": 1019
+    },
+    {
+      "slug": "roi-calculator",
+      "viewport": 1024,
+      "overflow": false,
+      "inputPanel": {
+        "x": 24,
+        "y": 226.953125,
+        "width": 595,
+        "height": 1267.34375,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(11, 31, 51)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "resultPanel": {
+        "x": 643,
+        "y": 226.953125,
+        "width": 357,
+        "height": 1999.921875,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgb(15, 34, 48)"
+      },
+      "input": {
+        "x": 71.578125,
+        "y": 359.53125,
+        "width": 240.921875,
+        "height": 51.59375,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "h1": {
+        "x": 24,
+        "y": 100,
+        "width": 976,
+        "height": 41.765625,
+        "font": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "34.816px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "result": {
+        "x": 667,
+        "y": 280.140625,
+        "width": 309,
+        "height": 40.796875,
+        "font": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "34px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "duplicateParagraphs": [],
+      "visibleInputs": 11,
+      "bodyWords": 1019
+    },
+    {
+      "slug": "roi-calculator",
+      "viewport": 768,
+      "overflow": false,
+      "inputPanel": {
+        "x": 24,
+        "y": 223.578125,
+        "width": 720,
+        "height": 1231.703125,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(11, 31, 51)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "resultPanel": {
+        "x": 24,
+        "y": 1479.28125,
+        "width": 720,
+        "height": 1860.3125,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgb(15, 34, 48)"
+      },
+      "input": {
+        "x": 67.578125,
+        "y": 352.15625,
+        "width": 307.421875,
+        "height": 51.59375,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "h1": {
+        "x": 24,
+        "y": 100,
+        "width": 720,
+        "height": 38.390625,
+        "font": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "32px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "result": {
+        "x": 44,
+        "y": 1528.46875,
+        "width": 680,
+        "height": 40.796875,
+        "font": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "34px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "duplicateParagraphs": [],
+      "visibleInputs": 11,
+      "bodyWords": 1019
+    },
+    {
+      "slug": "roi-calculator",
+      "viewport": 390,
+      "overflow": false,
+      "inputPanel": {
+        "x": 16,
+        "y": 344.03125,
+        "width": 358,
+        "height": 2096.015625,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(11, 31, 51)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "resultPanel": {
+        "x": 16,
+        "y": 2464.046875,
+        "width": 358,
+        "height": 1924.96875,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgb(15, 34, 48)"
+      },
+      "input": {
+        "x": 55.578125,
+        "y": 491,
+        "width": 300.421875,
+        "height": 51.59375,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "h1": {
+        "x": 16,
+        "y": 169.265625,
+        "width": 358,
+        "height": 38.390625,
+        "font": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "32px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "result": {
+        "x": 32,
+        "y": 2509.234375,
+        "width": 326,
+        "height": 40.796875,
+        "font": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "34px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "duplicateParagraphs": [],
+      "visibleInputs": 11,
+      "bodyWords": 1022
+    },
+    {
+      "slug": "roi-calculator",
+      "viewport": 375,
+      "overflow": false,
+      "inputPanel": {
+        "x": 16,
+        "y": 344.03125,
+        "width": 343,
+        "height": 2096.015625,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(11, 31, 51)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "resultPanel": {
+        "x": 16,
+        "y": 2464.046875,
+        "width": 343,
+        "height": 1966.875,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgb(15, 34, 48)"
+      },
+      "input": {
+        "x": 55.578125,
+        "y": 491,
+        "width": 285.421875,
+        "height": 51.59375,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "h1": {
+        "x": 16,
+        "y": 169.265625,
+        "width": 343,
+        "height": 38.390625,
+        "font": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "32px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "result": {
+        "x": 32,
+        "y": 2509.234375,
+        "width": 311,
+        "height": 40.796875,
+        "font": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "34px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "duplicateParagraphs": [],
+      "visibleInputs": 11,
+      "bodyWords": 1022
+    },
+    {
+      "slug": "noi-calculator",
+      "viewport": 1440,
+      "overflow": false,
+      "inputPanel": {
+        "x": 120,
+        "y": 293.765625,
+        "width": 735,
+        "height": 954.21875,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(11, 31, 51)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "resultPanel": {
+        "x": 879,
+        "y": 293.765625,
+        "width": 441,
+        "height": 1079.484375,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgb(15, 34, 48)"
+      },
+      "input": {
+        "x": 167.578125,
+        "y": 550.515625,
+        "width": 268.140625,
+        "height": 51.59375,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "h1": {
+        "x": 120,
+        "y": 144.59375,
+        "width": 680,
+        "height": 52.796875,
+        "font": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "44px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "result": {
+        "x": 903,
+        "y": 346.953125,
+        "width": 393,
+        "height": 50.390625,
+        "font": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "42px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "duplicateParagraphs": [],
+      "visibleInputs": 8,
+      "bodyWords": 957
+    },
+    {
+      "slug": "noi-calculator",
+      "viewport": 1024,
+      "overflow": false,
+      "inputPanel": {
+        "x": 24,
+        "y": 274.734375,
+        "width": 595,
+        "height": 954.21875,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(11, 31, 51)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "resultPanel": {
+        "x": 643,
+        "y": 274.734375,
+        "width": 357,
+        "height": 1185.390625,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgb(15, 34, 48)"
+      },
+      "input": {
+        "x": 71.578125,
+        "y": 531.484375,
+        "width": 198.140625,
+        "height": 51.59375,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "h1": {
+        "x": 24,
+        "y": 136.59375,
+        "width": 680,
+        "height": 41.765625,
+        "font": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "34.816px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "result": {
+        "x": 667,
+        "y": 327.921875,
+        "width": 309,
+        "height": 40.796875,
+        "font": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "34px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "duplicateParagraphs": [],
+      "visibleInputs": 8,
+      "bodyWords": 957
+    },
+    {
+      "slug": "noi-calculator",
+      "viewport": 768,
+      "overflow": false,
+      "inputPanel": {
+        "x": 24,
+        "y": 271.359375,
+        "width": 720,
+        "height": 946.21875,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(11, 31, 51)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "resultPanel": {
+        "x": 24,
+        "y": 1241.578125,
+        "width": 720,
+        "height": 1015.796875,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgb(15, 34, 48)"
+      },
+      "input": {
+        "x": 67.578125,
+        "y": 524.109375,
+        "width": 264.640625,
+        "height": 51.59375,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "h1": {
+        "x": 24,
+        "y": 136.59375,
+        "width": 680,
+        "height": 38.390625,
+        "font": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "32px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "result": {
+        "x": 44,
+        "y": 1290.765625,
+        "width": 680,
+        "height": 40.796875,
+        "font": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "34px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "duplicateParagraphs": [],
+      "visibleInputs": 8,
+      "bodyWords": 946
+    },
+    {
+      "slug": "noi-calculator",
+      "viewport": 390,
+      "overflow": false,
+      "inputPanel": {
+        "x": 16,
+        "y": 359.8125,
+        "width": 358,
+        "height": 1322.90625,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(11, 31, 51)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "resultPanel": {
+        "x": 16,
+        "y": 1706.71875,
+        "width": 358,
+        "height": 1086.359375,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgb(15, 34, 48)"
+      },
+      "input": {
+        "x": 55.578125,
+        "y": 623.96875,
+        "width": 257.640625,
+        "height": 51.59375,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "h1": {
+        "x": 16,
+        "y": 205.859375,
+        "width": 358,
+        "height": 38.390625,
+        "font": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "32px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "result": {
+        "x": 32,
+        "y": 1751.90625,
+        "width": 326,
+        "height": 40.796875,
+        "font": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "34px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "duplicateParagraphs": [],
+      "visibleInputs": 8,
+      "bodyWords": 949
+    },
+    {
+      "slug": "noi-calculator",
+      "viewport": 375,
+      "overflow": false,
+      "inputPanel": {
+        "x": 16,
+        "y": 359.8125,
+        "width": 343,
+        "height": 1322.90625,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(11, 31, 51)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "resultPanel": {
+        "x": 16,
+        "y": 1706.71875,
+        "width": 343,
+        "height": 1158.34375,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgb(15, 34, 48)"
+      },
+      "input": {
+        "x": 55.578125,
+        "y": 623.96875,
+        "width": 242.640625,
+        "height": 51.59375,
+        "font": "Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, \"Segoe UI\", sans-serif",
+        "fontSize": "16px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgb(255, 255, 255)"
+      },
+      "h1": {
+        "x": 16,
+        "y": 205.859375,
+        "width": 343,
+        "height": 38.390625,
+        "font": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "32px",
+        "color": "rgb(20, 32, 43)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "result": {
+        "x": 32,
+        "y": 1751.90625,
+        "width": 311,
+        "height": 40.796875,
+        "font": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+        "fontSize": "34px",
+        "color": "rgb(255, 255, 255)",
+        "background": "rgba(0, 0, 0, 0)"
+      },
+      "duplicateParagraphs": [],
+      "visibleInputs": 8,
+      "bodyWords": 949
+    }
+  ]
+}

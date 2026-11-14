@@ -1,0 +1,393 @@
+{
+  "assertions": 332,
+  "failures": [],
+  "errors": [],
+  "broken": [],
+  "measurements": [
+    {
+      "route": "resources/",
+      "width": 1440,
+      "viewport": 1440,
+      "overflow": false,
+      "h1": {
+        "x": 120,
+        "y": 151.421875,
+        "width": 1200,
+        "height": 47.03125
+      },
+      "displayFont": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+      "duplicateIds": false,
+      "missingRefs": [],
+      "gridColumns": 3,
+      "cards": [
+        {
+          "x": 120,
+          "y": 264.046875,
+          "width": 385.328125,
+          "height": 272.265625
+        },
+        {
+          "x": 527.328125,
+          "y": 264.046875,
+          "width": 385.328125,
+          "height": 272.265625
+        }
+      ],
+      "article": null
+    },
+    {
+      "route": "resources/mortgage-payments/",
+      "width": 1440,
+      "viewport": 1440,
+      "overflow": false,
+      "h1": {
+        "x": 312,
+        "y": 179.734375,
+        "width": 816,
+        "height": 46
+      },
+      "displayFont": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+      "duplicateIds": false,
+      "missingRefs": [],
+      "gridColumns": null,
+      "cards": [],
+      "article": {
+        "x": 312,
+        "y": 76,
+        "width": 816,
+        "height": 3045
+      }
+    },
+    {
+      "route": "resources/real-estate-commission/",
+      "width": 1440,
+      "viewport": 1440,
+      "overflow": false,
+      "h1": {
+        "x": 312,
+        "y": 179.734375,
+        "width": 816,
+        "height": 46
+      },
+      "displayFont": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+      "duplicateIds": false,
+      "missingRefs": [],
+      "gridColumns": null,
+      "cards": [],
+      "article": {
+        "x": 312,
+        "y": 76,
+        "width": 816,
+        "height": 2443.234375
+      }
+    },
+    {
+      "route": "resources/",
+      "width": 1024,
+      "viewport": 1024,
+      "overflow": false,
+      "h1": {
+        "x": 24,
+        "y": 143.421875,
+        "width": 976,
+        "height": 45.859375
+      },
+      "displayFont": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+      "duplicateIds": false,
+      "missingRefs": [],
+      "gridColumns": 3,
+      "cards": [
+        {
+          "x": 24,
+          "y": 254.875,
+          "width": 310.65625,
+          "height": 317.046875
+        },
+        {
+          "x": 356.65625,
+          "y": 254.875,
+          "width": 310.671875,
+          "height": 317.046875
+        }
+      ],
+      "article": null
+    },
+    {
+      "route": "resources/mortgage-payments/",
+      "width": 1024,
+      "viewport": 1024,
+      "overflow": false,
+      "h1": {
+        "x": 104,
+        "y": 171.734375,
+        "width": 816,
+        "height": 46
+      },
+      "displayFont": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+      "duplicateIds": false,
+      "missingRefs": [],
+      "gridColumns": null,
+      "cards": [],
+      "article": {
+        "x": 104,
+        "y": 68,
+        "width": 816,
+        "height": 3045
+      }
+    },
+    {
+      "route": "resources/real-estate-commission/",
+      "width": 1024,
+      "viewport": 1024,
+      "overflow": false,
+      "h1": {
+        "x": 104,
+        "y": 171.734375,
+        "width": 816,
+        "height": 46
+      },
+      "displayFont": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+      "duplicateIds": false,
+      "missingRefs": [],
+      "gridColumns": null,
+      "cards": [],
+      "article": {
+        "x": 104,
+        "y": 68,
+        "width": 816,
+        "height": 2443.234375
+      }
+    },
+    {
+      "route": "resources/",
+      "width": 768,
+      "viewport": 768,
+      "overflow": false,
+      "h1": {
+        "x": 24,
+        "y": 143.421875,
+        "width": 720,
+        "height": 38.078125
+      },
+      "displayFont": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+      "duplicateIds": false,
+      "missingRefs": [],
+      "gridColumns": 2,
+      "cards": [
+        {
+          "x": 24,
+          "y": 247.09375,
+          "width": 349,
+          "height": 317.046875
+        },
+        {
+          "x": 395,
+          "y": 247.09375,
+          "width": 349,
+          "height": 317.046875
+        }
+      ],
+      "article": null
+    },
+    {
+      "route": "resources/mortgage-payments/",
+      "width": 768,
+      "viewport": 768,
+      "overflow": false,
+      "h1": {
+        "x": 24,
+        "y": 171.734375,
+        "width": 720,
+        "height": 39.734375
+      },
+      "displayFont": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+      "duplicateIds": false,
+      "missingRefs": [],
+      "gridColumns": null,
+      "cards": [],
+      "article": {
+        "x": 24,
+        "y": 68,
+        "width": 720,
+        "height": 3243.265625
+      }
+    },
+    {
+      "route": "resources/real-estate-commission/",
+      "width": 768,
+      "viewport": 768,
+      "overflow": false,
+      "h1": {
+        "x": 24,
+        "y": 171.734375,
+        "width": 720,
+        "height": 39.734375
+      },
+      "displayFont": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+      "duplicateIds": false,
+      "missingRefs": [],
+      "gridColumns": null,
+      "cards": [],
+      "article": {
+        "x": 24,
+        "y": 68,
+        "width": 720,
+        "height": 2614.390625
+      }
+    },
+    {
+      "route": "resources/",
+      "width": 390,
+      "viewport": 390,
+      "overflow": false,
+      "h1": {
+        "x": 16,
+        "y": 129.421875,
+        "width": 358,
+        "height": 38.078125
+      },
+      "displayFont": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+      "duplicateIds": false,
+      "missingRefs": [],
+      "gridColumns": 1,
+      "cards": [
+        {
+          "x": 16,
+          "y": 258.6875,
+          "width": 358,
+          "height": 294.65625
+        },
+        {
+          "x": 16,
+          "y": 575.34375,
+          "width": 358,
+          "height": 294.65625
+        }
+      ],
+      "article": null
+    },
+    {
+      "route": "resources/mortgage-payments/",
+      "width": 390,
+      "viewport": 390,
+      "overflow": false,
+      "h1": {
+        "x": 16,
+        "y": 196.53125,
+        "width": 358,
+        "height": 73.59375
+      },
+      "displayFont": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+      "duplicateIds": false,
+      "missingRefs": [],
+      "gridColumns": null,
+      "cards": [],
+      "article": {
+        "x": 16,
+        "y": 64,
+        "width": 358,
+        "height": 4769.484375
+      }
+    },
+    {
+      "route": "resources/real-estate-commission/",
+      "width": 390,
+      "viewport": 390,
+      "overflow": false,
+      "h1": {
+        "x": 16,
+        "y": 196.53125,
+        "width": 358,
+        "height": 73.59375
+      },
+      "displayFont": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+      "duplicateIds": false,
+      "missingRefs": [],
+      "gridColumns": null,
+      "cards": [],
+      "article": {
+        "x": 16,
+        "y": 64,
+        "width": 358,
+        "height": 3689.234375
+      }
+    },
+    {
+      "route": "resources/",
+      "width": 375,
+      "viewport": 375,
+      "overflow": false,
+      "h1": {
+        "x": 16,
+        "y": 129.421875,
+        "width": 343,
+        "height": 76.15625
+      },
+      "displayFont": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+      "duplicateIds": false,
+      "missingRefs": [],
+      "gridColumns": 1,
+      "cards": [
+        {
+          "x": 16,
+          "y": 296.765625,
+          "width": 343,
+          "height": 317.046875
+        },
+        {
+          "x": 16,
+          "y": 635.8125,
+          "width": 343,
+          "height": 294.65625
+        }
+      ],
+      "article": null
+    },
+    {
+      "route": "resources/mortgage-payments/",
+      "width": 375,
+      "viewport": 375,
+      "overflow": false,
+      "h1": {
+        "x": 16,
+        "y": 196.53125,
+        "width": 343,
+        "height": 73.59375
+      },
+      "displayFont": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+      "duplicateIds": false,
+      "missingRefs": [],
+      "gridColumns": null,
+      "cards": [],
+      "article": {
+        "x": 16,
+        "y": 64,
+        "width": 343,
+        "height": 4820.640625
+      }
+    },
+    {
+      "route": "resources/real-estate-commission/",
+      "width": 375,
+      "viewport": 375,
+      "overflow": false,
+      "h1": {
+        "x": 16,
+        "y": 196.53125,
+        "width": 343,
+        "height": 73.59375
+      },
+      "displayFont": "\"Source Serif 4\", Georgia, \"Times New Roman\", serif",
+      "duplicateIds": false,
+      "missingRefs": [],
+      "gridColumns": null,
+      "cards": [],
+      "article": {
+        "x": 16,
+        "y": 64,
+        "width": 343,
+        "height": 3748.734375
+      }
+    }
+  ]
+}

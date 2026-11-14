@@ -13,7 +13,7 @@ const frozen = {
     "index.html": "6dac1daef758dbd8d6055a357af33aa3bd73856e3ea68f00d0b28fbbd98e8725",
     "about/index.html": "315ffffed741a25a1eb6e42a1bc5b6477de35f427b06f30932cc115e90e6f2a4",
     "contact/index.html": "1aff953a79f28c6a89b14b10d562a09d8487d216467dcaceb10e78e6c3c3ce4d",
-    "resources/index.html": "956b2ca8f1ca04e179935117107a13c03da70b491c532842b685626d7f509b7e",
+    "resources/index.html": "7b185c913c572d214f4fcdf0f273615041e4d7335e837d33f2492f9a2184d233",
     "realtorcrm/index.html": "2e4e3170636b9fabaae83e14ae08b5761bdb7c70da6d620c464a4dc51b0cfff4",
     "tools/index.html": "c1500325fd6710d57ce5af96dd202fd5c1276f63f12fa70cbdedf542091e783a",
     "tools/bridge-loan-calculator/index.html": "43515c7aa207d4a3a5ee1ebe7fef0b663d06b16b7881e780a71bb2f3feadcd7f",
