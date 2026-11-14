@@ -124,6 +124,7 @@ function calculator(name) {
   return { get: id => elements[id].textContent, html: id => elements[id].innerHTML, fire(id, event) { elements[id].fire(event); }, put(id, value) { elements[id].value = String(value); }, val: id => elements[id].value, set(id, value) { elements[id].value = String(value); elements[id].fire('input'); } };
 }
 const c = calculator('commission');
+c.fire('mode-agent', 'click');
 assert.equal(c.get('commission-total'), '$13,500.00'); assert.equal(c.get('commission-agent'), '$9,450.00');
 assert.equal(c.get('commission-net'), '$9,155.00');
 c.set('agent-split', 100); assert.equal(c.get('commission-net'), '$13,205.00');

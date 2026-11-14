@@ -1,0 +1,770 @@
+{
+  "base": "0c43cddf7455cfcbe2260fccf83f4e2a62f47844",
+  "calculators": {
+    "bridge-loan-calculator": {
+      "metadata": {
+        "title": "Bridge Loan Calculator | Every Real Estate Calculator",
+        "viewport": "width=device-width,initial-scale=1",
+        "theme-color": "#102131",
+        "description": "Estimate a bridge loan from your current home equity: interest-only payments, total cost, down payment coverage and cash left after your current home sells.",
+        "og:type": "website",
+        "og:title": "Bridge Loan Calculator | Every Real Estate Calculator",
+        "og:description": "Estimate a bridge loan from your current home equity: interest-only payments, total cost, down payment coverage and cash left after your current home sells.",
+        "og:url": "https://everyrealestatecalculator.com/tools/bridge-loan-calculator/",
+        "og:image": "https://everyrealestatecalculator.com/assets/home-architecture.jpg",
+        "twitter:image": "https://everyrealestatecalculator.com/assets/home-architecture.jpg",
+        "twitter:card": "summary",
+        "twitter:title": "Bridge Loan Calculator | Every Real Estate Calculator",
+        "twitter:description": "Estimate a bridge loan from your current home equity: interest-only payments, total cost, down payment coverage and cash left after your current home sells.",
+        "canonical": "https://everyrealestatecalculator.com/tools/bridge-loan-calculator/"
+      },
+      "inputs": {
+        "current-value": {
+          "value": "450000",
+          "min": "0",
+          "max": "1000000000000"
+        },
+        "current-mortgage": {
+          "value": "200000",
+          "min": "0",
+          "max": "1000000000000"
+        },
+        "new-price": {
+          "value": "600000",
+          "min": "0",
+          "max": "1000000000000"
+        },
+        "down-percent": {
+          "value": "20",
+          "min": "0",
+          "max": "100"
+        },
+        "bridge-ltv": {
+          "value": "80",
+          "min": "0",
+          "max": "100"
+        },
+        "bridge-rate": {
+          "value": "9",
+          "min": "0",
+          "max": "100"
+        },
+        "months-to-sale": {
+          "value": "6",
+          "min": "1",
+          "max": "24"
+        },
+        "origination-rate": {
+          "value": "1",
+          "min": "0",
+          "max": "100"
+        },
+        "other-closing": {
+          "value": "3000",
+          "min": "0",
+          "max": "1000000000000"
+        },
+        "selling-rate": {
+          "value": "6",
+          "min": "0",
+          "max": "100"
+        }
+      },
+      "engineHash": "73a3f70cc58556491caef23fd5a70bfc2c26a84cc99f92743598f9248661af22"
+    },
+    "cap-rate-calculator": {
+      "metadata": {
+        "title": "Cap Rate Calculator | Every Real Estate Calculator",
+        "viewport": "width=device-width,initial-scale=1",
+        "theme-color": "#102131",
+        "description": "Estimate a rental property's cap rate from monthly rent, vacancy and operating expenses — with net operating income, price sensitivity and implied value.",
+        "og:type": "website",
+        "og:title": "Cap Rate Calculator | Every Real Estate Calculator",
+        "og:description": "Estimate a rental property's cap rate from monthly rent, vacancy and operating expenses — with net operating income, price sensitivity and implied value.",
+        "og:url": "https://everyrealestatecalculator.com/tools/cap-rate-calculator/",
+        "og:image": "https://everyrealestatecalculator.com/assets/home-architecture.jpg",
+        "twitter:image": "https://everyrealestatecalculator.com/assets/home-architecture.jpg",
+        "twitter:card": "summary",
+        "twitter:title": "Cap Rate Calculator | Every Real Estate Calculator",
+        "twitter:description": "Estimate a rental property's cap rate from monthly rent, vacancy and operating expenses — with net operating income, price sensitivity and implied value.",
+        "canonical": "https://everyrealestatecalculator.com/tools/cap-rate-calculator/"
+      },
+      "inputs": {
+        "property-price": {
+          "value": "350000",
+          "min": "0",
+          "max": "1000000000000"
+        },
+        "monthly-rent": {
+          "value": "2200",
+          "min": "0",
+          "max": "1000000000000"
+        },
+        "vacancy-rate": {
+          "value": "5",
+          "min": "0",
+          "max": "100"
+        },
+        "other-income": {
+          "value": "0",
+          "min": "0",
+          "max": "1000000000000"
+        },
+        "property-tax": {
+          "value": "4200",
+          "min": "0",
+          "max": "1000000000000"
+        },
+        "home-insurance": {
+          "value": "1800",
+          "min": "0",
+          "max": "1000000000000"
+        },
+        "maintenance-cost": {
+          "value": "1500",
+          "min": "0",
+          "max": "1000000000000"
+        },
+        "management-rate": {
+          "value": "8",
+          "min": "0",
+          "max": "100"
+        },
+        "hoa-other": {
+          "value": "0",
+          "min": "0",
+          "max": "1000000000000"
+        },
+        "target-cap-rate": {
+          "value": "8",
+          "min": "0",
+          "max": "100"
+        }
+      },
+      "engineHash": "2b799718b8337003dbd3ff2467862fc702cfa91ad04188dd551a28cb5387ad6e"
+    },
+    "capital-gains-tax-calculator": {
+      "metadata": {
+        "title": "Capital Gains Tax Calculator | Every Real Estate Calculator",
+        "viewport": "width=device-width,initial-scale=1",
+        "theme-color": "#102131",
+        "description": "Estimate capital gains tax on a property sale: gain, primary-residence exclusion, depreciation recapture, NIIT and net proceeds after tax.",
+        "og:type": "website",
+        "og:title": "Capital Gains Tax Calculator | Every Real Estate Calculator",
+        "og:description": "Estimate capital gains tax on a property sale: gain, primary-residence exclusion, depreciation recapture, NIIT and net proceeds after tax.",
+        "og:url": "https://everyrealestatecalculator.com/tools/capital-gains-tax-calculator/",
+        "og:image": "https://everyrealestatecalculator.com/assets/home-architecture.jpg",
+        "twitter:image": "https://everyrealestatecalculator.com/assets/home-architecture.jpg",
+        "twitter:card": "summary",
+        "twitter:title": "Capital Gains Tax Calculator | Every Real Estate Calculator",
+        "twitter:description": "Estimate capital gains tax on a property sale: gain, primary-residence exclusion, depreciation recapture, NIIT and net proceeds after tax.",
+        "canonical": "https://everyrealestatecalculator.com/tools/capital-gains-tax-calculator/"
+      },
+      "inputs": {
+        "sale-price": {
+          "value": "650000",
+          "min": "0",
+          "max": "1000000000000"
+        },
+        "purchase-price": {
+          "value": "400000",
+          "min": "0",
+          "max": "1000000000000"
+        },
+        "improvements": {
+          "value": "30000",
+          "min": "0",
+          "max": "1000000000000"
+        },
+        "years-lived": {
+          "value": "0",
+          "min": "0",
+          "max": "50"
+        },
+        "depreciation": {
+          "value": "60000",
+          "min": "0",
+          "max": "1000000000000"
+        },
+        "buying-costs": {
+          "value": "8000",
+          "min": "0",
+          "max": "1000000000000"
+        },
+        "selling-rate": {
+          "value": "6",
+          "min": "0",
+          "max": "100"
+        },
+        "ordinary-rate": {
+          "value": "22",
+          "min": "0",
+          "max": "100"
+        },
+        "state-rate": {
+          "value": "5",
+          "min": "0",
+          "max": "100"
+        }
+      },
+      "engineHash": "1b6421d1d048cd7e31f8e0eb1b9ea96f8af13cdd6431b446a42a90b779182385"
+    },
+    "commission-calculator": {
+      "metadata": {
+        "title": "Commission Calculator | Every Real Estate Calculator",
+        "viewport": "width=device-width,initial-scale=1",
+        "theme-color": "#102131",
+        "description": "Estimate real estate commission by side, your agent split after referral and franchise fees, and the seller's net proceeds. Free browser-based calculator with USD estimates.",
+        "og:type": "website",
+        "og:title": "Commission Calculator | Every Real Estate Calculator",
+        "og:description": "Estimate real estate commission by side, your agent split after referral and franchise fees, and the seller's net proceeds. Free browser-based calculator with USD estimates.",
+        "og:url": "https://everyrealestatecalculator.com/tools/commission-calculator/",
+        "og:image": "https://everyrealestatecalculator.com/assets/home-architecture.jpg",
+        "twitter:image": "https://everyrealestatecalculator.com/assets/home-architecture.jpg",
+        "twitter:card": "summary",
+        "twitter:title": "Commission Calculator | Every Real Estate Calculator",
+        "twitter:description": "Estimate real estate commission by side, your agent split after referral and franchise fees, and the seller's net proceeds. Free browser-based calculator with USD estimates.",
+        "canonical": "https://everyrealestatecalculator.com/tools/commission-calculator/"
+      },
+      "inputs": {
+        "sale-price": {
+          "value": "450000",
+          "min": "0",
+          "max": "1000000000000"
+        },
+        "commission-rate": {
+          "value": "3",
+          "min": "0",
+          "max": "100"
+        },
+        "listing-share": {
+          "value": "50",
+          "min": "0",
+          "max": "100"
+        },
+        "referral-fee": {
+          "value": "0",
+          "min": "0",
+          "max": "100"
+        },
+        "franchise-fee": {
+          "value": "0",
+          "min": "0",
+          "max": "100"
+        },
+        "agent-split": {
+          "value": "70",
+          "min": "0",
+          "max": "100"
+        },
+        "transaction-fee": {
+          "value": "295",
+          "min": "0",
+          "max": "1000000000000"
+        },
+        "other-closing-costs": {
+          "value": "0",
+          "min": "0",
+          "max": "100"
+        },
+        "mortgage-payoff": {
+          "value": "0",
+          "min": "0",
+          "max": "1000000000000"
+        }
+      },
+      "engineHash": "9e3d10af1aa13f1a85854cae22b990c35e72f297e9b5b73dab5728912a946487",
+      "arithmeticHash": "72bb67cc3990a8de50b76596a094cba5b327482a6dc63034a54974df97dff7ff"
+    },
+    "home-affordability-calculator": {
+      "metadata": {
+        "title": "Home Affordability Calculator | Every Real Estate Calculator",
+        "viewport": "width=device-width,initial-scale=1",
+        "theme-color": "#102131",
+        "description": "Estimate the maximum home price from the monthly housing payment you can afford, with taxes, insurance, HOA and PMI included. Optional income guideline included.",
+        "og:type": "website",
+        "og:title": "Home Affordability Calculator | Every Real Estate Calculator",
+        "og:description": "Estimate the maximum home price from the monthly housing payment you can afford, with taxes, insurance, HOA and PMI included. Optional income guideline included.",
+        "og:url": "https://everyrealestatecalculator.com/tools/home-affordability-calculator/",
+        "og:image": "https://everyrealestatecalculator.com/assets/home-architecture.jpg",
+        "twitter:image": "https://everyrealestatecalculator.com/assets/home-architecture.jpg",
+        "twitter:card": "summary",
+        "twitter:title": "Home Affordability Calculator | Every Real Estate Calculator",
+        "twitter:description": "Estimate the maximum home price from the monthly housing payment you can afford, with taxes, insurance, HOA and PMI included. Optional income guideline included.",
+        "canonical": "https://everyrealestatecalculator.com/tools/home-affordability-calculator/"
+      },
+      "inputs": {
+        "monthly-budget": {
+          "value": "2300",
+          "min": "0",
+          "max": "1000000000000"
+        },
+        "down-payment": {
+          "value": "60000",
+          "min": "0",
+          "max": "1000000000000"
+        },
+        "down-percent-input": {
+          "value": "18.2",
+          "min": "0",
+          "max": "100"
+        },
+        "interest-rate": {
+          "value": "6.5",
+          "min": "0",
+          "max": "100"
+        },
+        "property-tax-rate": {
+          "value": "1.2",
+          "min": "0",
+          "max": "100"
+        },
+        "home-insurance": {
+          "value": "1800",
+          "min": "0",
+          "max": "1000000000000"
+        },
+        "hoa-fee": {
+          "value": "0",
+          "min": "0",
+          "max": "1000000000000"
+        },
+        "pmi-rate": {
+          "value": "0.5",
+          "min": "0",
+          "max": "100"
+        },
+        "closing-costs": {
+          "value": "3",
+          "min": "0",
+          "max": "100"
+        },
+        "guide-income": {
+          "value": "100000",
+          "min": "0",
+          "max": "1000000000000"
+        },
+        "guide-debts": {
+          "value": "500",
+          "min": "0",
+          "max": "1000000000000"
+        },
+        "guide-front": {
+          "value": "28",
+          "min": "0",
+          "max": "100"
+        },
+        "guide-back": {
+          "value": "36",
+          "min": "0",
+          "max": "100"
+        }
+      },
+      "engineHash": "7b5d4e818ecfd09d49905ab72b87317de6a072d738fccf663bbe59884bdf2c11"
+    },
+    "mortgage-calculator": {
+      "metadata": {
+        "title": "Mortgage Calculator | Every Real Estate Calculator",
+        "viewport": "width=device-width,initial-scale=1",
+        "theme-color": "#102131",
+        "description": "Use the mortgage calculator to estimate your full monthly payment: principal and interest, tax, insurance, HOA and PMI, with total interest and payoff savings.",
+        "og:type": "website",
+        "og:title": "Mortgage Calculator | Every Real Estate Calculator",
+        "og:description": "Use the mortgage calculator to estimate your full monthly payment: principal and interest, tax, insurance, HOA and PMI, with total interest and payoff savings.",
+        "og:url": "https://everyrealestatecalculator.com/tools/mortgage-calculator/",
+        "og:image": "https://everyrealestatecalculator.com/assets/home-architecture.jpg",
+        "twitter:image": "https://everyrealestatecalculator.com/assets/home-architecture.jpg",
+        "twitter:card": "summary",
+        "twitter:title": "Mortgage Calculator | Every Real Estate Calculator",
+        "twitter:description": "Use the mortgage calculator to estimate your full monthly payment: principal and interest, tax, insurance, HOA and PMI, with total interest and payoff savings.",
+        "canonical": "https://everyrealestatecalculator.com/tools/mortgage-calculator/"
+      },
+      "inputs": {
+        "home-price": {
+          "value": "400000",
+          "min": "0",
+          "max": "1000000000000"
+        },
+        "down-payment": {
+          "value": "80000",
+          "min": "0"
+        },
+        "down-percent-input": {
+          "value": "20",
+          "min": "0",
+          "max": "100"
+        },
+        "interest-rate": {
+          "value": "6.5",
+          "min": "0",
+          "max": "100"
+        },
+        "property-tax": {
+          "value": "4800",
+          "min": "0"
+        },
+        "home-insurance": {
+          "value": "1800",
+          "min": "0"
+        },
+        "hoa-fee": {
+          "value": "0",
+          "min": "0"
+        },
+        "pmi-rate": {
+          "value": "0.5",
+          "min": "0",
+          "max": "100"
+        },
+        "extra-payment": {
+          "value": "0",
+          "min": "0"
+        },
+        "lump-sum": {
+          "value": "0",
+          "min": "0"
+        }
+      },
+      "engineHash": "3b230369a94c2765d17fef1583a6f241ae75781eeab8a96ac46e5124d289f58f"
+    },
+    "noi-calculator": {
+      "metadata": {
+        "title": "NOI Calculator | Every Real Estate Calculator",
+        "viewport": "width=device-width,initial-scale=1",
+        "theme-color": "#102131",
+        "description": "Calculate net operating income (NOI) for a rental property from rent, vacancy and operating expenses — the formula, a worked example, and why the mortgage stays out.",
+        "og:type": "website",
+        "og:title": "NOI Calculator | Every Real Estate Calculator",
+        "og:description": "Calculate net operating income (NOI) for a rental property from rent, vacancy and operating expenses — the formula, a worked example, and why the mortgage stays out.",
+        "og:url": "https://everyrealestatecalculator.com/tools/noi-calculator/",
+        "og:image": "https://everyrealestatecalculator.com/assets/home-architecture.jpg",
+        "twitter:image": "https://everyrealestatecalculator.com/assets/home-architecture.jpg",
+        "twitter:card": "summary",
+        "twitter:title": "NOI Calculator | Every Real Estate Calculator",
+        "twitter:description": "Calculate net operating income (NOI) for a rental property from rent, vacancy and operating expenses — the formula, a worked example, and why the mortgage stays out.",
+        "canonical": "https://everyrealestatecalculator.com/tools/noi-calculator/"
+      },
+      "inputs": {
+        "monthly-rent": {
+          "value": "2200",
+          "min": "0",
+          "max": "1000000000000"
+        },
+        "vacancy-rate": {
+          "value": "5",
+          "min": "0",
+          "max": "100"
+        },
+        "other-income": {
+          "value": "0",
+          "min": "0",
+          "max": "1000000000000"
+        },
+        "property-tax": {
+          "value": "4200",
+          "min": "0",
+          "max": "1000000000000"
+        },
+        "home-insurance": {
+          "value": "1800",
+          "min": "0",
+          "max": "1000000000000"
+        },
+        "maintenance-cost": {
+          "value": "1500",
+          "min": "0",
+          "max": "1000000000000"
+        },
+        "management-rate": {
+          "value": "8",
+          "min": "0",
+          "max": "100"
+        },
+        "hoa-other": {
+          "value": "0",
+          "min": "0",
+          "max": "1000000000000"
+        }
+      },
+      "engineHash": "22341a1e68536c5521670e6355503e9d68368e6179e17c43f82a1fe23b7f692d"
+    },
+    "property-investment-calculator": {
+      "metadata": {
+        "title": "Property Investment Calculator | Every Real Estate Calculator",
+        "viewport": "width=device-width,initial-scale=1",
+        "theme-color": "#102131",
+        "description": "Analyze a rental property: monthly cash flow, cash-on-cash return, cap rate, DSCR and break-even rent from price, financing, rent and operating costs.",
+        "og:type": "website",
+        "og:title": "Property Investment Calculator | Every Real Estate Calculator",
+        "og:description": "Analyze a rental property: monthly cash flow, cash-on-cash return, cap rate, DSCR and break-even rent from price, financing, rent and operating costs.",
+        "og:url": "https://everyrealestatecalculator.com/tools/property-investment-calculator/",
+        "og:image": "https://everyrealestatecalculator.com/assets/home-architecture.jpg",
+        "twitter:image": "https://everyrealestatecalculator.com/assets/home-architecture.jpg",
+        "twitter:card": "summary",
+        "twitter:title": "Property Investment Calculator | Every Real Estate Calculator",
+        "twitter:description": "Analyze a rental property: monthly cash flow, cash-on-cash return, cap rate, DSCR and break-even rent from price, financing, rent and operating costs.",
+        "canonical": "https://everyrealestatecalculator.com/tools/property-investment-calculator/"
+      },
+      "inputs": {
+        "property-price": {
+          "value": "250000",
+          "min": "0",
+          "max": "1000000000000"
+        },
+        "interest-rate": {
+          "value": "7",
+          "min": "0",
+          "max": "100"
+        },
+        "down-payment": {
+          "value": "50000",
+          "min": "0",
+          "max": "1000000000000"
+        },
+        "down-percent-input": {
+          "value": "20",
+          "min": "0",
+          "max": "100"
+        },
+        "monthly-rent": {
+          "value": "2400",
+          "min": "0",
+          "max": "1000000000000"
+        },
+        "vacancy-rate": {
+          "value": "5",
+          "min": "0",
+          "max": "100"
+        },
+        "other-income": {
+          "value": "0",
+          "min": "0",
+          "max": "1000000000000"
+        },
+        "property-tax": {
+          "value": "3000",
+          "min": "0",
+          "max": "1000000000000"
+        },
+        "home-insurance": {
+          "value": "1200",
+          "min": "0",
+          "max": "1000000000000"
+        },
+        "hoa-fee": {
+          "value": "0",
+          "min": "0",
+          "max": "1000000000000"
+        },
+        "maintenance-rate": {
+          "value": "5",
+          "min": "0",
+          "max": "100"
+        },
+        "capex-rate": {
+          "value": "5",
+          "min": "0",
+          "max": "100"
+        },
+        "management-rate": {
+          "value": "8",
+          "min": "0",
+          "max": "100"
+        },
+        "closing-costs": {
+          "value": "7500",
+          "min": "0",
+          "max": "1000000000000"
+        }
+      },
+      "engineHash": "bab77ec3c4d6eaf745b37512aebcc90078126ec3c86589bbd957a7c2142148c9"
+    },
+    "rent-vs-buy-calculator": {
+      "metadata": {
+        "title": "Rent vs Buy Calculator | Every Real Estate Calculator",
+        "viewport": "width=device-width,initial-scale=1",
+        "theme-color": "#102131",
+        "description": "Compare renting vs buying a home: monthly costs, total cost over your stay, and the breakeven year when buying becomes cheaper.",
+        "og:type": "website",
+        "og:title": "Rent vs Buy Calculator | Every Real Estate Calculator",
+        "og:description": "Compare renting vs buying a home: monthly costs, total cost over your stay, and the breakeven year when buying becomes cheaper.",
+        "og:url": "https://everyrealestatecalculator.com/tools/rent-vs-buy-calculator/",
+        "og:image": "https://everyrealestatecalculator.com/assets/home-architecture.jpg",
+        "twitter:image": "https://everyrealestatecalculator.com/assets/home-architecture.jpg",
+        "twitter:card": "summary",
+        "twitter:title": "Rent vs Buy Calculator | Every Real Estate Calculator",
+        "twitter:description": "Compare renting vs buying a home: monthly costs, total cost over your stay, and the breakeven year when buying becomes cheaper.",
+        "canonical": "https://everyrealestatecalculator.com/tools/rent-vs-buy-calculator/"
+      },
+      "inputs": {
+        "monthly-rent": {
+          "value": "1800",
+          "min": "0",
+          "max": "1000000000000"
+        },
+        "home-price": {
+          "value": "350000",
+          "min": "0",
+          "max": "1000000000000"
+        },
+        "down-payment": {
+          "value": "70000",
+          "min": "0",
+          "max": "1000000000000"
+        },
+        "down-percent-input": {
+          "value": "20",
+          "min": "0",
+          "max": "100"
+        },
+        "interest-rate": {
+          "value": "6.5",
+          "min": "0",
+          "max": "100"
+        },
+        "years-stay": {
+          "value": "7",
+          "min": "1",
+          "max": "30"
+        },
+        "rent-growth": {
+          "value": "3",
+          "min": "0",
+          "max": "100"
+        },
+        "home-appreciation": {
+          "value": "3",
+          "min": "0",
+          "max": "100"
+        },
+        "property-tax-rate": {
+          "value": "1.2",
+          "min": "0",
+          "max": "100"
+        },
+        "home-insurance": {
+          "value": "1800",
+          "min": "0",
+          "max": "1000000000000"
+        },
+        "hoa-fee": {
+          "value": "0",
+          "min": "0",
+          "max": "1000000000000"
+        },
+        "pmi-rate": {
+          "value": "0.5",
+          "min": "0",
+          "max": "100"
+        },
+        "maintenance-rate": {
+          "value": "1",
+          "min": "0",
+          "max": "100"
+        },
+        "closing-costs": {
+          "value": "3",
+          "min": "0",
+          "max": "100"
+        },
+        "selling-costs": {
+          "value": "6",
+          "min": "0",
+          "max": "100"
+        },
+        "investment-return": {
+          "value": "5",
+          "min": "0",
+          "max": "100"
+        }
+      },
+      "engineHash": "7fb5a20177e1013f4ae2295a9181d936539caa0846b4e98c4e83060fb518f830"
+    },
+    "roi-calculator": {
+      "metadata": {
+        "title": "ROI Calculator | Every Real Estate Calculator",
+        "viewport": "width=device-width,initial-scale=1",
+        "theme-color": "#102131",
+        "description": "Project a rental property's total ROI over your hold period: cash flow, appreciation, loan paydown, sale proceeds and annualized return.",
+        "og:type": "website",
+        "og:title": "ROI Calculator | Every Real Estate Calculator",
+        "og:description": "Project a rental property's total ROI over your hold period: cash flow, appreciation, loan paydown, sale proceeds and annualized return.",
+        "og:url": "https://everyrealestatecalculator.com/tools/roi-calculator/",
+        "og:image": "https://everyrealestatecalculator.com/assets/home-architecture.jpg",
+        "twitter:image": "https://everyrealestatecalculator.com/assets/home-architecture.jpg",
+        "twitter:card": "summary",
+        "twitter:title": "ROI Calculator | Every Real Estate Calculator",
+        "twitter:description": "Project a rental property's total ROI over your hold period: cash flow, appreciation, loan paydown, sale proceeds and annualized return.",
+        "canonical": "https://everyrealestatecalculator.com/tools/roi-calculator/"
+      },
+      "inputs": {
+        "purchase-price": {
+          "value": "300000",
+          "min": "0",
+          "max": "1000000000000"
+        },
+        "down-payment": {
+          "value": "60000",
+          "min": "0",
+          "max": "1000000000000"
+        },
+        "down-percent-input": {
+          "value": "20",
+          "min": "0",
+          "max": "100"
+        },
+        "interest-rate": {
+          "value": "7",
+          "min": "0",
+          "max": "100"
+        },
+        "monthly-rent": {
+          "value": "2500",
+          "min": "0",
+          "max": "1000000000000"
+        },
+        "vacancy-rate": {
+          "value": "5",
+          "min": "0",
+          "max": "100"
+        },
+        "monthly-expenses": {
+          "value": "650",
+          "min": "0",
+          "max": "1000000000000"
+        },
+        "appreciation-rate": {
+          "value": "3",
+          "min": "-50",
+          "max": "100"
+        },
+        "hold-years": {
+          "value": "10",
+          "min": "1",
+          "max": "30"
+        },
+        "selling-rate": {
+          "value": "6",
+          "min": "0",
+          "max": "100"
+        },
+        "closing-costs": {
+          "value": "9000",
+          "min": "0",
+          "max": "1000000000000"
+        },
+        "rent-growth": {
+          "value": "2",
+          "min": "-50",
+          "max": "100"
+        },
+        "expense-growth": {
+          "value": "2",
+          "min": "-50",
+          "max": "100"
+        }
+      },
+      "engineHash": "0c99f92a90aedbf249108c63d39af0276cdbfcf88c1c8a8498965ed0dcf4bacb"
+    }
+  }
+}

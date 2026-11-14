@@ -1,0 +1,102 @@
+[
+  {
+    "file": "screenshots/mortgage-calculator-desktop.png",
+    "bytes": 214065,
+    "sha256": "66898a8175b1c360745d392bd121dcb266e63207115d5949cdc4e7b425d35167"
+  },
+  {
+    "file": "screenshots/mortgage-calculator-mobile.png",
+    "bytes": 202082,
+    "sha256": "0e835f1c31fa116971e56b50e8551a1570305e5a0dbcf845efa16cca1c35f959"
+  },
+  {
+    "file": "screenshots/commission-calculator-desktop.png",
+    "bytes": 143407,
+    "sha256": "0973aa87624e867ec7f02246ff503b8fcbcd200c0b6c08dcb890673725ee10eb"
+  },
+  {
+    "file": "screenshots/commission-calculator-mobile.png",
+    "bytes": 119556,
+    "sha256": "4bab09d655cd373592b8ab961b8215aab4d833be61d99cea9035a4af1bb54812"
+  },
+  {
+    "file": "screenshots/home-affordability-calculator-desktop.png",
+    "bytes": 239252,
+    "sha256": "2a6bb5232b6934fb0956b203c6241ec97c1036c37d64df1f30eb852a67012bf0"
+  },
+  {
+    "file": "screenshots/home-affordability-calculator-mobile.png",
+    "bytes": 223607,
+    "sha256": "ede5c7ea30414ee810fde6af9b95309a16f1b7c393e6b8d5d2983c6b7c933537"
+  },
+  {
+    "file": "screenshots/rent-vs-buy-calculator-desktop.png",
+    "bytes": 208501,
+    "sha256": "b28d7078cdbf6d3663fd0c1e1da748207be5badfab07215595f19e66c17f61aa"
+  },
+  {
+    "file": "screenshots/rent-vs-buy-calculator-mobile.png",
+    "bytes": 184848,
+    "sha256": "2f638b0fce6db96b62ee9e7ffec8ca18a24816c0c97ea8b9e77a8ec3c4ff2d73"
+  },
+  {
+    "file": "screenshots/cap-rate-calculator-desktop.png",
+    "bytes": 211675,
+    "sha256": "ad77f9cc282940c8fe257158ba03be81637d797ca55e77d40f3f25ef2cf2a7b9"
+  },
+  {
+    "file": "screenshots/cap-rate-calculator-mobile.png",
+    "bytes": 187162,
+    "sha256": "8ca519ea738161bccda2fcb6407eac9c89815c9571ffbcf1738e5d832f7fa0c2"
+  },
+  {
+    "file": "screenshots/bridge-loan-calculator-desktop.png",
+    "bytes": 228910,
+    "sha256": "9d806d26c151aa813b85710271ad8af9dedc8e26e31c0d88a54a68db524a85d6"
+  },
+  {
+    "file": "screenshots/bridge-loan-calculator-mobile.png",
+    "bytes": 199717,
+    "sha256": "bec6acb84a7e2ba9ec91767fdb07ef4c3af8a3ca020ab10def111abf494a1789"
+  },
+  {
+    "file": "screenshots/property-investment-calculator-desktop.png",
+    "bytes": 232036,
+    "sha256": "7ac8031988aa019a23ae8214cc314dacb8416a84076e321281f5bbf7a8a1c5ea"
+  },
+  {
+    "file": "screenshots/property-investment-calculator-mobile.png",
+    "bytes": 206840,
+    "sha256": "11fcb835b72820138c39d158c4c3433f1195b24f714bd51d75a0c88938ae8507"
+  },
+  {
+    "file": "screenshots/capital-gains-tax-calculator-desktop.png",
+    "bytes": 268152,
+    "sha256": "7bba1b5f986cae85029c28578c36da85f78aac050a972836544be57a1df278e1"
+  },
+  {
+    "file": "screenshots/capital-gains-tax-calculator-mobile.png",
+    "bytes": 232527,
+    "sha256": "147b2cc12568bf38123c125c927f88f1efe6678253db42d0cf0d4d4fd1c92bf4"
+  },
+  {
+    "file": "screenshots/roi-calculator-desktop.png",
+    "bytes": 350349,
+    "sha256": "4f964b72210b7739022745051d2a11a910a8179b721ad3000649e532fee422c0"
+  },
+  {
+    "file": "screenshots/roi-calculator-mobile.png",
+    "bytes": 309745,
+    "sha256": "09885a1b1ede56fccb12035093e02118026eb31f600ecd5f30e4e3ef4c21f53f"
+  },
+  {
+    "file": "screenshots/noi-calculator-desktop.png",
+    "bytes": 226287,
+    "sha256": "43df2f897478898f7dfcb56f097c4e46db22fcb69af26d9c221ada36dc93f1c2"
+  },
+  {
+    "file": "screenshots/noi-calculator-mobile.png",
+    "bytes": 188553,
+    "sha256": "56f0bb323f31bd0bb72a4d1f66bf2f6d18cc0aaec57cbbe45e6ca0a355d1d7b3"
+  }
+]

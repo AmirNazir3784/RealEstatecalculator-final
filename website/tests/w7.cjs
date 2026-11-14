@@ -54,11 +54,15 @@ check('cap rate distinct example', cap.includes('5.66%') && cap.includes('$35,07
 check('cap rate mistakes', cap.includes('<h2>Common mistakes</h2>'));
 const noi = read('tools/noi-calculator/index.html');
 check('NOI meta rewritten', noi.includes('why the mortgage stays out'));
-check('NOI expense narrative', noi.includes('Reading the expense side of the example') && noi.includes('42.6%'));
+// Corrected 2026-11-14 (design-system task): the expense-side paragraph
+// previously said $11,546.40 / 42.6%, contradicting the worked example on
+// the same page ($9,506.40 expenses, 37.90% ratio, tax 44% of expenses).
+// The assertion now locks the corrected figures.
+check('NOI expense narrative', noi.includes('Reading the expense side of the example') && noi.includes('absorbs 37.90%') && noi.includes('about 44% of all expenses'));
 // 7. Bridge comparison + mistakes sections.
 check('bridge comparison', read('tools/bridge-loan-calculator/index.html').includes('Bridge loan, HELOC, or home-equity loan?'));
 for (const slug of ['mortgage-calculator','commission-calculator','home-affordability-calculator','property-investment-calculator']) {
-  check(`${slug} mistakes section`, read(`tools/${slug}/index.html`).includes('<h2>Common mistakes</h2>'));
+  check(`${slug} mistakes section`, read(`tools/${slug}/index.html`).includes(slug === 'commission-calculator' ? '<h2>Common Commission Calculation Mistakes</h2>' : '<h2>Common mistakes</h2>'));
 }
 // 8. RealtorCRM: early access stated, placeholders byte-identical text.
 const rc = read('realtorcrm/index.html');
