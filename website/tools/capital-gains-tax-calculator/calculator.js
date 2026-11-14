@@ -132,6 +132,7 @@
       });
       var message = problems.length ? problems.join(' ') : 'Check the values: sale price above $0, rates 0–100%, years 0–50, amounts 0 or more, and no field left empty.';
       set('total-tax', problems.length ? problems[0] : message);
+      set('sticky-value', '—');
       OUTPUTS.forEach(function (id) { if (id !== 'total-tax') set(id, '—'); });
       set('validation-note', message);
       set('cgt-validation', message);
@@ -168,6 +169,7 @@
     // Headline and sale-price split
     set('net-proceeds', usd(net));
     set('total-tax', usd(total));
+    set('sticky-value', usd(total));
     set('bottom-keep', usd(net));
     set('lg-costs', usd(selling));
     set('lg-tax', usd(total));

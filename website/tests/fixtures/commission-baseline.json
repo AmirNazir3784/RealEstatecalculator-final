@@ -1,0 +1,319 @@
+[
+  {
+    "name": "defaults / both sides",
+    "inputs": {},
+    "total": 13500,
+    "net": 9155,
+    "seller": 436500,
+    "outputs": {
+      "total": "$13,500.00",
+      "agent": "$9,155.00",
+      "seller": "$436,500.00"
+    }
+  },
+  {
+    "name": "listing role",
+    "inputs": {
+      "agent-role": "listing"
+    },
+    "total": 13500,
+    "net": 4430,
+    "seller": 436500,
+    "outputs": {
+      "total": "$13,500.00",
+      "agent": "$4,430.00",
+      "seller": "$436,500.00"
+    }
+  },
+  {
+    "name": "buyer role",
+    "inputs": {
+      "agent-role": "buyer"
+    },
+    "total": 13500,
+    "net": 4430,
+    "seller": 436500,
+    "outputs": {
+      "total": "$13,500.00",
+      "agent": "$4,430.00",
+      "seller": "$436,500.00"
+    }
+  },
+  {
+    "name": "listing 40 percent",
+    "inputs": {
+      "agent-role": "listing",
+      "listing-share": 40
+    },
+    "total": 13500,
+    "net": 3485,
+    "seller": 436500,
+    "outputs": {
+      "total": "$13,500.00",
+      "agent": "$3,485.00",
+      "seller": "$436,500.00"
+    }
+  },
+  {
+    "name": "buyer 60 percent",
+    "inputs": {
+      "agent-role": "buyer",
+      "listing-share": 40
+    },
+    "total": 13500,
+    "net": 5375,
+    "seller": 436500,
+    "outputs": {
+      "total": "$13,500.00",
+      "agent": "$5,375.00",
+      "seller": "$436,500.00"
+    }
+  },
+  {
+    "name": "both ignores listing allocation",
+    "inputs": {
+      "listing-share": 10
+    },
+    "total": 13500,
+    "net": 9155,
+    "seller": 436500,
+    "outputs": {
+      "total": "$13,500.00",
+      "agent": "$9,155.00",
+      "seller": "$436,500.00"
+    }
+  },
+  {
+    "name": "50 percent agent split",
+    "inputs": {
+      "agent-split": 50
+    },
+    "total": 13500,
+    "net": 6455,
+    "seller": 436500,
+    "outputs": {
+      "total": "$13,500.00",
+      "agent": "$6,455.00",
+      "seller": "$436,500.00"
+    }
+  },
+  {
+    "name": "100 percent agent split",
+    "inputs": {
+      "agent-split": 100
+    },
+    "total": 13500,
+    "net": 13205,
+    "seller": 436500,
+    "outputs": {
+      "total": "$13,500.00",
+      "agent": "$13,205.00",
+      "seller": "$436,500.00"
+    }
+  },
+  {
+    "name": "zero agent split",
+    "inputs": {
+      "agent-split": 0
+    },
+    "total": 13500,
+    "net": -295,
+    "seller": 436500,
+    "outputs": {
+      "total": "$13,500.00",
+      "agent": "-$295.00",
+      "seller": "$436,500.00"
+    }
+  },
+  {
+    "name": "referral 10 percent",
+    "inputs": {
+      "referral-fee": 10
+    },
+    "total": 13500,
+    "net": 8210,
+    "seller": 436500,
+    "outputs": {
+      "total": "$13,500.00",
+      "agent": "$8,210.00",
+      "seller": "$436,500.00"
+    }
+  },
+  {
+    "name": "franchise 6 percent",
+    "inputs": {
+      "franchise-fee": 6
+    },
+    "total": 13500,
+    "net": 8588,
+    "seller": 436500,
+    "outputs": {
+      "total": "$13,500.00",
+      "agent": "$8,588.00",
+      "seller": "$436,500.00"
+    }
+  },
+  {
+    "name": "independent fees, listing",
+    "inputs": {
+      "agent-role": "listing",
+      "referral-fee": 10,
+      "franchise-fee": 6
+    },
+    "total": 13500,
+    "net": 3674,
+    "seller": 436500,
+    "outputs": {
+      "total": "$13,500.00",
+      "agent": "$3,674.00",
+      "seller": "$436,500.00"
+    }
+  },
+  {
+    "name": "independent fees, buyer 60 percent",
+    "inputs": {
+      "agent-role": "buyer",
+      "listing-share": 40,
+      "referral-fee": 10,
+      "franchise-fee": 6
+    },
+    "total": 13500,
+    "net": 4467.8,
+    "seller": 436500,
+    "outputs": {
+      "total": "$13,500.00",
+      "agent": "$4,467.80",
+      "seller": "$436,500.00"
+    }
+  },
+  {
+    "name": "transaction fee",
+    "inputs": {
+      "transaction-fee": 1000
+    },
+    "total": 13500,
+    "net": 8450,
+    "seller": 436500,
+    "outputs": {
+      "total": "$13,500.00",
+      "agent": "$8,450.00",
+      "seller": "$436,500.00"
+    }
+  },
+  {
+    "name": "closing costs and payoff",
+    "inputs": {
+      "other-closing-costs": 1.5,
+      "mortgage-payoff": 200000
+    },
+    "total": 13500,
+    "net": 9155,
+    "seller": 229750,
+    "outputs": {
+      "total": "$13,500.00",
+      "agent": "$9,155.00",
+      "seller": "$229,750.00"
+    }
+  },
+  {
+    "name": "zero commission",
+    "inputs": {
+      "commission-rate": 0
+    },
+    "total": 0,
+    "net": -295,
+    "seller": 450000,
+    "outputs": {
+      "total": "$0.00",
+      "agent": "-$295.00",
+      "seller": "$450,000.00"
+    }
+  },
+  {
+    "name": "zero price",
+    "inputs": {
+      "sale-price": 0
+    },
+    "total": 0,
+    "net": -295,
+    "seller": 0,
+    "outputs": {
+      "total": "$0.00",
+      "agent": "-$295.00",
+      "seller": "$0.00"
+    }
+  },
+  {
+    "name": "simple published example",
+    "inputs": {
+      "sale-price": 400000,
+      "commission-rate": 5
+    },
+    "total": 20000,
+    "net": 13705,
+    "seller": 380000,
+    "outputs": {
+      "total": "$20,000.00",
+      "agent": "$13,705.00",
+      "seller": "$380,000.00"
+    }
+  },
+  {
+    "name": "quick formula illustration",
+    "inputs": {
+      "commission-rate": 5
+    },
+    "total": 22500,
+    "net": 15455,
+    "seller": 427500,
+    "outputs": {
+      "total": "$22,500.00",
+      "agent": "$15,455.00",
+      "seller": "$427,500.00"
+    }
+  },
+  {
+    "name": "upper amounts and rate",
+    "inputs": {
+      "sale-price": 1000000000000,
+      "commission-rate": 100
+    },
+    "total": 1000000000000,
+    "net": 699999999705,
+    "seller": 0,
+    "outputs": {
+      "total": "$1,000,000,000,000.00",
+      "agent": "$699,999,999,705.00",
+      "seller": "$0.00"
+    }
+  },
+  {
+    "name": "negative earnings retained for excessive percentage fees",
+    "inputs": {
+      "referral-fee": 100,
+      "franchise-fee": 100
+    },
+    "total": 13500,
+    "net": -9745,
+    "seller": 436500,
+    "outputs": {
+      "total": "$13,500.00",
+      "agent": "-$9,745.00",
+      "seller": "$436,500.00"
+    }
+  },
+  {
+    "name": "negative seller proceeds retained",
+    "inputs": {
+      "mortgage-payoff": 500000
+    },
+    "total": 13500,
+    "net": 9155,
+    "seller": -63500,
+    "outputs": {
+      "total": "$13,500.00",
+      "agent": "$9,155.00",
+      "seller": "-$63,500.00"
+    }
+  }
+]

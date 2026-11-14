@@ -1,0 +1,76 @@
+[
+  {
+    "id": "sale-price",
+    "value": "",
+    "error": "Property sale price is empty.",
+    "output": "Property sale price is empty."
+  },
+  {
+    "id": "sale-price",
+    "value": -1,
+    "error": "Property sale price must be 0 or more.",
+    "output": "Property sale price must be 0 or more."
+  },
+  {
+    "id": "commission-rate",
+    "value": 101,
+    "error": "Total commission rate must be 0–100%.",
+    "output": "Total commission rate must be 0–100%."
+  },
+  {
+    "id": "listing-share",
+    "value": 101,
+    "error": "Listing side share must be 0–100%.",
+    "output": "Listing side share must be 0–100%."
+  },
+  {
+    "id": "agent-split",
+    "value": "",
+    "error": "Your commission split is empty.",
+    "output": "Your commission split is empty."
+  },
+  {
+    "id": "referral-fee",
+    "value": 101,
+    "error": "Referral fee must be 0–100%.",
+    "output": "Referral fee must be 0–100%."
+  },
+  {
+    "id": "franchise-fee",
+    "value": -1,
+    "error": "Franchise / royalty fee must be 0–100%.",
+    "output": "Franchise / royalty fee must be 0–100%."
+  },
+  {
+    "id": "transaction-fee",
+    "value": -1,
+    "error": "Transaction fee must be 0 or more.",
+    "output": "Transaction fee must be 0 or more."
+  },
+  {
+    "id": "other-closing-costs",
+    "value": 101,
+    "error": "Other seller closing costs must be 0–100%.",
+    "output": "Other seller closing costs must be 0–100%."
+  },
+  {
+    "id": "mortgage-payoff",
+    "value": -1,
+    "error": "Mortgage payoff must be 0 or more.",
+    "output": "Mortgage payoff must be 0 or more."
+  },
+  {
+    "id": "transaction-fee",
+    "value": "",
+    "error": "Transaction fee is empty.",
+    "currentError": "",
+    "output": "Transaction fee is empty."
+  },
+  {
+    "id": "mortgage-payoff",
+    "value": "",
+    "error": "Mortgage payoff is empty.",
+    "currentError": "",
+    "output": "Mortgage payoff is empty."
+  }
+]
