@@ -13,7 +13,7 @@ const frozen = {
     "index.html": "6dac1daef758dbd8d6055a357af33aa3bd73856e3ea68f00d0b28fbbd98e8725",
     "about/index.html": "315ffffed741a25a1eb6e42a1bc5b6477de35f427b06f30932cc115e90e6f2a4",
     "contact/index.html": "1aff953a79f28c6a89b14b10d562a09d8487d216467dcaceb10e78e6c3c3ce4d",
-    "resources/index.html": "956b2ca8f1ca04e179935117107a13c03da70b491c532842b685626d7f509b7e",
+    "resources/index.html": "c48ef47ed70d40320dc7ea59d4ddf0f2169799df210003ef5d6299f269af5153",
     "realtorcrm/index.html": "2e4e3170636b9fabaae83e14ae08b5761bdb7c70da6d620c464a4dc51b0cfff4",
     "tools/index.html": "c1500325fd6710d57ce5af96dd202fd5c1276f63f12fa70cbdedf542091e783a",
     "tools/bridge-loan-calculator/index.html": "43515c7aa207d4a3a5ee1ebe7fef0b663d06b16b7881e780a71bb2f3feadcd7f",
@@ -46,16 +46,16 @@ const frozen = {
     "tools/roi-calculator/index.html": "bc3cd3f9e232ef8b213dc058eac0e159bf9faf2ac4aeb51ea5a5821b8c634181"
   },
   "calculators": {
-    "bridge-loan-calculator": "74b2f4f6d5330a2b4aec345587ec4e44faffe5228c4643b28f47a2fd4d9d124d",
-    "cap-rate-calculator": "505c4381f9d4aac198cebc1b9b66deaa4814ad477dd41b5d956fb4fd3423b79b",
-    "capital-gains-tax-calculator": "6ca3b2c736cc79ce6bf8dab9cdf2ffea50e5ae54bb8dfef9d2d8fc73fe1a47e9",
-    "commission-calculator": "2b36dd89cd5eede3fe3c6ff2d25abec61241fe0177982a62a8e0cffe36b9a717",
-    "home-affordability-calculator": "0560122f57d28acddb84d50754f327f6faa8e61e1a0b158d75269795db257cad",
-    "mortgage-calculator": "8017db7163331edc279263aab50a979f5377cd2738f994fefe97b4b0392bd652",
-    "noi-calculator": "d2deaf652832d3ce41d521bc707721d549fc507a124df6e899c8e83a5864d598",
-    "property-investment-calculator": "8c03521413d98b9c0f2ca4cf811666cf41dedee57a7decc647269d4ef28211a7",
-    "rent-vs-buy-calculator": "4e3bc4c05eb1ec0961d7e7d07641803d06c5b07251e995652e67cbf6926a36e1",
-    "roi-calculator": "20d22bfc5708832155ccba50973f6eaf5f945aa7c12be827fee83627928f028b"
+    "bridge-loan-calculator": "73a3f70cc58556491caef23fd5a70bfc2c26a84cc99f92743598f9248661af22",
+    "cap-rate-calculator": "2b799718b8337003dbd3ff2467862fc702cfa91ad04188dd551a28cb5387ad6e",
+    "capital-gains-tax-calculator": "1b6421d1d048cd7e31f8e0eb1b9ea96f8af13cdd6431b446a42a90b779182385",
+    "commission-calculator": "9e3d10af1aa13f1a85854cae22b990c35e72f297e9b5b73dab5728912a946487",
+    "home-affordability-calculator": "7b5d4e818ecfd09d49905ab72b87317de6a072d738fccf663bbe59884bdf2c11",
+    "mortgage-calculator": "3b230369a94c2765d17fef1583a6f241ae75781eeab8a96ac46e5124d289f58f",
+    "noi-calculator": "22341a1e68536c5521670e6355503e9d68368e6179e17c43f82a1fe23b7f692d",
+    "property-investment-calculator": "bab77ec3c4d6eaf745b37512aebcc90078126ec3c86589bbd957a7c2142148c9",
+    "rent-vs-buy-calculator": "7fb5a20177e1013f4ae2295a9181d936539caa0846b4e98c4e83060fb518f830",
+    "roi-calculator": "0c99f92a90aedbf249108c63d39af0276cdbfcf88c1c8a8498965ed0dcf4bacb"
   }
 };
 const context = {window:{}};
