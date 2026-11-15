@@ -1,0 +1,3 @@
+# Reserved subdomain document root. This does NOT protect tracked deletions
+# or destructive mirroring/git clean -x. Complete the migration runbook first.
+/realtorcrm/

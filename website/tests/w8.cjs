@@ -15,7 +15,7 @@ const frozen = {
     "about/index.html": "a19518c7c6b8b37122202608641445928000dc4c41e9bb2b06cfea5690825a57",
     "contact/index.html": "1aff953a79f28c6a89b14b10d562a09d8487d216467dcaceb10e78e6c3c3ce4d",
     "resources/index.html": "8afc4767b9b890d297d867a102b47edf701eeeef424f1176c6ca514f3de6c0bb",
-    "realtorcrm/index.html": "2e4e3170636b9fabaae83e14ae08b5761bdb7c70da6d620c464a4dc51b0cfff4",
+    "real-estate-crm/index.html": "2e4e3170636b9fabaae83e14ae08b5761bdb7c70da6d620c464a4dc51b0cfff4",
     "tools/index.html": "c1500325fd6710d57ce5af96dd202fd5c1276f63f12fa70cbdedf542091e783a",
     "tools/bridge-loan-calculator/index.html": "43515c7aa207d4a3a5ee1ebe7fef0b663d06b16b7881e780a71bb2f3feadcd7f",
     "tools/cap-rate-calculator/index.html": "550be3d5dd01866cdbe01afa6f8a4b8d9e5a29936148279d8fa0a13aace54c9c",
@@ -33,7 +33,7 @@ const frozen = {
     "about/index.html": "dcf19b9faa556e2e80415ed8913016ff71dc7807434d38fd5e98036e9c89a516",
     "contact/index.html": "09b5ef330478d66108c0fddbd8472d220f1af6c9f0f1cfe1556eaff68bed30a9",
     "resources/index.html": "1e132af771c4f39d6bac996c76c4e9d25f519bed25861be2f221835b266f1a80",
-    "realtorcrm/index.html": "5b364caf2fb0dd6188b8353181ff1459dc9db46ddf41b2e53f06744e35e6d786",
+    "real-estate-crm/index.html": "5b364caf2fb0dd6188b8353181ff1459dc9db46ddf41b2e53f06744e35e6d786",
     "tools/index.html": "061f31223642b159193adafd0459b8c1b84f08beba8b81cb95a5ed3f68ad9c38",
     "tools/bridge-loan-calculator/index.html": "bc3cd3f9e232ef8b213dc058eac0e159bf9faf2ac4aeb51ea5a5821b8c634181",
     "tools/cap-rate-calculator/index.html": "bc3cd3f9e232ef8b213dc058eac0e159bf9faf2ac4aeb51ea5a5821b8c634181",
@@ -62,12 +62,13 @@ const frozen = {
 const context = {window:{}};
 vm.runInNewContext(read('assets/tool-registry.js'), context);
 const tools = Array.from(context.window.realEstateTools).filter(t=>t.status==='published');
-const pages = ['index.html','about/index.html','contact/index.html','resources/index.html','realtorcrm/index.html','tools/index.html',...tools.map(t=>`tools/${t.slug}/index.html`)];
+const pages = ['index.html','about/index.html','contact/index.html','resources/index.html','real-estate-crm/index.html','tools/index.html',...tools.map(t=>`tools/${t.slug}/index.html`)];
 const escape = s=>s.replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('"','&quot;');
 const menuPattern = /<div class="tools-menu" id="tools-menu">[\s\S]*?<\/div>\s*<\/div><\/div>/;
 // The shared brand fix changes only the accessible name. Keep the original
 // appearance/content fingerprints while brand-accessibility.cjs checks the new name.
-const legacyBrandLabel = html=>html.replaceAll('aria-label="Every Real Estate Calculator Tools · Software · Guides, homepage"', 'aria-label="Every Real Estate Calculator, homepage"').replaceAll('Every Real Estate Calculator</span> <em>Tools', 'Every Real Estate Calculator</span><em>Tools');
+// Normalize only the approved route migration; retain the frozen visual/content hashes.
+const legacyBrandLabel = html=>html.replaceAll('real-estate-crm/', 'realtorcrm/').replaceAll('aria-label="Every Real Estate Calculator Tools · Software · Guides, homepage"', 'aria-label="Every Real Estate Calculator, homepage"').replaceAll('Every Real Estate Calculator</span> <em>Tools', 'Every Real Estate Calculator</span><em>Tools');
 const outsideHeader = html=>legacyBrandLabel(html).replace(/<header\b[\s\S]*?<\/header>/,'').replace(/\n<div class="tools-menu-overlay"[^>]*><\/div>/,'').replace(/\s+/g,' ').trim();
 let reference;
 for(const file of pages) {

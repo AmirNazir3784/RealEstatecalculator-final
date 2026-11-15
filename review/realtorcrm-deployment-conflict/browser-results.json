@@ -1,0 +1,197 @@
+{
+  "checks": 473,
+  "routes": 38,
+  "errors": [],
+  "reports": [
+    {
+      "route": "about/",
+      "width": 1440,
+      "status": "pass"
+    },
+    {
+      "route": "contact/",
+      "width": 1440,
+      "status": "pass"
+    },
+    {
+      "route": "",
+      "width": 1440,
+      "status": "pass"
+    },
+    {
+      "route": "real-estate-crm/",
+      "width": 1440,
+      "status": "pass"
+    },
+    {
+      "route": "resources/how-much-house-can-i-afford/",
+      "width": 1440,
+      "status": "pass"
+    },
+    {
+      "route": "resources/",
+      "width": 1440,
+      "status": "pass"
+    },
+    {
+      "route": "resources/mortgage-payments/",
+      "width": 1440,
+      "status": "pass"
+    },
+    {
+      "route": "resources/real-estate-commission/",
+      "width": 1440,
+      "status": "pass"
+    },
+    {
+      "route": "tools/bridge-loan-calculator/",
+      "width": 1440,
+      "status": "pass"
+    },
+    {
+      "route": "tools/cap-rate-calculator/",
+      "width": 1440,
+      "status": "pass"
+    },
+    {
+      "route": "tools/capital-gains-tax-calculator/",
+      "width": 1440,
+      "status": "pass"
+    },
+    {
+      "route": "tools/commission-calculator/",
+      "width": 1440,
+      "status": "pass"
+    },
+    {
+      "route": "tools/home-affordability-calculator/",
+      "width": 1440,
+      "status": "pass"
+    },
+    {
+      "route": "tools/",
+      "width": 1440,
+      "status": "pass"
+    },
+    {
+      "route": "tools/mortgage-calculator/",
+      "width": 1440,
+      "status": "pass"
+    },
+    {
+      "route": "tools/noi-calculator/",
+      "width": 1440,
+      "status": "pass"
+    },
+    {
+      "route": "tools/property-investment-calculator/",
+      "width": 1440,
+      "status": "pass"
+    },
+    {
+      "route": "tools/rent-vs-buy-calculator/",
+      "width": 1440,
+      "status": "pass"
+    },
+    {
+      "route": "tools/roi-calculator/",
+      "width": 1440,
+      "status": "pass"
+    },
+    {
+      "route": "about/",
+      "width": 390,
+      "status": "pass"
+    },
+    {
+      "route": "contact/",
+      "width": 390,
+      "status": "pass"
+    },
+    {
+      "route": "",
+      "width": 390,
+      "status": "pass"
+    },
+    {
+      "route": "real-estate-crm/",
+      "width": 390,
+      "status": "pass"
+    },
+    {
+      "route": "resources/how-much-house-can-i-afford/",
+      "width": 390,
+      "status": "pass"
+    },
+    {
+      "route": "resources/",
+      "width": 390,
+      "status": "pass"
+    },
+    {
+      "route": "resources/mortgage-payments/",
+      "width": 390,
+      "status": "pass"
+    },
+    {
+      "route": "resources/real-estate-commission/",
+      "width": 390,
+      "status": "pass"
+    },
+    {
+      "route": "tools/bridge-loan-calculator/",
+      "width": 390,
+      "status": "pass"
+    },
+    {
+      "route": "tools/cap-rate-calculator/",
+      "width": 390,
+      "status": "pass"
+    },
+    {
+      "route": "tools/capital-gains-tax-calculator/",
+      "width": 390,
+      "status": "pass"
+    },
+    {
+      "route": "tools/commission-calculator/",
+      "width": 390,
+      "status": "pass"
+    },
+    {
+      "route": "tools/home-affordability-calculator/",
+      "width": 390,
+      "status": "pass"
+    },
+    {
+      "route": "tools/",
+      "width": 390,
+      "status": "pass"
+    },
+    {
+      "route": "tools/mortgage-calculator/",
+      "width": 390,
+      "status": "pass"
+    },
+    {
+      "route": "tools/noi-calculator/",
+      "width": 390,
+      "status": "pass"
+    },
+    {
+      "route": "tools/property-investment-calculator/",
+      "width": 390,
+      "status": "pass"
+    },
+    {
+      "route": "tools/rent-vs-buy-calculator/",
+      "width": 390,
+      "status": "pass"
+    },
+    {
+      "route": "tools/roi-calculator/",
+      "width": 390,
+      "status": "pass"
+    }
+  ]
+}

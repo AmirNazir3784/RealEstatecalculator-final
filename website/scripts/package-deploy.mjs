@@ -32,6 +32,14 @@ import crypto from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+// The CRM subdomain owns this directory on the shared host. Fail rather
+// than silently exclude a reintroduced marketing folder or app copy.
+if (fs.existsSync(path.join(root, 'realtorcrm')) || fs.existsSync(path.join(root, 'realtoros'))) {
+  throw new Error('Reserved CRM/legacy route in website source; use real-estate-crm/ for marketing.');
+}
+if (!fs.existsSync(path.join(root, 'real-estate-crm', 'index.html'))) {
+  throw new Error('Missing real-estate-crm marketing page.');
+}
 const args = process.argv.slice(2);
 const outFlag = args.indexOf('--out');
 const outDir = outFlag >= 0 ? path.resolve(args[outFlag + 1]) : path.join(root, 'dist-production');

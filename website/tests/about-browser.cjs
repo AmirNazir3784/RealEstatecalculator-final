@@ -41,7 +41,7 @@ function check(name,value){assert(value,name);passed++;}
   await page.locator('#tools-menu-toggle').focus();await page.keyboard.press('Enter');check(width+' tools opens',await page.locator('#tools-mega-menu').isVisible());check(width+' ten tools',await page.locator('[data-menu-tool]:visible').count()===10);
   await page.keyboard.press('Escape');check(width+' Escape closes tools',await page.locator('#tools-mega-menu').isHidden());check(width+' focus returns to toggle',await page.locator('#tools-menu-toggle').evaluate(e=>e===document.activeElement));
   await page.goto(root+'about/');await page.keyboard.press('Tab');check(width+' keyboard skip link',await page.locator('.skip-link').evaluate(e=>e===document.activeElement));await page.keyboard.press('Enter');check(width+' skip to main',await page.evaluate(()=>location.hash==='#main'));
-  for(const [selector,destination] of [['.about-hero .btn','tools/'],['.about-crm a[href="../realtorcrm/"]','realtorcrm/'],['.about-actions a[href="../resources/"]','resources/']]){
+  for(const [selector,destination] of [['.about-hero .btn','tools/'],['.about-crm a[href="../real-estate-crm/"]','real-estate-crm/'],['.about-actions a[href="../resources/"]','resources/']]){
    await page.goto(root+'about/');await page.locator(selector).click();check(width+' CTA navigates '+destination,new URL(page.url()).pathname===new URL(root+destination).pathname);
   }
   await context.close();

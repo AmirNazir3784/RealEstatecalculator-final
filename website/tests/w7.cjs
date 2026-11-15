@@ -13,7 +13,7 @@ let passed = 0; const failures = [];
 function check(name, cond) { if (cond) { passed++; } else { failures.push(name); } }
 function read(rel) { return fs.readFileSync(path.join(ROOT, rel), 'utf8'); }
 const PAGES = ['index.html', 'tools/index.html', 'about/index.html', 'contact/index.html',
-  'resources/index.html', 'realtorcrm/index.html',
+  'resources/index.html', 'real-estate-crm/index.html',
   ...['mortgage-calculator','commission-calculator','home-affordability-calculator','rent-vs-buy-calculator',
       'cap-rate-calculator','bridge-loan-calculator','property-investment-calculator',
       'capital-gains-tax-calculator','roi-calculator','noi-calculator'].map(s => `tools/${s}/index.html`)];
@@ -65,7 +65,7 @@ for (const slug of ['mortgage-calculator','commission-calculator','home-affordab
   check(`${slug} mistakes section`, read(`tools/${slug}/index.html`).includes(slug === 'commission-calculator' ? '<h2>Common Commission Calculation Mistakes</h2>' : '<h2>Common mistakes</h2>'));
 }
 // 8. RealtorCRM: early access stated, placeholders byte-identical text.
-const rc = read('realtorcrm/index.html');
+const rc = read('real-estate-crm/index.html');
 check('realtorcrm meta early access', rc.includes('Free during early access'));
 check('realtorcrm access section early access', rc.includes('RealtorCRM is free during early access — organize your contacts'));
 check('demo placeholder untouched', rc.includes('RealtorCRM Product Demo') && rc.includes('Add your product video or screenshots here'));

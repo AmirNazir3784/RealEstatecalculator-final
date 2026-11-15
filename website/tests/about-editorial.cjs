@@ -13,7 +13,7 @@ check('source and license recorded',fs.readFileSync(path.join(root,'about/IMAGE_
 check('responsive photo has dimensions',/srcset="residential-home-600.webp 600w, residential-home.webp 1200w"[^>]*width="1200" height="900"/.test(main));
 check('no new main scripts',!/<script\b/.test(main));
 for(const name of ['residential-home.webp','residential-home-600.webp','mortgage-calculator.webp'])check(name+' exists',fs.existsSync(path.join(root,'about',name)));
-for(const link of ['../tools/','../resources/','../realtorcrm/'])check('existing link '+link,main.includes('href="'+link+'"'));
+for(const link of ['../tools/','../resources/','../real-estate-crm/'])check('existing link '+link,main.includes('href="'+link+'"'));
 // The supplied copy is approximately 250 words; do not pad it with new marketing.
 const words=main.replace(/<[^>]+>/g,' ').replace(/&[^;]+;/g,' ').trim().split(/\s+/).length;check('concise supplied copy',words>=225&&words<=400);
 check('canonical unchanged',html.includes('rel="canonical" href="https://everyrealestatecalculator.com/about/"'));
