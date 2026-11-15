@@ -83,9 +83,8 @@ jobs:
           name: website-production-output
           path: out/
           # upload-artifact v4 excludes hidden files by default, which
-          # silently dropped out/.htaccess (the output's only dotfile -
-          # it carries the redirects, security headers and caching
-          # rules) from every published deploy so far.
+          # previously dropped .htaccess. Keep both .htaccess (redirects,
+          # headers) and .gitignore (reserved CRM root) in the artifact.
           include-hidden-files: true
           retention-days: 14
 

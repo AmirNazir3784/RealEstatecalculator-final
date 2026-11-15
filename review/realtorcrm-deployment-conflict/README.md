@@ -12,7 +12,9 @@ Repository search left old route references only in redirects, protection/tests,
 migration documentation and historical review evidence; app names/hosts remain.
 
 Main-host-only 301s include apex/www, HTTP/HTTPS, slashless/folder/index.html
-forms, query preservation and direct legacy RealtorOS redirects. New route never
+forms, query preservation and legacy RealtorOS redirects. HTTP may normalize to
+HTTPS before the migration redirect under the unchanged nested CRM config.
+The hostname-scoped alias redirect survives child rewrite overrides. New route never
 rematches. Nested CRM assets and app-subdomain auth/PWA URLs do not migrate.
 
 ## Local results

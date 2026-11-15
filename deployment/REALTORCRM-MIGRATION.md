@@ -15,8 +15,11 @@ Do not change document roots, DNS, SSL, Supabase settings, or the product name.
   CRM output stays byte-identical to the pre-migration package; its downloaded
   artifacts are checked for accidental marketing/nested CRM roots too.
 - Main-host-only 301s take `/realtorcrm`, `/realtorcrm/` and
-  `/realtorcrm/index.html` directly to the absolute new HTTPS marketing URL,
-  preserving query strings. Prior `/realtoros/` aliases go directly there too.
+  `/realtorcrm/index.html` to the absolute new HTTPS marketing URL,
+  preserving query strings. Prior `/realtoros/` aliases go there too. An HTTP
+  request may first follow the unchanged child CRM's HTTPS normalization.
+  A hostname-scoped `RedirectMatch` also handles Apache child rewrite overrides;
+  the standard rewrite rule remains for the existing LiteSpeed configuration.
   Nested app files are excluded; the CRM subdomain never matches the migration rule.
 - Website publishing refuses to push unless the manual input
   `crm_preservation_verified=true` is explicitly supplied. This is a host-side

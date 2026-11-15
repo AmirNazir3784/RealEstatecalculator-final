@@ -9,6 +9,7 @@ import ssl
 import subprocess
 import tempfile
 import time
+from urllib.parse import urlsplit
 
 ROOT = Path(__file__).resolve().parents[2]
 APEX = 'everyrealestatecalculator.com'
@@ -68,8 +69,26 @@ with tempfile.TemporaryDirectory(prefix='crm-apache-') as tmp:
             for tls in [False, True]:
                 for old in ['realtorcrm', 'realtoros']:
                     for suffix in ['', '/', '/index.html']:
-                        status, location, _ = get(host, '/'+old+suffix+'?utm_source=migration', tls)
-                        assert (status, location) == (301, f'https://{APEX}/real-estate-crm/?utm_source=migration'), (host, old, suffix, status, location)
+                        route = '/'+old+suffix+'?utm_source=migration'
+                        current_host, current_tls, seen = host, tls, set()
+                        for hop in range(3):
+                            marker = (current_host.lower(), route, current_tls)
+                            assert marker not in seen, ('redirect loop', marker)
+                            seen.add(marker)
+                            status, location, _ = get(current_host, route, current_tls)
+                            assert status == 301 and location, (host, old, suffix, tls, status, location)
+                            if location == f'https://{APEX}/real-estate-crm/?utm_source=migration':
+                                assert get(APEX, '/real-estate-crm/?utm_source=migration')[0] == 200
+                                break
+                            # The unchanged child CRM config can canonicalize HTTP
+                            # before inherited alias handling. Require a bounded,
+                            # permanent main-host chain with the same path/query.
+                            target = urlsplit(location)
+                            assert target.scheme == 'https' and target.hostname in [APEX, 'www.'+APEX], location
+                            assert target.path == '/'+old+suffix and target.query == 'utm_source=migration', location
+                            current_host, current_tls = target.hostname, True
+                        else:
+                            raise AssertionError(('migration target not reached', host, route))
                         checks += 1
         for route in ['/real-estate-crm/', '/real-estate-crm/realtorcrm.css']:
             status, location, _ = get(APEX, route)
