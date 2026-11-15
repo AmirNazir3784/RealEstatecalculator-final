@@ -2486,6 +2486,13 @@ App.data = (function () {
   }
 
   async function completeFollowUp(activityModel, contactId, lastContact, nextFollowUp) {
+    // The next follow-up must be resolved explicitly by the caller: a date
+    // string to set it, or null to CLEAR it. An omitted (undefined) value
+    // is a programming error, never a silent clear — refuse before any
+    // state changes so a careless caller cannot wipe a date by accident.
+    if (lastContact === undefined || nextFollowUp === undefined) {
+      throw new Error("completeFollowUp requires an explicit lastContact and nextFollowUp (a date, or null to clear).");
+    }
     requireUser();
     const activityId = activityModel.id || U().uid("ac");
     const activityRow = Object.assign({ id: activityId }, REGISTRY.activities.toRow(Object.assign({}, activityModel, { id: activityId })));

@@ -332,6 +332,11 @@ App.followUp = (function () {
     const suggested = CHANNEL_DEFAULT_OUTCOME[opts.channel] || "reached";
     let outcomeId = suggested;
     let nextId = "none";
+    // One activity id per opening of this modal, reused by every save
+    // attempt from it. If a save actually committed but its response was
+    // lost, a retry with the same id fails on the activity's primary key
+    // inside the RPC's transaction instead of writing a duplicate.
+    const attemptId = U().uid("ac");
 
     const chip = (group, item, selected) =>
       `<button type="button" class="btn btn-sm fu-chip${selected ? " fu-chip-on" : ""}"
@@ -390,34 +395,37 @@ App.followUp = (function () {
           const note = m.querySelector("#fuNote").value.trim();
           const today = U().todayISO();
 
-          let nextFollowUp;
+          // Every save resolves the follow-up explicitly: a new date, or
+          // null for "None", which CLEARS the stored date. There is no
+          // "leave it as it was" outcome from this modal — the agent has
+          // dealt with this follow-up, and a date left behind would keep
+          // the contact in Today/Overdue indefinitely. The write is
+          // App.store.completeFollowUp: one RPC, one transaction, so the
+          // activity and the date change land together or not at all.
+          let nextFollowUp = null;
           const nextChoice = byId(NEXT_CHOICES, nextId);
           if (nextId === "pick") {
             if (!dateEl.value) { App.app.toast("Pick a date, or choose None.", "danger"); return; }
             nextFollowUp = dateEl.value;
           } else if (nextChoice && nextChoice.days != null) {
             nextFollowUp = U().addDaysISO(today, nextChoice.days);
-          } else {
-            nextFollowUp = null; // "None" leaves whatever is already set
           }
 
           saveBtn.disabled = true;
           try {
-            await S().activities.create({
+            await S().completeFollowUp({
+              id: attemptId,
               type: chosen.type,
               date: U().nowISO(),
               contactId: contact.id,
               subject: chosen.outcome,
               outcome: chosen.outcome,
               notes: note
-            });
-            const patch = { lastContact: today };
-            if (nextFollowUp) patch.nextFollowUp = nextFollowUp;
-            await S().contacts.update(contact.id, patch);
+            }, contact.id, today, nextFollowUp);
             h.close();
             App.app.toast("Logged. " + (nextFollowUp
               ? "Next follow-up " + U().formatDate(nextFollowUp) + "."
-              : "No new follow-up date set."), "success");
+              : (contact.nextFollowUp ? "Follow-up cleared." : "No follow-up date set.")), "success");
             if (typeof opts.onLogged === "function") await opts.onLogged(contact.id);
           } catch (err) {
             App.app.toast("Could not save: " + ((err && err.message) || "Unknown error"), "danger");
