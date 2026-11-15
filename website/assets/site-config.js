@@ -5,7 +5,8 @@ window.siteConfig = Object.freeze({ brandName: 'Every Real Estate Calculator', c
   const name = window.siteConfig.brandName.trim();
   document.querySelectorAll('[data-brand-name]').forEach(node => { node.textContent = name; });
   document.querySelectorAll('.brand[aria-label]').forEach(node => {
-    node.setAttribute('aria-label', `${name}, homepage`);
+    const tagline = node.querySelector('.brand-name em')?.textContent.trim();
+    node.setAttribute('aria-label', `${[name, tagline].filter(Boolean).join(' ')}, homepage`);
   });
   document.title = document.title.replace(/Every Real Estate Calculator/g, () => name);
   document.querySelectorAll('meta[property="og:title"], meta[name="twitter:title"]').forEach(node => {
