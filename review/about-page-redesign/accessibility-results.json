@@ -3,41 +3,10 @@
   "reports": [
     {
       "width": 1920,
-      "passes": 35,
+      "passes": 36,
       "mainPasses": 19,
       "mainViolations": [],
-      "violations": [
-        {
-          "id": "color-contrast",
-          "impact": "serious",
-          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
-          "nodes": [
-            {
-              "html": "<em>Tools · Software · Guides</em>",
-              "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4 (foreground color: #73818c, background color: #ffffff, font size: 7.3pt (9.76px), font weight: normal). Expected contrast ratio of 4.5:1"
-            },
-            {
-              "html": "<em>Tools · Software · Guides</em>",
-              "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.08 (foreground color: #73818c, background color: #102131, font size: 7.3pt (9.76px), font weight: normal). Expected contrast ratio of 4.5:1"
-            }
-          ]
-        },
-        {
-          "id": "label-content-name-mismatch",
-          "impact": "serious",
-          "description": "Ensure that elements labelled through their content must have their visible text as part of their accessible name",
-          "nodes": [
-            {
-              "html": "<a class=\"brand\" href=\"../\" aria-label=\"Every Real Estate Calculator, homepage\">",
-              "summary": "Fix any of the following:\n  Text inside the element is not included in the accessible name"
-            },
-            {
-              "html": "<a class=\"brand\" href=\"../\" aria-label=\"Every Real Estate Calculator, homepage\">",
-              "summary": "Fix any of the following:\n  Text inside the element is not included in the accessible name"
-            }
-          ]
-        }
-      ],
+      "violations": [],
       "incomplete": [
         {
           "id": "color-contrast",
@@ -47,41 +16,10 @@
     },
     {
       "width": 1440,
-      "passes": 35,
+      "passes": 36,
       "mainPasses": 19,
       "mainViolations": [],
-      "violations": [
-        {
-          "id": "color-contrast",
-          "impact": "serious",
-          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
-          "nodes": [
-            {
-              "html": "<em>Tools · Software · Guides</em>",
-              "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4 (foreground color: #73818c, background color: #ffffff, font size: 7.3pt (9.76px), font weight: normal). Expected contrast ratio of 4.5:1"
-            },
-            {
-              "html": "<em>Tools · Software · Guides</em>",
-              "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.08 (foreground color: #73818c, background color: #102131, font size: 7.3pt (9.76px), font weight: normal). Expected contrast ratio of 4.5:1"
-            }
-          ]
-        },
-        {
-          "id": "label-content-name-mismatch",
-          "impact": "serious",
-          "description": "Ensure that elements labelled through their content must have their visible text as part of their accessible name",
-          "nodes": [
-            {
-              "html": "<a class=\"brand\" href=\"../\" aria-label=\"Every Real Estate Calculator, homepage\">",
-              "summary": "Fix any of the following:\n  Text inside the element is not included in the accessible name"
-            },
-            {
-              "html": "<a class=\"brand\" href=\"../\" aria-label=\"Every Real Estate Calculator, homepage\">",
-              "summary": "Fix any of the following:\n  Text inside the element is not included in the accessible name"
-            }
-          ]
-        }
-      ],
+      "violations": [],
       "incomplete": [
         {
           "id": "color-contrast",
@@ -91,41 +29,10 @@
     },
     {
       "width": 1280,
-      "passes": 35,
+      "passes": 36,
       "mainPasses": 19,
       "mainViolations": [],
-      "violations": [
-        {
-          "id": "color-contrast",
-          "impact": "serious",
-          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
-          "nodes": [
-            {
-              "html": "<em>Tools · Software · Guides</em>",
-              "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4 (foreground color: #73818c, background color: #ffffff, font size: 7.3pt (9.76px), font weight: normal). Expected contrast ratio of 4.5:1"
-            },
-            {
-              "html": "<em>Tools · Software · Guides</em>",
-              "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.08 (foreground color: #73818c, background color: #102131, font size: 7.3pt (9.76px), font weight: normal). Expected contrast ratio of 4.5:1"
-            }
-          ]
-        },
-        {
-          "id": "label-content-name-mismatch",
-          "impact": "serious",
-          "description": "Ensure that elements labelled through their content must have their visible text as part of their accessible name",
-          "nodes": [
-            {
-              "html": "<a class=\"brand\" href=\"../\" aria-label=\"Every Real Estate Calculator, homepage\">",
-              "summary": "Fix any of the following:\n  Text inside the element is not included in the accessible name"
-            },
-            {
-              "html": "<a class=\"brand\" href=\"../\" aria-label=\"Every Real Estate Calculator, homepage\">",
-              "summary": "Fix any of the following:\n  Text inside the element is not included in the accessible name"
-            }
-          ]
-        }
-      ],
+      "violations": [],
       "incomplete": [
         {
           "id": "color-contrast",
@@ -135,41 +42,10 @@
     },
     {
       "width": 1024,
-      "passes": 35,
+      "passes": 36,
       "mainPasses": 19,
       "mainViolations": [],
-      "violations": [
-        {
-          "id": "color-contrast",
-          "impact": "serious",
-          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
-          "nodes": [
-            {
-              "html": "<em>Tools · Software · Guides</em>",
-              "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4 (foreground color: #73818c, background color: #ffffff, font size: 7.3pt (9.76px), font weight: normal). Expected contrast ratio of 4.5:1"
-            },
-            {
-              "html": "<em>Tools · Software · Guides</em>",
-              "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.08 (foreground color: #73818c, background color: #102131, font size: 7.3pt (9.76px), font weight: normal). Expected contrast ratio of 4.5:1"
-            }
-          ]
-        },
-        {
-          "id": "label-content-name-mismatch",
-          "impact": "serious",
-          "description": "Ensure that elements labelled through their content must have their visible text as part of their accessible name",
-          "nodes": [
-            {
-              "html": "<a class=\"brand\" href=\"../\" aria-label=\"Every Real Estate Calculator, homepage\">",
-              "summary": "Fix any of the following:\n  Text inside the element is not included in the accessible name"
-            },
-            {
-              "html": "<a class=\"brand\" href=\"../\" aria-label=\"Every Real Estate Calculator, homepage\">",
-              "summary": "Fix any of the following:\n  Text inside the element is not included in the accessible name"
-            }
-          ]
-        }
-      ],
+      "violations": [],
       "incomplete": [
         {
           "id": "color-contrast",
@@ -179,41 +55,10 @@
     },
     {
       "width": 768,
-      "passes": 35,
+      "passes": 36,
       "mainPasses": 19,
       "mainViolations": [],
-      "violations": [
-        {
-          "id": "color-contrast",
-          "impact": "serious",
-          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
-          "nodes": [
-            {
-              "html": "<em>Tools · Software · Guides</em>",
-              "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4 (foreground color: #73818c, background color: #ffffff, font size: 7.3pt (9.76px), font weight: normal). Expected contrast ratio of 4.5:1"
-            },
-            {
-              "html": "<em>Tools · Software · Guides</em>",
-              "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.08 (foreground color: #73818c, background color: #102131, font size: 7.3pt (9.76px), font weight: normal). Expected contrast ratio of 4.5:1"
-            }
-          ]
-        },
-        {
-          "id": "label-content-name-mismatch",
-          "impact": "serious",
-          "description": "Ensure that elements labelled through their content must have their visible text as part of their accessible name",
-          "nodes": [
-            {
-              "html": "<a class=\"brand\" href=\"../\" aria-label=\"Every Real Estate Calculator, homepage\">",
-              "summary": "Fix any of the following:\n  Text inside the element is not included in the accessible name"
-            },
-            {
-              "html": "<a class=\"brand\" href=\"../\" aria-label=\"Every Real Estate Calculator, homepage\">",
-              "summary": "Fix any of the following:\n  Text inside the element is not included in the accessible name"
-            }
-          ]
-        }
-      ],
+      "violations": [],
       "incomplete": [
         {
           "id": "color-contrast",
@@ -223,41 +68,10 @@
     },
     {
       "width": 390,
-      "passes": 35,
+      "passes": 36,
       "mainPasses": 19,
       "mainViolations": [],
-      "violations": [
-        {
-          "id": "color-contrast",
-          "impact": "serious",
-          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
-          "nodes": [
-            {
-              "html": "<em>Tools · Software · Guides</em>",
-              "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4 (foreground color: #73818c, background color: #ffffff, font size: 7.3pt (9.76px), font weight: normal). Expected contrast ratio of 4.5:1"
-            },
-            {
-              "html": "<em>Tools · Software · Guides</em>",
-              "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.08 (foreground color: #73818c, background color: #102131, font size: 7.3pt (9.76px), font weight: normal). Expected contrast ratio of 4.5:1"
-            }
-          ]
-        },
-        {
-          "id": "label-content-name-mismatch",
-          "impact": "serious",
-          "description": "Ensure that elements labelled through their content must have their visible text as part of their accessible name",
-          "nodes": [
-            {
-              "html": "<a class=\"brand\" href=\"../\" aria-label=\"Every Real Estate Calculator, homepage\">",
-              "summary": "Fix any of the following:\n  Text inside the element is not included in the accessible name"
-            },
-            {
-              "html": "<a class=\"brand\" href=\"../\" aria-label=\"Every Real Estate Calculator, homepage\">",
-              "summary": "Fix any of the following:\n  Text inside the element is not included in the accessible name"
-            }
-          ]
-        }
-      ],
+      "violations": [],
       "incomplete": [
         {
           "id": "color-contrast",
@@ -271,41 +85,10 @@
     },
     {
       "width": 375,
-      "passes": 35,
+      "passes": 36,
       "mainPasses": 19,
       "mainViolations": [],
-      "violations": [
-        {
-          "id": "color-contrast",
-          "impact": "serious",
-          "description": "Ensure the contrast between foreground and background colors meets WCAG 2 AA minimum contrast ratio thresholds",
-          "nodes": [
-            {
-              "html": "<em>Tools · Software · Guides</em>",
-              "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4 (foreground color: #73818c, background color: #ffffff, font size: 7.3pt (9.76px), font weight: normal). Expected contrast ratio of 4.5:1"
-            },
-            {
-              "html": "<em>Tools · Software · Guides</em>",
-              "summary": "Fix any of the following:\n  Element has insufficient color contrast of 4.08 (foreground color: #73818c, background color: #102131, font size: 7.3pt (9.76px), font weight: normal). Expected contrast ratio of 4.5:1"
-            }
-          ]
-        },
-        {
-          "id": "label-content-name-mismatch",
-          "impact": "serious",
-          "description": "Ensure that elements labelled through their content must have their visible text as part of their accessible name",
-          "nodes": [
-            {
-              "html": "<a class=\"brand\" href=\"../\" aria-label=\"Every Real Estate Calculator, homepage\">",
-              "summary": "Fix any of the following:\n  Text inside the element is not included in the accessible name"
-            },
-            {
-              "html": "<a class=\"brand\" href=\"../\" aria-label=\"Every Real Estate Calculator, homepage\">",
-              "summary": "Fix any of the following:\n  Text inside the element is not included in the accessible name"
-            }
-          ]
-        }
-      ],
+      "violations": [],
       "incomplete": [
         {
           "id": "color-contrast",

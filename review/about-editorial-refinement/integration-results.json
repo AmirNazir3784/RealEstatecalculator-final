@@ -1,0 +1,22 @@
+{
+  "base": "5fcfb0efd68d37d0e8dbba557d795e478edddfe6",
+  "integrated": "4df5c7ca6297427b011eae96e8760573a183ba4f",
+  "identicalTree": true,
+  "results": [
+    {
+      "suite": "brand-accessibility",
+      "status": 0,
+      "output": "PASS: 174 shared-brand assertions across 18 public pages; header 4.74:1, footer 4.80:1; static names, configured names and visible tagline preserved.\n"
+    },
+    {
+      "suite": "w4",
+      "status": 0,
+      "output": "PASS: sixteen-page shared navigation, unique IDs, label references, viewport structure, form validation branches, submission prevention, draft-only behavior, stale-draft clearing and configurable brand.\nDOM stubs do not replace browser checks for responsive layout, native validation or keyboard interaction.\n"
+    },
+    {
+      "suite": "w8",
+      "status": 0,
+      "output": "W8: 1460 passed, 0 failed (16 shared menus, 10 preserved financial engine contracts, compact intro, SEO and disclosure behavior).\n"
+    }
+  ]
+}
