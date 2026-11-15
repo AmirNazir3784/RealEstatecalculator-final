@@ -38,6 +38,12 @@ jobs:
       - name: w5a - metadata, accessibility and shared navigation
         run: node website/tests/w5a.cjs
 
+      - name: Shared brand accessible names and tagline contrast
+        run: node website/tests/brand-accessibility.cjs
+
+      - name: Editorial About structure and content
+        run: node website/tests/about-editorial.cjs
+
       - name: Remaining website, calculator and Resources regression suites
         run: |
           set -euo pipefail

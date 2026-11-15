@@ -1,0 +1,945 @@
+{
+  "engine": "axe-core 4.14.0",
+  "assertions": 614,
+  "pages": 18,
+  "reports": [
+    {
+      "route": "/about/",
+      "width": 1440,
+      "javaScriptEnabled": true,
+      "passes": 9,
+      "violations": [],
+      "incomplete": [],
+      "geometryUnchanged": true
+    },
+    {
+      "route": "/contact/",
+      "width": 1440,
+      "javaScriptEnabled": true,
+      "passes": 9,
+      "violations": [],
+      "incomplete": [],
+      "geometryUnchanged": true
+    },
+    {
+      "route": "/",
+      "width": 1440,
+      "javaScriptEnabled": true,
+      "passes": 9,
+      "violations": [],
+      "incomplete": [],
+      "geometryUnchanged": true
+    },
+    {
+      "route": "/realtorcrm/",
+      "width": 1440,
+      "javaScriptEnabled": true,
+      "passes": 9,
+      "violations": [],
+      "incomplete": [],
+      "geometryUnchanged": true
+    },
+    {
+      "route": "/resources/",
+      "width": 1440,
+      "javaScriptEnabled": true,
+      "passes": 9,
+      "violations": [],
+      "incomplete": [],
+      "geometryUnchanged": true
+    },
+    {
+      "route": "/resources/mortgage-payments/",
+      "width": 1440,
+      "javaScriptEnabled": true,
+      "passes": 9,
+      "violations": [],
+      "incomplete": [],
+      "geometryUnchanged": true
+    },
+    {
+      "route": "/resources/real-estate-commission/",
+      "width": 1440,
+      "javaScriptEnabled": true,
+      "passes": 9,
+      "violations": [],
+      "incomplete": [],
+      "geometryUnchanged": true
+    },
+    {
+      "route": "/tools/bridge-loan-calculator/",
+      "width": 1440,
+      "javaScriptEnabled": true,
+      "passes": 9,
+      "violations": [],
+      "incomplete": [],
+      "geometryUnchanged": true
+    },
+    {
+      "route": "/tools/cap-rate-calculator/",
+      "width": 1440,
+      "javaScriptEnabled": true,
+      "passes": 9,
+      "violations": [],
+      "incomplete": [],
+      "geometryUnchanged": true
+    },
+    {
+      "route": "/tools/capital-gains-tax-calculator/",
+      "width": 1440,
+      "javaScriptEnabled": true,
+      "passes": 9,
+      "violations": [],
+      "incomplete": [],
+      "geometryUnchanged": true
+    },
+    {
+      "route": "/tools/commission-calculator/",
+      "width": 1440,
+      "javaScriptEnabled": true,
+      "passes": 9,
+      "violations": [],
+      "incomplete": [],
+      "geometryUnchanged": true
+    },
+    {
+      "route": "/tools/home-affordability-calculator/",
+      "width": 1440,
+      "javaScriptEnabled": true,
+      "passes": 9,
+      "violations": [],
+      "incomplete": [],
+      "geometryUnchanged": true
+    },
+    {
+      "route": "/tools/",
+      "width": 1440,
+      "javaScriptEnabled": true,
+      "passes": 9,
+      "violations": [],
+      "incomplete": [],
+      "geometryUnchanged": true
+    },
+    {
+      "route": "/tools/mortgage-calculator/",
+      "width": 1440,
+      "javaScriptEnabled": true,
+      "passes": 9,
+      "violations": [],
+      "incomplete": [],
+      "geometryUnchanged": true
+    },
+    {
+      "route": "/tools/noi-calculator/",
+      "width": 1440,
+      "javaScriptEnabled": true,
+      "passes": 9,
+      "violations": [],
+      "incomplete": [],
+      "geometryUnchanged": true
+    },
+    {
+      "route": "/tools/property-investment-calculator/",
+      "width": 1440,
+      "javaScriptEnabled": true,
+      "passes": 9,
+      "violations": [],
+      "incomplete": [],
+      "geometryUnchanged": true
+    },
+    {
+      "route": "/tools/rent-vs-buy-calculator/",
+      "width": 1440,
+      "javaScriptEnabled": true,
+      "passes": 9,
+      "violations": [],
+      "incomplete": [],
+      "geometryUnchanged": true
+    },
+    {
+      "route": "/tools/roi-calculator/",
+      "width": 1440,
+      "javaScriptEnabled": true,
+      "passes": 9,
+      "violations": [],
+      "incomplete": [],
+      "geometryUnchanged": true
+    },
+    {
+      "route": "/about/",
+      "width": 1440,
+      "javaScriptEnabled": false,
+      "nativeContrast": [
+        {
+          "foreground": "rgb(103, 117, 128)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 4.737271613283458
+        },
+        {
+          "foreground": "rgb(127, 141, 152)",
+          "background": "rgb(16, 33, 49)",
+          "ratio": 4.802272186198465
+        }
+      ]
+    },
+    {
+      "route": "/contact/",
+      "width": 1440,
+      "javaScriptEnabled": false,
+      "nativeContrast": [
+        {
+          "foreground": "rgb(103, 117, 128)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 4.737271613283458
+        },
+        {
+          "foreground": "rgb(194, 209, 218)",
+          "background": "rgb(16, 33, 49)",
+          "ratio": 10.457345765146952
+        }
+      ]
+    },
+    {
+      "route": "/",
+      "width": 1440,
+      "javaScriptEnabled": false,
+      "nativeContrast": [
+        {
+          "foreground": "rgb(104, 119, 129)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 4.621135765236592
+        },
+        {
+          "foreground": "rgb(186, 199, 205)",
+          "background": "rgb(16, 33, 49)",
+          "ratio": 9.454406983331706
+        }
+      ]
+    },
+    {
+      "route": "/realtorcrm/",
+      "width": 1440,
+      "javaScriptEnabled": false,
+      "nativeContrast": [
+        {
+          "foreground": "rgb(103, 117, 128)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 4.737271613283458
+        },
+        {
+          "foreground": "rgb(127, 141, 152)",
+          "background": "rgb(16, 33, 49)",
+          "ratio": 4.802272186198465
+        }
+      ]
+    },
+    {
+      "route": "/resources/",
+      "width": 1440,
+      "javaScriptEnabled": false,
+      "nativeContrast": [
+        {
+          "foreground": "rgb(103, 117, 128)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 4.737271613283458
+        },
+        {
+          "foreground": "rgb(127, 141, 152)",
+          "background": "rgb(16, 33, 49)",
+          "ratio": 4.802272186198465
+        }
+      ]
+    },
+    {
+      "route": "/resources/mortgage-payments/",
+      "width": 1440,
+      "javaScriptEnabled": false,
+      "nativeContrast": [
+        {
+          "foreground": "rgb(103, 117, 128)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 4.737271613283458
+        },
+        {
+          "foreground": "rgb(127, 141, 152)",
+          "background": "rgb(16, 33, 49)",
+          "ratio": 4.802272186198465
+        }
+      ]
+    },
+    {
+      "route": "/resources/real-estate-commission/",
+      "width": 1440,
+      "javaScriptEnabled": false,
+      "nativeContrast": [
+        {
+          "foreground": "rgb(103, 117, 128)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 4.737271613283458
+        },
+        {
+          "foreground": "rgb(127, 141, 152)",
+          "background": "rgb(16, 33, 49)",
+          "ratio": 4.802272186198465
+        }
+      ]
+    },
+    {
+      "route": "/tools/bridge-loan-calculator/",
+      "width": 1440,
+      "javaScriptEnabled": false,
+      "nativeContrast": [
+        {
+          "foreground": "rgb(103, 117, 128)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 4.737271613283458
+        },
+        {
+          "foreground": "rgb(127, 141, 152)",
+          "background": "rgb(16, 33, 49)",
+          "ratio": 4.802272186198465
+        }
+      ]
+    },
+    {
+      "route": "/tools/cap-rate-calculator/",
+      "width": 1440,
+      "javaScriptEnabled": false,
+      "nativeContrast": [
+        {
+          "foreground": "rgb(103, 117, 128)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 4.737271613283458
+        },
+        {
+          "foreground": "rgb(127, 141, 152)",
+          "background": "rgb(16, 33, 49)",
+          "ratio": 4.802272186198465
+        }
+      ]
+    },
+    {
+      "route": "/tools/capital-gains-tax-calculator/",
+      "width": 1440,
+      "javaScriptEnabled": false,
+      "nativeContrast": [
+        {
+          "foreground": "rgb(103, 117, 128)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 4.737271613283458
+        },
+        {
+          "foreground": "rgb(127, 141, 152)",
+          "background": "rgb(16, 33, 49)",
+          "ratio": 4.802272186198465
+        }
+      ]
+    },
+    {
+      "route": "/tools/commission-calculator/",
+      "width": 1440,
+      "javaScriptEnabled": false,
+      "nativeContrast": [
+        {
+          "foreground": "rgb(103, 117, 128)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 4.737271613283458
+        },
+        {
+          "foreground": "rgb(127, 141, 152)",
+          "background": "rgb(16, 33, 49)",
+          "ratio": 4.802272186198465
+        }
+      ]
+    },
+    {
+      "route": "/tools/home-affordability-calculator/",
+      "width": 1440,
+      "javaScriptEnabled": false,
+      "nativeContrast": [
+        {
+          "foreground": "rgb(103, 117, 128)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 4.737271613283458
+        },
+        {
+          "foreground": "rgb(127, 141, 152)",
+          "background": "rgb(16, 33, 49)",
+          "ratio": 4.802272186198465
+        }
+      ]
+    },
+    {
+      "route": "/tools/",
+      "width": 1440,
+      "javaScriptEnabled": false,
+      "nativeContrast": [
+        {
+          "foreground": "rgb(103, 117, 128)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 4.737271613283458
+        },
+        {
+          "foreground": "rgb(127, 141, 152)",
+          "background": "rgb(16, 33, 49)",
+          "ratio": 4.802272186198465
+        }
+      ]
+    },
+    {
+      "route": "/tools/mortgage-calculator/",
+      "width": 1440,
+      "javaScriptEnabled": false,
+      "nativeContrast": [
+        {
+          "foreground": "rgb(103, 117, 128)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 4.737271613283458
+        },
+        {
+          "foreground": "rgb(127, 141, 152)",
+          "background": "rgb(16, 33, 49)",
+          "ratio": 4.802272186198465
+        }
+      ]
+    },
+    {
+      "route": "/tools/noi-calculator/",
+      "width": 1440,
+      "javaScriptEnabled": false,
+      "nativeContrast": [
+        {
+          "foreground": "rgb(103, 117, 128)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 4.737271613283458
+        },
+        {
+          "foreground": "rgb(127, 141, 152)",
+          "background": "rgb(16, 33, 49)",
+          "ratio": 4.802272186198465
+        }
+      ]
+    },
+    {
+      "route": "/tools/property-investment-calculator/",
+      "width": 1440,
+      "javaScriptEnabled": false,
+      "nativeContrast": [
+        {
+          "foreground": "rgb(103, 117, 128)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 4.737271613283458
+        },
+        {
+          "foreground": "rgb(127, 141, 152)",
+          "background": "rgb(16, 33, 49)",
+          "ratio": 4.802272186198465
+        }
+      ]
+    },
+    {
+      "route": "/tools/rent-vs-buy-calculator/",
+      "width": 1440,
+      "javaScriptEnabled": false,
+      "nativeContrast": [
+        {
+          "foreground": "rgb(103, 117, 128)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 4.737271613283458
+        },
+        {
+          "foreground": "rgb(127, 141, 152)",
+          "background": "rgb(16, 33, 49)",
+          "ratio": 4.802272186198465
+        }
+      ]
+    },
+    {
+      "route": "/tools/roi-calculator/",
+      "width": 1440,
+      "javaScriptEnabled": false,
+      "nativeContrast": [
+        {
+          "foreground": "rgb(103, 117, 128)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 4.737271613283458
+        },
+        {
+          "foreground": "rgb(127, 141, 152)",
+          "background": "rgb(16, 33, 49)",
+          "ratio": 4.802272186198465
+        }
+      ]
+    },
+    {
+      "route": "/about/",
+      "width": 390,
+      "javaScriptEnabled": true,
+      "passes": 9,
+      "violations": [],
+      "incomplete": [],
+      "geometryUnchanged": true
+    },
+    {
+      "route": "/contact/",
+      "width": 390,
+      "javaScriptEnabled": true,
+      "passes": 9,
+      "violations": [],
+      "incomplete": [],
+      "geometryUnchanged": true
+    },
+    {
+      "route": "/",
+      "width": 390,
+      "javaScriptEnabled": true,
+      "passes": 9,
+      "violations": [],
+      "incomplete": [],
+      "geometryUnchanged": true
+    },
+    {
+      "route": "/realtorcrm/",
+      "width": 390,
+      "javaScriptEnabled": true,
+      "passes": 9,
+      "violations": [],
+      "incomplete": [],
+      "geometryUnchanged": true
+    },
+    {
+      "route": "/resources/",
+      "width": 390,
+      "javaScriptEnabled": true,
+      "passes": 9,
+      "violations": [],
+      "incomplete": [],
+      "geometryUnchanged": true
+    },
+    {
+      "route": "/resources/mortgage-payments/",
+      "width": 390,
+      "javaScriptEnabled": true,
+      "passes": 9,
+      "violations": [],
+      "incomplete": [],
+      "geometryUnchanged": true
+    },
+    {
+      "route": "/resources/real-estate-commission/",
+      "width": 390,
+      "javaScriptEnabled": true,
+      "passes": 9,
+      "violations": [],
+      "incomplete": [],
+      "geometryUnchanged": true
+    },
+    {
+      "route": "/tools/bridge-loan-calculator/",
+      "width": 390,
+      "javaScriptEnabled": true,
+      "passes": 9,
+      "violations": [],
+      "incomplete": [],
+      "geometryUnchanged": true
+    },
+    {
+      "route": "/tools/cap-rate-calculator/",
+      "width": 390,
+      "javaScriptEnabled": true,
+      "passes": 9,
+      "violations": [],
+      "incomplete": [],
+      "geometryUnchanged": true
+    },
+    {
+      "route": "/tools/capital-gains-tax-calculator/",
+      "width": 390,
+      "javaScriptEnabled": true,
+      "passes": 9,
+      "violations": [],
+      "incomplete": [],
+      "geometryUnchanged": true
+    },
+    {
+      "route": "/tools/commission-calculator/",
+      "width": 390,
+      "javaScriptEnabled": true,
+      "passes": 9,
+      "violations": [],
+      "incomplete": [],
+      "geometryUnchanged": true
+    },
+    {
+      "route": "/tools/home-affordability-calculator/",
+      "width": 390,
+      "javaScriptEnabled": true,
+      "passes": 9,
+      "violations": [],
+      "incomplete": [],
+      "geometryUnchanged": true
+    },
+    {
+      "route": "/tools/",
+      "width": 390,
+      "javaScriptEnabled": true,
+      "passes": 9,
+      "violations": [],
+      "incomplete": [],
+      "geometryUnchanged": true
+    },
+    {
+      "route": "/tools/mortgage-calculator/",
+      "width": 390,
+      "javaScriptEnabled": true,
+      "passes": 9,
+      "violations": [],
+      "incomplete": [],
+      "geometryUnchanged": true
+    },
+    {
+      "route": "/tools/noi-calculator/",
+      "width": 390,
+      "javaScriptEnabled": true,
+      "passes": 9,
+      "violations": [],
+      "incomplete": [],
+      "geometryUnchanged": true
+    },
+    {
+      "route": "/tools/property-investment-calculator/",
+      "width": 390,
+      "javaScriptEnabled": true,
+      "passes": 9,
+      "violations": [],
+      "incomplete": [],
+      "geometryUnchanged": true
+    },
+    {
+      "route": "/tools/rent-vs-buy-calculator/",
+      "width": 390,
+      "javaScriptEnabled": true,
+      "passes": 9,
+      "violations": [],
+      "incomplete": [],
+      "geometryUnchanged": true
+    },
+    {
+      "route": "/tools/roi-calculator/",
+      "width": 390,
+      "javaScriptEnabled": true,
+      "passes": 9,
+      "violations": [],
+      "incomplete": [],
+      "geometryUnchanged": true
+    },
+    {
+      "route": "/about/",
+      "width": 390,
+      "javaScriptEnabled": false,
+      "nativeContrast": [
+        {
+          "foreground": "rgb(103, 117, 128)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 4.737271613283458
+        },
+        {
+          "foreground": "rgb(127, 141, 152)",
+          "background": "rgb(16, 33, 49)",
+          "ratio": 4.802272186198465
+        }
+      ]
+    },
+    {
+      "route": "/contact/",
+      "width": 390,
+      "javaScriptEnabled": false,
+      "nativeContrast": [
+        {
+          "foreground": "rgb(103, 117, 128)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 4.737271613283458
+        },
+        {
+          "foreground": "rgb(194, 209, 218)",
+          "background": "rgb(16, 33, 49)",
+          "ratio": 10.457345765146952
+        }
+      ]
+    },
+    {
+      "route": "/",
+      "width": 390,
+      "javaScriptEnabled": false,
+      "nativeContrast": [
+        {
+          "foreground": "rgb(104, 119, 129)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 4.621135765236592
+        },
+        {
+          "foreground": "rgb(186, 199, 205)",
+          "background": "rgb(16, 33, 49)",
+          "ratio": 9.454406983331706
+        }
+      ]
+    },
+    {
+      "route": "/realtorcrm/",
+      "width": 390,
+      "javaScriptEnabled": false,
+      "nativeContrast": [
+        {
+          "foreground": "rgb(103, 117, 128)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 4.737271613283458
+        },
+        {
+          "foreground": "rgb(127, 141, 152)",
+          "background": "rgb(16, 33, 49)",
+          "ratio": 4.802272186198465
+        }
+      ]
+    },
+    {
+      "route": "/resources/",
+      "width": 390,
+      "javaScriptEnabled": false,
+      "nativeContrast": [
+        {
+          "foreground": "rgb(103, 117, 128)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 4.737271613283458
+        },
+        {
+          "foreground": "rgb(127, 141, 152)",
+          "background": "rgb(16, 33, 49)",
+          "ratio": 4.802272186198465
+        }
+      ]
+    },
+    {
+      "route": "/resources/mortgage-payments/",
+      "width": 390,
+      "javaScriptEnabled": false,
+      "nativeContrast": [
+        {
+          "foreground": "rgb(103, 117, 128)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 4.737271613283458
+        },
+        {
+          "foreground": "rgb(127, 141, 152)",
+          "background": "rgb(16, 33, 49)",
+          "ratio": 4.802272186198465
+        }
+      ]
+    },
+    {
+      "route": "/resources/real-estate-commission/",
+      "width": 390,
+      "javaScriptEnabled": false,
+      "nativeContrast": [
+        {
+          "foreground": "rgb(103, 117, 128)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 4.737271613283458
+        },
+        {
+          "foreground": "rgb(127, 141, 152)",
+          "background": "rgb(16, 33, 49)",
+          "ratio": 4.802272186198465
+        }
+      ]
+    },
+    {
+      "route": "/tools/bridge-loan-calculator/",
+      "width": 390,
+      "javaScriptEnabled": false,
+      "nativeContrast": [
+        {
+          "foreground": "rgb(103, 117, 128)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 4.737271613283458
+        },
+        {
+          "foreground": "rgb(127, 141, 152)",
+          "background": "rgb(16, 33, 49)",
+          "ratio": 4.802272186198465
+        }
+      ]
+    },
+    {
+      "route": "/tools/cap-rate-calculator/",
+      "width": 390,
+      "javaScriptEnabled": false,
+      "nativeContrast": [
+        {
+          "foreground": "rgb(103, 117, 128)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 4.737271613283458
+        },
+        {
+          "foreground": "rgb(127, 141, 152)",
+          "background": "rgb(16, 33, 49)",
+          "ratio": 4.802272186198465
+        }
+      ]
+    },
+    {
+      "route": "/tools/capital-gains-tax-calculator/",
+      "width": 390,
+      "javaScriptEnabled": false,
+      "nativeContrast": [
+        {
+          "foreground": "rgb(103, 117, 128)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 4.737271613283458
+        },
+        {
+          "foreground": "rgb(127, 141, 152)",
+          "background": "rgb(16, 33, 49)",
+          "ratio": 4.802272186198465
+        }
+      ]
+    },
+    {
+      "route": "/tools/commission-calculator/",
+      "width": 390,
+      "javaScriptEnabled": false,
+      "nativeContrast": [
+        {
+          "foreground": "rgb(103, 117, 128)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 4.737271613283458
+        },
+        {
+          "foreground": "rgb(127, 141, 152)",
+          "background": "rgb(16, 33, 49)",
+          "ratio": 4.802272186198465
+        }
+      ]
+    },
+    {
+      "route": "/tools/home-affordability-calculator/",
+      "width": 390,
+      "javaScriptEnabled": false,
+      "nativeContrast": [
+        {
+          "foreground": "rgb(103, 117, 128)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 4.737271613283458
+        },
+        {
+          "foreground": "rgb(127, 141, 152)",
+          "background": "rgb(16, 33, 49)",
+          "ratio": 4.802272186198465
+        }
+      ]
+    },
+    {
+      "route": "/tools/",
+      "width": 390,
+      "javaScriptEnabled": false,
+      "nativeContrast": [
+        {
+          "foreground": "rgb(103, 117, 128)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 4.737271613283458
+        },
+        {
+          "foreground": "rgb(127, 141, 152)",
+          "background": "rgb(16, 33, 49)",
+          "ratio": 4.802272186198465
+        }
+      ]
+    },
+    {
+      "route": "/tools/mortgage-calculator/",
+      "width": 390,
+      "javaScriptEnabled": false,
+      "nativeContrast": [
+        {
+          "foreground": "rgb(103, 117, 128)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 4.737271613283458
+        },
+        {
+          "foreground": "rgb(127, 141, 152)",
+          "background": "rgb(16, 33, 49)",
+          "ratio": 4.802272186198465
+        }
+      ]
+    },
+    {
+      "route": "/tools/noi-calculator/",
+      "width": 390,
+      "javaScriptEnabled": false,
+      "nativeContrast": [
+        {
+          "foreground": "rgb(103, 117, 128)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 4.737271613283458
+        },
+        {
+          "foreground": "rgb(127, 141, 152)",
+          "background": "rgb(16, 33, 49)",
+          "ratio": 4.802272186198465
+        }
+      ]
+    },
+    {
+      "route": "/tools/property-investment-calculator/",
+      "width": 390,
+      "javaScriptEnabled": false,
+      "nativeContrast": [
+        {
+          "foreground": "rgb(103, 117, 128)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 4.737271613283458
+        },
+        {
+          "foreground": "rgb(127, 141, 152)",
+          "background": "rgb(16, 33, 49)",
+          "ratio": 4.802272186198465
+        }
+      ]
+    },
+    {
+      "route": "/tools/rent-vs-buy-calculator/",
+      "width": 390,
+      "javaScriptEnabled": false,
+      "nativeContrast": [
+        {
+          "foreground": "rgb(103, 117, 128)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 4.737271613283458
+        },
+        {
+          "foreground": "rgb(127, 141, 152)",
+          "background": "rgb(16, 33, 49)",
+          "ratio": 4.802272186198465
+        }
+      ]
+    },
+    {
+      "route": "/tools/roi-calculator/",
+      "width": 390,
+      "javaScriptEnabled": false,
+      "nativeContrast": [
+        {
+          "foreground": "rgb(103, 117, 128)",
+          "background": "rgb(255, 255, 255)",
+          "ratio": 4.737271613283458
+        },
+        {
+          "foreground": "rgb(127, 141, 152)",
+          "background": "rgb(16, 33, 49)",
+          "ratio": 4.802272186198465
+        }
+      ]
+    }
+  ],
+  "problems": [],
+  "httpErrors": []
+}

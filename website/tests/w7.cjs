@@ -72,8 +72,8 @@ check('demo placeholder untouched', rc.includes('RealtorCRM Product Demo') && rc
 check('mobile placeholder untouched', rc.includes('RealtorCRM Mobile Preview') && rc.includes('Add your real mobile screenshot here'));
 // 9. About product scope and methodology, integrated into the approach section.
 const about = read('about/index.html');
-check('about verified CRM scope', about.includes('organizing contacts, deals, follow-ups') && !about.includes('Follow-up Plans'));
-check('about methodology', ['formulas and assumptions', 'worked examples you can check by hand', 'illustrative inputs', 'live lender quotes, market feeds or tax-authority data', 'includes and excludes'].every(text => about.includes(text)));
+check('about verified CRM scope', about.includes('organize contacts, deals, appointments and follow-ups') && !about.includes('Follow-up Plans'));
+check('about methodology', ['formulas, inputs and assumptions', 'Worked examples', 'understand and check their results', 'Every estimate has limitations', 'not as a replacement for professional financial, legal or tax advice'].every(text => about.includes(text)));
 // 10. No legal pages published; sitemap exactly 19 URLs (16 site pages + the
 // three standalone Resources guides).
 check('no privacy page in website tree', !fs.existsSync(path.join(ROOT, 'privacy-policy')));
