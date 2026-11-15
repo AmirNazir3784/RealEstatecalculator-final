@@ -3035,9 +3035,9 @@ a:hover { text-decoration: underline; text-underline-offset: 2px; }
    On mobile the product panel is hidden and the card styling falls away:
    the form sits on the page background under the compact header and the
    page ends shortly after the account-switch link. */
-.cloud-auth { position:fixed; inset:0; z-index:9999; display:flex; flex-direction:column; align-items:center; justify-content:center; padding:28px 24px; background:var(--bg); overflow-y:auto; }
+.cloud-auth { position:fixed; inset:0; z-index:9999; display:flex; flex-direction:column; align-items:center; justify-content:flex-start; padding:24px; background:var(--bg); overflow-y:auto; }
 /* Compact header above the card. */
-.cloud-auth-header { position:relative; z-index:1; width:min(100%,1040px); display:flex; align-items:center; justify-content:space-between; gap:16px; padding:0 2px 16px; }
+.cloud-auth-header { position:relative; z-index:1; width:min(100%,1040px); display:flex; align-items:center; justify-content:space-between; gap:16px; padding:0 2px 16px; margin-top:auto; }
 .cloud-auth-brand { display:flex; align-items:baseline; gap:12px; min-width:0; }
 .cloud-auth-wordmark { font-family:var(--font-auth-display); font-size:24px; font-weight:700; letter-spacing:-0.02em; color:var(--text); white-space:nowrap; }
 .cloud-auth-product-of { padding-left:12px; border-left:1px solid var(--border-strong); color:var(--text-muted); font-family:var(--font-auth-ui); font-size:var(--font-size-sm); white-space:nowrap; }
@@ -3046,9 +3046,9 @@ a:hover { text-decoration: underline; text-underline-offset: 2px; }
 .cloud-auth-back:focus-visible { outline:none; border-color:var(--accent); box-shadow:var(--shadow-focus); }
 .cloud-auth-back-short { display:none; }
 /* Two-panel card: one refined white auth surface on the right. */
-.cloud-auth-card { position:relative; z-index:1; width:min(100%,1040px); max-width:100%; display:flex; align-items:stretch; background:var(--card); border:1px solid var(--border); border-radius:var(--radius-lg); box-shadow:0 12px 32px rgba(31,30,24,.08); overflow:hidden; font-family:var(--font-auth-ui); }
+.cloud-auth-card { position:relative; z-index:1; width:min(100%,1040px); max-width:100%; display:flex; align-items:stretch; background:var(--card); border:1px solid var(--border); border-radius:var(--radius-lg); box-shadow:0 12px 32px rgba(31,30,24,.08); overflow:hidden; font-family:var(--font-auth-ui); margin-bottom:auto; }
 .cloud-auth-form-panel { flex:1 1 54%; min-width:0; padding:34px 40px 30px; display:flex; flex-direction:column; justify-content:center; order:2; }
-.cloud-auth-heading { font-family:var(--font-auth-display); font-size:38px; font-weight:700; line-height:1.15; letter-spacing:-0.02em; margin:0 0 6px; color:var(--text); }
+.cloud-auth-heading { font-family:var(--font-auth-display); font-size:34px; font-weight:700; line-height:1.15; letter-spacing:-0.02em; margin:0 0 6px; color:var(--text); }
 .cloud-auth-intro { color:var(--text-muted); margin:0 0 20px; font-size:var(--font-size-md); }
 .cloud-auth-subheading { margin:0 0 4px; font-family:var(--font-auth-ui); font-size:var(--font-size-lg); font-weight:700; color:var(--text); }
 .cloud-auth-tabs { display:flex; gap:3px; padding:3px; margin:0 0 22px; border:1px solid var(--border); border-radius:var(--radius-sm); background:var(--surface-sunk); }
@@ -3134,8 +3134,9 @@ a:hover { text-decoration: underline; text-underline-offset: 2px; }
    panel, no card chrome - the form uses the page background at ~20px
    padding and the page ends shortly after the switch link. */
 @media (max-width: 779px) {
-  .cloud-auth { padding:20px; justify-content:flex-start; }
-  .cloud-auth-header { width:100%; padding:0 0 18px; }
+  .cloud-auth { padding:20px; }
+  .cloud-auth-header { width:100%; padding:0 0 18px; margin-top:0; }
+  .cloud-auth-card { margin-bottom:0; }
   .cloud-auth-wordmark { font-size:21px; }
   .cloud-auth-product-of { display:none; }
   .cloud-auth-back { padding:8px 13px; }
@@ -3152,13 +3153,10 @@ a:hover { text-decoration: underline; text-underline-offset: 2px; }
   .cloud-auth-submit { min-height:52px; }
   .cloud-auth-pw-rules { display:grid; grid-template-columns:1fr 1fr; gap:7px 14px; }
 }
-/* Shorter viewports: anchor to the top and let the overlay scroll like a
-   normal page (it already has overflow-y:auto) so the whole card -
-   header included - stays reachable; the photo shrinks instead of
-   forcing height. */
-@media (max-height: 860px) {
-  .cloud-auth { justify-content:flex-start; }
-}
+/* Shorter viewports: the auto margins above collapse and the overlay
+   scrolls like a normal page (it already has overflow-y:auto) so the
+   whole card - header included - stays reachable; the photo shrinks
+   instead of forcing height. */
 @media (max-height: 700px) {
   .cloud-auth { padding:16px; }
   .cloud-auth-form-panel { padding-top:26px; padding-bottom:20px; }
