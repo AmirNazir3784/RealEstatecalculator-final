@@ -65,7 +65,10 @@ const tools = Array.from(context.window.realEstateTools).filter(t=>t.status==='p
 const pages = ['index.html','about/index.html','contact/index.html','resources/index.html','realtorcrm/index.html','tools/index.html',...tools.map(t=>`tools/${t.slug}/index.html`)];
 const escape = s=>s.replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('"','&quot;');
 const menuPattern = /<div class="tools-menu" id="tools-menu">[\s\S]*?<\/div>\s*<\/div><\/div>/;
-const outsideHeader = html=>html.replace(/<header\b[\s\S]*?<\/header>/,'').replace(/\n<div class="tools-menu-overlay"[^>]*><\/div>/,'').replace(/\s+/g,' ').trim();
+// The shared brand fix changes only the accessible name. Keep the original
+// appearance/content fingerprints while brand-accessibility.cjs checks the new name.
+const legacyBrandLabel = html=>html.replaceAll('aria-label="Every Real Estate Calculator Tools · Software · Guides, homepage"', 'aria-label="Every Real Estate Calculator, homepage"').replaceAll('Every Real Estate Calculator</span> <em>Tools', 'Every Real Estate Calculator</span><em>Tools');
+const outsideHeader = html=>legacyBrandLabel(html).replace(/<header\b[\s\S]*?<\/header>/,'').replace(/\n<div class="tools-menu-overlay"[^>]*><\/div>/,'').replace(/\s+/g,' ').trim();
 let reference;
 for(const file of pages) {
   const html = read(file), header = html.match(/<header\b[\s\S]*?<\/header>/)[0];
@@ -101,7 +104,7 @@ for(const file of pages) {
   check(`${file} no inline scripts`,!/<script(?![^>]*\bsrc=)/i.test(html));
   check(`${file} no inline handlers`,!/<[^>]*\son[a-z]+\s*=/i.test(html));
   if(file!=='tools/index.html' && !/^tools\/[^/]+\/index\.html$/.test(file)) equal(`${file} content outside header frozen`,hash(outsideHeader(html)),frozen.pages[file]);
-  const normalizedHeader=header.replace(menuPattern,'MENU').replace(/\s+/g,' ').trim();
+  const normalizedHeader=legacyBrandLabel(header).replace(menuPattern,'MENU').replace(/\s+/g,' ').trim();
   equal(`${file} brand / other navbar items frozen`,hash(normalizedHeader),frozen.headers[file]);
 }
 // Calculator composition is intentionally changed by the centralized system.

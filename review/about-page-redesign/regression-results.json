@@ -53,5 +53,10 @@
     "suite": "commission",
     "status": 0,
     "output": "PASS: 250 commission assertions; 22 scenarios match captured baseline and independent numerical answers; mode state, validation, reset, copy and print covered.\n"
+  },
+  {
+    "suite": "brand-accessibility",
+    "status": 0,
+    "output": "PASS: 174 shared-brand assertions across 18 public pages; header 4.74:1, footer 4.80:1; static names, configured names and visible tagline preserved.\n"
   }
 ]
