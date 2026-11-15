@@ -1,6 +1,6 @@
 // W9 — Resources redesign guards.
 // Locks the CaptionX-style Resources hub and the standalone guide articles:
-// exactly two real guide cards (no invented dates), the legacy hub anchors
+// exactly three real guide cards (no invented dates), the legacy hub anchors
 // still resolve, both articles exist with correct canonicals and matching
 // card metadata, the calculator directory is intact, and the shared
 // stylesheet lives in assets/. Dependency-free. Run: node website/tests/w9-resources.cjs
@@ -14,20 +14,24 @@ function equal(name, actual, expected) { assert.deepEqual(actual, expected, name
 const hub = read('resources/index.html');
 const mortgage = read('resources/mortgage-payments/index.html');
 const commission = read('resources/real-estate-commission/index.html');
+const affordability = read('resources/how-much-house-can-i-afford/index.html');
 const css = read('assets/resources.css');
 
-// Hub: intro + exactly two real cards, no dates, no extra features.
+// Hub: intro + exactly three real cards, no dates, no extra features.
 check('hub H1', hub.includes('<h1>Real Estate Resources</h1>'));
 check('hub intro copy', hub.includes('Practical guides to buying, selling, financing and investing in real estate.'));
-equal('exactly two article cards', (hub.match(/class="article-card"/g) || []).length, 2);
+equal('exactly three article cards', (hub.match(/class="article-card"/g) || []).length, 3);
 check('mortgage card title', hub.includes('<h2 id="mortgage-title">Understanding Mortgage Payments</h2>'));
 check('commission card title', hub.includes('<h2 id="commission-title">Understanding Real Estate Commission</h2>'));
+check('affordability card title', hub.includes('<h2 id="affordability-title">How Much House Can I Afford?</h2>'));
 check('mortgage card link', hub.includes('href="mortgage-payments/"'));
 check('commission card link', hub.includes('href="real-estate-commission/"'));
+check('affordability card link', hub.includes('href="how-much-house-can-i-afford/"'));
 check('no dates on cards', !hub.includes('card-date') && !/<time[\s>]/.test(hub));
 check('no search/filter/newsletter on hub', !/article-search|category-filter|newsletter/.test(hub));
 for (const [name, card] of [['mortgage', hub.match(/<article class="article-card" id="mortgage-guide">[\s\S]*?<\/article>/)[0]],
-                            ['commission', hub.match(/<article class="article-card" id="commission-guide">[\s\S]*?<\/article>/)[0]]]) {
+                            ['commission', hub.match(/<article class="article-card" id="commission-guide">[\s\S]*?<\/article>/)[0]],
+                            ['affordability', hub.match(/<article class="article-card" id="affordability-guide">[\s\S]*?<\/article>/)[0]]]) {
   const desc = card.match(/<p class="article-card-desc">([\s\S]*?)<\/p>/)[1].replace(/<[^>]+>/g, '');
   const words = desc.trim().split(/\s+/).length;
   check(`${name} card description 25-40 words (${words})`, words >= 25 && words <= 40);
@@ -35,7 +39,7 @@ for (const [name, card] of [['mortgage', hub.match(/<article class="article-card
 }
 
 // Legacy anchors still resolve on the hub.
-for (const id of ['mortgage-guide', 'commission-guide', 'calculators', 'available-title', 'mortgage-title', 'commission-title', 'reading-title']) check(`hub anchor #${id}`, hub.includes(`id="${id}"`));
+for (const id of ['mortgage-guide', 'commission-guide', 'affordability-guide', 'calculators', 'available-title', 'mortgage-title', 'commission-title', 'affordability-title', 'reading-title']) check(`hub anchor #${id}`, hub.includes(`id="${id}"`));
 
 // Calculator directory intact: all ten tools linked from the hub.
 for (const slug of ['mortgage-calculator', 'home-affordability-calculator', 'rent-vs-buy-calculator', 'bridge-loan-calculator',
@@ -47,7 +51,8 @@ for (const slug of ['mortgage-calculator', 'home-affordability-calculator', 'ren
 // Standalone articles: identity, SEO and template wiring.
 for (const [name, page, slug, title] of [
   ['mortgage', mortgage, 'mortgage-payments', 'Understanding Mortgage Payments'],
-  ['commission', commission, 'real-estate-commission', 'Understanding Real Estate Commission']]) {
+  ['commission', commission, 'real-estate-commission', 'Understanding Real Estate Commission'],
+  ['affordability', affordability, 'how-much-house-can-i-afford', 'How Much House Can I Afford?']]) {
   equal(`${name} exactly one H1`, (page.match(/<h1>/g) || []).length, 1);
   check(`${name} H1 text`, page.includes(`<h1>${title}</h1>`));
   check(`${name} canonical`, page.includes(`rel="canonical" href="https://everyrealestatecalculator.com/resources/${slug}/"`));
@@ -59,29 +64,32 @@ for (const [name, page, slug, title] of [
 }
 check('mortgage article links its calculator', mortgage.includes('href="../../tools/mortgage-calculator/"'));
 check('commission article links its calculator', commission.includes('href="../../tools/commission-calculator/"'));
+check('affordability article links its calculator', affordability.includes('href="../../tools/home-affordability-calculator/"'));
 check('articles cross-link', mortgage.includes('href="../real-estate-commission/"') && commission.includes('href="../mortgage-payments/"'));
+check('affordability article links the mortgage guide', affordability.includes('href="../mortgage-payments/"'));
 // The mortgage guide now states the calculator's real model (tax, insurance,
 // HOA dues and PMI are added when entered); the old false exclusion is gone.
 check('mortgage fix: added when entered', mortgage.includes('plus property tax, homeowner insurance, HOA dues and PMI whenever you enter them'));
 check('mortgage fix: old exclusion removed', !mortgage.includes('The result excludes property taxes') && !mortgage.includes('It does not model rate changes, extra payments'));
 check('commission example identifies the current mode and role', commission.includes('Choose Agent Earnings and keep your role set to Both sides, with referral and franchise fees at 0%'));
 check('commission split accounts for side and fees', commission.includes('Your percentage of the applicable side after referral and franchise fees.'));
-for (const title of ['Understanding Mortgage Payments', 'Understanding Real Estate Commission']) {
+for (const title of ['Understanding Mortgage Payments', 'Understanding Real Estate Commission', 'How Much House Can I Afford?']) {
   check(title + ' card link has a distinct accessible name', hub.includes('aria-label="Read article: ' + title + '"'));
 }
 
 // Card metadata remains part of the directory; article headers start at H1.
-for (const [id, category, minutes] of [['mortgage-guide', 'Mortgage', '3'], ['commission-guide', 'For agents', '2']]) {
+for (const [id, category, minutes] of [['mortgage-guide', 'Mortgage', '3'], ['commission-guide', 'For agents', '2'], ['affordability-guide', 'Buying', '8']]) {
   const card = hub.match(new RegExp('<article class="article-card" id="' + id + '">[\\s\\S]*?</article>'))[0];
   check(id + ' card badge unchanged', card.includes('<span class="chip">' + category + '</span>'));
   check(id + ' card reading time unchanged', card.includes('<span class="read-time">' + minutes + ' min read</span>'));
 }
 
-// Sitemap carries both articles; 18 URLs in total.
+// Sitemap carries all three articles; 19 URLs in total.
 const sm = read('sitemap.xml');
-equal('sitemap 18 URLs', (sm.match(/<loc>/g) || []).length, 18);
+equal('sitemap 19 URLs', (sm.match(/<loc>/g) || []).length, 19);
 check('sitemap mortgage article', sm.includes('<loc>https://everyrealestatecalculator.com/resources/mortgage-payments/</loc>'));
 check('sitemap commission article', sm.includes('<loc>https://everyrealestatecalculator.com/resources/real-estate-commission/</loc>'));
+check('sitemap affordability article', sm.includes('<loc>https://everyrealestatecalculator.com/resources/how-much-house-can-i-afford/</loc>'));
 
 // Centralized stylesheet: shared file exists, page-local copy is gone.
 check('shared resources.css in assets', fs.existsSync(path.join(root, 'assets/resources.css')));

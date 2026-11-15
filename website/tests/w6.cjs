@@ -8,7 +8,7 @@ const assert = require('node:assert/strict');
 const root = path.resolve(__dirname, '..');
 function walk(dir) { return fs.readdirSync(dir, { withFileTypes: true }).flatMap(e => e.isDirectory() ? walk(path.join(dir, e.name)) : [path.join(dir, e.name)]); }
 const pages = walk(root).filter(f => f.endsWith('.html') && !f.split(path.sep).includes('dist-production'));
-assert.equal(pages.length, 18, 'expected 18 website pages');
+assert.equal(pages.length, 19, 'expected 19 website pages');
 const BANNED = ['Working name, brand pending', 'Before launch', 'will be finalized before public launch', 'Connect support email, app login, pricing and approved legal policies'];
 for (const file of pages) {
   const html = fs.readFileSync(file, 'utf8');
