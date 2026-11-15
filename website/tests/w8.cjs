@@ -11,7 +11,8 @@ function equal(name, actual, expected) { assert.deepEqual(actual, expected, name
 const frozen = {
   "pages": {
     "index.html": "6dac1daef758dbd8d6055a357af33aa3bd73856e3ea68f00d0b28fbbd98e8725",
-    "about/index.html": "315ffffed741a25a1eb6e42a1bc5b6477de35f427b06f30932cc115e90e6f2a4",
+    // About baseline refreshed for the approved six-section redesign; shared header stays frozen.
+    "about/index.html": "36bd5bedd55399abecbcbc9be9dd156a0484c24f64f931a9e54697681c33eac2",
     "contact/index.html": "1aff953a79f28c6a89b14b10d562a09d8487d216467dcaceb10e78e6c3c3ce4d",
     "resources/index.html": "1fd7ed5c47ae8644a3e16b5869087eb9ea8f53073d6ad5739e29c2352f1c8f76",
     "realtorcrm/index.html": "2e4e3170636b9fabaae83e14ae08b5761bdb7c70da6d620c464a4dc51b0cfff4",

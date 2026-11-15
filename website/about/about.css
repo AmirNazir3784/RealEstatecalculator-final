@@ -1,140 +1,108 @@
-/* About page only. Reuses the shared palette, type, buttons and section tiers;
-   loaded after supporting.css, which stays unmodified. */
-
-/* Hero: page-scoped heading size within the approved 48-52 / 40 / 34-38 targets.
-   Padding rides the shared .page-hero tiers (48/40, 36/32, 28/28). */
-.about-page .page-hero h1 { font-size:50px; line-height:1.12; }
-.about-page .hero-actions { display:flex; flex-wrap:wrap; gap:12px; margin-top:26px; }
-
-/* Section headings: 32 / 29 / 27 within the approved 30-34 / 28-30 / 26-28 targets. */
-.about-page .support-heading { font-size:32px; }
-
-/* Offering cards */
-.about-page .offer-grid { display:grid; grid-template-columns:1fr 1fr; gap:24px; margin-top:24px; }
-.about-page .offer-card { background:var(--white); border:1px solid var(--line); border-radius:16px; padding:28px; display:flex; flex-direction:column; }
-.about-page .offer-tag { font-size:.72rem; letter-spacing:.13em; text-transform:uppercase; font-weight:800; color:var(--teal); margin-bottom:10px; }
-.about-page .offer-card h3 { font-family:var(--font-display); font-weight:600; letter-spacing:-.02em; font-size:26px; line-height:1.2; color:var(--navy); margin:0 0 12px; }
-.about-page .offer-card p { color:#44586A; margin:0 0 16px; }
-.about-page .about-chips { display:flex; flex-wrap:wrap; gap:8px 10px; list-style:none; padding:0; margin:0 0 20px; }
-.about-page .about-chips li { background:var(--mist); border:1px solid var(--line); border-radius:999px; padding:5px 12px; font-size:.85rem; }
-.about-page .offer-foot { margin-top:auto; }
-.about-page .offer-note { color:var(--muted); font-size:.88rem; margin:10px 0 0; }
-
-/* Two products, different purposes */
-.about-page .about-alt { background:#FBFAF6; border-block:1px solid var(--line); }
-.about-page .about-lede { max-width:720px; margin:0 0 24px; }
-.about-page .compare { display:grid; grid-template-columns:1fr 1fr; background:var(--white); border:1px solid var(--line); border-radius:16px; overflow:hidden; }
-.about-page .compare-col { padding:28px; }
-.about-page .compare-col + .compare-col { border-left:1px solid var(--line); }
-.about-page .compare-col h3 { font-size:1.05rem; margin:0 0 12px; color:var(--navy); }
-.about-page .compare-num { color:var(--teal); font-weight:800; margin-right:8px; }
-.about-page .compare-col ul { margin:0; padding-left:20px; color:#44586A; }
-.about-page .compare-col li { margin:8px 0; }
-.about-page .compare-col li::marker { color:var(--teal); }
-.about-page .about-note-bar { background:var(--mist); border:1px solid var(--line); border-radius:12px; padding:14px 18px; margin:20px 0 0; color:#33505F; font-size:.95rem; }
-
-/* Our approach: principles with subtle separators instead of cards. */
-.about-page .about-principles { grid-template-columns:repeat(4,1fr); gap:0; margin-top:24px; }
-.about-page .about-principles > div { padding:4px 22px; }
-.about-page .about-principles > div:first-child { padding-left:0; }
-.about-page .about-principles > div + div { border-left:1px solid var(--line); }
-
-/* Closing */
-.about-page .about-closing-sec { padding-top:0; }
-.about-page .about-closing { background:var(--navy); border-radius:20px; padding:40px; }
-.about-page .about-closing h2 { font-family:var(--font-display); font-weight:600; letter-spacing:-.02em; font-size:32px; line-height:1.15; color:#fff; margin:0 0 10px; }
-.about-page .about-closing p { color:#B9C8D2; max-width:640px; margin:0; }
-.about-page .about-closing .hero-actions { margin-top:24px; }
-.about-page .about-closing .btn-outline { background:transparent; border-color:#8FB3AC; color:#fff; }
-
-@media (max-width:1000px) {
-  .about-page .page-hero h1 { font-size:40px; }
-  .about-page .support-heading { font-size:29px; }
-  .about-page .about-closing h2 { font-size:29px; }
-  .about-page .offer-grid { gap:20px; }
-  .about-page .offer-card, .about-page .compare-col { padding:24px; }
-  .about-page .about-principles { grid-template-columns:repeat(2,1fr); }
-  .about-page .about-principles > div { padding:16px 22px; }
-  .about-page .about-principles > div:nth-child(odd) { border-left:none; padding-left:0; }
-  .about-page .about-principles > div:nth-child(n+3) { border-top:1px solid var(--line); }
+/* About page: shared palette, fonts, container and button components. */
+.about-page { font-size:16px; line-height:1.7; }
+.about-page h1, .about-page h2 { color:var(--navy); text-wrap:balance; }
+.about-page h2 { font-size:32px; line-height:1.2; margin:0 0 24px; }
+.about-page h3 { color:var(--navy); font-size:20px; line-height:1.3; margin:0 0 8px; }
+.about-page p { color:var(--muted); }
+.about-page .eyebrow { margin-bottom:12px; }
+.about-page .section { padding:52px 0; }
+.about-page .about-hero { padding:44px 0; border-bottom:1px solid var(--line); }
+.about-page .about-hero-grid { display:grid; grid-template-columns:minmax(0,1.15fr) minmax(0,1fr); align-items:center; gap:48px; }
+.about-page .about-hero h1 { font-size:48px; line-height:1.14; letter-spacing:-.035em; max-width:620px; margin:0 0 20px; }
+.about-page .about-hero h1 span { color:var(--teal); }
+.about-page .about-hero p { max-width:570px; margin-bottom:24px; }
+.about-page .about-hero-art { display:block; width:100%; height:auto; }
+.about-page .about-purpose-grid { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1.15fr); gap:64px; align-items:center; }
+.about-page .about-purpose h2 { max-width:400px; margin-bottom:0; }
+.about-page .about-purpose-grid p { margin:0; }
+.about-page .about-highlights { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); margin:32px 0 0; padding-top:24px; border-top:1px solid var(--line); }
+.about-page .about-highlights > div { padding:0 32px; }
+.about-page .about-highlights > div:first-child { padding-left:0; }
+.about-page .about-highlights > div + div { border-left:1px solid var(--line); }
+.about-page .about-highlights dt { font-family:var(--font-display); color:var(--teal); font-weight:600; font-size:30px; line-height:1.3; }
+.about-page .about-highlights dd { color:var(--muted); margin:4px 0 0; font-size:14px; }
+.about-page .about-products { background:var(--white); border-block:1px solid var(--line); }
+.about-page .about-product-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:24px; }
+.about-page .about-product-card { display:flex; flex-direction:column; border:1px solid var(--line); border-radius:16px; overflow:hidden; }
+.about-page .about-product-visual { height:184px; margin:0; background:var(--mist); border-bottom:1px solid var(--line); position:relative; }
+.about-page .about-calculator-visual { padding:20px 24px 0; overflow:hidden; }
+.about-page .about-calculator-visual img { display:block; width:100%; height:128px; object-fit:contain; border-radius:8px; }
+.about-page .about-calculator-visual figcaption { position:absolute; bottom:0; left:0; right:0; text-align:center; background:var(--mist); padding:6px 10px; color:var(--muted); font-size:12px; }
+.about-page .about-crm-visual { display:flex; flex-direction:column; align-items:center; justify-content:center; gap:18px; }
+.about-page .about-crm-concept { display:flex; align-items:center; }
+.about-page .about-crm-node, .about-page .about-crm-center { width:58px; height:58px; display:grid; place-items:center; border:1px solid var(--line); border-radius:14px; background:var(--white); color:var(--teal); }
+.about-page .about-crm-center { background:var(--navy); color:var(--white); width:76px; height:76px; border:none; }
+.about-page .about-crm-concept svg { width:28px; height:28px; }
+.about-page .about-crm-center svg { width:36px; height:36px; }
+.about-page .about-crm-connector { width:40px; height:1px; background:var(--gold); }
+.about-page .about-visual-caption { font-size:12px; color:var(--muted); }
+.about-page .about-product-copy { padding:24px; flex:1; display:flex; flex-direction:column; align-items:flex-start; }
+.about-page .about-product-copy h3 { font-size:22px; }
+.about-page .about-product-copy p { margin-bottom:18px; }
+.about-page .about-product-copy .card-arrow { margin-top:auto; font-size:14px; min-height:44px; display:inline-flex; align-items:center; gap:8px; }
+.about-page .about-audience-grid { display:grid; grid-template-columns:repeat(4,minmax(0,1fr)); gap:24px; }
+.about-page .about-audience-intro { max-width:850px; margin-bottom:24px; }
+.about-page .about-audience-card { border:1px solid var(--line); border-radius:14px; padding:24px; }
+.about-page .about-audience-card h3 { font-size:20px; margin-top:16px; }
+.about-page .about-audience-card p { margin:0; }
+.about-page .about-icon { display:inline-flex; align-items:center; justify-content:center; width:42px; height:42px; flex-shrink:0; border-radius:10px; color:var(--teal); background:var(--mist); }
+.about-page .about-icon svg { width:24px; height:24px; }
+.about-page .about-approach { padding-top:0; }
+.about-page .about-approach > .wrap { padding-top:48px; border-top:1px solid var(--line); }
+.about-page .about-approach h2 { margin-bottom:16px; }
+.about-page .about-approach-intro { max-width:800px; margin:0 0 28px; }
+.about-page .about-principles { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:28px 48px; }
+.about-page .about-principle { display:flex; align-items:flex-start; gap:16px; }
+.about-page .about-principle p { margin:0; }
+.about-page .about-disclaimer { font-size:14px; margin:28px 0 0; padding:16px 20px; border-left:3px solid var(--gold); background:var(--white); }
+.about-page .about-closing-section { padding-top:0; }
+.about-page .about-closing { background:var(--navy); border-radius:16px; padding:36px 40px; display:grid; grid-template-columns:minmax(0,1.3fr) minmax(0,1fr); gap:36px; align-items:center; }
+.about-page .about-closing h2 { font-size:30px; color:var(--white); margin-bottom:12px; }
+.about-page .about-closing p { color:#CBD4D7; margin:0; }
+.about-page .about-actions { display:flex; flex-wrap:wrap; gap:12px; justify-content:flex-end; }
+.about-page .about-closing .btn-outline { background:transparent; border-color:#8FB3AC; color:var(--white); }
+.about-page .about-closing .btn-outline:hover { background:var(--navy2); }
+@media (max-width:1100px) {
+  .about-page .about-hero-grid { gap:28px; }
+  .about-page .about-hero h1 { font-size:44px; }
+  .about-page .about-purpose-grid { gap:32px; }
+  .about-page .about-audience-grid { grid-template-columns:repeat(2,minmax(0,1fr)); }
+  .about-page .about-closing { grid-template-columns:minmax(0,1.5fr) minmax(0,1fr); padding:32px; gap:24px; }
 }
-@media (max-width:760px) {
-  .about-page .page-hero h1 { font-size:36px; }
-  .about-page .support-heading { font-size:27px; }
-  .about-page .offer-grid { grid-template-columns:1fr; gap:16px; }
-  .about-page .offer-card, .about-page .compare-col { padding:20px; }
-  .about-page .offer-card h3 { font-size:24px; }
-  .about-page .compare { grid-template-columns:1fr; }
-  .about-page .compare-col + .compare-col { border-left:none; border-top:1px solid var(--line); }
-  .about-page .about-principles { grid-template-columns:1fr; }
-  .about-page .about-principles > div { padding:14px 0; }
-  .about-page .about-principles > div + div { border-left:none; border-top:1px solid var(--line); }
-  .about-page .about-closing { padding:26px 20px; }
-  .about-page .about-closing h2 { font-size:27px; }
+@media (max-width:800px) {
+  .about-page .section { padding:40px 0; }
+  .about-page h2 { font-size:30px; }
+  .about-page .about-hero { padding:36px 0; }
+  .about-page .about-hero-grid { grid-template-columns:1fr; gap:24px; }
+  .about-page .about-hero h1 { font-size:40px; }
+  .about-page .about-hero-art { max-width:440px; justify-self:center; }
+  .about-page .about-purpose-grid { grid-template-columns:1fr; gap:20px; }
+  .about-page .about-purpose h2 { max-width:none; }
+  .about-page .about-principles { gap:24px; }
+  .about-page .about-approach, .about-page .about-closing-section { padding-top:0; }
+  .about-page .about-approach > .wrap { padding-top:40px; }
+  .about-page .about-closing { grid-template-columns:1fr; }
+  .about-page .about-actions { justify-content:flex-start; }
 }
-
-/* About hero — compact, centered, balanced */
-.about-page .page-hero {
-  padding: 44px 0;
+@media (max-width:600px) {
+  .about-page h2, .about-page .about-closing h2 { font-size:28px; }
+  .about-page .about-hero h1 { font-size:36px; }
+  .about-page .about-hero-art { max-width:360px; }
+  .about-page .about-highlights { grid-template-columns:.9fr .9fr 1.2fr; }
+  .about-page .about-highlights > div { padding:0 12px; }
+  .about-page .about-highlights dt { font-size:25px; }
+  .about-page .about-highlights > div:last-child dt { font-size:18px; white-space:nowrap; min-height:33px; display:flex; align-items:center; }
+  .about-page .about-highlights dd { font-size:12px; line-height:1.5; }
+  .about-page .about-product-grid, .about-page .about-principles { grid-template-columns:1fr; }
+  .about-page .about-audience-grid { gap:16px; }
+  .about-page .about-audience-card { padding:20px; }
+  .about-page .about-audience-card h3 { font-size:20px; }
+  .about-page .about-audience-card p { font-size:14px; }
+  .about-page .about-closing { padding:28px 24px; }
 }
-
-.about-page .page-hero .wrap {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-}
-
-.about-page .page-hero h1 {
-  font-size: clamp(34px, 3.2vw, 48px);
-  line-height: 1.15;
-  max-width: 760px;
-  margin: 0 0 18px;
-  text-wrap: balance;
-}
-
-.about-page .page-hero p {
-  font-size: 17px;
-  line-height: 1.65;
-  max-width: 700px;
-  margin: 0;
-}
-
-.about-page .hero-actions {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-top: 24px;
-}
-
-@media (max-width: 600px) {
-  .about-page .page-hero {
-    padding: 32px 0;
-  }
-
-  .about-page .page-hero h1 {
-    font-size: 34px;
-  }
-
-  .about-page .page-hero p {
-    font-size: 16px;
-  }
-}
-
-/* About hero — final size and spacing refinement */
-@media (min-width: 761px) {
-  .about-page .page-hero {
-    padding: 32px 0 36px;
-  }
-
-  .about-page .page-hero h1 {
-    font-size: 44px;
-    line-height: 1.16;
-    max-width: 800px;
-  }
-
-  .about-page .hero-actions {
-    margin-top: 22px;
-  }
+@media (max-width:399px) {
+  .about-page .about-audience-grid { grid-template-columns:1fr; }
+  .about-page .about-audience-card { display:grid; grid-template-columns:42px minmax(0,1fr); column-gap:16px; }
+  .about-page .about-audience-card .about-icon { grid-row:1/3; }
+  .about-page .about-audience-card h3 { margin:0 0 6px; }
 }
