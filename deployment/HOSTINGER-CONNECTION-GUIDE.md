@@ -1,5 +1,11 @@
 # Connecting GitHub to Hostinger — the two deployments
 
+> Existing production uses `public_html` for the website and
+> `public_html/realtorcrm` for the unchanged CRM subdomain. Marketing now belongs
+> in `public_html/real-estate-crm`. Complete [the migration handoff](REALTORCRM-MIGRATION.md)
+> before any website publish. The first-connection/empty-directory instructions
+> below are historical setup guidance, not a safe migration procedure.
+
 How Hostinger's Git feature actually works (verified against Hostinger's
 current documentation and hPanel behaviour):
 
@@ -43,7 +49,8 @@ owner during the launch sequence.
 7. Verify: the file list in File Manager → `public_html` should show
    `index.html`, `sitemap.xml`, `robots.txt`, `.htaccess` and the
    folders `assets`, `tools`, `about`, `contact`, `resources`,
-   `realtoros` — and **no** CRM files, tests, or documentation.
+   `real-estate-crm` — with no CRM application files tracked by the website branch.
+   The existing, ignored `realtorcrm` directory belongs to the subdomain and must be preserved.
 8. SSL: hPanel → Security → SSL → **Lifetime SSL** for the domain →
    Install → wait for **Active**. The branch's `.htaccess` then enforces
    HTTPS and www→non-www redirects by itself.

@@ -1,0 +1,26 @@
+name: Deployment isolation
+on:
+  pull_request:
+    paths: ['website/**', 'deployment/**', '.github/workflows/deploy-*.yml', '.github/workflows/deployment-isolation.yml']
+  push:
+    branches: [main]
+    paths: ['website/**', 'deployment/**', '.github/workflows/deploy-*.yml', '.github/workflows/deployment-isolation.yml']
+permissions:
+  contents: read
+jobs:
+  isolation:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node website/scripts/package-deploy.mjs
+      - run: node deployment/package-crm.mjs
+      - name: Artifact ownership, deployment orders and legacy deletion regression
+        run: node --test --test-concurrency=1 deployment/tests/isolation.test.mjs
+      - name: Install Apache for isolated server tests
+        run: sudo apt-get update -qq && sudo apt-get install -y apache2
+      - name: Test actual HTTP 301 rules and app isolation on Apache
+        run: python3 deployment/tests/apache-redirects.py

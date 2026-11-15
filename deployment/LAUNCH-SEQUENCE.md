@@ -1,5 +1,9 @@
 # Launch Sequence — avoiding a broken sign-in experience
 
+> Historical first-launch instructions. For the existing nested CRM deployment,
+> follow [REALTORCRM-MIGRATION.md](REALTORCRM-MIGRATION.md) instead. Do not empty
+> directories or change document roots, DNS, SSL or Supabase for this migration.
+
 The website's "Sign in to RealtorCRM" links point at
 `https://realtorcrm.everyrealestatecalculator.com` (PR #9 configuration). That
 subdomain must be **live and verified before the website goes public**,

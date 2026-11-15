@@ -10,17 +10,25 @@ on:
     paths:
       - "website/**"
       - "deployment/website.htaccess"
+      - "deployment/website-deploy.gitignore"
+      - "deployment/assert-isolation.mjs"
       - ".github/workflows/deploy-website.yml"
   pull_request:
     branches: [main]
     paths:
       - "website/**"
       - "deployment/website.htaccess"
+      - "deployment/website-deploy.gitignore"
+      - "deployment/assert-isolation.mjs"
       - ".github/workflows/deploy-website.yml"
   workflow_dispatch:
     inputs:
       publish:
         description: "Publish the verified output to the deploy-website branch"
+        type: boolean
+        default: false
+      crm_preservation_verified:
+        description: "Verified Hostinger preserves realtorcrm/, including legacy tracked-file deletion (see migration runbook)"
         type: boolean
         default: false
 
@@ -56,6 +64,8 @@ jobs:
           mkdir -p out
           cp -r website/dist-production/. out/
           cp deployment/website.htaccess out/.htaccess
+          cp deployment/website-deploy.gitignore out/.gitignore
+          node deployment/assert-isolation.mjs website out
           test -f out/index.html
           test -f out/sitemap.xml
           test -f out/robots.txt
@@ -85,11 +95,17 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
       - name: Download the uploaded artifact
         uses: actions/download-artifact@v4
         with:
           name: website-production-output
           path: artifact
+      - name: Verify deployment isolation after artifact download
+        run: node deployment/assert-isolation.mjs website artifact
       - name: Verify the artifact contents
         run: |
           set -euo pipefail
@@ -126,11 +142,17 @@ jobs:
     permissions:
       contents: write
     steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
       - name: Download the verified output
         uses: actions/download-artifact@v4
         with:
           name: website-production-output
           path: out
+      - name: Verify deployment isolation before publication
+        run: node deployment/assert-isolation.mjs website out
       - name: Verify the downloaded output contains .htaccess
         run: |
           set -euo pipefail
@@ -156,6 +178,7 @@ jobs:
       - name: Commit the output to the deploy-website branch
         env:
           SOURCE_SHA: ${{ github.sha }}
+          CRM_PRESERVATION_VERIFIED: ${{ inputs.crm_preservation_verified }}
         run: |
           set -euo pipefail
           git config --global user.name "github-actions[bot]"
@@ -169,6 +192,7 @@ jobs:
           else
             git checkout -q --orphan deploy-website
           fi
+          node "$GITHUB_WORKSPACE/deployment/assert-isolation.mjs" handoff "$PWD"
           find . -mindepth 1 -maxdepth 1 -not -name .git -exec rm -rf {} +
           cp -r "$GITHUB_WORKSPACE/out/." .
           git add -A

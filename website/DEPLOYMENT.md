@@ -1,5 +1,15 @@
 # Website deployment packaging
 
+## Existing nested CRM hosting
+
+Marketing uses `/real-estate-crm/`; `/realtorcrm/` is reserved for the existing
+CRM subdomain directory. Before publishing, follow
+[the ownership migration runbook](../deployment/REALTORCRM-MIGRATION.md).
+Do not upload/mirror the website across that reserved directory or use a
+pre-migration artifact. The build directory alone does not prove Hostinger
+preserves previously tracked or untracked CRM files.
+
+
 The website is a static site. What gets deployed is **not** the `website/`
 folder as it sits in the repository — it is a clean package built from it,
 containing only the files the live site needs.

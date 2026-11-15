@@ -2,7 +2,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const assert = require('node:assert/strict');
 const root = path.resolve(__dirname, '..');
-const pages = ['index.html', 'tools/index.html', 'realtorcrm/index.html', 'about/index.html', 'resources/index.html', 'contact/index.html', 'tools/commission-calculator/index.html', 'tools/mortgage-calculator/index.html', 'tools/home-affordability-calculator/index.html', 'tools/rent-vs-buy-calculator/index.html', 'tools/cap-rate-calculator/index.html', 'tools/bridge-loan-calculator/index.html', 'tools/property-investment-calculator/index.html', 'tools/capital-gains-tax-calculator/index.html', 'tools/roi-calculator/index.html', 'tools/noi-calculator/index.html'];
+const pages = ['index.html', 'tools/index.html', 'real-estate-crm/index.html', 'about/index.html', 'resources/index.html', 'contact/index.html', 'tools/commission-calculator/index.html', 'tools/mortgage-calculator/index.html', 'tools/home-affordability-calculator/index.html', 'tools/rent-vs-buy-calculator/index.html', 'tools/cap-rate-calculator/index.html', 'tools/bridge-loan-calculator/index.html', 'tools/property-investment-calculator/index.html', 'tools/capital-gains-tax-calculator/index.html', 'tools/roi-calculator/index.html', 'tools/noi-calculator/index.html'];
 const titles = new Set(), descriptions = new Set();
 for (const page of pages) {
   const html = fs.readFileSync(path.join(root, page), 'utf8');
@@ -36,7 +36,7 @@ assert(!/<form[^>]*action=/.test(contact));
 console.log('PASS: 16 unique titles/descriptions, matching social metadata, heading order, language/skip links, deferred scripts, configured canonical/sitemap URLs for everyrealestatecalculator.com, honest draft-only contact messaging.');
 
 // Regression: the header navigation's RealtorCRM item must open the
-// product details page (/realtorcrm/), never the CRM login app. The
+// product details page (/real-estate-crm/), never the CRM login app. The
 // data-crm-link marker is what assets/site.js rewrites to the app URL,
 // so the nav item must not carry it - while the header's two
 // "Sign in to RealtorCRM" CTAs must keep it (they are login buttons).
@@ -46,7 +46,7 @@ for (const page of pages) {
   const navItem = [...header.matchAll(/<a [^>]*>RealtorCRM<\/a>/g)];
   assert.equal(navItem.length, 1, `${page}: exactly one header nav RealtorCRM item`);
   assert(!navItem[0][0].includes('data-crm-link'), `${page}: header nav RealtorCRM item must not be rewritten to the CRM app`);
-  assert(/href="((?:\.\.\/)*realtorcrm\/)"/.test(navItem[0][0]), `${page}: header nav RealtorCRM item must link to the details page`);
+  assert(/href="((?:\.\.\/)*real-estate-crm\/)"/.test(navItem[0][0]), `${page}: header nav RealtorCRM item must link to the details page`);
   const signInCtas = [...header.matchAll(/<a [^>]*data-crm-link="login"[^>]*>\s*Sign in to RealtorCRM/g)];
   assert.equal(signInCtas.length, 2, `${page}: both header Sign in CTAs keep their CRM app wiring`);
 }
@@ -54,7 +54,7 @@ for (const page of pages) {
 // RealtorCRM product page: approved structure, exact copy, live CTAs,
 // media placeholders, and none of the retired sections.
 {
-  const page = fs.readFileSync(path.join(root, 'realtorcrm/index.html'), 'utf8');
+  const page = fs.readFileSync(path.join(root, 'real-estate-crm/index.html'), 'utf8');
   assert(page.includes('<h1 id="product-title">Keep every lead, deal, and follow-up'), 'hero headline');
   assert(page.includes('REALTORCRM · BUILT FOR REAL ESTATE AGENTS'), 'hero eyebrow');
   assert(page.includes('Manage contacts, track deals, plan follow-ups, and stay organized'), 'hero description');
@@ -77,7 +77,7 @@ for (const page of pages) {
 {
   const expected = new Map([
     ['index.html', 'Every Real Estate Calculator | Tools &amp; Guides'],
-    ['realtorcrm/index.html', 'RealtorCRM | CRM for Real Estate Agents'],
+    ['real-estate-crm/index.html', 'RealtorCRM | CRM for Real Estate Agents'],
     ['about/index.html', 'About | Every Real Estate Calculator'],
     ['contact/index.html', 'Contact | Every Real Estate Calculator'],
     ['resources/index.html', 'Resources | Every Real Estate Calculator'],
