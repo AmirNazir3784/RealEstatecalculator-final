@@ -37,27 +37,38 @@ App.cloud = (function () {
     root = document.createElement("div"); root.id = "cloudAuth"; root.className = "cloud-auth";
     document.body.appendChild(root);
     // Small inline icons only — no icon library/CDN. currentColor follows the
-    // muted text token set in CSS; the Google/Facebook marks use their
-    // official colors, scoped to just these small icons.
+    // muted text token set in CSS; the Google mark uses its official colors,
+    // scoped to just this small icon.
     const ICON_USER = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.2"></circle><path d="M5 19c0-3.5 3-6 7-6s7 2.5 7 6"></path></svg>';
     const ICON_EMAIL = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="M3 7l9 6 9-6"></path></svg>';
     const ICON_LOCK = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>';
     const ICON_EYE = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 12S6 5.6 12 5.6 21.5 12 21.5 12 18 18.4 12 18.4 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="3"/></svg>';
     const ICON_EYE_OFF = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 4.5l15 15"/><path d="M9.9 6.2A9.8 9.8 0 0 1 12 5.6c6 0 9.5 6.4 9.5 6.4a17.6 17.6 0 0 1-3.2 3.5M6.1 8A16.9 16.9 0 0 0 2.5 12S6 18.4 12 18.4c1.5 0 2.9-.4 4.1-1"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/></svg>';
     const ICON_GOOGLE = '<svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path fill="#4285F4" d="M19.6 10.23c0-.68-.06-1.36-.18-2H10v3.79h5.38a4.6 4.6 0 0 1-2 3.02v2.5h3.23c1.89-1.74 2.99-4.3 2.99-7.31z"/><path fill="#34A853" d="M10 20c2.7 0 4.96-.89 6.62-2.42l-3.23-2.5c-.9.6-2.06.95-3.39.95-2.6 0-4.8-1.76-5.59-4.12H1.06v2.59A10 10 0 0 0 10 20z"/><path fill="#FBBC05" d="M4.41 11.9a5.99 5.99 0 0 1 0-3.8V5.5H1.06a10 10 0 0 0 0 9l3.35-2.6z"/><path fill="#EA4335" d="M10 3.98c1.47 0 2.79.5 3.82 1.5l2.87-2.87C14.95.99 12.7 0 10 0 6.09 0 2.72 2.24 1.06 5.5l3.35 2.6C5.2 5.75 7.4 3.98 10 3.98z"/></svg>';
-    const ICON_FACEBOOK = '<svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path fill="#1877F2" d="M20 10a10 10 0 1 0-11.56 9.88v-6.99H5.9V10h2.54V7.8c0-2.5 1.49-3.89 3.77-3.89 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56V10h2.78l-.44 2.89h-2.34v6.99A10 10 0 0 0 20 10z"/></svg>';
+    const ICON_RULE_CHECK = '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 12.5l5 5L19.5 7"/></svg>';
     // The card is built once. Switching modes (including into/out of Reset
     // and Update Password) toggles [hidden] on these sibling forms and
     // mutates their fields instead of re-rendering, so the fade transition
     // can actually animate rather than jump.
-    root.innerHTML = `<div class="cloud-auth-card" id="cloudAuthCard">
+    root.innerHTML = `<header class="cloud-auth-header">
+        <div class="cloud-auth-brand">
+          <span class="cloud-auth-wordmark">RealtorCRM</span>
+          <span class="cloud-auth-product-of">A product of Every Real Estate Calculator</span>
+        </div>
+        <a id="cloudBackToWebsite" class="cloud-auth-back" href="#"><span aria-hidden="true">←</span> <span class="cloud-auth-back-full">Back to website</span><span class="cloud-auth-back-short">Back</span></a>
+      </header>
+      <div class="cloud-auth-card" id="cloudAuthCard">
         <div class="cloud-auth-form-panel" id="cloudAuthPanel">
-          <h1>RealtorCRM</h1>
           <form id="cloudAuthForm">
-            <p class="cloud-auth-intro" id="cloudAuthIntro"></p>
             <div class="cloud-auth-tabs" role="tablist" aria-label="Account access">
               <button class="cloud-auth-tab" id="cloudSignInTab" type="button" role="tab" aria-selected="true" aria-controls="cloudAuthForm">Sign in</button>
               <button class="cloud-auth-tab" id="cloudCreateTab" type="button" role="tab" aria-selected="false" aria-controls="cloudAuthForm">Create account</button>
+            </div>
+            <h2 class="cloud-auth-heading" id="cloudAuthHeading">Welcome back</h2>
+            <p class="cloud-auth-intro" id="cloudAuthIntro"></p>
+            <div id="cloudOAuthBlock">
+              <button type="button" class="cloud-auth-oauth-btn" id="cloudOAuthGoogle" aria-label="Continue with Google">${ICON_GOOGLE}<span>Continue with Google</span></button>
+              <div class="cloud-auth-divider"><span>or continue with email</span></div>
             </div>
             <div class="cloud-auth-field" id="cloudFullNameField" hidden>
               <label for="cloudFullName">Full name</label>
@@ -77,7 +88,13 @@ App.cloud = (function () {
               <div class="cloud-auth-input-wrap"><span class="cloud-auth-input-icon">${ICON_LOCK}</span>
                 <input class="cloud-password-input" id="cloudPassword" type="password" autocomplete="current-password" placeholder="Enter your password" required minlength="6"><button type="button" class="cloud-password-toggle" data-password-toggle data-password-label="password" aria-label="Show password" aria-pressed="false">${ICON_EYE}</button></div>
             </div>
-            <p class="cloud-auth-pw-line" id="cloudPwLine" hidden>10+ characters, including uppercase, lowercase, a number, and a symbol.</p>
+            <ul class="cloud-auth-pw-rules" id="cloudPwRules" hidden aria-label="Password requirements">
+              <li data-rule="length"><span class="cloud-auth-rule-check">${ICON_RULE_CHECK}</span>10+ characters</li>
+              <li data-rule="upper"><span class="cloud-auth-rule-check">${ICON_RULE_CHECK}</span>Uppercase</li>
+              <li data-rule="lower"><span class="cloud-auth-rule-check">${ICON_RULE_CHECK}</span>Lowercase</li>
+              <li data-rule="number"><span class="cloud-auth-rule-check">${ICON_RULE_CHECK}</span>Number</li>
+              <li data-rule="symbol"><span class="cloud-auth-rule-check">${ICON_RULE_CHECK}</span>Symbol</li>
+            </ul>
             <div class="cloud-auth-field" id="cloudConfirmField" hidden>
               <label for="cloudPasswordConfirm">Confirm password</label>
               <div class="cloud-auth-input-wrap"><span class="cloud-auth-input-icon">${ICON_LOCK}</span>
@@ -86,16 +103,7 @@ App.cloud = (function () {
             </div>
             <button class="btn btn-primary cloud-auth-submit" id="cloudAuthSubmit" type="submit">Sign in</button>
             <p id="cloudAuthMessage" class="cloud-auth-message" aria-live="polite"></p>
-            <div id="cloudOAuthBlock">
-              <div class="cloud-auth-divider"><span>or continue with</span></div>
-              <div class="cloud-auth-oauth-row">
-                <button type="button" class="cloud-auth-oauth-btn" id="cloudOAuthGoogle">${ICON_GOOGLE}<span>Continue with Google</span></button>
-                <!-- Facebook OAuth is wired below, but the provider is not enabled in Supabase yet, so this button ships disabled; remove the disabled attribute when the provider is turned on. -->
-                <button type="button" class="cloud-auth-oauth-btn" id="cloudOAuthFacebook" disabled title="Facebook sign-in is not available yet">${ICON_FACEBOOK}<span>Continue with Facebook</span></button>
-              </div>
-            </div>
             <p class="cloud-auth-switch"><span id="cloudAuthSwitchCopy"></span> <button id="cloudAuthSwitch" type="button"></button></p>
-            <p class="cloud-auth-switch"><a id="cloudBackToWebsite" href="#">Back to website</a></p>
           </form>
           <form id="cloudResetForm" hidden>
             <p class="cloud-auth-subheading">Reset your password</p>
@@ -138,13 +146,16 @@ App.cloud = (function () {
           </div>
         </div>
         <div class="cloud-auth-illustration" aria-hidden="true">
-          <div class="cloud-auth-illustration-art">
-            <img class="cloud-auth-illustration-img" src="assets/illustrations/realtor-auth-buy-house.svg" alt="" width="248" height="239">
-          </div>
-          <p class="cloud-auth-illustration-label">REALTORCRM</p>
-          <h2 class="cloud-auth-illustration-heading">Your real estate workspace</h2>
-          <p class="cloud-auth-illustration-desc">Organize contacts, manage deals, plan follow-ups and close with confidence.</p>
+          <p class="cloud-auth-illustration-label">RealtorCRM</p>
+          <h2 class="cloud-auth-illustration-heading">Stay on top of contacts, deals and follow-ups.</h2>
+          <p class="cloud-auth-illustration-desc">A simple and practical CRM for real estate professionals to organize contacts, manage deals, track follow-ups and keep your work on schedule.</p>
           <div class="cloud-auth-illustration-features"><span class="cloud-auth-illustration-feature"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.4"/><path d="M3.5 19.5c.7-3.2 2.9-5 5.5-5s4.8 1.8 5.5 5"/></svg>Contacts</span><span class="cloud-auth-illustration-feature"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3l9 5-9 5-9-5 9-5z"/><path d="M3.6 13.4L12 18l8.4-4.6"/></svg>Deals</span><span class="cloud-auth-illustration-feature"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18M8 3v4M16 3v4"/></svg>Follow-ups</span><span class="cloud-auth-illustration-feature"><svg viewBox="0 0 24 24" width="15" height="15" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="8.6"/><path d="M8.6 12.4l2.4 2.4 4.4-4.9"/></svg>Tasks</span></div>
+          <div class="cloud-auth-illustration-photo">
+            <picture>
+              <source srcset="assets/images/home-architecture-768.avif" type="image/avif">
+              <img src="assets/images/home-architecture-768.webp" alt="" loading="eager" decoding="async">
+            </picture>
+          </div>
         </div>
       </div>`;
 
@@ -165,9 +176,8 @@ App.cloud = (function () {
     const switchCopy = root.querySelector("#cloudAuthSwitchCopy");
     const switchBtn = root.querySelector("#cloudAuthSwitch");
     const forgotLink = root.querySelector("#cloudForgotLink");
-    const oauthBlock = root.querySelector("#cloudOAuthBlock");
+    const heading = root.querySelector("#cloudAuthHeading");
     const oauthGoogleBtn = root.querySelector("#cloudOAuthGoogle");
-    const oauthFacebookBtn = root.querySelector("#cloudOAuthFacebook");
     const resetEmailInput = root.querySelector("#cloudResetEmail");
     const resetSubmitBtn = root.querySelector("#cloudResetSubmit");
     const resetBackBtn = root.querySelector("#cloudResetBack");
@@ -179,7 +189,7 @@ App.cloud = (function () {
     const resendBtn = root.querySelector("#cloudResendBtn");
     const changeEmailBtn = root.querySelector("#cloudChangeEmailBtn");
     const confirmBackBtn = root.querySelector("#cloudConfirmBackBtn");
-    const pwLine = root.querySelector("#cloudPwLine");
+    const pwRules = root.querySelector("#cloudPwRules");
     const updatePwLine = root.querySelector("#cloudUpdatePwLine");
     const confirmLine = root.querySelector("#cloudConfirmLine");
     const updateConfirmLine = root.querySelector("#cloudUpdateConfirmLine");
@@ -192,8 +202,8 @@ App.cloud = (function () {
 
     // New-password rule for Create account and Update password (sign-in is
     // never re-judged: an existing password stays valid whatever it is).
-    // Frontend-only guidance - the matching Supabase-side policy is a
-    // dashboard setting, listed for the owner as an approval item.
+    // The matching Supabase-side policy (dashboard) enforces the same rule
+    // server-side; this code renders it and blocks bad submits first.
     const PW_RULES = [
       ["length", (v) => v.length >= 10, "10+ characters"],
       ["upper", (v) => /[A-Z]/.test(v), "uppercase letter"],
@@ -225,6 +235,17 @@ App.cloud = (function () {
         lineEl.innerHTML = ICON_PW_WARN + "<span>Still needed: " + missing.join(", ") + ".</span>";
       }
     }
+    // Create-account requirements checklist: one item per PW_RULES entry,
+    // ticked live as the password is typed (met items turn green). This is
+    // guidance only - submit-time validation still goes through pwError().
+    function paintPwRules(v) {
+      if (!pwRules) return;
+      PW_RULES.forEach(([key, test]) => {
+        const item = pwRules.querySelector('[data-rule="' + key + '"]');
+        if (item) item.classList.toggle("met", !!test(v));
+      });
+      pwRules.classList.toggle("all-met", v.length > 0 && pwMissing(v).length === 0);
+    }
     // Confirm feedback appears only once something has been typed into
     // the confirmation field - never a warning before the user starts.
     function paintConfirmLine(lineEl, pw, confirm) {
@@ -244,7 +265,8 @@ App.cloud = (function () {
 
     function applySignMode(nextCreating) {
       creating = nextCreating;
-      intro.textContent = creating ? "Create an account to securely start your workspace." : "Sign in to securely open your workspace.";
+      heading.textContent = creating ? "Create your RealtorCRM account" : "Welcome back";
+      intro.textContent = creating ? "Start your workspace securely with email or Google." : "Sign in to continue to your RealtorCRM workspace.";
       signInTab.setAttribute("aria-selected", String(!creating));
       createTab.setAttribute("aria-selected", String(creating));
       fullNameField.hidden = !creating;
@@ -255,9 +277,9 @@ App.cloud = (function () {
       if (!creating) confirmInput.value = "";
       passwordInput.setAttribute("autocomplete", creating ? "new-password" : "current-password");
       passwordInput.minLength = creating ? 10 : 6;
-      pwLine.hidden = !creating;
+      pwRules.hidden = !creating;
       if (creating) {
-        paintPwLine(pwLine, passwordInput.value);
+        paintPwRules(passwordInput.value);
         paintConfirmLine(confirmLine, passwordInput.value, confirmInput.value);
       } else {
         confirmLine.hidden = true;
@@ -266,14 +288,11 @@ App.cloud = (function () {
       switchCopy.textContent = creating ? "Already have an account?" : "Don’t have an account?";
       switchBtn.textContent = creating ? "Sign in" : "Create one";
       forgotLink.hidden = creating;
-      oauthBlock.hidden = creating; // Google/Facebook are Sign in-only, per spec
-      card.classList.toggle("is-create", creating);
       setMessage("");
     }
 
-    // Desktop/tablet gets a brief fade+translate for every mode change
-    // (including the panel-order swap between Sign in and Create account
-    // underneath); mobile and reduced-motion just flip instantly.
+    // Desktop/tablet gets a brief fade+translate for every mode change;
+    // mobile and reduced-motion just flip instantly.
     function transitionSwap(run) {
       if (switching) { run(); return; }
       const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -300,7 +319,6 @@ App.cloud = (function () {
         updateForm.hidden = mode !== "update-password";
         confirmPanel.hidden = mode !== "confirm";
         if (mode === "confirm") paintResendState();
-        card.classList.remove("is-create");
         if (mode === "sign-in" || mode === "create") {
           applySignMode(mode === "create");
         } else if (mode === "reset") {
@@ -320,7 +338,7 @@ App.cloud = (function () {
 
     passwordInput.addEventListener("input", () => {
       if (!creating) return;
-      paintPwLine(pwLine, passwordInput.value);
+      paintPwRules(passwordInput.value);
       paintConfirmLine(confirmLine, passwordInput.value, confirmInput.value);
     });
     confirmInput.addEventListener("input", () => {
@@ -430,7 +448,7 @@ App.cloud = (function () {
       // stays editable, and neither password is carried back.
       passwordInput.value = "";
       confirmInput.value = "";
-      paintPwLine(pwLine, "");
+      paintPwRules("");
       confirmLine.hidden = true;
       setMessage("");
       showMode("create");
@@ -489,24 +507,30 @@ App.cloud = (function () {
       });
     });
 
-    async function handleOAuth(provider, btn) {
+    // Google is the only OAuth provider. The redirect returns to this
+    // app's own current URL (never a hardcoded host), so the same code is
+    // correct in local development and in production. Whether the flow
+    // completes depends on the Google provider being enabled in the
+    // Supabase dashboard with Google Cloud credentials - if it is not,
+    // Supabase returns an error and it is shown here, honestly.
+    async function handleGoogleOAuth() {
+      const btn = oauthGoogleBtn;
       btn.disabled = true;
-      setMessage("Redirecting to " + (provider === "google" ? "Google" : "Facebook") + "…");
+      setMessage("Redirecting to Google…");
       try {
         const { error } = await initClient().auth.signInWithOAuth({
-          provider,
+          provider: "google",
           options: { redirectTo: window.location.origin + window.location.pathname }
         });
         if (error) { setMessage(error.message, "error"); btn.disabled = false; }
-        // On success the browser navigates away to the provider now, so
-        // there is nothing further to do here.
+        // On success the browser navigates away to Google now, so there
+        // is nothing further to do here.
       } catch (err) {
         setMessage((err && err.message) || "Unable to start sign-in.", "error");
         btn.disabled = false;
       }
     }
-    oauthGoogleBtn.addEventListener("click", () => handleOAuth("google", oauthGoogleBtn));
-    oauthFacebookBtn.addEventListener("click", () => handleOAuth("facebook", oauthFacebookBtn));
+    oauthGoogleBtn.addEventListener("click", handleGoogleOAuth);
 
     // The gate's way back to the public website. The target comes from
     // App.config.websiteUrl (per-environment, not a secret); without a
