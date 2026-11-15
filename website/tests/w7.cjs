@@ -70,10 +70,10 @@ check('realtorcrm meta early access', rc.includes('Free during early access'));
 check('realtorcrm access section early access', rc.includes('RealtorCRM is free during early access — organize your contacts'));
 check('demo placeholder untouched', rc.includes('RealtorCRM Product Demo') && rc.includes('Add your product video or screenshots here'));
 check('mobile placeholder untouched', rc.includes('RealtorCRM Mobile Preview') && rc.includes('Add your real mobile screenshot here'));
-// 9. About methodology + chip.
+// 9. About product scope and methodology, integrated into the approach section.
 const about = read('about/index.html');
-check('about chip renamed', about.includes('<li>Follow-ups</li>') && !about.includes('<li>Follow-up Plans</li>'));
-check('about methodology', about.includes('How the calculators work'));
+check('about verified CRM scope', about.includes('organizing contacts, deals, follow-ups') && !about.includes('Follow-up Plans'));
+check('about methodology', ['formulas and assumptions', 'worked examples you can check by hand', 'illustrative inputs', 'live lender quotes, market feeds or tax-authority data', 'includes and excludes'].every(text => about.includes(text)));
 // 10. No legal pages published; sitemap exactly 18 URLs (16 site pages + the
 // two standalone Resources guides added by the resources redesign).
 check('no privacy page in website tree', !fs.existsSync(path.join(ROOT, 'privacy-policy')));
