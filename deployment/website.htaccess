@@ -1,3 +1,11 @@
+# Host-scoped alias redirect survives the nested CRM's independent rewrite
+# configuration on Apache. It matches the URL, not the physical app directory.
+<IfModule mod_alias.c>
+  <If "%{HTTP_HOST} =~ m#^(?i:(?:www\.)?everyrealestatecalculator\.com)$#">
+    RedirectMatch 301 ^/(?:realtorcrm|realtoros)(?:/index\.html|/)?$ https://everyrealestatecalculator.com/real-estate-crm/
+  </If>
+</IfModule>
+
 # Canonical host + HTTPS redirects (Hostinger / LiteSpeed / Apache)
 <IfModule mod_rewrite.c>
   RewriteEngine On

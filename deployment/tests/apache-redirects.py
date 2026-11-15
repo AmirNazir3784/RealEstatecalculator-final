@@ -27,7 +27,7 @@ with tempfile.TemporaryDirectory(prefix='crm-apache-') as tmp:
     shutil.copytree(ROOT / 'deployment/dist-crm', site / 'realtorcrm')
     subprocess.run(['openssl', 'req', '-x509', '-newkey', 'rsa:2048', '-nodes', '-days', '1', '-subj', '/CN=localhost', '-keyout', str(base/'key.pem'), '-out', str(base/'cert.pem')], check=True, capture_output=True)
     http_port, tls_port = port(), port()
-    modules = ['mpm_event', 'authz_core', 'authz_host', 'dir', 'mime', 'rewrite', 'headers', 'ssl', 'socache_shmcb']
+    modules = ['mpm_event', 'authz_core', 'authz_host', 'dir', 'mime', 'alias', 'rewrite', 'headers', 'ssl', 'socache_shmcb']
     config = f'ServerRoot "{base}"\nServerName localhost\nPidFile "{base}/apache.pid"\nErrorLog "{base}/error.log"\nListen 127.0.0.1:{http_port}\nListen 127.0.0.1:{tls_port}\n'
     for module in modules:
         config += f'LoadModule {module}_module /usr/lib/apache2/modules/mod_{module}.so\n'

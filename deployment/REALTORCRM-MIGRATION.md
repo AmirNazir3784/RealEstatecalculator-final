@@ -39,8 +39,9 @@ An exclusion-capable upload mechanism would be needed in a separately approved t
 
 ## Exact first production deployment order (owner only, after manual merge)
 
-1. Keep both deployment webhooks/automatic pulls paused during this controlled
-   handoff. Do not run the historical first-launch instructions or empty/recreate
+1. Pause delivery of both GitHub-side deployment webhooks and coordinate no manual
+   Hostinger pulls during this controlled handoff; leave hPanel settings unchanged.
+   Do not run the historical first-launch instructions or empty/recreate
    either directory. Inspect the existing two connections and actual cleanup
    behavior without changing roots or other hosting/auth configuration. If there
    is no shell/Git metadata access, arrange the equivalent non-deleting handoff
@@ -52,7 +53,7 @@ An exclusion-capable upload mechanism would be needed in a separately approved t
    the backup can be read. Do not clear the production CRM directory.
 3. Verify the actual website deploy command will not delete ignored/untracked
    CRM files, perform destructive directory replacement, or clean with `-x`.
-   With automatic pulls still paused and a controlled, non-deleting handoff
+   With GitHub-side webhook delivery still paused and a controlled, non-deleting handoff
    scheduled, run **Deploy website** on merged `main`, `publish=true`,
    `crm_preservation_verified=true`. Wait for all checks and branch publication
    to succeed. This updates GitHub only while the webhook is paused.
