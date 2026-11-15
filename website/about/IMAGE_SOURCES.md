@@ -1,21 +1,40 @@
-# About image sources
+# About photography sources
 
-## Residential photograph
+Three real photographs provide architectural/planning context. They do not
+depict company-owned property, a company office, customers or a RealtorCRM
+interface. All are stored locally; the page never hotlinks. Official source
+pages and licenses were checked on 15 November 2026.
 
-- Photographer: **Zac Gudakov**.
-- Original title: *A Beautiful Home in North Carolina*; the source identifies Pineville, North Carolina, USA.
-- [Official photograph page](https://unsplash.com/photos/white-and-brown-concrete-house-near-green-trees-during-daytime-wwqZ8CM21gg).
-- [Original image delivery URL](https://images.unsplash.com/photo-1628624747186-a941c476b7ef?fit=max&w=1800&q=90&fm=jpg).
-- License: [Unsplash License](https://unsplash.com/license), verified from the official source on 15 November 2026. It permits downloading, modifying and using the image, including commercially; it is not a public-domain or Creative Commons claim. Attribution is appreciated and is retained here.
-- Locally optimized outputs: `residential-home.webp` (1200 × 900) and `residential-home-600.webp` (600 × 450). Centre-cropped from the original 3:2 photograph to 4:3 and WebP-encoded; no objects, overlays, people or generated elements were added.
-- Used as architectural context, not presented as a company property or listing.
+## Hero — residential architecture
 
-## Calculator image
+- Photographer: **Max Vakhtbovych**.
+- [Official Pexels photograph: A House with a Modern Design](https://www.pexels.com/photo/a-house-with-a-modern-design-7598374/).
+- [Original image delivery](https://images.pexels.com/photos/7598374/pexels-photo-7598374.jpeg).
+- [Pexels License](https://www.pexels.com/license/): free use and modification, including commercial use; attribution is appreciated and recorded here. No ownership or endorsement is implied.
+- Outputs: `architecture-home.webp` (1440 × 1080), `architecture-home-720.webp` (720 × 540). Centre crop to 4:3, retaining the timber/stone facade and surrounding daylight.
 
-- `mortgage-calculator.webp` (1152 × 704): actual local Chrome capture of this repository's `/tools/mortgage-calculator/`, with the functional form and results together. The lower edge ends above the next input row to avoid a partial label.
-- Uses unchanged illustrative defaults: $400,000 price, $80,000 down payment, 6.5% interest and 30-year term; total monthly payment $2,572.62.
-- Encoded locally as WebP. No recreated controls, fictional UI, browser decorations or customer information.
+## Calculators — property planning
 
-## RealtorCRM
+- Photographer: **Tima Miroshnichenko**.
+- [Official Pexels photograph: Printed Designs and Drawings over the Work Table](https://www.pexels.com/photo/printed-designs-and-drawings-over-the-work-table-6614747/).
+- [Original image delivery](https://images.pexels.com/photos/6614747/pexels-photo-6614747.jpeg).
+- License: [Pexels License](https://www.pexels.com/license/).
+- Outputs: `property-planning.webp` (1440 × 900), `property-planning-720.webp` (720 × 450). Centre crop to 16:10; real architectural plans, a scale model, sketchbook and drafting tools. No screenshot or generated UI.
 
-No verified screenshot or local demonstration mode was available. The product's text-first row describes only existing documented functionality. It does not show the broken production subdomain or a fabricated dashboard.
+## RealtorCRM — professional workspace
+
+- Photographer: **Andrew Neel**.
+- [Official Unsplash photograph: MacBook Pro, white ceramic mug, and black smartphone on table](https://unsplash.com/photos/macbook-pro-white-ceramic-mugand-black-smartphone-on-table-cckf4TsHAuw).
+- [Original image delivery](https://images.unsplash.com/photo-1499750310107-5fef28a66643).
+- [Unsplash License](https://unsplash.com/license): permits downloading, modifying and using the photograph, including commercially. This is not a public-domain or Creative Commons claim.
+- Outputs: `professional-workspace.webp` (1440 × 900), `professional-workspace-720.webp` (720 × 450). Centre crop to 16:10; laptop, notepad and coffee beside a window. No visible software UI or competitor branding.
+
+## Local processing
+
+All six assets were resized/cropped and WebP-encoded locally at quality 0.82.
+Original photographic colors are retained. No generated elements, object removal,
+logos, text overlays, retouching or artificial interfaces were added. Product
+photos share identical dimensions and treatment. Responsive `srcset` and `sizes`
+select the appropriate asset; explicit dimensions reserve layout space. Only the
+hero has high fetch priority; product images load lazily. The previous red-house
+assets and calculator screenshot have been removed.

@@ -12,7 +12,7 @@ const frozen = {
   "pages": {
     "index.html": "6dac1daef758dbd8d6055a357af33aa3bd73856e3ea68f00d0b28fbbd98e8725",
     // About baseline refreshed for the editorial refinement; shared header stays frozen.
-    "about/index.html": "a19518c7c6b8b37122202608641445928000dc4c41e9bb2b06cfea5690825a57",
+    "about/index.html": "d7816f270706e7058e425459d0386223358f44991200ae8def036307abd23abd",
     "contact/index.html": "1aff953a79f28c6a89b14b10d562a09d8487d216467dcaceb10e78e6c3c3ce4d",
     "resources/index.html": "8afc4767b9b890d297d867a102b47edf701eeeef424f1176c6ca514f3de6c0bb",
     "real-estate-crm/index.html": "2e4e3170636b9fabaae83e14ae08b5761bdb7c70da6d620c464a4dc51b0cfff4",
