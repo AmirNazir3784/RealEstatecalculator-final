@@ -5,7 +5,7 @@ const root=path.resolve(__dirname,'..');
 function pages(dir){return fs.readdirSync(dir,{withFileTypes:true}).flatMap(e=>e.isDirectory()&&!['tests','reference','dist-production'].includes(e.name)?pages(path.join(dir,e.name)):e.isFile()&&e.name==='index.html'?[path.join(dir,e.name)]:[]);}
 let checks=0;function check(value,message){assert(value,message);checks++;}
 const label='Every Real Estate Calculator Tools · Software · Guides, homepage';
-const files=pages(root);check(files.length===18,'All eighteen public pages checked');
+const files=pages(root);check(files.length===19,'All nineteen public pages checked');
 for(const file of files){
  const html=fs.readFileSync(file,'utf8');
  const links=Array.from(html.matchAll(/<a\b[^>]*class="brand"[^>]*>[\s\S]*?<\/a>/g),m=>m[0]);
@@ -34,4 +34,4 @@ const header=css.match(/\.brand-name em\s*\{[^}]*color:#([a-f0-9]{6})/i)[1];
 const footer=css.match(/\.footer-top \.brand-name em\s*\{[^}]*color:#([a-f0-9]{6})/i)[1];
 check(contrast(header,'FFFFFF')>=4.5,'Header small text meets AA contrast');
 check(contrast(footer,'102131')>=4.5,'Footer small text meets AA contrast');
-console.log(`PASS: ${checks} shared-brand assertions across 18 public pages; header ${contrast(header,'FFFFFF').toFixed(2)}:1, footer ${contrast(footer,'102131').toFixed(2)}:1; static names, configured names and visible tagline preserved.`);
+console.log(`PASS: ${checks} shared-brand assertions across 19 public pages; header ${contrast(header,'FFFFFF').toFixed(2)}:1, footer ${contrast(footer,'102131').toFixed(2)}:1; static names, configured names and visible tagline preserved.`);
