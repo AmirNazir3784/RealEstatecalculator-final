@@ -1,6 +1,6 @@
 # RealtorCRM final auth refinement
 
-Based on main `39c154b7c5e708de71ddaae2902e319f6dec043d`. Only the existing authentication gate, its scoped CSS and auth regression tests were changed. The approved product photograph, fonts, copy, Google-first order, two-panel desktop layout and focused mobile layout are retained. No hosting, configuration, database, website or other CRM screen changes.
+Based on main `39c154b7c5e708de71ddaae2902e319f6dec043d`. Changes are limited to the existing authentication gate, its scoped CSS, auth regression tests and the service worker's shell version. The approved product photograph, fonts, copy, Google-first order, two-panel desktop layout and focused mobile layout are retained. No hosting, application configuration, database, website or other CRM screen changes.
 
 ## Final corrections
 
@@ -9,6 +9,7 @@ Based on main `39c154b7c5e708de71ddaae2902e319f6dec043d`. Only the existing auth
 - Password requirements are associated with the password input and expose each rule's met/unmet state. Existing password rules and submit-time validation are retained, including the separate Update Password summary.
 - One pending authentication request across Google/email and both modes; clear network failure/retry behavior. Confirmation, resend cooldown, recovery, session verification and workspace restrictions remain in place.
 - Cards no longer shrink and clip the account-switch action on shorter desktops. Short-viewport desktop spacing no longer overrides the phone layout. Mobile keeps 20px side padding, 52px inputs, equal single-line tabs, two-column checklist and no product panel. A short reserved status line limits error-related movement; longer messages wrap naturally.
+- The service worker's shell version is bumped so installed clients receive the changed auth assets through the existing update/reload flow. Caching strategy, Supabase/auth exclusions and update-consent behavior are unchanged.
 
 ## Verification — 2026-11-16
 
