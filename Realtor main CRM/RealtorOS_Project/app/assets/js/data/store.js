@@ -856,6 +856,17 @@ App.store = (function () {
     listRecent: (opts) => D().listRecentTestOutboundMessages(opts)
   };
 
+  // ---------- CONNECTED MAILBOX ----------
+  // Thin pass-through to the mailbox-connect Edge Function (via
+  // data-service). Status shows addresses/metadata only — no token ever
+  // reaches the browser.
+  const mailbox = {
+    status: () => D().getMailboxStatus(),
+    start: (kind) => D().startMailboxConnect(kind),
+    disconnect: (kind) => D().disconnectMailbox(kind),
+    setPolicy: (mode) => D().setMailboxPolicy(mode)
+  };
+
   // ---------- TEAM ----------
   // Membership, invitations and permissions. Pages never reach past this to
   // Supabase, exactly as with every entity above. Each method answers with
@@ -890,7 +901,7 @@ App.store = (function () {
     resetWorkspace, completeFollowUp,
     sheetConnections, sheetImportHistory, leadFileImport, notifications, push,
     messageTemplates, legacyScriptImport, automationRules, automationSteps, automationRuntime,
-    emailSenderProfile, testEmail, team,
+    emailSenderProfile, testEmail, mailbox, team,
     resetAllCaches: () => D().resetAllCaches(),
     _emptyState: emptyState,
     _normalize: normalize,
