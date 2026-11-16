@@ -18,6 +18,8 @@ const ENV = {
   ...WORKER_ENV,
   GOOGLE_CLIENT_ID: "test-client-id",
   GOOGLE_CLIENT_SECRET: "test-client-secret",
+  MICROSOFT_CLIENT_ID: "test-ms-client-id",
+  MICROSOFT_CLIENT_SECRET: "test-ms-client-secret",
   MAILBOX_TOKEN_ENCRYPTION_KEY: ENC_KEY,
 };
 
@@ -108,7 +110,46 @@ test("Gmail network failure: message unconfirmed, job terminal, Resend never tri
   assert.equal(msg.provider, "gmail");
   assert.equal(msg.status, "unconfirmed");
   const job = db.table("automation_jobs").find((j) => j.id === jobId);
-  assert.equal(job.last_error_code, "gmail_outcome_unconfirmed");
+  assert.equal(job.last_error_code, "mailbox_outcome_unconfirmed");
+});
+
+test("connected Outlook: the job sends via Graph, rotated token persisted, Resend untouched", async () => {
+  const { db, jobId } = automationScenario();
+  const enc = await oauth.encryptRefreshToken(ENC_KEY, "ms-refresh-1");
+  const connectionId = randomUUID();
+  db.seed("workspace_members", [{
+    id: randomUUID(), workspace_id: WORKSPACE, user_id: OWNER,
+    role: "owner", status: "active", created_at: "2026-09-01T00:00:00Z",
+  }]);
+  db.seed("mailbox_connections", [{
+    id: connectionId, workspace_id: WORKSPACE, user_id: OWNER,
+    kind: "personal", provider: "microsoft", email_address: "agent@outlook.com",
+    refresh_token_ciphertext: enc.ciphertext, refresh_token_iv: enc.iv,
+    status: "connected", last_error_code: null,
+  }]);
+  db.install();
+  fetchMock = mockFetch((url) => {
+    if (url.includes("login.microsoftonline.com")) {
+      return json({ access_token: "ms-at", refresh_token: "ms-refresh-2" });
+    }
+    if (url.includes("graph.microsoft.com")) return new Response(null, { status: 202 });
+    return json({ id: "re_msg_123" });
+  });
+  const res = await handler(workerRequest());
+  assert.equal(res.status, 200);
+  assert.equal(resendCalls().length, 0);
+  const graphCalls = fetchMock.calls.filter((c) => c.url.includes("graph.microsoft.com"));
+  assert.equal(graphCalls.length, 1);
+  const msg = db.table("outbound_messages")[0];
+  assert.equal(msg.provider, "microsoft");
+  assert.equal(msg.sender_address, "agent@outlook.com");
+  assert.equal(msg.status, "sent");
+  assert.equal(msg.provider_message_id, null);
+  assert.equal(db.table("automation_jobs").find((j) => j.id === jobId).status, "completed");
+  // The rotated refresh token replaced the stored one (still encrypted).
+  const stored = db.table("mailbox_connections").find((c) => c.id === connectionId);
+  const decrypted = await oauth.decryptRefreshToken(ENC_KEY, stored.refresh_token_ciphertext, stored.refresh_token_iv);
+  assert.equal(decrypted, "ms-refresh-2");
 });
 
 test("no mailbox connected: behavior is the original Resend path", async () => {

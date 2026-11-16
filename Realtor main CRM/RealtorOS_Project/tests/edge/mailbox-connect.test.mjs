@@ -91,6 +91,36 @@ test("consent URL: send-only scopes, offline access, forced consent", () => {
   assert.equal(url.searchParams.get("state"), "m1.payload.sig");
 });
 
+test("state: the provider survives the round trip; gmail is the default", async () => {
+  const msToken = await oauth.createMailboxState(SECRET, {
+    userId: USER, workspaceId: WORKSPACE, kind: "personal", provider: "microsoft",
+  });
+  const ms = await oauth.verifyMailboxState(SECRET, msToken);
+  assert.equal(ms.ok, true);
+  assert.equal(ms.state.provider, "microsoft");
+  const gToken = await oauth.createMailboxState(SECRET, {
+    userId: USER, workspaceId: WORKSPACE, kind: "personal",
+  });
+  const g = await oauth.verifyMailboxState(SECRET, gToken);
+  assert.equal(g.ok, true);
+  assert.equal(g.state.provider, "gmail");
+});
+
+test("microsoft consent URL: Graph send scope + offline access on the Microsoft host", () => {
+  const url = new URL(oauth.buildMicrosoftAuthUrl({
+    clientId: "client-456",
+    redirectUri: "https://example.supabase.co/functions/v1/mailbox-connect",
+    state: "m1.payload.sig",
+  }));
+  assert.equal(url.host, "login.microsoftonline.com");
+  const scope = url.searchParams.get("scope");
+  assert.match(scope, /graph\.microsoft\.com\/Mail\.Send/);
+  assert.match(scope, /offline_access/);
+  assert.doesNotMatch(scope, /Mail\.Read|Mail\.ReadWrite|Calendars/);
+  assert.equal(url.searchParams.get("response_type"), "code");
+  assert.equal(url.searchParams.get("state"), "m1.payload.sig");
+});
+
 // ------------------------------------------------------------ HTTP handler
 
 let handler;

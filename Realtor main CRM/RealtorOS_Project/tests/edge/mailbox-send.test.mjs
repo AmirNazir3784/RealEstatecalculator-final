@@ -22,26 +22,39 @@ const conn = (overrides = {}) => ({
 // ------------------------------------------------------------ planRoute
 
 test("route: members_own = personal, shared, resend", () => {
-  const steps = send.planRoute("members_own", conn(), conn({ id: "c-2", kind: "shared" }));
+  const steps = send.planRoute("members_own", [conn()], [conn({ id: "c-2", kind: "shared" })]);
   assert.deepEqual(steps.map((s) => s.via), ["gmail", "gmail", "resend"]);
   assert.equal(steps[0].connection.kind, "personal");
   assert.equal(steps[1].connection.kind, "shared");
 });
 
 test("route: shared policy = shared, resend (personal never used)", () => {
-  const steps = send.planRoute("shared", conn(), conn({ id: "c-2", kind: "shared" }));
+  const steps = send.planRoute("shared", [conn()], [conn({ id: "c-2", kind: "shared" })]);
   assert.deepEqual(steps.map((s) => s.via), ["gmail", "resend"]);
   assert.equal(steps[0].connection.kind, "shared");
 });
 
-test("route: no usable connection = resend only; error/revoked/other-provider excluded", () => {
-  assert.deepEqual(send.planRoute("members_own", null, null).map((s) => s.via), ["resend"]);
+test("route: no usable connection = resend only; error/revoked/unknown-provider excluded", () => {
+  assert.deepEqual(send.planRoute("members_own", [], []).map((s) => s.via), ["resend"]);
   assert.deepEqual(
-    send.planRoute("members_own", conn({ status: "error" }), conn({ provider: "microsoft", kind: "shared" })).map((s) => s.via),
+    send.planRoute("members_own", [conn({ status: "error" })], [conn({ provider: "yahoo", kind: "shared" })]).map((s) => s.via),
     ["resend"],
   );
   // Shared policy with no shared mailbox falls straight to Resend.
-  assert.deepEqual(send.planRoute("shared", conn(), null).map((s) => s.via), ["resend"]);
+  assert.deepEqual(send.planRoute("shared", [conn()], []).map((s) => s.via), ["resend"]);
+});
+
+test("route: both providers connected — Gmail before Microsoft within a kind", () => {
+  const steps = send.planRoute("members_own", [
+    conn({ id: "ms", provider: "microsoft", email_address: "agent@outlook.com" }),
+    conn({ id: "g", provider: "gmail" }),
+  ], []);
+  assert.deepEqual(steps.map((s) => s.via), ["gmail", "microsoft", "resend"]);
+  // A Microsoft-only member routes through Microsoft.
+  const msOnly = send.planRoute("members_own", [
+    conn({ id: "ms", provider: "microsoft", email_address: "agent@outlook.com" }),
+  ], []);
+  assert.deepEqual(msOnly.map((s) => s.via), ["microsoft", "resend"]);
 });
 
 // ------------------------------------------------------------ MIME
@@ -142,6 +155,60 @@ test("gmail: network failure and unreadable success are ambiguous, never rejecte
   assert.equal(malformed.code, "send_response_malformed");
 });
 
+// ------------------------------------------------------------ Microsoft send
+
+async function microsoftConnection() {
+  const enc = await oauth.encryptRefreshToken(ENC_KEY, "ms-refresh-1");
+  return conn({
+    provider: "microsoft", email_address: "agent@outlook.com",
+    refresh_token_ciphertext: enc.ciphertext, refresh_token_iv: enc.iv,
+  });
+}
+
+test("microsoft: token exchange + 202 returns sent with the rotated refresh token", async () => {
+  const seen = [];
+  globalThis.fetch = async (url, init = {}) => {
+    seen.push(String(url));
+    if (String(url).includes("login.microsoftonline.com")) {
+      return new Response(JSON.stringify({ access_token: "ms-at", refresh_token: "ms-refresh-2" }), { status: 200 });
+    }
+    const parsed = JSON.parse(init.body);
+    assert.equal(parsed.message.toRecipients[0].emailAddress.address, "lead@example.com");
+    assert.equal(parsed.message.subject, "Hi");
+    assert.equal(parsed.saveToSentItems, true);
+    return new Response(null, { status: 202 });
+  };
+  const result = await send.sendViaMicrosoft({ connection: await microsoftConnection(), ...CREDS, message: MESSAGE });
+  assert.deepEqual(result, { outcome: "sent", providerMessageId: null, rotatedRefreshToken: "ms-refresh-2" });
+  assert.equal(seen.length, 2);
+});
+
+test("microsoft: invalid_grant is token_revoked; a Graph 403 is a definitive rejection", async () => {
+  globalThis.fetch = async () =>
+    new Response(JSON.stringify({ error: "invalid_grant" }), { status: 400 });
+  const revoked = await send.sendViaMicrosoft({ connection: await microsoftConnection(), ...CREDS, message: MESSAGE });
+  assert.equal(revoked.outcome, "rejected");
+  assert.equal(revoked.code, "token_revoked");
+  assert.equal(revoked.tokenInvalid, true);
+
+  globalThis.fetch = async (url) => {
+    if (String(url).includes("login.microsoftonline.com")) {
+      return new Response(JSON.stringify({ access_token: "ms-at" }), { status: 200 });
+    }
+    return new Response(JSON.stringify({ error: { code: "ErrorAccessDenied" } }), { status: 403 });
+  };
+  const denied = await send.sendViaMicrosoft({ connection: await microsoftConnection(), ...CREDS, message: MESSAGE });
+  assert.equal(denied.outcome, "rejected");
+  assert.equal(denied.code, "microsoft_erroraccessdenied");
+  assert.equal(denied.tokenInvalid, false);
+});
+
+test("microsoft: network failure is ambiguous, never rejected", async () => {
+  globalThis.fetch = async () => { throw new Error("socket hangup"); };
+  const result = await send.sendViaMicrosoft({ connection: await microsoftConnection(), ...CREDS, message: MESSAGE });
+  assert.equal(result.outcome, "ambiguous");
+});
+
 // ------------------------------------------------------------ resolveRoute
 
 function stubAdmin(tables) {
@@ -176,9 +243,23 @@ test("resolveRoute: acting member's personal connection wins under members_own",
   const route = await send.resolveRoute(admin, "u1");
   assert.equal(route.workspaceId, "w1");
   assert.deepEqual(
-    route.steps.map((s) => (s.via === "gmail" ? s.connection.id : "resend")),
+    route.steps.map((s) => (s.via !== "resend" ? s.connection.id : "resend")),
     ["mine", "shared", "resend"],
   );
+});
+
+test("resolveRoute: a Microsoft personal connection routes as a microsoft step", async () => {
+  const admin = stubAdmin({
+    workspace_members: [
+      { workspace_id: "w1", user_id: "u1", role: "agent", status: "active", created_at: "2026-01-01" },
+    ],
+    workspace_mailbox_policies: [],
+    mailbox_connections: [
+      { id: "msmine", user_id: "u1", workspace_id: "w1", kind: "personal", provider: "microsoft", status: "connected", email_address: "me@outlook.com", refresh_token_ciphertext: "x", refresh_token_iv: "y" },
+    ],
+  });
+  const route = await send.resolveRoute(admin, "u1");
+  assert.deepEqual(route.steps.map((s) => s.via), ["microsoft", "resend"]);
 });
 
 test("resolveRoute: no membership or empty tables degrade to plain Resend", async () => {
