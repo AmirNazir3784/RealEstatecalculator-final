@@ -166,28 +166,29 @@ test("change email keeps the name, drops the passwords; back returns to sign in"
   } finally { g.b.close(); }
 });
 
-test("one password line cycles neutral, missing and met states", async (t) => {
+test("create account shows a live password-requirements checklist", async (t) => {
   const g = await gate(t);
   if (!g) return;
   try {
     const d = g.document;
     d.getElementById("cloudCreateTab").click();
-    const line = d.getElementById("cloudPwLine");
-    assert.equal(line.hidden, false, "the line shows in Create account mode");
-    assert.equal(d.getElementById("cloudPwRules"), null, "the five-item checklist is gone");
-    assert.equal(line.textContent, "10+ characters, including uppercase, lowercase, a number, and a symbol.",
-      "state A: neutral guidance before typing");
+    const rules = d.getElementById("cloudPwRules");
+    assert.ok(rules, "the requirements checklist exists");
+    assert.equal(rules.hidden, false, "the checklist shows in Create account mode");
+    assert.equal(d.getElementById("cloudPwLine"), null,
+      "the one-sentence line no longer serves the auth form (the Update Password form keeps its own)");
+    const item = (k) => rules.querySelector('[data-rule="' + k + '"]');
+    const met = () => ["length", "upper", "lower", "number", "symbol"].filter((k) => item(k).classList.contains("met"));
+    assert.deepEqual(met(), [], "nothing is ticked before typing");
     const pw = d.getElementById("cloudPassword");
     const type = (v) => { pw.value = v; pw.dispatchEvent(new g.window.Event("input", { bubbles: true })); };
     type("abc");
-    assert.match(line.className, /error/, "state B is the warning state");
-    assert.equal(line.textContent, "Still needed: 10+ characters, uppercase letter, number, symbol.",
-      "and it names only what is missing");
+    assert.deepEqual(met(), ["lower"], "typing ticks only the rules that are met");
     type(STRONG);
-    assert.match(line.className, /success/, "state C is the success state");
-    assert.equal(line.textContent, "Password meets all requirements.");
+    assert.deepEqual(met(), ["length", "upper", "lower", "number", "symbol"], "a strong password ticks every rule");
+    assert.equal(rules.classList.contains("all-met"), true, "and the list reports the all-met state");
     d.getElementById("cloudSignInTab").click();
-    assert.equal(line.hidden, true, "and the line hides again for Sign in");
+    assert.equal(rules.hidden, true, "and the checklist hides again for Sign in");
   } finally { g.b.close(); }
 });
 
