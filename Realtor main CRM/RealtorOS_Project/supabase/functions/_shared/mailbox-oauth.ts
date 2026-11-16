@@ -28,6 +28,7 @@ const SIGNING_CONTEXT = "realtoros-mailbox-state.v1.";
 export const STATE_LIFETIME_SECONDS = 10 * 60;
 export const MIN_SECRET_LENGTH = 32;
 export const GMAIL_SEND_SCOPE = "https://www.googleapis.com/auth/gmail.send";
+export const MICROSOFT_SEND_SCOPE = "https://graph.microsoft.com/Mail.Send";
 
 const UUID_SHAPE =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
@@ -91,10 +92,13 @@ function timingSafeEqual(a: Uint8Array, b: Uint8Array): boolean {
   return diff === 0;
 }
 
+export type MailboxProvider = "gmail" | "microsoft";
+
 export interface MailboxState {
   userId: string;
   workspaceId: string;
   kind: "personal" | "shared";
+  provider: MailboxProvider;
   expiresAtSeconds: number;
 }
 
@@ -104,6 +108,7 @@ export async function createMailboxState(
     userId: string;
     workspaceId: string;
     kind: "personal" | "shared";
+    provider?: MailboxProvider;
     nowSeconds?: number;
   },
 ): Promise<string> {
@@ -119,6 +124,7 @@ export async function createMailboxState(
     u: input.userId,
     w: input.workspaceId,
     k: input.kind,
+    pr: input.provider ?? "gmail",
     e: now + STATE_LIFETIME_SECONDS,
   };
   const payloadB64 = b64urlEncode(encoder.encode(JSON.stringify(payload)));
@@ -173,6 +179,9 @@ export async function verifyMailboxState(
     typeof payload.u !== "string" || !UUID_SHAPE.test(payload.u) ||
     typeof payload.w !== "string" || !UUID_SHAPE.test(payload.w) ||
     (payload.k !== "personal" && payload.k !== "shared") ||
+    // pr was added with the Microsoft provider; tokens minted before it
+    // (none can still be live — they expire in 10 minutes) default to gmail.
+    (payload.pr !== undefined && payload.pr !== "gmail" && payload.pr !== "microsoft") ||
     typeof payload.e !== "number" || !Number.isFinite(payload.e)
   ) {
     return { ok: false, reason: "malformed" };
@@ -184,6 +193,7 @@ export async function verifyMailboxState(
       userId: payload.u,
       workspaceId: payload.w,
       kind: payload.k,
+      provider: payload.pr === "microsoft" ? "microsoft" : "gmail",
       expiresAtSeconds: payload.e,
     },
   };
@@ -254,4 +264,24 @@ export function buildGoogleAuthUrl(input: {
     state: input.state,
   });
   return `https://accounts.google.com/o/oauth2/v2/auth?${params.toString()}`;
+}
+
+export function buildMicrosoftAuthUrl(input: {
+  clientId: string;
+  redirectUri: string;
+  state: string;
+}): string {
+  const params = new URLSearchParams({
+    client_id: input.clientId,
+    redirect_uri: input.redirectUri,
+    response_type: "code",
+    response_mode: "query",
+    // Mail.Send (delegated) plus offline_access for the refresh token and
+    // identity scopes so the callback can confirm WHICH mailbox connected.
+    // No read scopes are requested, ever. The "common" tenant accepts both
+    // work/school and personal Microsoft accounts.
+    scope: `${MICROSOFT_SEND_SCOPE} offline_access openid email`,
+    state: input.state,
+  });
+  return `https://login.microsoftonline.com/common/oauth2/v2.0/authorize?${params.toString()}`;
 }

@@ -29,10 +29,13 @@ import {
 } from "../_shared/runtime.ts";
 import {
   buildGoogleAuthUrl,
+  buildMicrosoftAuthUrl,
   createMailboxState,
   decryptRefreshToken,
   encryptRefreshToken,
   GMAIL_SEND_SCOPE,
+  type MailboxProvider,
+  MICROSOFT_SEND_SCOPE,
   verifyMailboxState,
 } from "../_shared/mailbox-oauth.ts";
 
@@ -92,6 +95,7 @@ async function findConnection(
   workspaceId: string,
   kind: Kind,
   userId: string,
+  provider: MailboxProvider,
 ) {
   let query = admin
     .from("mailbox_connections")
@@ -100,10 +104,14 @@ async function findConnection(
     )
     .eq("workspace_id", workspaceId)
     .eq("kind", kind)
-    .eq("provider", "gmail");
+    .eq("provider", provider);
   if (kind === "personal") query = query.eq("user_id", userId);
   const { data } = await query.limit(1);
   return data && data.length > 0 ? data[0] : null;
+}
+
+function providerOf(body: Record<string, unknown>): MailboxProvider {
+  return body.provider === "microsoft" ? "microsoft" : "gmail";
 }
 
 function safeView(row: Record<string, unknown> | null) {
@@ -122,9 +130,13 @@ async function handleStart(
   body: Record<string, unknown>,
 ): Promise<Response> {
   const kind: Kind = body.kind === "shared" ? "shared" : "personal";
-  if (body.provider !== undefined && body.provider !== "gmail") {
+  if (
+    body.provider !== undefined && body.provider !== "gmail" &&
+    body.provider !== "microsoft"
+  ) {
     return jsonResponse({ error: "provider_not_available_yet" }, 400);
   }
+  const provider = providerOf(body);
   const membership = await resolveMembership(admin, userId, body.workspaceId);
   if (!membership) return jsonResponse({ error: "no_workspace" }, 403);
   if (kind === "shared" && !isManager(membership.role)) {
@@ -132,13 +144,20 @@ async function handleStart(
   }
   const state = await createMailboxState(
     requiredEnv("MAILBOX_OAUTH_STATE_SECRET"),
-    { userId, workspaceId: membership.workspaceId, kind },
+    { userId, workspaceId: membership.workspaceId, kind, provider },
   );
-  const authUrl = buildGoogleAuthUrl({
-    clientId: requiredEnv("GOOGLE_CLIENT_ID"),
-    redirectUri: requiredEnv("MAILBOX_OAUTH_REDIRECT_URL"),
-    state,
-  });
+  const redirectUri = requiredEnv("MAILBOX_OAUTH_REDIRECT_URL");
+  const authUrl = provider === "microsoft"
+    ? buildMicrosoftAuthUrl({
+      clientId: requiredEnv("MICROSOFT_CLIENT_ID"),
+      redirectUri,
+      state,
+    })
+    : buildGoogleAuthUrl({
+      clientId: requiredEnv("GOOGLE_CLIENT_ID"),
+      redirectUri,
+      state,
+    });
   return jsonResponse({ authUrl });
 }
 
@@ -149,21 +168,25 @@ async function handleStatus(
 ): Promise<Response> {
   const membership = await resolveMembership(admin, userId, body.workspaceId);
   if (!membership) return jsonResponse({ error: "no_workspace" }, 403);
-  const [personal, shared, policy] = await Promise.all([
-    findConnection(admin, membership.workspaceId, "personal", userId),
-    findConnection(admin, membership.workspaceId, "shared", userId),
-    admin
-      .from("workspace_mailbox_policies")
-      .select("mode")
-      .eq("workspace_id", membership.workspaceId)
-      .limit(1),
-  ]);
+  const [personalGmail, personalMicrosoft, sharedGmail, sharedMicrosoft, policy] =
+    await Promise.all([
+      findConnection(admin, membership.workspaceId, "personal", userId, "gmail"),
+      findConnection(admin, membership.workspaceId, "personal", userId, "microsoft"),
+      findConnection(admin, membership.workspaceId, "shared", userId, "gmail"),
+      findConnection(admin, membership.workspaceId, "shared", userId, "microsoft"),
+      admin
+        .from("workspace_mailbox_policies")
+        .select("mode")
+        .eq("workspace_id", membership.workspaceId)
+        .limit(1),
+    ]);
+  const view = (r: unknown) => safeView(r as Record<string, unknown> | null);
   return jsonResponse({
     workspaceId: membership.workspaceId,
     role: membership.role,
     canManageShared: isManager(membership.role),
-    personal: safeView(personal as Record<string, unknown> | null),
-    shared: safeView(shared as Record<string, unknown> | null),
+    personal: { gmail: view(personalGmail), microsoft: view(personalMicrosoft) },
+    shared: { gmail: view(sharedGmail), microsoft: view(sharedMicrosoft) },
     policy: {
       mode: (policy.data && policy.data[0]?.mode) || "members_own",
     },
@@ -186,23 +209,29 @@ async function handleDisconnect(
     membership.workspaceId,
     kind,
     userId,
+    providerOf(body),
   ) as Record<string, unknown> | null;
   if (!row) return jsonResponse({ disconnected: false, reason: "not_connected" });
-  // Best-effort provider revoke; the local delete proceeds either way so a
-  // member is never trapped by a provider outage.
-  try {
-    const token = await decryptRefreshToken(
-      requiredEnv("MAILBOX_TOKEN_ENCRYPTION_KEY"),
-      String(row.refresh_token_ciphertext),
-      String(row.refresh_token_iv),
-    );
-    await fetch("https://oauth2.googleapis.com/revoke", {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: new URLSearchParams({ token }),
-    });
-  } catch {
-    // Ignore: deletion below is the authoritative disconnect.
+  // Best-effort provider revoke (Google only — Microsoft offers no revoke
+  // endpoint for delegated refresh tokens; deleting our copy ends our
+  // access, and the member can remove the grant in their Microsoft account
+  // settings). The local delete proceeds either way so a member is never
+  // trapped by a provider outage.
+  if (row.provider === "gmail") {
+    try {
+      const token = await decryptRefreshToken(
+        requiredEnv("MAILBOX_TOKEN_ENCRYPTION_KEY"),
+        String(row.refresh_token_ciphertext),
+        String(row.refresh_token_iv),
+      );
+      await fetch("https://oauth2.googleapis.com/revoke", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams({ token }),
+      });
+    } catch {
+      // Ignore: deletion below is the authoritative disconnect.
+    }
   }
   await admin.from("mailbox_connections").delete().eq("id", row.id);
   return jsonResponse({ disconnected: true });
@@ -246,17 +275,31 @@ async function handleCallback(request: Request): Promise<Response> {
   }
   const { state } = verified;
   try {
-    const tokenResponse = await fetch("https://oauth2.googleapis.com/token", {
-      method: "POST",
-      headers: { "Content-Type": "application/x-www-form-urlencoded" },
-      body: new URLSearchParams({
-        code,
-        client_id: requiredEnv("GOOGLE_CLIENT_ID"),
-        client_secret: requiredEnv("GOOGLE_CLIENT_SECRET"),
-        redirect_uri: requiredEnv("MAILBOX_OAUTH_REDIRECT_URL"),
-        grant_type: "authorization_code",
-      }),
-    });
+    const isMicrosoft = state.provider === "microsoft";
+    const tokenResponse = isMicrosoft
+      ? await fetch("https://login.microsoftonline.com/common/oauth2/v2.0/token", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams({
+          code,
+          client_id: requiredEnv("MICROSOFT_CLIENT_ID"),
+          client_secret: requiredEnv("MICROSOFT_CLIENT_SECRET"),
+          redirect_uri: requiredEnv("MAILBOX_OAUTH_REDIRECT_URL"),
+          grant_type: "authorization_code",
+          scope: `${MICROSOFT_SEND_SCOPE} offline_access openid email`,
+        }),
+      })
+      : await fetch("https://oauth2.googleapis.com/token", {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams({
+          code,
+          client_id: requiredEnv("GOOGLE_CLIENT_ID"),
+          client_secret: requiredEnv("GOOGLE_CLIENT_SECRET"),
+          redirect_uri: requiredEnv("MAILBOX_OAUTH_REDIRECT_URL"),
+          grant_type: "authorization_code",
+        }),
+      });
     if (!tokenResponse.ok) {
       return appRedirect({ mailbox: "error", reason: "token_exchange_failed" });
     }
@@ -264,15 +307,28 @@ async function handleCallback(request: Request): Promise<Response> {
     if (typeof tokens.refresh_token !== "string" || !tokens.refresh_token) {
       return appRedirect({ mailbox: "error", reason: "no_refresh_token" });
     }
-    const profileResponse = await fetch(
-      "https://openidconnect.googleapis.com/v1/userinfo",
-      { headers: { Authorization: `Bearer ${tokens.access_token}` } },
-    );
+    const profileResponse = isMicrosoft
+      ? await fetch("https://graph.microsoft.com/v1.0/me", {
+        headers: { Authorization: `Bearer ${tokens.access_token}` },
+      })
+      : await fetch(
+        "https://openidconnect.googleapis.com/v1/userinfo",
+        { headers: { Authorization: `Bearer ${tokens.access_token}` } },
+      );
     if (!profileResponse.ok) {
       return appRedirect({ mailbox: "error", reason: "profile_lookup_failed" });
     }
     const profile = await profileResponse.json();
-    if (typeof profile.email !== "string" || !profile.email) {
+    // Microsoft: mail is null for many personal accounts — the UPN is the
+    // account's sign-in address there and is what Graph sends as.
+    const emailAddress = isMicrosoft
+      ? (typeof profile.mail === "string" && profile.mail
+        ? profile.mail
+        : typeof profile.userPrincipalName === "string"
+        ? profile.userPrincipalName
+        : "")
+      : (typeof profile.email === "string" ? profile.email : "");
+    if (!emailAddress) {
       return appRedirect({ mailbox: "error", reason: "profile_lookup_failed" });
     }
     const admin = createAdminClient();
@@ -298,16 +354,17 @@ async function handleCallback(request: Request): Promise<Response> {
       state.workspaceId,
       state.kind,
       state.userId,
+      state.provider,
     ) as Record<string, unknown> | null;
     const row = {
       workspace_id: state.workspaceId,
       user_id: state.userId,
       kind: state.kind,
-      provider: "gmail",
-      email_address: profile.email,
+      provider: state.provider,
+      email_address: emailAddress,
       refresh_token_ciphertext: encrypted.ciphertext,
       refresh_token_iv: encrypted.iv,
-      scopes: GMAIL_SEND_SCOPE,
+      scopes: state.provider === "microsoft" ? MICROSOFT_SEND_SCOPE : GMAIL_SEND_SCOPE,
       status: "connected",
       last_error_code: null,
       connected_at: new Date().toISOString(),
@@ -318,7 +375,7 @@ async function handleCallback(request: Request): Promise<Response> {
     if (error) {
       return appRedirect({ mailbox: "error", reason: "save_failed" });
     }
-    return appRedirect({ mailbox: "connected", kind: state.kind });
+    return appRedirect({ mailbox: "connected", kind: state.kind, provider: state.provider });
   } catch {
     return appRedirect({ mailbox: "error", reason: "internal" });
   }
