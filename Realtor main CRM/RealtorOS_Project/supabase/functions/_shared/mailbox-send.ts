@@ -34,24 +34,30 @@ export interface MailboxConnectionRow {
 }
 
 export type RouteStep =
-  | { via: "gmail"; connection: MailboxConnectionRow }
+  | { via: "gmail" | "microsoft"; connection: MailboxConnectionRow }
   | { via: "resend" };
 
 // Pure route planning, kept separate from the database reads so the policy
-// is unit-testable without a database.
+// is unit-testable without a database. A member may connect both providers;
+// within a kind, Gmail is tried before Microsoft (stable, documented
+// order), then the route falls back as the policy dictates.
 export function planRoute(
   mode: string,
-  personal: MailboxConnectionRow | null,
-  shared: MailboxConnectionRow | null,
+  personal: MailboxConnectionRow[],
+  shared: MailboxConnectionRow[],
 ): RouteStep[] {
   const steps: RouteStep[] = [];
-  const usable = (c: MailboxConnectionRow | null): c is MailboxConnectionRow =>
-    !!c && c.provider === "gmail" && c.status === "connected";
+  const usable = (rows: MailboxConnectionRow[]): MailboxConnectionRow[] =>
+    rows
+      .filter((c) => (c.provider === "gmail" || c.provider === "microsoft") && c.status === "connected")
+      .sort((a, b) => a.provider.localeCompare(b.provider));
+  const push = (c: MailboxConnectionRow) =>
+    steps.push({ via: c.provider as "gmail" | "microsoft", connection: c });
   if (mode === "shared") {
-    if (usable(shared)) steps.push({ via: "gmail", connection: shared });
+    usable(shared).forEach(push);
   } else {
-    if (usable(personal)) steps.push({ via: "gmail", connection: personal });
-    if (usable(shared)) steps.push({ via: "gmail", connection: shared });
+    usable(personal).forEach(push);
+    usable(shared).forEach(push);
   }
   steps.push({ via: "resend" });
   return steps;
@@ -86,19 +92,19 @@ export async function resolveRoute(
         .eq("workspace_id", workspaceId).limit(1),
       admin.from("mailbox_connections")
         .select("id, user_id, kind, provider, email_address, refresh_token_ciphertext, refresh_token_iv, status")
-        .eq("workspace_id", workspaceId).eq("provider", "gmail").eq("status", "connected"),
+        .eq("workspace_id", workspaceId).eq("status", "connected"),
     ]);
     const mode = (policies && policies[0]?.mode) || "members_own";
     const rows = (connections ?? []) as (MailboxConnectionRow & { user_id?: string })[];
     // A personal connection is only ever the acting member's own row.
-    const personalRow = rows.find(
+    const personalRows = rows.filter(
       (c) => c.kind === "personal" && c.user_id === userId,
-    ) ?? null;
-    const sharedRow = rows.find((c) => c.kind === "shared") ?? null;
+    );
+    const sharedRows = rows.filter((c) => c.kind === "shared");
     return {
       workspaceId,
       mode,
-      steps: planRoute(mode, personalRow, sharedRow),
+      steps: planRoute(mode, personalRows, sharedRows),
     };
   } catch {
     return fallback;
@@ -302,6 +308,139 @@ export async function sendViaGmail(input: {
       outcome: "rejected",
       httpStatus: sendResponse.status,
       code: errStatus ? `gmail_${errStatus.toLowerCase()}` : "gmail_rejected",
+      tokenInvalid: sendResponse.status === 401,
+    };
+  } catch {
+    return { outcome: "ambiguous", code: "send_network_error" };
+  }
+}
+
+// ------------------------------------------------------------ Microsoft send
+
+export type MicrosoftSendResult =
+  // Graph's sendMail returns 202 with an empty body: acceptance is
+  // definitive, but there is no provider message id to record.
+  | { outcome: "sent"; providerMessageId: null; rotatedRefreshToken?: string }
+  | { outcome: "rejected"; httpStatus: number; code: string; tokenInvalid: boolean }
+  | { outcome: "ambiguous"; code: string };
+
+const MICROSOFT_TIMEOUT_MS = 10_000;
+
+// Sends through Microsoft Graph (POST /me/sendMail) with the same outcome
+// discipline as Gmail: a 202 is a definitive accept; an HTTP error answer
+// is a definitive reject (safe to fall back); a network failure or an
+// unreadable token response is ambiguous (never safe to fall back).
+// Microsoft rotates refresh tokens: when the token response carries a new
+// one it is returned so the caller can persist it (re-encrypted).
+export async function sendViaMicrosoft(input: {
+  connection: MailboxConnectionRow;
+  encryptionKey: string;
+  clientId: string;
+  clientSecret: string;
+  message: MimeMessage;
+}): Promise<MicrosoftSendResult> {
+  let refreshToken: string;
+  try {
+    refreshToken = await decryptRefreshToken(
+      input.encryptionKey,
+      input.connection.refresh_token_ciphertext,
+      input.connection.refresh_token_iv,
+    );
+  } catch {
+    return { outcome: "rejected", httpStatus: 0, code: "token_undecryptable", tokenInvalid: true };
+  }
+
+  let accessToken: string;
+  let rotatedRefreshToken: string | undefined;
+  try {
+    const tokenResponse = await fetchWithTimeout(
+      "https://login.microsoftonline.com/common/oauth2/v2.0/token",
+      {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: new URLSearchParams({
+          client_id: input.clientId,
+          client_secret: input.clientSecret,
+          refresh_token: refreshToken,
+          grant_type: "refresh_token",
+          scope: "https://graph.microsoft.com/Mail.Send offline_access openid email",
+        }),
+      },
+      MICROSOFT_TIMEOUT_MS,
+    );
+    const parsed = await tokenResponse.json().catch(() => null);
+    if (!tokenResponse.ok) {
+      const errCode = parsed && typeof parsed === "object"
+        ? String((parsed as { error?: unknown }).error ?? "")
+        : "";
+      return {
+        outcome: "rejected",
+        httpStatus: tokenResponse.status,
+        code: errCode === "invalid_grant" ? "token_revoked" : "token_exchange_failed",
+        tokenInvalid: errCode === "invalid_grant" || tokenResponse.status === 401,
+      };
+    }
+    const candidate = parsed && typeof parsed === "object"
+      ? (parsed as { access_token?: unknown }).access_token
+      : undefined;
+    if (typeof candidate !== "string" || !candidate) {
+      return { outcome: "ambiguous", code: "token_response_malformed" };
+    }
+    accessToken = candidate;
+    const rotated = (parsed as { refresh_token?: unknown }).refresh_token;
+    if (typeof rotated === "string" && rotated && rotated !== refreshToken) {
+      rotatedRefreshToken = rotated;
+    }
+  } catch {
+    return { outcome: "ambiguous", code: "token_network_error" };
+  }
+
+  for (const r of input.message.replyTo) assertHeaderSafe(r, "reply_to");
+  assertHeaderSafe(input.message.to, "to");
+  assertHeaderSafe(input.message.subject, "subject");
+
+  const graphMessage: Record<string, unknown> = {
+    subject: input.message.subject,
+    body: { contentType: "Text", content: input.message.text },
+    toRecipients: [{ emailAddress: { address: input.message.to } }],
+  };
+  if (input.message.replyTo.length > 0) {
+    graphMessage.replyTo = input.message.replyTo.map((address) => ({
+      emailAddress: { address },
+    }));
+  }
+  const headers = Object.entries(input.message.headers ?? {}).map(([name, value]) => {
+    assertHeaderSafe(name, "header_name");
+    assertHeaderSafe(value, "header_value");
+    return { name, value };
+  });
+  if (headers.length > 0) graphMessage.internetMessageHeaders = headers;
+
+  try {
+    const sendResponse = await fetchWithTimeout(
+      "https://graph.microsoft.com/v1.0/me/sendMail",
+      {
+        method: "POST",
+        headers: {
+          "Authorization": `Bearer ${accessToken}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ message: graphMessage, saveToSentItems: true }),
+      },
+      MICROSOFT_TIMEOUT_MS,
+    );
+    if (sendResponse.status === 202) {
+      return { outcome: "sent", providerMessageId: null, rotatedRefreshToken };
+    }
+    const parsedError = await sendResponse.json().catch(() => null);
+    const errCode = parsedError && typeof parsedError === "object"
+      ? String((parsedError as { error?: { code?: unknown } }).error?.code ?? "")
+      : "";
+    const safeCode = errCode.toLowerCase().replace(/[^a-z0-9_]+/g, "_").slice(0, 40);
+    return {
+      outcome: "rejected",
+      httpStatus: sendResponse.status,
+      code: safeCode ? `microsoft_${safeCode}` : "microsoft_rejected",
       tokenInvalid: sendResponse.status === 401,
     };
   } catch {

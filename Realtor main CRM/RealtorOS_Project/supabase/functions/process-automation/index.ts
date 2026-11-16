@@ -59,7 +59,9 @@ import {
   resolveRoute,
   type RouteStep,
   sendViaGmail,
+  sendViaMicrosoft,
 } from "../_shared/mailbox-send.ts";
+import { encryptRefreshToken } from "../_shared/mailbox-oauth.ts";
 
 // Plain-text footer on every automated email. Fixed wording, appended
 // after rendering — not a template field.
@@ -933,26 +935,27 @@ async function processSendEmail(admin: AdminClient, job: JobRow): Promise<JobOut
     : "";
 
   // Mailbox routing: on a FRESH message the workspace sending policy picks
-  // the transport — the acting member's connected Gmail, then the shared
-  // Gmail, then Resend. A queued message never re-resolves: its row pins
-  // the transport (Resend rows retry behind their Idempotency-Key; Gmail
+  // the transport — the acting member's connected mailbox, then the shared
+  // mailbox, then Resend. A queued message never re-resolves: its row pins
+  // the transport (Resend rows retry behind their Idempotency-Key; mailbox
   // rows are closed as unconfirmed in the queued branch below, because a
-  // Gmail send cannot be retried safely). Without the Google secrets no
-  // Gmail step can run, so the route degrades to plain Resend — the
-  // pre-mailbox behavior.
-  const gmailSecretsReady = Boolean(
-    Deno.env.get("GOOGLE_CLIENT_ID") && Deno.env.get("GOOGLE_CLIENT_SECRET") &&
-    Deno.env.get("MAILBOX_TOKEN_ENCRYPTION_KEY"),
-  );
+  // mailbox send cannot be retried safely). A provider's steps only run
+  // when that provider's secrets are configured; otherwise the route
+  // degrades to plain Resend — the pre-mailbox behavior.
+  const encryptionKeyReady = Boolean(Deno.env.get("MAILBOX_TOKEN_ENCRYPTION_KEY"));
+  const providerSecretsReady = (via: string): boolean =>
+    encryptionKeyReady && (via === "gmail"
+      ? Boolean(Deno.env.get("GOOGLE_CLIENT_ID") && Deno.env.get("GOOGLE_CLIENT_SECRET"))
+      : Boolean(Deno.env.get("MICROSOFT_CLIENT_ID") && Deno.env.get("MICROSOFT_CLIENT_SECRET")));
   const route = queuedMessageId ? null : await resolveRoute(admin, job.user_id);
-  const routeSteps: RouteStep[] = route && gmailSecretsReady
-    ? route.steps
+  const routeSteps: RouteStep[] = route
+    ? route.steps.filter((s) => s.via === "resend" || providerSecretsReady(s.via))
     : [{ via: "resend" }];
   const firstStep = routeSteps[0];
   if (firstStep.via === "resend" && !resendReady) {
     return await rescheduleJob(admin, job, { retriable: true, category: "provider", errorCode: "provider_not_configured", errorMessage: "Email provider is not configured.", delaySeconds: 300 });
   }
-  const senderAddress = firstStep.via === "gmail"
+  const senderAddress = firstStep.via !== "resend"
     ? firstStep.connection.email_address
     : resendSenderAddress;
   // Every automated email carries a working unsubscribe link. Without the
@@ -999,18 +1002,19 @@ async function processSendEmail(admin: AdminClient, job: JobRow): Promise<JobOut
     // The only path on which a message may legitimately reach the
     // provider again — behind the same idempotency key.
     messageId = queuedMessageId;
-    if (existingMessage && existingMessage.provider === "gmail") {
-      // A Gmail send cannot be retried safely: Gmail offers no idempotency
-      // key and the send-only scope cannot read the mailbox back to check
-      // whether the earlier attempt landed. Fail closed, exactly like the
-      // expired idempotency window below — never risk a duplicate.
+    if (existingMessage && (existingMessage.provider === "gmail" || existingMessage.provider === "microsoft")) {
+      // A mailbox send cannot be retried safely: neither Gmail nor Graph
+      // offers an idempotency key for sends, and the send-only scope cannot
+      // read the mailbox back to check whether the earlier attempt landed.
+      // Fail closed, exactly like the expired idempotency window below —
+      // never risk a duplicate.
       const { error: unconfirmedError } = await admin.from("outbound_messages")
         .update({ status: "unconfirmed" })
         .eq("id", messageId).eq("user_id", job.user_id).eq("status", "queued");
       requireNoError(unconfirmedError, "update_message_unconfirmed");
       return await rescheduleJob(admin, job, {
-        retriable: false, category: "provider", errorCode: "gmail_retry_not_safe",
-        errorMessage: "A previous Gmail send attempt for this message could not be confirmed, and Gmail sends cannot be retried safely; no further automatic attempts will be made.",
+        retriable: false, category: "provider", errorCode: "mailbox_retry_not_safe",
+        errorMessage: "A previous mailbox send attempt for this message could not be confirmed, and mailbox sends cannot be retried safely; no further automatic attempts will be made.",
       });
     }
     const stamped = await ensureFirstProviderAttemptAt(admin, job, queuedMessageId, queuedFirstAttemptAt);
@@ -1028,14 +1032,14 @@ async function processSendEmail(admin: AdminClient, job: JobRow): Promise<JobOut
       .insert({
         user_id: job.user_id, job_id: job.id, contact_id: contact.id, template_id: step.template_id,
         message_kind: "automation", idempotency_key: idempotencyKey,
-        channel: "email", provider: firstStep.via === "gmail" ? "gmail" : "resend", recipient: email, subject: renderedSubject, body_snapshot: renderedBody,
+        channel: "email", provider: firstStep.via !== "resend" ? firstStep.via : "resend", recipient: email, subject: renderedSubject, body_snapshot: renderedBody,
         sender_display_name: senderProfile.display_name, sender_address: senderAddress, reply_to_email: senderProfile.reply_to_email,
         status: "queued", queued_at: nowIso, first_provider_attempt_at: nowIso,
         // Opaque, deterministic reply token (never an id, address or name):
         // resend-webhook maps an inbound reply back to this row through it.
-        // A Gmail first step also records WHICH connection will send, so a
+        // A mailbox first step also records WHICH connection will send, so a
         // later attempt can see the pinned transport at a glance.
-        metadata: firstStep.via === "gmail"
+        metadata: firstStep.via !== "resend"
           ? { reply_token: replyToken, mailbox_connection_id: firstStep.connection.id, mailbox_kind: firstStep.connection.kind }
           : { reply_token: replyToken },
       })
@@ -1125,7 +1129,7 @@ async function processSendEmail(admin: AdminClient, job: JobRow): Promise<JobOut
   // "retryable" is the default: any outcome not positively recognized as
   // a confirmed send, or as a definitive non-retryable rejection, leaves
   // the message in its retryable 'queued' state for another attempt
-  // behind the same Idempotency-Key. Gmail attempts below never produce
+  // behind the same Idempotency-Key. Mailbox attempts below never produce
   // "retryable": they resolve to sent, terminal, or unconfirmed inside
   // this single attempt (see _shared/mailbox-send.ts).
   let outcome: "sent" | "terminal" | "retryable" = "retryable";
@@ -1134,62 +1138,88 @@ async function processSendEmail(admin: AdminClient, job: JobRow): Promise<JobOut
   let failureCategory = "provider";
   let retryDelaySeconds = AMBIGUOUS_RETRY_BACKOFF_SECONDS;
 
-  // Gmail route steps (fresh messages only — a queued Gmail message was
-  // already closed as unconfirmed above). A definitive rejection means
-  // Gmail accepted nothing, so the next route step may be tried inside
-  // this same attempt; the message row is first updated to the transport
-  // that will actually be attempted next, so its record tells the truth.
-  // An ambiguous outcome never falls back.
+  // Mailbox route steps (fresh messages only — a queued mailbox message
+  // was already closed as unconfirmed above). A definitive rejection means
+  // the provider accepted nothing, so the next route step may be tried
+  // inside this same attempt; the message row is first updated to the
+  // transport that will actually be attempted next, so its record tells
+  // the truth. An ambiguous outcome never falls back.
   let resendPending = !route;
   if (route) {
     for (let stepIndex = 0; stepIndex < routeSteps.length; stepIndex++) {
       const step = routeSteps[stepIndex];
       if (step.via === "resend") { resendPending = true; break; }
-      const gmailResult = await sendViaGmail({
-        connection: step.connection,
-        encryptionKey: Deno.env.get("MAILBOX_TOKEN_ENCRYPTION_KEY") ?? "",
-        clientId: Deno.env.get("GOOGLE_CLIENT_ID") ?? "",
-        clientSecret: Deno.env.get("GOOGLE_CLIENT_SECRET") ?? "",
-        message: {
-          fromName: senderProfile.display_name,
-          fromEmail: step.connection.email_address,
-          to: email,
-          replyTo: replyToList,
-          subject: renderedSubject,
-          text: finalText,
-          headers: unsubscribeHeaders,
-        },
-      });
-      if (gmailResult.outcome === "sent") {
+      const providerLabel = step.via === "microsoft" ? "Microsoft" : "Gmail";
+      const mailboxMessage = {
+        fromName: senderProfile.display_name,
+        fromEmail: step.connection.email_address,
+        to: email,
+        replyTo: replyToList,
+        subject: renderedSubject,
+        text: finalText,
+        headers: unsubscribeHeaders,
+      };
+      const sendResult = step.via === "microsoft"
+        ? await sendViaMicrosoft({
+          connection: step.connection,
+          encryptionKey: Deno.env.get("MAILBOX_TOKEN_ENCRYPTION_KEY") ?? "",
+          clientId: Deno.env.get("MICROSOFT_CLIENT_ID") ?? "",
+          clientSecret: Deno.env.get("MICROSOFT_CLIENT_SECRET") ?? "",
+          message: mailboxMessage,
+        })
+        : await sendViaGmail({
+          connection: step.connection,
+          encryptionKey: Deno.env.get("MAILBOX_TOKEN_ENCRYPTION_KEY") ?? "",
+          clientId: Deno.env.get("GOOGLE_CLIENT_ID") ?? "",
+          clientSecret: Deno.env.get("GOOGLE_CLIENT_SECRET") ?? "",
+          message: mailboxMessage,
+        });
+      // Microsoft rotates refresh tokens: persist the new one
+      // (re-encrypted) or the NEXT send would use a dead token.
+      // Best-effort — a failure surfaces later as token_revoked, which the
+      // member fixes with a reconnect.
+      if (sendResult.outcome === "sent" && "rotatedRefreshToken" in sendResult && sendResult.rotatedRefreshToken) {
+        try {
+          const encrypted = await encryptRefreshToken(
+            Deno.env.get("MAILBOX_TOKEN_ENCRYPTION_KEY") ?? "",
+            sendResult.rotatedRefreshToken,
+          );
+          await admin.from("mailbox_connections").update({
+            refresh_token_ciphertext: encrypted.ciphertext,
+            refresh_token_iv: encrypted.iv,
+          }).eq("id", step.connection.id);
+        } catch { /* best effort, see comment above */ }
+      }
+      if (sendResult.outcome === "sent") {
         outcome = "sent";
-        providerMessageId = gmailResult.providerMessageId;
+        providerMessageId = sendResult.providerMessageId;
         resendPending = false;
         break;
       }
-      if (gmailResult.outcome === "ambiguous") {
+      if (sendResult.outcome === "ambiguous") {
         const { error: unconfirmedError } = await admin.from("outbound_messages")
           .update({ status: "unconfirmed" })
           .eq("id", messageId).eq("user_id", job.user_id).eq("status", "queued");
         requireNoError(unconfirmedError, "update_message_unconfirmed");
         return await rescheduleJob(admin, job, {
-          retriable: false, category: "provider", errorCode: "gmail_outcome_unconfirmed",
-          errorMessage: "The Gmail send could not be confirmed and Gmail sends cannot be retried safely; no further automatic attempts will be made.",
+          retriable: false, category: "provider", errorCode: "mailbox_outcome_unconfirmed",
+          errorMessage: "The mailbox send could not be confirmed and mailbox sends cannot be retried safely; no further automatic attempts will be made.",
         });
       }
-      // Definitive rejection — Gmail accepted nothing.
-      if (gmailResult.tokenInvalid) {
-        await markConnectionError(admin, step.connection.id, gmailResult.code);
+      // Definitive rejection — the provider accepted nothing.
+      if (sendResult.tokenInvalid) {
+        await markConnectionError(admin, step.connection.id, sendResult.code);
       }
       const nextStep = routeSteps[stepIndex + 1];
       if (!nextStep) {
         outcome = "terminal";
-        failureCode = gmailResult.code.slice(0, 100);
-        failureMessage = `Gmail responded with status ${gmailResult.httpStatus} (${gmailResult.code}).`;
+        failureCode = sendResult.code.slice(0, 100);
+        failureMessage = `${providerLabel} responded with status ${sendResult.httpStatus} (${sendResult.code}).`;
         resendPending = false;
         break;
       }
-      const transportUpdate = nextStep.via === "gmail"
-        ? { provider: "gmail", sender_address: nextStep.connection.email_address, metadata: { reply_token: replyToken, mailbox_connection_id: nextStep.connection.id, mailbox_kind: nextStep.connection.kind } }
+      const transportUpdate = nextStep.via !== "resend"
+        ? { provider: nextStep.via, sender_address: nextStep.connection.email_address, metadata: { reply_token: replyToken, mailbox_connection_id: nextStep.connection.id, mailbox_kind: nextStep.connection.kind } }
         : { provider: "resend", sender_address: resendSenderAddress, metadata: { reply_token: replyToken } };
       const { error: transportError } = await admin.from("outbound_messages")
         .update(transportUpdate)
@@ -1205,7 +1235,7 @@ async function processSendEmail(admin: AdminClient, job: JobRow): Promise<JobOut
   }
 
   if (resendPending && !resendReady) {
-    // Reachable only by a Gmail → Resend fallback with Resend not
+    // Reachable only by a mailbox → Resend fallback with Resend not
     // configured: the row already records provider 'resend', so a later
     // retry takes the ordinary idempotency-safe Resend path.
     return await rescheduleJob(admin, job, { retriable: true, category: "provider", errorCode: "provider_not_configured", errorMessage: "Email provider is not configured.", delaySeconds: 300 });
