@@ -230,7 +230,7 @@ App.pages.googleSheetsSettings = (function () {
   function copyToClipboard(text, successMessage) {
     if (navigator.clipboard && navigator.clipboard.writeText) {
       navigator.clipboard.writeText(text)
-        .then(() => App.app.toast(successMessage || "Copied to clipboard.", "success"))
+        .then(() => App.app.toast(successMessage || App.i18n.t("Copied to clipboard."), "success"))
         .catch(() => fallbackCopy(text, successMessage));
       return;
     }
@@ -245,9 +245,9 @@ App.pages.googleSheetsSettings = (function () {
     ta.select();
     try {
       document.execCommand("copy");
-      App.app.toast(successMessage || "Copied to clipboard.", "success");
+      App.app.toast(successMessage || App.i18n.t("Copied to clipboard."), "success");
     } catch (e) {
-      App.app.toast("Copy failed. Select the text manually.", "danger");
+      App.app.toast(App.i18n.t("Copy failed. Select the text manually."), "danger");
     }
     document.body.removeChild(ta);
   }
@@ -255,7 +255,7 @@ App.pages.googleSheetsSettings = (function () {
   function statusBadge(status) {
     const s = String(status || "").toLowerCase();
     const cls = s === "active" ? "badge-success" : (s === "paused" || s === "disabled") ? "badge-neutral" : "badge-warning";
-    return `<span class="badge ${cls}"><span class="dot"></span>${U().esc(status || "unknown")}</span>`;
+    return App.i18n.html`<span class="badge ${App.i18n.value(() => (cls))}"><span class="dot"></span>${App.i18n.value(() => (U().esc(status || App.i18n.t("unknown"))))}</span>`;
   }
 
   /* ============================================================
@@ -265,21 +265,21 @@ App.pages.googleSheetsSettings = (function () {
   async function render(pane) {
     if (!pane) return;
     requestInFlight = false;
-    pane.innerHTML = App.app.loadingHtml ? App.app.loadingHtml("your Google Sheets connections") : "";
+    pane.innerHTML = App.app.loadingHtml ? App.app.loadingHtml(App.i18n.t("your Google Sheets connections")) : "";
 
     let connections;
     try {
       connections = await S().sheetConnections.list();
     } catch (err) {
       pane.innerHTML = App.app.errorHtml
-        ? App.app.errorHtml("Could not load your Google Sheets connections: " + (err && err.message ? err.message : "Unknown error"))
+        ? App.app.errorHtml(App.i18n.t("Could not load your Google Sheets connections: ") + (err && err.message ? err.message : "Unknown error"))
         : "";
       const retryBtn = pane.querySelector('[data-role="route-retry"]');
       if (retryBtn) retryBtn.addEventListener("click", () => render(pane));
       return;
     }
 
-    pane.innerHTML = `
+    pane.innerHTML = App.i18n.html`
       <div class="settings-category-head">
         <div class="settings-category-title">Google Sheets</div>
         <p class="form-help">Automatically import leads from a permanent Google Sheet into RealtorCRM.</p>
@@ -325,7 +325,7 @@ App.pages.googleSheetsSettings = (function () {
             <div class="form-grid">
               <label class="field full">
                 <span>Connection name</span>
-                <input type="text" id="gsFieldName" maxlength="100" placeholder="${U().esc(DEFAULT_NAME)}" autocomplete="off">
+                <input type="text" id="gsFieldName" maxlength="100" placeholder="${App.i18n.value(() => (U().esc(DEFAULT_NAME)))}" autocomplete="off">
                 <div class="field-error-hint" id="gsFieldNameErr"></div>
               </label>
               <label class="field full">
@@ -335,16 +335,16 @@ App.pages.googleSheetsSettings = (function () {
               </label>
               <label class="field">
                 <span>Raw tab name</span>
-                <input type="text" id="gsFieldRawTab" maxlength="100" placeholder="${U().esc(DEFAULT_RAW_TAB)}" autocomplete="off">
+                <input type="text" id="gsFieldRawTab" maxlength="100" placeholder="${App.i18n.value(() => (U().esc(DEFAULT_RAW_TAB)))}" autocomplete="off">
                 <div class="field-error-hint" id="gsFieldRawTabErr"></div>
               </label>
               <label class="field">
                 <span>Ready tab name</span>
-                <input type="text" id="gsFieldReadyTab" maxlength="100" placeholder="${U().esc(DEFAULT_READY_TAB)}" autocomplete="off">
+                <input type="text" id="gsFieldReadyTab" maxlength="100" placeholder="${App.i18n.value(() => (U().esc(DEFAULT_READY_TAB)))}" autocomplete="off">
                 <div class="field-error-hint" id="gsFieldReadyTabErr"></div>
               </label>
             </div>
-            <button type="submit" class="btn btn-primary" id="gsCreateSubmit" style="margin-top:14px">${App.app.icon("plus")} Connect Google Sheet</button>
+            <button type="submit" class="btn btn-primary" id="gsCreateSubmit" style="margin-top:14px">${App.i18n.value(() => (App.app.icon("plus")))} Connect Google Sheet</button>
             <p id="gsFormMessage" class="profile-edit-message" aria-live="polite"></p>
           </form>
         </div>
@@ -397,11 +397,11 @@ App.pages.googleSheetsSettings = (function () {
     if (!body) return;
 
     if (!connections || connections.length === 0) {
-      body.innerHTML = `
+      body.innerHTML = App.i18n.html`
         <div class="empty-state">
           <div class="empty-title">No Google Sheets connections yet</div>
           <div class="empty-desc">Connect a Google Sheet below to start importing leads automatically.</div>
-          <button type="button" class="btn btn-primary" id="gsEmptyConnectBtn">${App.app.icon("plus")} Connect Google Sheet</button>
+          <button type="button" class="btn btn-primary" id="gsEmptyConnectBtn">${App.i18n.value(() => (App.app.icon("plus")))} Connect Google Sheet</button>
         </div>`;
       const btn = body.querySelector("#gsEmptyConnectBtn");
       if (btn) btn.addEventListener("click", () => {
@@ -427,32 +427,32 @@ App.pages.googleSheetsSettings = (function () {
 
   function renderConnectionCard(conn) {
     const spreadsheetLink = isSafeGoogleSheetsUrl(conn.spreadsheet_url)
-      ? `<a href="${U().esc(conn.spreadsheet_url)}" target="_blank" rel="noopener noreferrer" class="link">Open Sheet</a> <span class="form-help" style="display:inline">(${U().esc(conn.spreadsheet_id)})</span>`
-      : `<span>${U().esc(conn.spreadsheet_id || "—")}</span>`;
+      ? App.i18n.html`<a href="${App.i18n.value(() => (U().esc(conn.spreadsheet_url)))}" target="_blank" rel="noopener noreferrer" class="link">Open Sheet</a> <span class="form-help" style="display:inline">(${App.i18n.value(() => (U().esc(conn.spreadsheet_id)))})</span>`
+      : App.i18n.html`<span>${App.i18n.value(() => (U().esc(conn.spreadsheet_id || "—")))}</span>`;
     const lastError = conn.last_error
-      ? `<div class="settings-status-card" style="border-color:var(--danger)"><div class="k">Last error</div><div class="v" style="color:var(--danger);font-size:var(--font-size-sm);font-weight:500">${U().esc(conn.last_error)}</div></div>`
+      ? App.i18n.html`<div class="settings-status-card" style="border-color:var(--danger)"><div class="k">Last error</div><div class="v" style="color:var(--danger);font-size:var(--font-size-sm);font-weight:500">${App.i18n.value(() => (U().esc(conn.last_error)))}</div></div>`
       : "";
 
-    return `
+    return App.i18n.html`
       <div class="gs-connection-card">
         <div class="gs-connection-head">
           <div>
-            <div class="gs-connection-name">${U().esc(conn.name || "Google Sheets")}</div>
-            <div class="form-help">${spreadsheetLink}</div>
+            <div class="gs-connection-name">${App.i18n.value(() => (U().esc(conn.name || App.i18n.t("Google Sheets"))))}</div>
+            <div class="form-help">${App.i18n.value(() => (spreadsheetLink))}</div>
           </div>
-          ${statusBadge(conn.status)}
+          ${App.i18n.value(() => (statusBadge(conn.status)))}
         </div>
         <div class="settings-status-grid">
-          <div class="settings-status-card"><div class="k">Raw tab</div><div class="v">${U().esc(conn.raw_tab_name || "—")}</div></div>
-          <div class="settings-status-card"><div class="k">Ready tab</div><div class="v">${U().esc(conn.ready_tab_name || "—")}</div></div>
-          <div class="settings-status-card"><div class="k">Sync</div><div class="v">Every ${U().esc(conn.sync_interval_minutes || 15)} min (automatic)</div></div>
-          <div class="settings-status-card"><div class="k">Connector token</div><div class="v">${U().esc(conn.connector_token_prefix || "—")}&hellip;</div></div>
-          <div class="settings-status-card"><div class="k">Last synchronized</div><div class="v">${U().esc(formatTimestamp(conn.last_synced_at))}</div></div>
-          <div class="settings-status-card"><div class="k">Token rotated</div><div class="v">${U().esc(formatTimestamp(conn.token_rotated_at))}</div></div>
-          ${lastError}
+          <div class="settings-status-card"><div class="k">Raw tab</div><div class="v">${App.i18n.value(() => (U().esc(conn.raw_tab_name || "—")))}</div></div>
+          <div class="settings-status-card"><div class="k">Ready tab</div><div class="v">${App.i18n.value(() => (U().esc(conn.ready_tab_name || "—")))}</div></div>
+          <div class="settings-status-card"><div class="k">Sync</div><div class="v">Every ${App.i18n.value(() => (U().esc(conn.sync_interval_minutes || 15)))} min (automatic)</div></div>
+          <div class="settings-status-card"><div class="k">Connector token</div><div class="v">${App.i18n.value(() => (U().esc(conn.connector_token_prefix || "—")))}&hellip;</div></div>
+          <div class="settings-status-card"><div class="k">Last synchronized</div><div class="v">${App.i18n.value(() => (U().esc(formatTimestamp(conn.last_synced_at))))}</div></div>
+          <div class="settings-status-card"><div class="k">Token rotated</div><div class="v">${App.i18n.value(() => (U().esc(formatTimestamp(conn.token_rotated_at))))}</div></div>
+          ${App.i18n.value(() => (lastError))}
         </div>
         <div class="gs-connection-actions">
-          <button type="button" class="btn btn-sm" data-rotate-id="${U().esc(conn.id)}">Rotate Token</button>
+          <button type="button" class="btn btn-sm" data-rotate-id="${App.i18n.value(() => (U().esc(conn.id)))}">Rotate Token</button>
         </div>
       </div>`;
   }
@@ -464,7 +464,7 @@ App.pages.googleSheetsSettings = (function () {
   function setFieldError(pane, fieldId, message) {
     const input = pane.querySelector("#gsField" + fieldId);
     const hint = pane.querySelector("#gsField" + fieldId + "Err");
-    if (hint) { hint.textContent = message || ""; hint.classList.toggle("visible", !!message); }
+    if (hint) { App.i18n.setText(hint, App.i18n.value(() => (message || ""))); hint.classList.toggle("visible", !!message); }
     if (input) {
       input.setAttribute("aria-invalid", message ? "true" : "false");
       const wrap = input.closest(".field");
@@ -479,7 +479,7 @@ App.pages.googleSheetsSettings = (function () {
   function setFormMessage(pane, text, kind) {
     const el = pane.querySelector("#gsFormMessage");
     if (!el) return;
-    el.textContent = text || "";
+    App.i18n.setText(el, App.i18n.value(() => (text || "")));
     el.className = "profile-edit-message" + (kind ? " " + kind : "");
   }
 
@@ -517,7 +517,7 @@ App.pages.googleSheetsSettings = (function () {
     if (requestInFlight) return;
     if (matchedConnection) {
       App.app.confirmDialog({
-        title: "Rotate connector token?",
+        get title() { return App.i18n.t("Rotate connector token?"); },
         message: ROTATION_CONFIRM_MESSAGE,
         okLabel: "Rotate token",
         danger: true
@@ -583,7 +583,7 @@ App.pages.googleSheetsSettings = (function () {
 
       submitConnection(pane, result.values, matched, {
         onError: (msg) => setFormMessage(pane, msg, "error"),
-        onBusyStart: () => { setPageBusy(pane, true); submitBtn.textContent = "Connecting…"; },
+        onBusyStart: () => { setPageBusy(pane, true); App.i18n.setText(submitBtn, App.i18n.message("Connecting…")); },
         onBusyEnd: () => { setPageBusy(pane, false); submitBtn.innerHTML = originalLabel; }
       });
     });
@@ -623,7 +623,7 @@ App.pages.googleSheetsSettings = (function () {
     let closePermitted = false;
     let cleanupCapture = function () {};
 
-    const bodyHtml = `
+    const bodyHtml = App.i18n.markup(`
       <p><strong>This connector token is shown only once. Save it now before closing.</strong></p>
       <label class="field full">
         <span>Ingest URL</span>
@@ -650,13 +650,13 @@ App.pages.googleSheetsSettings = (function () {
           <button type="button" class="btn btn-sm btn-danger" id="gsCredCloseAnyway">Close anyway</button>
         </div>
       </div>
-    `;
+    `);
 
     const h = App.app.openModal({
-      title: "Connector credentials",
+      get title() { return App.i18n.t("Connector credentials"); },
       wide: true,
       body: bodyHtml,
-      footer: `<button type="button" class="btn btn-primary" id="gsCredDone">I saved these details</button>`,
+      footer: App.i18n.markup(`<button type="button" class="btn btn-primary" id="gsCredDone">I saved these details</button>`),
       onOpen: (modal) => {
         // Secret/reference values are set via safe DOM APIs (input.value /
         // textContent) — never interpolated into the HTML template above.
@@ -664,8 +664,8 @@ App.pages.googleSheetsSettings = (function () {
         const tokenInput = modal.querySelector("#gsCredToken");
         urlInput.value = payload.ingest_url;
         tokenInput.value = payload.connector_token;
-        modal.querySelector("#gsCredConnId").textContent = payload.connection_id;
-        modal.querySelector("#gsCredConfiguredAt").textContent = formatTimestamp(payload.configured_at);
+        App.i18n.setText(modal.querySelector("#gsCredConnId"), App.i18n.value(() => (payload.connection_id)));
+        App.i18n.setText(modal.querySelector("#gsCredConfiguredAt"), App.i18n.value(() => (formatTimestamp(payload.configured_at))));
 
         modal.querySelector("#gsCopyUrl").addEventListener("click", () =>
           copyToClipboard(urlInput.value, "Ingest URL copied."));

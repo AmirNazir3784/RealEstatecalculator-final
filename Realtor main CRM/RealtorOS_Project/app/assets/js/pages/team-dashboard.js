@@ -35,29 +35,29 @@ App.pages.teamDashboard = (function () {
 
   async function render(container) {
     if (!container) return;
-    App.app.setBreadcrumbs([{ label: "Team" }]);
+    App.app.setBreadcrumbs([{ get label() { return App.i18n.t("Team"); } }]);
     App.app.setTopActions("");
-    container.innerHTML = App.app.loadingHtml("your team");
+    container.innerHTML = App.app.loadingHtml(App.i18n.t("your team"));
 
     try {
       await W().load();
       await S().ensureLoaded(DEPS);
     } catch (err) {
-      container.innerHTML = App.app.errorHtml("The team page could not load.");
+      container.innerHTML = App.app.errorHtml(App.i18n.t("The team page could not load."));
       const retry = container.querySelector('[data-role="route-retry"]');
       if (retry) retry.addEventListener("click", () => render(container));
       return;
     }
 
     if (App.customization && !App.customization.isTeamMode()) {
-      container.innerHTML = header() + `
+      container.innerHTML = header() + App.i18n.markup(`
         <section class="card"><div class="card-body">
           <div class="empty-state">
             <div class="empty-title">Team features are off</div>
             <div class="empty-desc">Turn them on in Settings to invite people and share work.</div>
             <button type="button" class="btn btn-primary" id="teamGoSettings">Open Team &amp; Access</button>
           </div>
-        </div></section>`;
+        </div></section>`);
       const b = container.querySelector("#teamGoSettings");
       if (b) b.addEventListener("click", () => App.app.navigate("/settings/team-access"));
       return;
@@ -74,8 +74,8 @@ App.pages.teamDashboard = (function () {
     }
 
     if (rosterFailed) {
-      container.innerHTML = header() + `
-        <section class="card"><div class="card-body">${App.app.errorHtml("The team list could not load.")}</div></section>`;
+      container.innerHTML = header() + App.i18n.html`
+        <section class="card"><div class="card-body">${App.i18n.value(() => (App.app.errorHtml(App.i18n.t("The team list could not load."))))}</div></section>`;
       const retry = container.querySelector('[data-role="route-retry"]');
       if (retry) retry.addEventListener("click", () => render(container));
       return;
@@ -97,14 +97,14 @@ App.pages.teamDashboard = (function () {
 
     const unassignedLeads = (state.contacts || []).filter(c => !c.assignedToId).length;
 
-    container.innerHTML = header() + `
+    container.innerHTML = header() + App.i18n.html`
       <section class="card">
         <div class="card-header">
           <div class="card-title">Who is carrying what</div>
-          ${W().can("team_manage") ? `<button class="btn btn-sm" id="teamManageBtn">Manage the team</button>` : ""}
+          ${App.i18n.value(() => (W().can("team_manage") ? App.i18n.markup(`<button class="btn btn-sm" id="teamManageBtn">Manage the team</button>`) : ""))}
         </div>
         <div class="card-body zero">
-          ${rows.length ? `
+          ${App.i18n.value(() => (rows.length ? App.i18n.html`
           <div class="table-wrap">
             <table class="tbl tbl-responsive">
               <thead>
@@ -113,41 +113,41 @@ App.pages.teamDashboard = (function () {
                 </tr>
               </thead>
               <tbody>
-                ${rows.map(r => `
+                ${App.i18n.value(() => (rows.map(r => App.i18n.html`
                   <tr>
                     <td data-label="Person" class="primary-cell">
-                      <strong>${U().esc((r.member.name && String(r.member.name).trim()) || r.member.email || "Someone")}</strong>
-                      ${r.member.is_self ? ` <span class="badge badge-neutral">You</span>` : ""}
-                      <div class="form-help">${U().esc(r.member.role === "owner" ? "Owner" : r.member.role === "admin" ? "Admin" : "Agent")}</div>
+                      <strong>${App.i18n.value(() => (U().esc((r.member.name && String(r.member.name).trim()) || r.member.email || App.i18n.t("Someone"))))}</strong>
+                      ${App.i18n.value(() => (r.member.is_self ? App.i18n.markup(` <span class="badge badge-neutral">You</span>`) : ""))}
+                      <div class="form-help">${App.i18n.value(() => (U().esc(r.member.role === "owner" ? App.i18n.t("Owner") : r.member.role === "admin" ? App.i18n.t("Admin") : App.i18n.t("Agent"))))}</div>
                     </td>
-                    <td data-label="Leads">${r.leads}</td>
-                    <td data-label="Open tasks">${r.openTasks}</td>
-                    <td data-label="Late tasks">${r.overdue
-                      ? `<span class="badge badge-overdue">${r.overdue}</span>` : "0"}</td>
-                    <td data-label="Deals in progress">${r.deals}</td>
-                  </tr>`).join("")}
+                    <td data-label="Leads">${App.i18n.value(() => (r.leads))}</td>
+                    <td data-label="Open tasks">${App.i18n.value(() => (r.openTasks))}</td>
+                    <td data-label="Late tasks">${App.i18n.value(() => (r.overdue
+                      ? App.i18n.html`<span class="badge badge-overdue">${App.i18n.value(() => (r.overdue))}</span>` : "0"))}</td>
+                    <td data-label="Deals in progress">${App.i18n.value(() => (r.deals))}</td>
+                  </tr>`).join("")))}
               </tbody>
             </table>
-          </div>` : `
+          </div>` : App.i18n.markup(`
           <div class="empty-state">
             <div class="empty-title">Nobody to show yet</div>
             <div class="empty-desc">Invite somebody in Team &amp; Access and they will appear here.</div>
-          </div>`}
+          </div>`)))}
         </div>
       </section>
-      ${renderResponseTable(members, state)}
-      ${unassignedLeads ? `
+      ${App.i18n.value(() => (renderResponseTable(members, state)))}
+      ${App.i18n.value(() => (unassignedLeads ? App.i18n.html`
       <section class="card">
         <div class="card-body">
           <div class="split-row">
             <div class="split-row-main"><div class="split-row-label">
-              <strong>${unassignedLeads} lead${unassignedLeads === 1 ? "" : "s"} nobody owns</strong>
+              <strong>${App.i18n.value(() => (unassignedLeads))} lead${App.i18n.value(() => (unassignedLeads === 1 ? "" : "s"))} nobody owns</strong>
               <div class="form-help">Give them to somebody so they do not go cold.</div>
             </div></div>
             <button class="btn btn-sm" id="teamGoUnassigned">Open those leads</button>
           </div>
         </div>
-      </section>` : ""}
+      </section>` : ""))}
       <p class="form-help">Counts come from the records you can see, so they match your own lists.</p>`;
 
     wireResponseTable(container, members, state);
@@ -181,11 +181,11 @@ App.pages.teamDashboard = (function () {
   // the thing needing attention first, which is what a manager wants on the
   // first click.
   const RESPONSE_COLUMNS = {
-    person: { label: "Person", dir: 1, value: (r) => String(r.name || "").toLowerCase() },
-    newContacts: { label: "New leads", dir: -1, value: (r) => r.stats.newContacts },
-    withinDay: { label: "Contacted within a day", dir: 1, value: (r) => (r.stats.touchedWithin24hPct == null ? Infinity : r.stats.touchedWithin24hPct) },
-    median: { label: "Typical time to first contact", dir: -1, value: (r) => (r.stats.medianTouchMs == null ? -1 : r.stats.medianTouchMs) },
-    overdue: { label: "Overdue now", dir: -1, value: (r) => r.stats.overdueNow }
+    person: { get label() { return App.i18n.t("Person"); }, dir: 1, value: (r) => String(r.name || "").toLowerCase() },
+    newContacts: { get label() { return App.i18n.t("New leads"); }, dir: -1, value: (r) => r.stats.newContacts },
+    withinDay: { get label() { return App.i18n.t("Contacted within a day"); }, dir: 1, value: (r) => (r.stats.touchedWithin24hPct == null ? Infinity : r.stats.touchedWithin24hPct) },
+    median: { get label() { return App.i18n.t("Typical time to first contact"); }, dir: -1, value: (r) => (r.stats.medianTouchMs == null ? -1 : r.stats.medianTouchMs) },
+    overdue: { get label() { return App.i18n.t("Overdue now"); }, dir: -1, value: (r) => r.stats.overdueNow }
   };
 
   let responseSort = { key: "overdue", dir: -1 };
@@ -241,19 +241,19 @@ App.pages.teamDashboard = (function () {
 
   function responseBodyHtml(rows) {
     const R = App.responseStats;
-    return sortResponseRows(rows).map((r) => `
-      <tr${r.isTeam ? ' class="tbl-total-row"' : ""}>
+    return sortResponseRows(rows).map((r) => App.i18n.html`
+      <tr${App.i18n.value(() => (r.isTeam ? ' class="tbl-total-row"' : ""))}>
         <td data-label="Person" class="primary-cell">
-          <strong>${U().esc(r.name)}</strong>
-          ${r.isSelf ? ' <span class="badge badge-neutral">You</span>' : ""}
+          <strong>${App.i18n.value(() => (U().esc(r.name)))}</strong>
+          ${App.i18n.value(() => (r.isSelf ? App.i18n.markup(' <span class="badge badge-neutral">You</span>') : ""))}
         </td>
-        <td data-label="New leads">${r.stats.newContacts}</td>
-        <td data-label="Contacted within a day">${U().esc(R.formatPct(r.stats.touchedWithin24hPct))}
-          ${r.stats.untouched ? `<div class="form-help">${r.stats.untouched} still waiting</div>` : ""}
+        <td data-label="New leads">${App.i18n.value(() => (r.stats.newContacts))}</td>
+        <td data-label="Contacted within a day">${App.i18n.value(() => (U().esc(R.formatPct(r.stats.touchedWithin24hPct))))}
+          ${App.i18n.value(() => (r.stats.untouched ? App.i18n.html`<div class="form-help">${App.i18n.value(() => (r.stats.untouched))} still waiting</div>` : ""))}
         </td>
-        <td data-label="Typical time to first contact">${U().esc(R.formatDuration(r.stats.medianTouchMs))}</td>
-        <td data-label="Overdue now">${r.stats.overdueNow
-          ? `<span class="badge badge-overdue">${r.stats.overdueNow}</span>` : "0"}</td>
+        <td data-label="Typical time to first contact">${App.i18n.value(() => (U().esc(R.formatDuration(r.stats.medianTouchMs))))}</td>
+        <td data-label="Overdue now">${App.i18n.value(() => (r.stats.overdueNow
+          ? App.i18n.html`<span class="badge badge-overdue">${App.i18n.value(() => (r.stats.overdueNow))}</span>` : "0"))}</td>
       </tr>`).join("");
   }
 
@@ -264,24 +264,24 @@ App.pages.teamDashboard = (function () {
     const head = Object.keys(RESPONSE_COLUMNS).map((key) => {
       const on = responseSort.key === key;
       const aria = on ? (responseSort.dir === 1 ? "ascending" : "descending") : "none";
-      return `<th aria-sort="${aria}">
-        <button type="button" class="tbl-sort" data-response-sort="${U().esc(key)}">
-          ${U().esc(RESPONSE_COLUMNS[key].label)}${on ? (responseSort.dir === 1 ? " \u2191" : " \u2193") : ""}
+      return App.i18n.html`<th aria-sort="${App.i18n.value(() => (aria))}">
+        <button type="button" class="tbl-sort" data-response-sort="${App.i18n.value(() => (U().esc(key)))}">
+          ${App.i18n.value(() => (U().esc(RESPONSE_COLUMNS[key].label)))}${App.i18n.value(() => (on ? (responseSort.dir === 1 ? " \u2191" : " \u2193") : ""))}
         </button>
       </th>`;
     }).join("");
 
-    return `
+    return App.i18n.html`
       <section class="card" id="teamResponseCard">
         <div class="card-header">
           <div class="card-title">How quickly leads get answered</div>
-          <span class="badge badge-neutral">last ${R.WINDOW_DAYS} days</span>
+          <span class="badge badge-neutral">last ${App.i18n.value(() => (R.WINDOW_DAYS))} days</span>
         </div>
         <div class="card-body zero">
           <div class="table-wrap">
             <table class="tbl tbl-responsive">
-              <thead><tr>${head}</tr></thead>
-              <tbody id="teamResponseBody">${responseBodyHtml(rows)}</tbody>
+              <thead><tr>${App.i18n.value(() => (head))}</tr></thead>
+              <tbody id="teamResponseBody">${App.i18n.value(() => (responseBodyHtml(rows)))}</tbody>
             </table>
           </div>
           <p class="form-help" style="padding:12px 16px 0">A dash means there were no new leads to measure. Counts come from the records you can see.</p>
@@ -311,7 +311,7 @@ App.pages.teamDashboard = (function () {
         const b = card.querySelector('[data-response-sort="' + k + '"]');
         if (!b) return;
         const on = responseSort.key === k;
-        b.textContent = RESPONSE_COLUMNS[k].label + (on ? (responseSort.dir === 1 ? " \u2191" : " \u2193") : "");
+        App.i18n.setText(b, App.i18n.value(() => (RESPONSE_COLUMNS[k].label + (on ? (responseSort.dir === 1 ? " \u2191" : " \u2193") : ""))));
         const th = b.closest("th");
         if (th) th.setAttribute("aria-sort", on ? (responseSort.dir === 1 ? "ascending" : "descending") : "none");
       });
@@ -319,13 +319,13 @@ App.pages.teamDashboard = (function () {
   }
 
   function header() {
-    return `
+    return App.i18n.markup(`
       <div class="page-header">
         <div>
           <div class="page-title">Team</div>
           <div class="page-desc">How work is spread across the people in this workspace.</div>
         </div>
-      </div>`;
+      </div>`);
   }
 
   return { render };

@@ -261,7 +261,7 @@ test("a dead endpoint is reported for deletion, and one live device is a send", 
   const livePost = posts.find((p) => p.url.endsWith("/live"));
   assert.deepEqual(
     JSON.parse(await decrypt(new Uint8Array(livePost.init.body), live)),
-    { title: "A lead replied", body: "Have a look", url: "/contacts/ct_1" });
+    { title: "A lead showed strong interest", body: "Open your inbox and review your next steps.", url: "/contacts/ct_1" });
 });
 
 test("every device refusing is a failure, and a push failure never stops the run", async () => {

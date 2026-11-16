@@ -65,14 +65,33 @@ async function app(opts = {}) {
   } = opts;
 
   const calls = [];
+  // Model the server's endpoint upsert/removal: browser permission alone is
+  // insufficient for the UI's registered-device status after an enable action.
+  const deviceRows = devices.map((device) => ({ ...device }));
   const b = await browser(SCRIPTS, {
     store: {
       ensureLoaded: async () => {},
       getState: () => ({ settings: {} }),
       push: {
-        devices: async () => devices,
-        register: async (sub, label) => { calls.push(["register", sub, label]); return { outcome: "registered" }; },
-        remove: async (endpoint) => { calls.push(["remove", endpoint]); return { outcome: "removed" }; },
+        devices: async () => deviceRows.map((device) => ({ ...device })),
+        register: async (sub, label) => {
+          calls.push(["register", sub, label]);
+          const existingDevice = deviceRows.find((device) => device.endpoint === sub.endpoint);
+          if (existingDevice) {
+            existingDevice.device_label = label || existingDevice.device_label;
+            existingDevice.failure_count = 0;
+          } else {
+            deviceRows.push({ id: "device-" + (deviceRows.length + 1), endpoint: sub.endpoint,
+              device_label: label, failure_count: 0, created_at: "2026-11-16T12:00:00Z" });
+          }
+          return { outcome: "registered" };
+        },
+        remove: async (endpoint) => {
+          calls.push(["remove", endpoint]);
+          const index = deviceRows.findIndex((device) => device.endpoint === endpoint);
+          if (index >= 0) deviceRows.splice(index, 1);
+          return { outcome: "removed" };
+        },
         preferences: async () => prefs,
         savePreferences: async (p) => { calls.push(["savePrefs", p]); return { outcome: "saved" }; },
       },
@@ -138,7 +157,8 @@ domTest("with no key configured it says so, and never asks for permission", asyn
   const p = await app({ vapidKey: "" });
   await renderPane(p);
 
-  assert.match(text(p), /switch on when RealtorCRM goes live/);
+  assert.match(text(p), /Phone notifications are not configured for this app\./);
+  assert.match(text(p), /Ask your workspace administrator to finish notification setup\./);
   assert.equal(p.pane.querySelector("#pushEnableBtn"), null,
     "no button, because pressing it could only fail");
   assert.equal(p.pane.querySelector("#pushPrefsCard"), null,
@@ -204,6 +224,10 @@ domTest("turning it on asks, subscribes with the key, and registers the device",
 
   assert.ok(p.toasts.some((t) => /on for this device/i.test(t.message || "")),
     JSON.stringify(p.toasts));
+  const persisted = await p.window.App.store.push.devices();
+  assert.equal(persisted.filter((device) => device.endpoint === registered[1].endpoint).length, 1,
+    "successful registration persists exactly one device for the subscribed endpoint");
+  assert.equal(persisted.find((device) => device.endpoint === registered[1].endpoint).failure_count, 0);
   // And the screen now offers the opposite.
   assert.ok(p.pane.querySelector("#pushDisableBtn"));
 });

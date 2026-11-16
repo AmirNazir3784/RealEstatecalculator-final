@@ -157,7 +157,9 @@ test("mark all as read clears the badge", async (t) => {
 });
 
 test("every notification text is escaped", async (t) => {
-  const d = await mounted(t);
+  // Known types use fixed translated system copy. Future/unknown types still
+  // need safe legacy fallback, including untrusted titles and descriptions.
+  const d = await mounted(t, ROWS.map(row => row.type === "followup_failed" ? {...row,type:"future_notification_type"} : row));
   if (!d) return;
   await openPanel(d);
   assert.equal(d.host.querySelector("img"), null);
@@ -270,6 +272,9 @@ test("relative time wording", async (t) => {
   deq(["2026-09-29T11:59:40Z", "2026-09-29T11:55:00Z", "2026-09-29T11:00:00Z", "2026-09-29T09:00:00Z", "2026-09-28T11:00:00Z", "2026-09-25T12:00:00Z"]
     .map((x) => rt(x, now)), ["just now", "5 min ago", "1 hour ago", "3 hours ago", "yesterday", "4 days ago"]);
   assert.equal(rt("not a date", now), "");
+  b.window.App.i18n.register("de",{});
+  await b.window.App.i18n.setLocale("de");
+  assert.equal(rt("2026-09-29T11:55:00Z",now),new Intl.RelativeTimeFormat("de",{numeric:"auto"}).format(-5,"minute"));
   b.close();
 });
 

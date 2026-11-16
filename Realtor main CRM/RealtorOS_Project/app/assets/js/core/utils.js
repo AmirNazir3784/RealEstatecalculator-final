@@ -122,7 +122,7 @@ App.util = (function () {
         ? { month: "short", day: "numeric" }
         : { year: "numeric", month: "short", day: "numeric" };
     try {
-      return d.toLocaleDateString("en-US", opts);
+      return d.toLocaleDateString(App.i18n ? App.i18n.locale() : "en-US", opts);
     } catch (e) {
       return iso;
     }
@@ -132,6 +132,7 @@ App.util = (function () {
   function relativeDayLabel(iso) {
     if (!iso) return "";
     const diff = daysBetween(todayISO(), iso);
+    if (App.i18n && App.i18n.locale() !== "en" && Math.abs(diff) <= 7) return new Intl.RelativeTimeFormat(App.i18n.locale(), { numeric:"auto" }).format(diff,"day");
     if (diff === 0) return "Today";
     if (diff === 1) return "Tomorrow";
     if (diff === -1) return "Yesterday";
@@ -155,7 +156,7 @@ App.util = (function () {
     const meta = CURRENCY_META[code] || CURRENCY_META.USD;
     const n = numSigned(amount);
     try {
-      return new Intl.NumberFormat(meta.locale, {
+      return new Intl.NumberFormat(App.i18n && App.i18n.locale() !== "en" ? App.i18n.locale() : meta.locale, {
         style: "currency",
         currency: code,
         maximumFractionDigits: 0
@@ -171,6 +172,7 @@ App.util = (function () {
     const meta = CURRENCY_META[code] || CURRENCY_META.USD;
     const n = numSigned(amount);
     const abs = Math.abs(n);
+    if (App.i18n && App.i18n.locale() !== "en") return new Intl.NumberFormat(App.i18n.locale(), { style:"currency", currency:code, notation:"compact", maximumFractionDigits:1 }).format(n);
     let val, suffix;
     if (abs >= 1e9)      { val = n / 1e9; suffix = "B"; }
     else if (abs >= 1e6) { val = n / 1e6; suffix = "M"; }

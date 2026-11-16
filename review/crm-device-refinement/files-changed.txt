@@ -1,0 +1,101 @@
+Realtor main CRM/RealtorOS_Project/app/assets/css/realtoros.css
+Realtor main CRM/RealtorOS_Project/app/assets/i18n/ar.json
+Realtor main CRM/RealtorOS_Project/app/assets/i18n/de.json
+Realtor main CRM/RealtorOS_Project/app/assets/i18n/en.json
+Realtor main CRM/RealtorOS_Project/app/assets/i18n/es.json
+Realtor main CRM/RealtorOS_Project/app/assets/i18n/fr.json
+Realtor main CRM/RealtorOS_Project/app/assets/i18n/it.json
+Realtor main CRM/RealtorOS_Project/app/assets/i18n/pt.json
+Realtor main CRM/RealtorOS_Project/app/assets/js/app.js
+Realtor main CRM/RealtorOS_Project/app/assets/js/core/customization.js
+Realtor main CRM/RealtorOS_Project/app/assets/js/core/header-actions.js
+Realtor main CRM/RealtorOS_Project/app/assets/js/core/i18n.js
+Realtor main CRM/RealtorOS_Project/app/assets/js/core/mobile-nav.js
+Realtor main CRM/RealtorOS_Project/app/assets/js/core/preferences.js
+Realtor main CRM/RealtorOS_Project/app/assets/js/core/push.js
+Realtor main CRM/RealtorOS_Project/app/assets/js/core/pwa.js
+Realtor main CRM/RealtorOS_Project/app/assets/js/core/quick-add.js
+Realtor main CRM/RealtorOS_Project/app/assets/js/core/utils.js
+Realtor main CRM/RealtorOS_Project/app/assets/js/data/data-service.js
+Realtor main CRM/RealtorOS_Project/app/assets/js/data/store.js
+Realtor main CRM/RealtorOS_Project/app/assets/js/data/supabase-client.js
+Realtor main CRM/RealtorOS_Project/app/assets/js/pages/activities.js
+Realtor main CRM/RealtorOS_Project/app/assets/js/pages/automation.js
+Realtor main CRM/RealtorOS_Project/app/assets/js/pages/buyer.js
+Realtor main CRM/RealtorOS_Project/app/assets/js/pages/calendar.js
+Realtor main CRM/RealtorOS_Project/app/assets/js/pages/commission.js
+Realtor main CRM/RealtorOS_Project/app/assets/js/pages/contacts.js
+Realtor main CRM/RealtorOS_Project/app/assets/js/pages/custom-fields-settings.js
+Realtor main CRM/RealtorOS_Project/app/assets/js/pages/deals.js
+Realtor main CRM/RealtorOS_Project/app/assets/js/pages/email-sending-settings.js
+Realtor main CRM/RealtorOS_Project/app/assets/js/pages/email-templates.js
+Realtor main CRM/RealtorOS_Project/app/assets/js/pages/finances.js
+Realtor main CRM/RealtorOS_Project/app/assets/js/pages/goals.js
+Realtor main CRM/RealtorOS_Project/app/assets/js/pages/google-sheets-import-history.js
+Realtor main CRM/RealtorOS_Project/app/assets/js/pages/google-sheets-settings.js
+Realtor main CRM/RealtorOS_Project/app/assets/js/pages/lead-file-import.js
+Realtor main CRM/RealtorOS_Project/app/assets/js/pages/notifications.js
+Realtor main CRM/RealtorOS_Project/app/assets/js/pages/onboarding.js
+Realtor main CRM/RealtorOS_Project/app/assets/js/pages/properties.js
+Realtor main CRM/RealtorOS_Project/app/assets/js/pages/push-settings.js
+Realtor main CRM/RealtorOS_Project/app/assets/js/pages/referrals.js
+Realtor main CRM/RealtorOS_Project/app/assets/js/pages/release.js
+Realtor main CRM/RealtorOS_Project/app/assets/js/pages/reports.js
+Realtor main CRM/RealtorOS_Project/app/assets/js/pages/scheduler.js
+Realtor main CRM/RealtorOS_Project/app/assets/js/pages/seller.js
+Realtor main CRM/RealtorOS_Project/app/assets/js/pages/tasks.js
+Realtor main CRM/RealtorOS_Project/app/assets/js/pages/team-dashboard.js
+Realtor main CRM/RealtorOS_Project/app/assets/js/pages/team-join.js
+Realtor main CRM/RealtorOS_Project/app/assets/js/pages/team-management.js
+Realtor main CRM/RealtorOS_Project/app/assets/js/pages/team-permissions.js
+Realtor main CRM/RealtorOS_Project/app/assets/js/ui/custom-fields-ui.js
+Realtor main CRM/RealtorOS_Project/app/index.html
+Realtor main CRM/RealtorOS_Project/app/sw.js
+Realtor main CRM/RealtorOS_Project/docs/auth-email-templates/README.md
+Realtor main CRM/RealtorOS_Project/docs/auth-email-templates/confirm-signup.html
+Realtor main CRM/RealtorOS_Project/docs/auth-email-templates/reset-password.html
+Realtor main CRM/RealtorOS_Project/docs/crm-notifications-refinement.md
+Realtor main CRM/RealtorOS_Project/supabase/functions/_shared/notification-copy.ts
+Realtor main CRM/RealtorOS_Project/supabase/functions/process-automation/index.ts
+Realtor main CRM/RealtorOS_Project/supabase/migrations/20261116070656_crm_scoped_search.sql
+Realtor main CRM/RealtorOS_Project/supabase/migrations/20261116070954_crm_notification_events.sql
+Realtor main CRM/RealtorOS_Project/supabase/rollback/20261116070656_crm_scoped_search.sql
+Realtor main CRM/RealtorOS_Project/supabase/rollback/crm_notification_events_revert.sql
+Realtor main CRM/RealtorOS_Project/supabase/tests/phase_4h_verification.sql
+Realtor main CRM/RealtorOS_Project/tests/edge/crm-notification-locales.test.mjs
+Realtor main CRM/RealtorOS_Project/tests/edge/crm-task-reminders.test.mjs
+Realtor main CRM/RealtorOS_Project/tests/edge/push-sending.test.mjs
+Realtor main CRM/RealtorOS_Project/tests/frontend/crm-push-renewal.test.mjs
+Realtor main CRM/RealtorOS_Project/tests/frontend/device-preferences.test.mjs
+Realtor main CRM/RealtorOS_Project/tests/frontend/header-actions.test.mjs
+Realtor main CRM/RealtorOS_Project/tests/frontend/i18n.test.mjs
+Realtor main CRM/RealtorOS_Project/tests/frontend/localization-catalogs.test.mjs
+Realtor main CRM/RealtorOS_Project/tests/frontend/notifications.test.mjs
+Realtor main CRM/RealtorOS_Project/tests/frontend/onboarding-and-presets.test.mjs
+Realtor main CRM/RealtorOS_Project/tests/frontend/push-settings.test.mjs
+Realtor main CRM/RealtorOS_Project/tests/frontend/scoped-search.test.mjs
+Realtor main CRM/RealtorOS_Project/tests/frontend/settings-groups.test.mjs
+Realtor main CRM/RealtorOS_Project/tests/helpers/browser.mjs
+Realtor main CRM/RealtorOS_Project/tests/security/scan.test.mjs
+Realtor main CRM/RealtorOS_Project/tests/sql/crm-notification-events.test.mjs
+Realtor main CRM/RealtorOS_Project/tests/sql/crm-scoped-search.test.mjs
+Realtor main CRM/RealtorOS_Project/tests/sql/file-import.test.mjs
+Realtor main CRM/RealtorOS_Project/tests/sql/notifications.test.mjs
+Realtor main CRM/RealtorOS_Project/tests/sql/phase_2c_response_tracking.test.mjs
+Realtor main CRM/RealtorOS_Project/tests/sql/phase_3b_push.test.mjs
+Realtor main CRM/RealtorOS_Project/tests/sql/phase_t2c_post_workspace_rpcs.test.mjs
+Realtor main CRM/RealtorOS_Project/tests/sql/phase_t2c_workspace_backend.test.mjs
+Realtor main CRM/RealtorOS_Project/tests/sql/rollback_files.test.mjs
+review/crm-device-refinement/.gitignore
+review/crm-device-refinement/BROWSER-QA.md
+review/crm-device-refinement/IMPLEMENTATION.md
+review/crm-device-refinement/PR_BODY.md
+review/crm-device-refinement/advanced.cjs
+review/crm-device-refinement/browser-results.json
+review/crm-device-refinement/browser.cjs
+review/crm-device-refinement/files-changed.txt
+review/crm-device-refinement/fixture.js
+review/crm-device-refinement/packaging-results.json
+review/crm-device-refinement/supabase.js
+review/crm-device-refinement/test-results.json
+review/crm-device-refinement/windows-rollback-diagnostic.json

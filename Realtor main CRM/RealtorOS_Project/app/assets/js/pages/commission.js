@@ -16,7 +16,7 @@ App.pages.commission = (function () {
   const C = () => App.commission;
 
   async function render(container) {
-    App.app.setBreadcrumbs([{ label: "Commission" }]);
+    App.app.setBreadcrumbs([{ get label() { return App.i18n.t("Commission"); } }]);
     App.app.setTopActions("");
     container.innerHTML = App.app.loadingHtml();
     await S().ensureLoaded(["deals", "contacts", "properties", "teamMembers"]);
@@ -26,13 +26,13 @@ App.pages.commission = (function () {
     // Data & Safety. See the "legacy view filter" section at the bottom of
     // data/workspace.js for the explicit limits of what this can do.
     if (App.workspace && App.workspace.commissionFiguresHidden()) {
-      container.innerHTML = `
+      container.innerHTML = App.i18n.markup(`
         <div class="page-header"><div><div class="page-title">Commission</div></div></div>
         <div class="release-callout">
           <strong>Commission figures are hidden for your current view.</strong><br>
           You're viewing as Staff. Switch back to full access in Settings → Team → Working as to see commission numbers. This only changes what's shown on this screen — the underlying data is never deleted or restricted.
         </div>
-        <button class="btn" data-go="/settings/team-access" id="commissionHiddenSettingsBtn" style="margin-top:12px">Open Team & Access</button>`;
+        <button class="btn" data-go="/settings/team-access" id="commissionHiddenSettingsBtn" style="margin-top:12px">Open Team & Access</button>`);
       const btn = container.querySelector("#commissionHiddenSettingsBtn");
       if (btn) btn.addEventListener("click", () => App.app.navigate("/settings/team-access"));
       return;
@@ -46,7 +46,7 @@ App.pages.commission = (function () {
     const pipe = D().pipelineSummary(s);
     const closings = D().upcomingClosings(s, 10);
 
-    container.innerHTML = `
+    container.innerHTML = App.i18n.html`
       <div class="page-header">
         <div>
           <div class="page-title">Commission</div>
@@ -57,33 +57,33 @@ App.pages.commission = (function () {
       <div class="stat-row">
         <div class="stat-card">
           <div class="k">Expected Net (Active)</div>
-          <div class="v">${U().formatCompact(overview.expectedCommission, cur)}</div>
-          <div class="sub">${U().formatCurrency(overview.expectedCommission, cur)}</div>
+          <div class="v">${App.i18n.value(() => (U().formatCompact(overview.expectedCommission, cur)))}</div>
+          <div class="sub">${App.i18n.value(() => (U().formatCurrency(overview.expectedCommission, cur)))}</div>
         </div>
         <div class="stat-card">
           <div class="k">Weighted Pipeline</div>
-          <div class="v">${U().formatCompact(glance.expectedWeightedCommission, cur)}</div>
+          <div class="v">${App.i18n.value(() => (U().formatCompact(glance.expectedWeightedCommission, cur)))}</div>
           <div class="sub">probability-adjusted</div>
         </div>
         <div class="stat-card">
           <div class="k">Pending (Under Contract)</div>
-          <div class="v">${U().formatCompact(overview.pendingCommission, cur)}</div>
-          <div class="sub">${U().formatCurrency(overview.pendingCommission, cur)}</div>
+          <div class="v">${App.i18n.value(() => (U().formatCompact(overview.pendingCommission, cur)))}</div>
+          <div class="sub">${App.i18n.value(() => (U().formatCurrency(overview.pendingCommission, cur)))}</div>
         </div>
         <div class="stat-card">
           <div class="k">YTD Net Commission</div>
-          <div class="v">${U().formatCompact(overview.ytdNetCommission, cur)}</div>
+          <div class="v">${App.i18n.value(() => (U().formatCompact(overview.ytdNetCommission, cur)))}</div>
           <div class="sub">closed this year</div>
         </div>
         <div class="stat-card">
           <div class="k">Received (Closed)</div>
-          <div class="v">${U().formatCompact(overview.receivedCommission, cur)}</div>
+          <div class="v">${App.i18n.value(() => (U().formatCompact(overview.receivedCommission, cur)))}</div>
           <div class="sub">Based on closed deals</div>
         </div>
         <div class="stat-card">
           <div class="k">Active Pipeline Value</div>
-          <div class="v">${U().formatCompact(glance.activePipelineValue, cur)}</div>
-          <div class="sub">${U().formatCurrency(glance.activePipelineValue, cur)}</div>
+          <div class="v">${App.i18n.value(() => (U().formatCompact(glance.activePipelineValue, cur)))}</div>
+          <div class="sub">${App.i18n.value(() => (U().formatCurrency(glance.activePipelineValue, cur)))}</div>
         </div>
       </div>
 
@@ -94,7 +94,7 @@ App.pages.commission = (function () {
               <div class="card-title">Monthly Net Commission — Last 12 Months</div>
             </div>
             <div class="card-body">
-              ${renderMonthlyChart(overview.monthlyTrend, cur)}
+              ${App.i18n.value(() => (renderMonthlyChart(overview.monthlyTrend, cur)))}
             </div>
           </div>
 
@@ -108,14 +108,14 @@ App.pages.commission = (function () {
           <div class="card">
             <div class="card-header"><div class="card-title">Pipeline by Stage</div></div>
             <div class="card-body zero">
-              ${renderPipelineSummary(pipe, cur)}
+              ${App.i18n.value(() => (renderPipelineSummary(pipe, cur)))}
             </div>
           </div>
 
           <div class="card">
             <div class="card-header"><div class="card-title">Upcoming Closings (30 days)</div></div>
             <div class="card-body zero">
-              ${renderUpcomingClosings(closings, cur)}
+              ${App.i18n.value(() => (renderUpcomingClosings(closings, cur)))}
             </div>
           </div>
 
@@ -136,7 +136,7 @@ App.pages.commission = (function () {
   function renderMonthlyChart(trend, cur) {
     // trend: [{ key, label, amount, count }]
     if (!trend || trend.length === 0) {
-      return `<div class="empty" style="padding:var(--empty-padding)"><p>No closings yet.</p></div>`;
+      return App.i18n.markup(`<div class="empty" style="padding:var(--empty-padding)"><p>No closings yet.</p></div>`);
     }
     const max = Math.max(1, ...trend.map(t => t.amount));
     const W = 640;
@@ -150,30 +150,30 @@ App.pages.commission = (function () {
     // Y-axis ticks (0, 25%, 50%, 75%, 100% of max)
     const ticks = [0, 0.25, 0.5, 0.75, 1].map(t => t * max);
 
-    return `
-      <svg viewBox="0 0 ${W} ${H}" width="100%" height="${H}" role="img" aria-label="Monthly commission trend for last 12 months">
-        ${ticks.map(t => {
+    return App.i18n.html`
+      <svg viewBox="0 0 ${App.i18n.value(() => (W))} ${App.i18n.value(() => (H))}" width="100%" height="${App.i18n.value(() => (H))}" role="img" aria-label="Monthly commission trend for last 12 months">
+        ${App.i18n.value(() => (ticks.map(t => {
           const y = padT + chartH - (t / max) * chartH;
-          return `
-            <line x1="${padL}" x2="${W-padR}" y1="${y}" y2="${y}" stroke="var(--chart-grid)" stroke-width="1"/>
-            <text x="${padL - 6}" y="${y + 3}" text-anchor="end" font-size="10" fill="var(--chart-axis)">${U().formatCompact(t, cur)}</text>
+          return App.i18n.html`
+            <line x1="${App.i18n.value(() => (padL))}" x2="${App.i18n.value(() => (W-padR))}" y1="${App.i18n.value(() => (y))}" y2="${App.i18n.value(() => (y))}" stroke="var(--chart-grid)" stroke-width="1"/>
+            <text x="${App.i18n.value(() => (padL - 6))}" y="${App.i18n.value(() => (y + 3))}" text-anchor="end" font-size="10" fill="var(--chart-axis)">${App.i18n.value(() => (U().formatCompact(t, cur)))}</text>
           `;
-        }).join("")}
-        ${trend.map((t, i) => {
+        }).join("")))}
+        ${App.i18n.value(() => (trend.map((t, i) => {
           const x = padL + step * i + (step - barW) / 2;
           const h = t.amount > 0 ? (t.amount / max) * chartH : 0;
           const y = padT + chartH - h;
           const isCurrentMonth = i === trend.length - 1;
           const fill = isCurrentMonth ? "var(--chart-series)" : "var(--chart-series-muted)";
-          return `
+          return App.i18n.html`
             <g>
-              <rect x="${x}" y="${y}" width="${barW}" height="${h}" fill="${fill}" rx="3">
-                <title>${t.label}: ${U().formatCurrency(t.amount, cur)} (${t.count} deal${t.count===1?'':'s'})</title>
+              <rect x="${App.i18n.value(() => (x))}" y="${App.i18n.value(() => (y))}" width="${App.i18n.value(() => (barW))}" height="${App.i18n.value(() => (h))}" fill="${App.i18n.value(() => (fill))}" rx="3">
+                <title>${App.i18n.value(() => (t.label))}: ${App.i18n.value(() => (U().formatCurrency(t.amount, cur)))} (${App.i18n.value(() => (t.count))} deal${App.i18n.value(() => (t.count===1?'':'s'))})</title>
               </rect>
-              <text x="${x + barW/2}" y="${H - 12}" text-anchor="middle" font-size="10" fill="var(--chart-axis)">${t.label}</text>
+              <text x="${App.i18n.value(() => (x + barW/2))}" y="${App.i18n.value(() => (H - 12))}" text-anchor="middle" font-size="10" fill="var(--chart-axis)">${App.i18n.value(() => (t.label))}</text>
             </g>
           `;
-        }).join("")}
+        }).join("")))}
       </svg>
     `;
   }
@@ -181,16 +181,16 @@ App.pages.commission = (function () {
   // ---------- PIPELINE SUMMARY ----------
 
   function renderPipelineSummary(pipe, cur) {
-    if (pipe.length === 0) return `<div class="empty" style="padding:var(--empty-padding)"><p>No pipeline stages configured.</p></div>`;
-    return pipe.map(stage => `
+    if (pipe.length === 0) return App.i18n.markup(`<div class="empty" style="padding:var(--empty-padding)"><p>No pipeline stages configured.</p></div>`);
+    return pipe.map(stage => App.i18n.html`
       <div class="item-row">
-        <div class="icon-slot" style="background:${stage.color}20;color:${stage.color}">${stage.count}</div>
+        <div class="icon-slot" style="background:${App.i18n.value(() => (stage.color))}20;color:${App.i18n.value(() => (stage.color))}">${App.i18n.value(() => (stage.count))}</div>
         <div class="body">
-          <div class="title">${U().esc(stage.stageName)}</div>
-          <div class="sub">${U().formatCompact(stage.totalValue, cur)} in deals · Net ${U().formatCompact(stage.expectedNetCommission, cur)}</div>
+          <div class="title">${App.i18n.value(() => (U().esc(stage.stageName)))}</div>
+          <div class="sub">${App.i18n.value(() => (U().formatCompact(stage.totalValue, cur)))} in deals · Net ${App.i18n.value(() => (U().formatCompact(stage.expectedNetCommission, cur)))}</div>
         </div>
         <div class="meta-right">
-          <div style="font-weight:600;color:var(--text)">${U().formatCompact(stage.weightedCommission, cur)}</div>
+          <div style="font-weight:600;color:var(--text)">${App.i18n.value(() => (U().formatCompact(stage.weightedCommission, cur)))}</div>
           <div style="font-size: var(--font-size-xs)">weighted</div>
         </div>
       </div>
@@ -201,25 +201,25 @@ App.pages.commission = (function () {
 
   function renderUpcomingClosings(closings, cur) {
     if (closings.rows.length === 0) {
-      return `<div class="empty" style="padding:var(--empty-padding)"><p>No closings scheduled in the next 30 days.</p></div>`;
+      return App.i18n.markup(`<div class="empty" style="padding:var(--empty-padding)"><p>No closings scheduled in the next 30 days.</p></div>`);
     }
-    return `
-      ${closings.rows.map(r => `
-        <div class="item-row clickable" onclick="location.hash='#/pipeline/${r.dealId}'">
-          <div class="icon-slot">${App.app.icon("cal")}</div>
+    return App.i18n.html`
+      ${App.i18n.value(() => (closings.rows.map(r => App.i18n.html`
+        <div class="item-row clickable" onclick="location.hash='#/pipeline/${App.i18n.value(() => (r.dealId))}'">
+          <div class="icon-slot">${App.i18n.value(() => (App.app.icon("cal")))}</div>
           <div class="body">
-            <div class="title">${U().esc(r.dealName)}</div>
-            <div class="sub">${U().esc(r.contactName)}${r.propertyAddress ? " · " + U().esc(r.propertyAddress) : ""}</div>
+            <div class="title">${App.i18n.value(() => (U().esc(r.dealName)))}</div>
+            <div class="sub">${App.i18n.value(() => (U().esc(r.contactName)))}${App.i18n.value(() => (r.propertyAddress ? " · " + U().esc(r.propertyAddress) : ""))}</div>
           </div>
           <div class="meta-right">
-            <div style="font-weight:600;color:var(--text)">${U().formatDate(r.closeDate, "short")}</div>
-            <div style="font-size: var(--font-size-xs);">Net ${U().formatCurrency(r.expectedNet, cur)}</div>
+            <div style="font-weight:600;color:var(--text)">${App.i18n.value(() => (U().formatDate(r.closeDate, "short")))}</div>
+            <div style="font-size: var(--font-size-xs);">Net ${App.i18n.value(() => (U().formatCurrency(r.expectedNet, cur)))}</div>
           </div>
         </div>
-      `).join("")}
+      `).join("")))}
       <div style="padding: 12px 16px; border-top: 1px solid var(--border); background: var(--surface-sunk); font-size: var(--font-size-sm); font-weight: 600; color: var(--text); display: flex; justify-content: space-between;">
         <span>Total expected net:</span>
-        <span>${U().formatCurrency(closings.totalExpectedNet, cur)}</span>
+        <span>${App.i18n.value(() => (U().formatCurrency(closings.totalExpectedNet, cur)))}</span>
       </div>
     `;
   }
@@ -240,11 +240,11 @@ App.pages.commission = (function () {
       });
 
     if (deals.length === 0) {
-      container.innerHTML = `<div class="empty" style="padding:var(--empty-padding)"><p>No deals yet.</p></div>`;
+      container.innerHTML = App.i18n.markup(`<div class="empty" style="padding:var(--empty-padding)"><p>No deals yet.</p></div>`);
       return;
     }
 
-    container.innerHTML = `
+    container.innerHTML = App.i18n.html`
       <div class="table-wrap">
         <table class="tbl tbl-responsive tbl-compact">
           <!-- Seven columns in a half-width grid column: without fixed widths
@@ -267,20 +267,20 @@ App.pages.commission = (function () {
             </tr>
           </thead>
           <tbody>
-            ${deals.map(d => {
+            ${App.i18n.value(() => (deals.map(d => {
               const stageColor = (s.settings.pipelineStages.find(x => x.name === d.stage) || {}).color || "#94A3B8";
-              return `
-                <tr class="clickable" data-deal-id="${d.id}">
-                  <td data-label="Deal" class="primary-cell" title="${U().esc(d.name)}">${U().esc(d.name)}</td>
-                  <td data-label="Stage"><span class="stage-pill"><span class="stage-dot" style="background:${stageColor}"></span>${U().esc(d.stage)}</span></td>
-                  <td data-label="Sale Price" class="num">${d.salePrice ? U().formatCurrency(d.salePrice, cur) : "—"}</td>
-                  <td data-label="Rate" class="num">${d.commissionRate ? d.commissionRate + "%" : "—"}</td>
-                  <td data-label="Gross GCI" class="num">${U().formatCurrency(C().grossGCI(d), cur)}</td>
-                  <td data-label="Net GCI" class="num" style="font-weight:600">${U().formatCurrency(C().netGCI(d), cur)}</td>
-                  <td data-label="Weighted" class="num">${U().formatCurrency(C().weightedGCI(d), cur)}</td>
+              return App.i18n.html`
+                <tr class="clickable" data-deal-id="${App.i18n.value(() => (d.id))}">
+                  <td data-label="Deal" class="primary-cell" title="${App.i18n.value(() => (U().esc(d.name)))}">${App.i18n.value(() => (U().esc(d.name)))}</td>
+                  <td data-label="Stage"><span class="stage-pill"><span class="stage-dot" style="background:${App.i18n.value(() => (stageColor))}"></span>${App.i18n.value(() => (U().esc(d.stage)))}</span></td>
+                  <td data-label="Sale Price" class="num">${App.i18n.value(() => (d.salePrice ? U().formatCurrency(d.salePrice, cur) : "—"))}</td>
+                  <td data-label="Rate" class="num">${App.i18n.value(() => (d.commissionRate ? d.commissionRate + "%" : "—"))}</td>
+                  <td data-label="Gross GCI" class="num">${App.i18n.value(() => (U().formatCurrency(C().grossGCI(d), cur)))}</td>
+                  <td data-label="Net GCI" class="num" style="font-weight:600">${App.i18n.value(() => (U().formatCurrency(C().netGCI(d), cur)))}</td>
+                  <td data-label="Weighted" class="num">${App.i18n.value(() => (U().formatCurrency(C().weightedGCI(d), cur)))}</td>
                 </tr>
               `;
-            }).join("")}
+            }).join("")))}
           </tbody>
         </table>
       </div>

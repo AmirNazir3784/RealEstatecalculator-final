@@ -23,7 +23,7 @@ App.pages.release = (function () {
   }
 
   function emptyMessage(title, text, actionHtml) {
-    return `<div class="empty-state"><div class="empty-title">${U().esc(title)}</div><div class="empty-desc">${U().esc(text)}</div>${actionHtml || ""}</div>`;
+    return App.i18n.html`<div class="empty-state"><div class="empty-title">${App.i18n.value(() => (title && title.__crmMessage ? title : U().esc(title)))}</div><div class="empty-desc">${App.i18n.value(() => (text && text.__crmMessage ? text : U().esc(text)))}</div>${App.i18n.value(() => (actionHtml || ""))}</div>`;
   }
 
   // ---------- DASHBOARD ----------
@@ -36,26 +36,26 @@ App.pages.release = (function () {
       const glance = D().businessAtAGlance(s);
       const comm = D().commissionOverview(s);
       const attention = D().needsAttention(s);
-      return `
+      return App.i18n.html`
         <div class="stat-row release-stat-grid" data-widget="statOverview">
-          <div class="stat-card"><div class="k">Active Pipeline</div><div class="v">${money(glance.activePipelineValue, true)}</div><div class="sub">${glance.activeDealsCount} active deal${glance.activeDealsCount===1?'':'s'}</div></div>
-          <div class="stat-card"><div class="k">Expected Net Commission</div><div class="v">${money(glance.expectedNetCommission, true)}</div><div class="sub">active deals before probability weighting</div></div>
-          <div class="stat-card"><div class="k">YTD Closed Net</div><div class="v">${money(comm.ytdNetCommission, true)}</div><div class="sub">closed deals this year</div></div>
-          <div class="stat-card"><div class="k">Needs Attention</div><div class="v" style="${attention.totalCount?'color:var(--warning)':''}">${attention.totalCount}</div><div class="sub">follow-ups, tasks, deadlines &amp; closings</div></div>
+          <div class="stat-card"><div class="k">Active Pipeline</div><div class="v">${App.i18n.value(() => (money(glance.activePipelineValue, true)))}</div><div class="sub">${App.i18n.value(() => (glance.activeDealsCount))} active deal${App.i18n.value(() => (glance.activeDealsCount===1?'':'s'))}</div></div>
+          <div class="stat-card"><div class="k">Expected Net Commission</div><div class="v">${App.i18n.value(() => (money(glance.expectedNetCommission, true)))}</div><div class="sub">active deals before probability weighting</div></div>
+          <div class="stat-card"><div class="k">YTD Closed Net</div><div class="v">${App.i18n.value(() => (money(comm.ytdNetCommission, true)))}</div><div class="sub">closed deals this year</div></div>
+          <div class="stat-card"><div class="k">Needs Attention</div><div class="v" style="${App.i18n.value(() => (attention.totalCount?'color:var(--warning)':''))}">${App.i18n.value(() => (attention.totalCount))}</div><div class="sub">follow-ups, tasks, deadlines &amp; closings</div></div>
         </div>`;
     },
     pipelineSnapshot: function (s) {
       const pipeline = D().pipelineSummary(s);
-      return `
+      return App.i18n.html`
         <section class="card" data-widget="pipelineSnapshot">
           <div class="card-header"><div class="card-title">Pipeline Snapshot</div><button class="btn btn-sm" data-go="/pipeline">View pipeline</button></div>
           <div class="card-body zero">
-            ${pipeline.some(x=>x.count) ? pipeline.map(st => `
+            ${App.i18n.value(() => (pipeline.some(x=>x.count) ? pipeline.map(st => App.i18n.html`
               <div class="item-row">
-                <div class="icon-slot" style="background:${st.color}22;color:${st.color}"><span class="stage-dot" style="background:${st.color}"></span></div>
-                <div class="body"><div class="title">${U().esc(st.stageName)}</div><div class="sub">${st.count} deal${st.count===1?'':'s'} · ${money(st.totalValue, true)}</div></div>
-                <div class="meta-right"><strong>${money(st.expectedNetCommission, true)}</strong><br><span>expected net</span></div>
-              </div>`).join("") : emptyMessage("No active pipeline yet", "Add a deal to start tracking pipeline value and commission.")}
+                <div class="icon-slot" style="background:${App.i18n.value(() => (st.color))}22;color:${App.i18n.value(() => (st.color))}"><span class="stage-dot" style="background:${App.i18n.value(() => (st.color))}"></span></div>
+                <div class="body"><div class="title">${App.i18n.value(() => (U().esc(st.stageName)))}</div><div class="sub">${App.i18n.value(() => (st.count))} deal${App.i18n.value(() => (st.count===1?'':'s'))} · ${App.i18n.value(() => (money(st.totalValue, true)))}</div></div>
+                <div class="meta-right"><strong>${App.i18n.value(() => (money(st.expectedNetCommission, true)))}</strong><br><span>expected net</span></div>
+              </div>`).join("") : emptyMessage(App.i18n.message("No active pipeline yet"), App.i18n.message("Add a deal to start tracking pipeline value and commission."))))}
           </div>
         </section>`;
     },
@@ -67,12 +67,12 @@ App.pages.release = (function () {
       // "Open Daily View" header button is dropped if the Daily View module is disabled.
       const dailyEnabled = App.customization && App.customization.isModuleEnabled("daily");
       const headerBtn = dailyEnabled
-        ? `<button class="btn btn-sm" data-go="/daily">Open Daily View</button>` : "";
-      return `
-        <section class="card${hasItems ? " card-attention" : ""}" data-widget="needsAttention">
-          <div class="card-header"><div class="card-title">Needs Attention</div>${headerBtn}</div>
+        ? App.i18n.markup(`<button class="btn btn-sm" data-go="/daily">Open Daily View</button>`) : "";
+      return App.i18n.html`
+        <section class="card${App.i18n.value(() => (hasItems ? " card-attention" : ""))}" data-widget="needsAttention">
+          <div class="card-header"><div class="card-title">Needs Attention</div>${App.i18n.value(() => (headerBtn))}</div>
           <div class="card-body zero">
-            ${renderAttention(attention)}
+            ${App.i18n.value(() => (renderAttention(attention)))}
           </div>
         </section>`;
     },
@@ -80,17 +80,17 @@ App.pages.release = (function () {
       const closings = D().upcomingClosings(s, 5);
       const calEnabled = App.customization && App.customization.isModuleEnabled("calendar");
       const headerBtn = calEnabled
-        ? `<button class="btn btn-sm" data-go="/calendar">Calendar</button>` : "";
-      return `
+        ? App.i18n.markup(`<button class="btn btn-sm" data-go="/calendar">Calendar</button>`) : "";
+      return App.i18n.html`
         <section class="card" data-widget="upcomingClosings">
-          <div class="card-header"><div class="card-title">Upcoming Closings</div>${headerBtn}</div>
+          <div class="card-header"><div class="card-title">Upcoming Closings</div>${App.i18n.value(() => (headerBtn))}</div>
           <div class="card-body zero">
-            ${closings.rows.length ? closings.rows.map(r => `
-              <div class="item-row clickable" data-go="/pipeline/${U().esc(r.dealId)}">
-                <div class="icon-slot">${App.app.icon("home")}</div>
-                <div class="body"><div class="title">${U().esc(r.dealName || r.propertyAddress || "Deal")}</div><div class="sub">${U().esc(r.contactName || "Unlinked contact")} · ${U().formatDate(r.closeDate)}</div></div>
-                <div class="meta-right"><strong>${money(r.expectedNet, true)}</strong><br><span>${money(r.salePrice, true)} sale</span></div>
-              </div>`).join("") : emptyMessage("No closings in the next 30 days", "Upcoming active deal closings will appear here.")}
+            ${App.i18n.value(() => (closings.rows.length ? closings.rows.map(r => App.i18n.html`
+              <div class="item-row clickable" data-go="/pipeline/${App.i18n.value(() => (U().esc(r.dealId)))}">
+                <div class="icon-slot">${App.i18n.value(() => (App.app.icon("home")))}</div>
+                <div class="body"><div class="title">${App.i18n.value(() => (U().esc(r.dealName || r.propertyAddress || App.i18n.t("Deal"))))}</div><div class="sub">${App.i18n.value(() => (U().esc(r.contactName || App.i18n.t("Unlinked contact"))))} · ${App.i18n.value(() => (U().formatDate(r.closeDate)))}</div></div>
+                <div class="meta-right"><strong>${App.i18n.value(() => (money(r.expectedNet, true)))}</strong><br><span>${App.i18n.value(() => (money(r.salePrice, true)))} sale</span></div>
+              </div>`).join("") : emptyMessage(App.i18n.message("No closings in the next 30 days"), App.i18n.message("Upcoming active deal closings will appear here."))))}
           </div>
         </section>`;
     },
@@ -98,81 +98,81 @@ App.pages.release = (function () {
       const goals = D().allGoalsProgress(s).slice(0, 5);
       const GOAL_TYPE_LABELS = { GCI: "Net GCI", ClosedDeals: "Closed Deals", NewClients: "New Clients", Referrals: "Referrals", Appointments: "Appointments" };
       const goalTypeLabel = t => GOAL_TYPE_LABELS[t] || String(t || "").replace(/([a-z])([A-Z])/g, "$1 $2");
-      return `
+      return App.i18n.html`
         <section class="card" data-widget="goalsProgress">
           <div class="card-header"><div class="card-title">Goals</div><button class="btn btn-sm" data-go="/goals">View goals</button></div>
           <div class="card-body">
-            ${goals.length ? goals.map(g => `
+            ${App.i18n.value(() => (goals.length ? goals.map(g => App.i18n.html`
               <div class="release-goal-row">
-                <div class="release-goal-head"><strong>${U().esc(goalTypeLabel(g.type))}</strong><span>${Math.round(g.rawPct || 0)}%</span></div>
-                <div class="progress-bar-wrap"><div class="progress-bar" style="width:${Math.max(0, Math.min(100, g.pct || 0))}%;background:var(--accent)"></div></div>
-                <div class="release-goal-sub">${g.type === 'GCI' ? money(g.current) : Number(g.current).toLocaleString()} of ${g.type === 'GCI' ? money(g.target) : Number(g.target).toLocaleString()} · ${g.year}</div>
-              </div>`).join("") : emptyMessage("No goals yet", "Add a business goal to track progress here.")}
+                <div class="release-goal-head"><strong>${App.i18n.value(() => (U().esc(goalTypeLabel(g.type))))}</strong><span>${App.i18n.value(() => (Math.round(g.rawPct || 0)))}%</span></div>
+                <div class="progress-bar-wrap"><div class="progress-bar" style="width:${App.i18n.value(() => (Math.max(0, Math.min(100, g.pct || 0))))}%;background:var(--accent)"></div></div>
+                <div class="release-goal-sub">${App.i18n.value(() => (g.type === 'GCI' ? money(g.current) : Number(g.current).toLocaleString()))} of ${App.i18n.value(() => (g.type === 'GCI' ? money(g.target) : Number(g.target).toLocaleString()))} · ${App.i18n.value(() => (g.year))}</div>
+              </div>`).join("") : emptyMessage(App.i18n.message("No goals yet"), App.i18n.message("Add a business goal to track progress here."))))}
           </div>
         </section>`;
     },
     recentActivity: function (s) {
       const recent = D().recentActivity(s, 6);
-      return `
+      return App.i18n.html`
         <section class="card" data-widget="recentActivity">
           <div class="card-header"><div class="card-title">Recent Activity</div><button class="btn btn-sm" data-go="/activities">View all</button></div>
           <div class="card-body zero">
-            ${recent.length ? recent.map(a => `
+            ${App.i18n.value(() => (recent.length ? recent.map(a => App.i18n.html`
               <div class="item-row">
-                <div class="icon-slot">${U().esc((a.type || "N").slice(0,1).toUpperCase())}</div>
-                <div class="body"><div class="title">${U().esc(a.subject || a.type || "Activity")}</div><div class="sub">${U().esc(a.contactName || a.propertyAddress || a.dealName || "General business activity")}</div></div>
-                <div class="meta-right">${U().formatDate(String(a.date || "").slice(0,10), "short")}</div>
-              </div>`).join("") : emptyMessage("No recent activity", "Calls, emails, meetings, notes, and other activities will appear here.")}
+                <div class="icon-slot">${App.i18n.value(() => (U().esc((a.type || "N").slice(0,1).toUpperCase())))}</div>
+                <div class="body"><div class="title">${App.i18n.value(() => (U().esc(a.subject || a.type || App.i18n.t("Activity"))))}</div><div class="sub">${App.i18n.value(() => (U().esc(a.contactName || a.propertyAddress || a.dealName || App.i18n.t("General business activity"))))}</div></div>
+                <div class="meta-right">${App.i18n.value(() => (U().formatDate(String(a.date || "").slice(0,10), "short")))}</div>
+              </div>`).join("") : emptyMessage(App.i18n.message("No recent activity"), App.i18n.message("Calls, emails, meetings, notes, and other activities will appear here."))))}
           </div>
         </section>`;
     },
     // ---- v2 widgets ----
     activeDealsWidget: function (s) {
       const glance = D().businessAtAGlance(s);
-      return `<div class="stat-card" data-widget="activeDealsWidget"><div class="k">Active Deals</div><div class="v">${glance.activeDealsCount}</div><div class="sub">${money(glance.activePipelineValue, true)} in active pipeline</div></div>`;
+      return App.i18n.html`<div class="stat-card" data-widget="activeDealsWidget"><div class="k">Active Deals</div><div class="v">${App.i18n.value(() => (glance.activeDealsCount))}</div><div class="sub">${App.i18n.value(() => (money(glance.activePipelineValue, true)))} in active pipeline</div></div>`;
     },
     newLeadsWidget: function (s) {
       const firstStage = s.settings.contactStages[0];
       const count = s.contacts.filter(c => c.stage === firstStage).length;
-      return `<div class="stat-card" data-widget="newLeadsWidget"><div class="k">New Leads</div><div class="v">${count}</div><div class="sub">contacts in "${U().esc(firstStage)}"</div></div>`;
+      return App.i18n.html`<div class="stat-card" data-widget="newLeadsWidget"><div class="k">New Leads</div><div class="v">${App.i18n.value(() => (count))}</div><div class="sub">contacts in "${App.i18n.value(() => (U().esc(firstStage)))}"</div></div>`;
     },
     monthlyCommission: function (s) {
       const overview = D().commissionOverview(s);
       const thisMonth = overview.monthlyTrend[overview.monthlyTrend.length - 1];
-      return `<div class="stat-card" data-widget="monthlyCommission"><div class="k">Monthly Commission</div><div class="v">${money(thisMonth.amount, true)}</div><div class="sub">${thisMonth.count} deal${thisMonth.count===1?'':'s'} closed in ${thisMonth.label}</div></div>`;
+      return App.i18n.html`<div class="stat-card" data-widget="monthlyCommission"><div class="k">Monthly Commission</div><div class="v">${App.i18n.value(() => (money(thisMonth.amount, true)))}</div><div class="sub">${App.i18n.value(() => (thisMonth.count))} deal${App.i18n.value(() => (thisMonth.count===1?'':'s'))} closed in ${App.i18n.value(() => (thisMonth.label))}</div></div>`;
     },
     propertiesWidget: function (s) {
       const summary = D().propertiesSummary(s);
-      return `
+      return App.i18n.html`
         <section class="card" data-widget="propertiesWidget">
           <div class="card-header"><div class="card-title">Properties</div><button class="btn btn-sm" data-go="/properties">View properties</button></div>
           <div class="card-body zero">
-            ${summary.total ? Object.keys(summary.byStatus).sort().map(st => `
-              <div class="item-row"><div class="body"><div class="title">${U().esc(st)}</div></div><div class="meta-right"><strong>${summary.byStatus[st]}</strong></div></div>`).join("")
-              : emptyMessage("No properties yet", "Add a property to see status breakdown here.")}
+            ${App.i18n.value(() => (summary.total ? Object.keys(summary.byStatus).sort().map(st => App.i18n.html`
+              <div class="item-row"><div class="body"><div class="title">${App.i18n.value(() => (U().esc(st)))}</div></div><div class="meta-right"><strong>${App.i18n.value(() => (summary.byStatus[st]))}</strong></div></div>`).join("")
+              : emptyMessage(App.i18n.message("No properties yet"), App.i18n.message("Add a property to see status breakdown here."))))}
           </div>
         </section>`;
     },
     conversionRate: function (s) {
       const cr = D().conversionRate(s);
-      return `<div class="stat-card" data-widget="conversionRate"><div class="k">Conversion Rate</div><div class="v">${cr.decided ? Math.round(cr.rate) + "%" : "—"}</div><div class="sub">${cr.won} won / ${cr.decided} decided</div></div>`;
+      return App.i18n.html`<div class="stat-card" data-widget="conversionRate"><div class="k">Conversion Rate</div><div class="v">${App.i18n.value(() => (cr.decided ? Math.round(cr.rate) + "%" : "—"))}</div><div class="sub">${App.i18n.value(() => (cr.won))} won / ${App.i18n.value(() => (cr.decided))} decided</div></div>`;
     },
     teamPerformance: function (s) {
       const rows = D().teamPerformance(s).filter(r => r.activeDeals || r.closedDeals);
-      return `
+      return App.i18n.html`
         <section class="card" data-widget="teamPerformance">
           <div class="card-header"><div class="card-title">Team Performance</div><button class="btn btn-sm" data-go="/settings/team-access">Manage team</button></div>
           <div class="card-body zero">
-            ${rows.length ? rows.map(r => `
-              <div class="item-row"><div class="body"><div class="title">${U().esc(r.memberName)}</div><div class="sub">${r.activeDeals} active · ${r.closedDeals} closed</div></div><div class="meta-right"><strong>${money(r.netCommission, true)}</strong><br><span>net commission</span></div></div>`).join("")
-              : emptyMessage("No deals yet", "Assign deals to team members in Settings → Team to see performance here.")}
+            ${App.i18n.value(() => (rows.length ? rows.map(r => App.i18n.html`
+              <div class="item-row"><div class="body"><div class="title">${App.i18n.value(() => (U().esc(r.memberName)))}</div><div class="sub">${App.i18n.value(() => (r.activeDeals))} active · ${App.i18n.value(() => (r.closedDeals))} closed</div></div><div class="meta-right"><strong>${App.i18n.value(() => (money(r.netCommission, true)))}</strong><br><span>net commission</span></div></div>`).join("")
+              : emptyMessage(App.i18n.message("No deals yet"), App.i18n.message("Assign deals to team members in Settings → Team to see performance here."))))}
           </div>
         </section>`;
     },
     revenueWidget: function (s) {
       const fin = D().financeSummary(s);
-      return `<div class="stat-card" data-widget="revenueWidget"><div class="k">Revenue (This Month)</div><div class="v">${money(fin.monthNet, true)}</div><div class="sub">${money(fin.monthIncome, true)} income − ${money(fin.monthExpenses, true)} expenses</div></div>`
-           + `<div class="stat-card" data-widget="revenueWidget"><div class="k">Revenue (YTD)</div><div class="v">${money(fin.ytdNet, true)}</div><div class="sub">${money(fin.ytdIncome, true)} income − ${money(fin.ytdExpenses, true)} expenses</div></div>`;
+      return App.i18n.html`<div class="stat-card" data-widget="revenueWidget"><div class="k">Revenue (This Month)</div><div class="v">${App.i18n.value(() => (money(fin.monthNet, true)))}</div><div class="sub">${App.i18n.value(() => (money(fin.monthIncome, true)))} income − ${App.i18n.value(() => (money(fin.monthExpenses, true)))} expenses</div></div>`
+           + App.i18n.html`<div class="stat-card" data-widget="revenueWidget"><div class="k">Revenue (YTD)</div><div class="v">${App.i18n.value(() => (money(fin.ytdNet, true)))}</div><div class="sub">${App.i18n.value(() => (money(fin.ytdIncome, true)))} income − ${App.i18n.value(() => (money(fin.ytdExpenses, true)))} expenses</div></div>`;
     }
   };
 
@@ -196,12 +196,12 @@ App.pages.release = (function () {
       for (let i = 0; i < cardIds.length; i += 2) {
         const a = DASHBOARD_WIDGETS[cardIds[i]](s);
         const b = (i + 1 < cardIds.length) ? DASHBOARD_WIDGETS[cardIds[i + 1]](s) : "";
-        out += b ? `<div class="release-grid release-grid-2">${a}${b}</div>` : a;
+        out += b ? App.i18n.html`<div class="release-grid release-grid-2">${App.i18n.value(() => (a))}${App.i18n.value(() => (b))}</div>` : a;
       }
       cardIds.length = 0;
     };
     const flushStats = () => {
-      if (statFragments.length) out += `<div class="stat-row release-stat-grid">${statFragments.join("")}</div>`;
+      if (statFragments.length) out += App.i18n.html`<div class="stat-row release-stat-grid">${App.i18n.value(() => (statFragments.join("")))}</div>`;
       statFragments.length = 0;
     };
     orderedIds.forEach(id => {
@@ -225,7 +225,7 @@ App.pages.release = (function () {
   const DASHBOARD_DEPS = ["contacts","properties","deals","milestones","activities","tasks","showings","referrals","goals","income","expenses","teamMembers"];
 
   async function renderDashboard(container) {
-    App.app.setBreadcrumbs([{ label: "Dashboard" }]);
+    App.app.setBreadcrumbs([{ get label() { return App.i18n.t("Dashboard"); } }]);
     // The header "Open Pipeline" shortcut was removed — Deals Pipeline stays
     // fully reachable from the sidebar nav.
     App.app.setTopActions("");
@@ -254,7 +254,7 @@ App.pages.release = (function () {
 
     const widgetHtml = composeDashboardWidgets(orderedIds, s);
     const emptyDashboard = orderedIds.length === 0
-      ? emptyMessage("Dashboard widgets hidden", "Every widget is hidden or its supporting module is disabled. Visit Settings → Customize Workspace to show widgets again.")
+      ? emptyMessage(App.i18n.message("Dashboard widgets hidden"), App.i18n.message("Every widget is hidden or its supporting module is disabled. Visit Settings → Customize Workspace to show widgets again."))
       : "";
 
     // Time-of-day greeting. The name comes from the authenticated Supabase
@@ -268,17 +268,17 @@ App.pages.release = (function () {
     const firstName = (meta.full_name || meta.name || "").trim().split(/\s+/)[0] || "";
     const greetLine = firstName ? `${greeting}, ${U().esc(firstName)}` : greeting;
 
-    container.innerHTML = `
+    container.innerHTML = App.i18n.html`
       <div class="page-header">
         <div>
-          <div class="page-title">${greetLine}</div>
+          <div class="page-title">${App.i18n.value(() => (greetLine))}</div>
           <div class="page-desc">Your pipeline, commissions, priorities, closings, goals, and recent client activity in one place.</div>
         </div>
       </div>
-      ${App.pages.onboarding ? App.pages.onboarding.timezoneNudgeHtml() : ""}
-      ${App.pages.onboarding ? App.pages.onboarding.checklistHtml(onboardingState) : ""}
-      ${widgetHtml}
-      ${emptyDashboard}`;
+      ${App.i18n.value(() => (App.pages.onboarding ? App.pages.onboarding.timezoneNudgeHtml() : ""))}
+      ${App.i18n.value(() => (App.pages.onboarding ? App.pages.onboarding.checklistHtml(onboardingState) : ""))}
+      ${App.i18n.value(() => (widgetHtml))}
+      ${App.i18n.value(() => (emptyDashboard))}`;
 
     wireGo(container);
     // Phase 2E. Both of these change what the dashboard should say, so a
@@ -319,8 +319,8 @@ App.pages.release = (function () {
 
   function renderAttention(a) {
     const rows = attentionRows(a);
-    if (!rows.length) return emptyMessage("You're caught up", "No overdue or near-term items need attention right now.");
-    return rows.map(r => `<button class="release-attention-row" data-go="${r[2]}"><span>${U().esc(r[0])}</span><strong>${r[1]}</strong></button>`).join("");
+    if (!rows.length) return emptyMessage(App.i18n.message("You're caught up"), App.i18n.message("No overdue or near-term items need attention right now."));
+    return rows.map(r => App.i18n.html`<button class="release-attention-row" data-go="${App.i18n.value(() => (r[2]))}"><span>${App.i18n.value(() => (U().esc(r[0])))}</span><strong>${App.i18n.value(() => (r[1]))}</strong></button>`).join("");
   }
 
   // Link availability follows the route registry, not the visual menu.
@@ -454,16 +454,16 @@ App.pages.release = (function () {
     const what = c.__years
       ? c.__celebration + " \u00b7 " + c.__years + (c.__years === 1 ? " year" : " years")
       : c.__celebration;
-    return `<div class="today-row" data-contact-row="${U().esc(c.id)}">
+    return App.i18n.html`<div class="today-row" data-contact-row="${App.i18n.value(() => (U().esc(c.id)))}">
       <div class="today-row-main">
-        <a class="today-row-name link" href="#/contacts/${U().esc(c.id)}">${U().esc(c.name || "Unnamed contact")}</a>
+        <a class="today-row-name link" href="#/contacts/${App.i18n.value(() => (U().esc(c.id)))}">${App.i18n.value(() => (U().esc(c.name || App.i18n.t("Unnamed contact"))))}</a>
         <div class="today-row-meta">
-          <span class="badge badge-neutral">${U().esc(what)}</span>
-          <span class="${days === 0 ? "today-due-late" : "today-due"}">${U().esc(when)}</span>
-          <span class="today-row-last">${U().esc(U().formatDate(c.__due))}</span>
+          <span class="badge badge-neutral">${App.i18n.value(() => (U().esc(what)))}</span>
+          <span class="${App.i18n.value(() => (days === 0 ? "today-due-late" : "today-due"))}">${App.i18n.value(() => (U().esc(when)))}</span>
+          <span class="today-row-last">${App.i18n.value(() => (U().esc(U().formatDate(c.__due))))}</span>
         </div>
       </div>
-      ${App.followUp ? App.followUp.barHtml(c) : ""}
+      ${App.i18n.value(() => (App.followUp ? App.followUp.barHtml(c) : ""))}
     </div>`;
   }
 
@@ -509,46 +509,46 @@ App.pages.release = (function () {
         : (a.__due < b.__due ? -1 : 1)));
 
     return [
-      { id: "overdue", title: "Overdue follow-ups", kind: "contact", rows: overdue, tone: "danger" },
-      { id: "today", title: "Follow-ups due today", kind: "contact", rows: dueTodayRows },
-      { id: "new", title: "New, not yet contacted", kind: "contact", rows: newUncontacted },
-      { id: "replied", title: "Replied recently", kind: "contact", rows: replied },
-      { id: "celebrations", title: "Birthdays & anniversaries (next 7 days)",
+      { id: "overdue", get title() { return App.i18n.t("Overdue follow-ups"); }, kind: "contact", rows: overdue, tone: "danger" },
+      { id: "today", get title() { return App.i18n.t("Follow-ups due today"); }, kind: "contact", rows: dueTodayRows },
+      { id: "new", get title() { return App.i18n.t("New, not yet contacted"); }, kind: "contact", rows: newUncontacted },
+      { id: "replied", get title() { return App.i18n.t("Replied recently"); }, kind: "contact", rows: replied },
+      { id: "celebrations", get title() { return App.i18n.t("Birthdays & anniversaries (next 7 days)"); },
         kind: "celebration", rows: celebrations(state, today) },
-      { id: "tasks", title: "Tasks due or overdue", kind: "task", rows: openTasks, tone: "danger" }
+      { id: "tasks", get title() { return App.i18n.t("Tasks due or overdue"); }, kind: "task", rows: openTasks, tone: "danger" }
     ].filter((sec) => sec.rows.length > 0);
   }
 
   function contactRowHtml(c, today) {
     const due = dueText(c.__due, today);
     const late = c.__due && c.__due < today;
-    return `<div class="today-row" data-contact-row="${U().esc(c.id)}">
+    return App.i18n.html`<div class="today-row" data-contact-row="${App.i18n.value(() => (U().esc(c.id)))}">
       <div class="today-row-main">
-        <a class="today-row-name link" href="#/contacts/${U().esc(c.id)}">${U().esc(c.name || "Unnamed contact")}</a>
+        <a class="today-row-name link" href="#/contacts/${App.i18n.value(() => (U().esc(c.id)))}">${App.i18n.value(() => (U().esc(c.name || App.i18n.t("Unnamed contact"))))}</a>
         <div class="today-row-meta">
-          <span class="badge badge-neutral">${U().esc(c.stage || "")}</span>
-          <span class="badge badge-neutral">${U().esc(c.temperature || "")}</span>
-          ${due ? `<span class="${late ? "today-due-late" : "today-due"}">${U().esc(due)}</span>` : ""}
-          <span class="today-row-last">${U().esc(lastContactText(c))}</span>
+          <span class="badge badge-neutral">${App.i18n.value(() => (U().esc(c.stage || "")))}</span>
+          <span class="badge badge-neutral">${App.i18n.value(() => (U().esc(c.temperature || "")))}</span>
+          ${App.i18n.value(() => (due ? App.i18n.html`<span class="${App.i18n.value(() => (late ? "today-due-late" : "today-due"))}">${App.i18n.value(() => (U().esc(due)))}</span>` : ""))}
+          <span class="today-row-last">${App.i18n.value(() => (U().esc(lastContactText(c))))}</span>
         </div>
       </div>
-      ${App.followUp ? App.followUp.barHtml(c) : ""}
+      ${App.i18n.value(() => (App.followUp ? App.followUp.barHtml(c) : ""))}
     </div>`;
   }
 
   function taskRowHtml(t, today) {
     const due = dueText(t.__due, today);
     const late = t.__due && t.__due < today;
-    return `<div class="today-row">
+    return App.i18n.html`<div class="today-row">
       <div class="today-row-main">
-        <div class="today-row-name">${U().esc(t.title || "Untitled task")}</div>
+        <div class="today-row-name">${App.i18n.value(() => (U().esc(t.title || App.i18n.t("Untitled task"))))}</div>
         <div class="today-row-meta">
-          <span class="badge badge-neutral">${U().esc(t.priority || "")} priority</span>
-          ${due ? `<span class="${late ? "today-due-late" : "today-due"}">${U().esc(due)}</span>` : ""}
+          <span class="badge badge-neutral">${App.i18n.value(() => (U().esc(t.priority || "")))} priority</span>
+          ${App.i18n.value(() => (due ? App.i18n.html`<span class="${App.i18n.value(() => (late ? "today-due-late" : "today-due"))}">${App.i18n.value(() => (U().esc(due)))}</span>` : ""))}
         </div>
       </div>
       <div class="fu-bar">
-        <button type="button" class="btn btn-sm" data-today-task="${U().esc(t.id)}">Open task</button>
+        <button type="button" class="btn btn-sm" data-today-task="${App.i18n.value(() => (U().esc(t.id)))}">Open task</button>
       </div>
     </div>`;
   }
@@ -556,25 +556,25 @@ App.pages.release = (function () {
   function sectionHtml(sec, today, shown) {
     const rows = sec.rows.slice(0, shown);
     const more = sec.rows.length - rows.length;
-    return `<section class="card today-section" data-today-section="${U().esc(sec.id)}">
+    return App.i18n.html`<section class="card today-section" data-today-section="${App.i18n.value(() => (U().esc(sec.id)))}">
       <div class="card-header">
-        <div class="card-title">${U().esc(sec.title)}
-          <span class="today-count${sec.tone === "danger" ? " today-count-late" : ""}">${sec.rows.length}</span>
+        <div class="card-title">${App.i18n.value(() => (U().esc(sec.title)))}
+          <span class="today-count${App.i18n.value(() => (sec.tone === "danger" ? " today-count-late" : ""))}">${App.i18n.value(() => (sec.rows.length))}</span>
         </div>
       </div>
       <div class="card-body zero">
-        ${rows.map((r) => (sec.kind === "task"
+        ${App.i18n.value(() => (rows.map((r) => (sec.kind === "task"
             ? taskRowHtml(r, today)
-            : (sec.kind === "celebration" ? celebrationRowHtml(r, today) : contactRowHtml(r, today)))).join("")}
-        ${more > 0
-          ? `<div class="today-more"><button type="button" class="btn btn-sm" data-today-more="${U().esc(sec.id)}">Show ${more} more</button></div>`
-          : ""}
+            : (sec.kind === "celebration" ? celebrationRowHtml(r, today) : contactRowHtml(r, today)))).join("")))}
+        ${App.i18n.value(() => (more > 0
+          ? App.i18n.html`<div class="today-more"><button type="button" class="btn btn-sm" data-today-more="${App.i18n.value(() => (U().esc(sec.id)))}">Show ${App.i18n.value(() => (more))} more</button></div>`
+          : ""))}
       </div>
     </section>`;
   }
 
   async function renderDaily(container) {
-    App.app.setBreadcrumbs([{ label: "Today" }]);
+    App.app.setBreadcrumbs([{ get label() { return App.i18n.t("Today"); } }]);
     App.app.setTopActions("");
     await S().ensureLoaded(TODAY_DEPS);
 
@@ -588,21 +588,21 @@ App.pages.release = (function () {
       const sections = todaySections(state);
       const total = sections.reduce((n, sec) => n + sec.rows.length, 0);
 
-      container.innerHTML = `
+      container.innerHTML = App.i18n.html`
         <div class="page-header">
           <div>
             <div class="page-title">Today</div>
-            <div class="page-desc">${U().esc(U().formatDate(today, "long"))} \u00b7 ${
-              total ? "who to contact, and what is due." : "nothing needs you right now."
+            <div class="page-desc">${App.i18n.value(() => (U().esc(U().formatDate(today, "long"))))} \u00b7 ${
+              App.i18n.value(() => (total ? App.i18n.t("who to contact, and what is due.") : App.i18n.t("nothing needs you right now.")))
             }</div>
           </div>
         </div>
-        ${sections.length
+        ${App.i18n.value(() => (sections.length
           ? sections.map((sec) => sectionHtml(sec, today, shownBySection[sec.id] || TODAY_SECTION_CAP)).join("")
-          : `<section class="card"><div class="card-body">${
-              emptyMessage("You are all caught up",
-                "Nothing is overdue and nothing is due today. New leads and follow-ups appear here as they come in.")
-            }</div></section>`}`;
+          : App.i18n.html`<section class="card"><div class="card-body">${
+              App.i18n.value(() => (emptyMessage(App.i18n.message("You are all caught up"),
+                App.i18n.message("Nothing is overdue and nothing is due today. New leads and follow-ups appear here as they come in."))))
+            }</div></section>`))}`;
 
       wireGo(container);
       // One delegated listener for every bar on the page, re-attached on
@@ -638,7 +638,7 @@ App.pages.release = (function () {
   // in normal user-facing navigation. The legacy `scripts` table/data are
   // untouched; this only changes what Content Library links to.
   async function renderContent(container) {
-    App.app.setBreadcrumbs([{ label: "Content Library" }]);
+    App.app.setBreadcrumbs([{ get label() { return App.i18n.t("Content Library"); } }]);
     App.app.setTopActions("");
     await S().ensureLoaded(["aiPrompts"]);
     const prompts = S().getState().aiPrompts;
@@ -647,27 +647,27 @@ App.pages.release = (function () {
     try { templates = await S().messageTemplates.list({ orderBy: "name" }); }
     catch (err) { templatesError = (err && err.message) ? err.message : "Unknown error"; }
 
-    container.innerHTML = `
+    container.innerHTML = App.i18n.html`
       <div class="page-header"><div><div class="page-title">Content Library</div><div class="page-desc">Ready-to-customize email templates and AI prompt templates included with your workspace.</div></div></div>
-      <div class="stat-row release-stat-grid"><div class="stat-card"><div class="k">Email Templates</div><div class="v">${templates.length}</div></div><div class="stat-card"><div class="k">AI Prompts</div><div class="v">${prompts.length}</div></div></div>
+      <div class="stat-row release-stat-grid"><div class="stat-card"><div class="k">Email Templates</div><div class="v">${App.i18n.value(() => (templates.length))}</div></div><div class="stat-card"><div class="k">AI Prompts</div><div class="v">${App.i18n.value(() => (prompts.length))}</div></div></div>
       <div class="release-grid release-grid-2">
         <section class="card"><div class="card-header"><div class="card-title">Email Templates</div><button class="btn btn-sm" data-go="/email-templates">Open library</button></div><div class="card-body">${
-          templatesError
-            ? emptyMessage("Could not load templates", templatesError)
-            : (templates.slice(0, 5).map(renderTemplatePreview).join("") || emptyMessage("No templates yet", "Add a template from the Email Templates page."))
+          App.i18n.value(() => (templatesError
+            ? emptyMessage(App.i18n.message("Could not load templates"), templatesError)
+            : (templates.slice(0, 5).map(renderTemplatePreview).join("") || emptyMessage(App.i18n.message("No templates yet"), App.i18n.message("Add a template from the Email Templates page.")))))
         }</div></section>
-        <section class="card"><div class="card-header"><div class="card-title">AI Prompts</div><button class="btn btn-sm" data-go="/prompts">Open library</button></div><div class="card-body">${prompts.slice(0,5).map(renderLibraryPreview).join("") || emptyMessage("No prompts", "Add a prompt from the AI Prompts page.")}</div></section>
+        <section class="card"><div class="card-header"><div class="card-title">AI Prompts</div><button class="btn btn-sm" data-go="/prompts">Open library</button></div><div class="card-body">${App.i18n.value(() => (prompts.slice(0,5).map(renderLibraryPreview).join("") || emptyMessage(App.i18n.message("No prompts"), App.i18n.message("Add a prompt from the AI Prompts page."))))}</div></section>
       </div>`;
     wireGo(container);
   }
 
   function renderLibraryPreview(r) {
-    return `<div class="release-library-preview"><div><span class="badge badge-neutral">${U().esc(r.category || "General")}</span></div><strong>${U().esc(r.title || "Untitled")}</strong><div>${U().esc(U().truncate(r.body || "", 140))}</div></div>`;
+    return App.i18n.html`<div class="release-library-preview"><div><span class="badge badge-neutral">${App.i18n.value(() => (U().esc(r.category || App.i18n.t("General"))))}</span></div><strong>${App.i18n.value(() => (U().esc(r.title || App.i18n.t("Untitled"))))}</strong><div>${App.i18n.value(() => (U().esc(U().truncate(r.body || "", 140))))}</div></div>`;
   }
 
   function renderTemplatePreview(t) {
-    const statusBadge = t.is_active ? '<span class="badge badge-success">Active</span>' : '<span class="badge badge-neutral">Inactive</span>';
-    return `<div class="release-library-preview"><div>${statusBadge}</div><strong>${U().esc(t.name || "Untitled")}</strong><div>${U().esc(U().truncate(t.subject || "(no subject yet)", 140))}</div></div>`;
+    const statusBadge = t.is_active ? App.i18n.markup('<span class="badge badge-success">Active</span>') : App.i18n.markup('<span class="badge badge-neutral">Inactive</span>');
+    return App.i18n.html`<div class="release-library-preview"><div>${App.i18n.value(() => (statusBadge))}</div><strong>${App.i18n.value(() => (U().esc(t.name || App.i18n.t("Untitled"))))}</strong><div>${App.i18n.value(() => (U().esc(U().truncate(t.subject || App.i18n.t("(no subject yet)"), 140))))}</div></div>`;
   }
 
   async function renderLibrary(container, type) {
@@ -679,12 +679,12 @@ App.pages.release = (function () {
     const records = S().getState()[key].slice().sort((a,b)=>(a.category||"").localeCompare(b.category||"") || (a.title||"").localeCompare(b.title||""));
     App.app.setBreadcrumbs([{ label }]);
     App.app.setTopActions("");
-    container.innerHTML = `<div class="page-header"><div><div class="page-title">${label}</div><div class="page-desc">Edit, copy, or add your own reusable ${isScript?'client communication scripts':'AI prompt templates'}.</div></div><div class="page-actions"><button class="btn btn-primary" id="libraryAdd">${App.app.icon("plus")} Add ${isScript?'Script':'Prompt'}</button></div></div><div class="filter-bar"><div class="search-wrap">${App.app.icon("search")}<input id="librarySearch" type="search" placeholder="Search ${label.toLowerCase()}…"></div></div><div class="release-library-grid" id="libraryGrid"></div>`;
+    container.innerHTML = App.i18n.html`<div class="page-header"><div><div class="page-title">${App.i18n.value(() => (label))}</div><div class="page-desc">Edit, copy, or add your own reusable ${App.i18n.value(() => (isScript?App.i18n.t('client communication scripts'):App.i18n.t('AI prompt templates')))}.</div></div><div class="page-actions"><button class="btn btn-primary" id="libraryAdd">${App.i18n.value(() => (App.app.icon("plus")))} Add ${App.i18n.value(() => (isScript?App.i18n.t('Script'):App.i18n.t('Prompt')))}</button></div></div><div class="filter-bar"><div class="search-wrap">${App.i18n.value(() => (App.app.icon("search")))}<input id="librarySearch" type="search" placeholder="Search ${App.i18n.value(() => (label.toLowerCase()))}…"></div></div><div class="release-library-grid" id="libraryGrid"></div>`;
     const grid = container.querySelector("#libraryGrid");
     const render = () => {
       const q = (container.querySelector("#librarySearch").value||"").trim().toLowerCase();
       const filtered = records.filter(r => !q || [r.title,r.category,r.body].some(v=>String(v||"").toLowerCase().includes(q)));
-      grid.innerHTML = filtered.length ? filtered.map(r => `<article class="card release-library-card" data-id="${U().esc(r.id)}"><div class="card-body"><div><span class="badge badge-neutral">${U().esc(r.category||"General")}</span></div><h3>${U().esc(r.title||"Untitled")}</h3><p>${U().esc(r.body||"")}</p><div class="release-card-actions"><button class="btn btn-sm" data-copy="${U().esc(r.id)}">Copy</button><button class="btn btn-sm" data-edit="${U().esc(r.id)}">Edit</button><button class="btn btn-sm btn-danger" data-delete="${U().esc(r.id)}">Delete</button></div></div></article>`).join("") : emptyMessage(`No ${label.toLowerCase()} found`, q?"Try another search.":"Add your first item.");
+      grid.innerHTML = filtered.length ? filtered.map(r => App.i18n.html`<article class="card release-library-card" data-id="${App.i18n.value(() => (U().esc(r.id)))}"><div class="card-body"><div><span class="badge badge-neutral">${App.i18n.value(() => (U().esc(r.category||App.i18n.t("General"))))}</span></div><h3>${App.i18n.value(() => (U().esc(r.title||App.i18n.t("Untitled"))))}</h3><p>${App.i18n.value(() => (U().esc(r.body||"")))}</p><div class="release-card-actions"><button class="btn btn-sm" data-copy="${App.i18n.value(() => (U().esc(r.id)))}">Copy</button><button class="btn btn-sm" data-edit="${App.i18n.value(() => (U().esc(r.id)))}">Edit</button><button class="btn btn-sm btn-danger" data-delete="${App.i18n.value(() => (U().esc(r.id)))}">Delete</button></div></div></article>`).join("") : emptyMessage(`No ${label.toLowerCase()} found`, q?"Try another search.":"Add your first item.");
     };
     render();
     container.querySelector("#librarySearch").addEventListener("input", render);
@@ -697,35 +697,35 @@ App.pages.release = (function () {
       if(copy){ copyText(rec.body||""); return; }
       if(edit){ openLibraryModal(collection,label,rec,() => renderLibrary(container, type)); return; }
       App.app.confirmDialog({title:`Delete ${isScript?'script':'prompt'}?`,message:`Delete “${U().esc(rec.title||'Untitled')}”?`,okLabel:"Delete",danger:true},async ()=>{
-        try { await collection.delete(id); App.app.toast("Deleted.","success"); await renderLibrary(container, type); }
-        catch (err) { App.app.toast("Could not delete: " + err.message, "danger"); }
+        try { await collection.delete(id); App.app.toast(App.i18n.t("Deleted."),"success"); await renderLibrary(container, type); }
+        catch (err) { App.app.toast(App.i18n.t("Could not delete: ") + err.message, "danger"); }
       });
     });
   }
 
   function openLibraryModal(collection, label, rec, rerender) {
-    const h=App.app.openModal({title:rec?`Edit ${label.slice(0,-1)}`:`Add ${label.slice(0,-1)}`,body:`<div class="form-grid"><label class="field"><span>Category</span><input id="libCat" value="${U().esc(rec?.category||'Follow-up')}"></label><label class="field full"><span>Title</span><input id="libTitle" value="${U().esc(rec?.title||'')}" required></label><label class="field full"><span>Content</span><textarea id="libBody" rows="9">${U().esc(rec?.body||'')}</textarea></label></div>`,footer:`<button class="btn" data-role="cancel">Cancel</button><button class="btn btn-primary" data-role="save">Save</button>`,onOpen:m=>{m.querySelector('[data-role="cancel"]').onclick=()=>h.close();m.querySelector('[data-role="save"]').onclick=async ()=>{
+    const h=App.app.openModal({title:rec?`Edit ${label.slice(0,-1)}`:`Add ${label.slice(0,-1)}`,body:App.i18n.html`<div class="form-grid"><label class="field"><span>Category</span><input id="libCat" value="${App.i18n.value(() => (U().esc(rec?.category||'Follow-up')))}"></label><label class="field full"><span>Title</span><input id="libTitle" value="${App.i18n.value(() => (U().esc(rec?.title||'')))}" required></label><label class="field full"><span>Content</span><textarea id="libBody" rows="9">${App.i18n.value(() => (U().esc(rec?.body||'')))}</textarea></label></div>`,footer:App.i18n.markup(`<button class="btn" data-role="cancel">Cancel</button><button class="btn btn-primary" data-role="save">Save</button>`),onOpen:m=>{m.querySelector('[data-role="cancel"]').onclick=()=>h.close();m.querySelector('[data-role="save"]').onclick=async ()=>{
       const title=m.querySelector('#libTitle').value.trim();
-      if(!title){App.app.toast('Title is required.','danger');return;}
+      if(!title){App.app.toast(App.i18n.t('Title is required.'),'danger');return;}
       const patch={category:m.querySelector('#libCat').value.trim()||'General',title,body:m.querySelector('#libBody').value};
       const saveBtn = m.querySelector('[data-role="save"]'); saveBtn.disabled = true;
       try {
         if (rec) await collection.update(rec.id, patch); else await collection.create(patch);
         h.close();
-        App.app.toast('Saved.','success');
+        App.app.toast(App.i18n.t('Saved.'),'success');
         await rerender();
       } catch (err) {
-        App.app.toast('Could not save: ' + err.message, 'danger');
+        App.app.toast(App.i18n.t('Could not save: ') + err.message, 'danger');
         saveBtn.disabled = false;
       }
     };}});
   }
 
   function copyText(text){
-    if(navigator.clipboard && navigator.clipboard.writeText){navigator.clipboard.writeText(text).then(()=>App.app.toast("Copied to clipboard.","success")).catch(()=>fallbackCopy(text));}
+    if(navigator.clipboard && navigator.clipboard.writeText){navigator.clipboard.writeText(text).then(()=>App.app.toast(App.i18n.t("Copied to clipboard."),"success")).catch(()=>fallbackCopy(text));}
     else fallbackCopy(text);
   }
-  function fallbackCopy(text){const ta=document.createElement('textarea');ta.value=text;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();try{document.execCommand('copy');App.app.toast('Copied to clipboard.','success');}catch(e){App.app.toast('Copy failed. Select the text manually.','danger');}document.body.removeChild(ta);}
+  function fallbackCopy(text){const ta=document.createElement('textarea');ta.value=text;ta.style.position='fixed';ta.style.opacity='0';document.body.appendChild(ta);ta.select();try{document.execCommand('copy');App.app.toast(App.i18n.t('Copied to clipboard.'),'success');}catch(e){App.app.toast(App.i18n.t('Copy failed. Select the text manually.'),'danger');}document.body.removeChild(ta);}
 
   // ---------- SETTINGS ----------
 
@@ -733,27 +733,28 @@ App.pages.release = (function () {
   // Redesigned Settings UI only. Store calls and persistence paths stay the
   // same; this layer only changes how configuration is grouped and presented.
   const SETTINGS_CATEGORIES = [
-    { id: "business-profile", label: "Business Profile", icon: "cog", group: "Profile" },
-    { id: "pipeline",         label: "Pipeline",         icon: "columns", group: "Workspace" },
-    { id: "google-sheets",    label: "Google Sheets",    icon: "grid", group: "Integrations" },
-    { id: "sheet-imports",    label: "Import History",   icon: "activity", group: "Integrations" },
-    { id: "email-sending",    label: "Email Sending",    icon: "chart", group: "Integrations" },
-    { id: "notifications",    label: "Notifications",    icon: "bell", group: "Profile" },
-    { id: "data-safety",      label: "Data & Safety",    icon: "save", group: "Advanced" },
-    { id: "modules",          label: "Modules",          icon: "spark", group: "Features" },
-    { id: "dashboard",        label: "Dashboard",        icon: "chart", group: "Features" },
-    { id: "custom-fields",    label: "Custom Fields",    icon: "edit", group: "Advanced" },
-    { id: "team-access",      label: "Team & Access",    icon: "users", group: "Workspace" },
+    { id: "business-profile", get label() { return App.i18n.t("Business Profile"); }, icon: "cog", group: "Account & Preferences" },
+    { id: "appearance", get label() { return App.i18n.t("Language & Appearance"); }, icon: "cog", group: "Account & Preferences" },
+    { id: "pipeline",         get label() { return App.i18n.t("Pipeline"); },         icon: "columns", group: "Workspace" },
+    { id: "google-sheets",    get label() { return App.i18n.t("Google Sheets"); },    icon: "grid", group: "Integrations" },
+    { id: "sheet-imports",    get label() { return App.i18n.t("Import History"); },   icon: "activity", group: "Integrations" },
+    { id: "email-sending",    get label() { return App.i18n.t("Email Sending"); },    icon: "chart", group: "Integrations" },
+    { id: "notifications",    get label() { return App.i18n.t("Notifications"); },    icon: "bell", group: "Account & Preferences" },
+    { id: "data-safety",      get label() { return App.i18n.t("Data & Safety"); },    icon: "save", group: "Advanced" },
+    { id: "modules",          get label() { return App.i18n.t("Modules"); },          icon: "spark", group: "Features" },
+    { id: "dashboard",        get label() { return App.i18n.t("Dashboard"); },        icon: "chart", group: "Features" },
+    { id: "custom-fields",    get label() { return App.i18n.t("Custom Fields"); },    icon: "edit", group: "Advanced" },
+    { id: "team-access",      get label() { return App.i18n.t("Team & Access"); },    icon: "users", group: "Workspace" },
     // Only once the workspace is being run as a team: there is nobody to set
     // permissions for before that.
-    { id: "team-permissions", label: "What people can do", icon: "lock", group: "Workspace", needsTeam: true }
+    { id: "team-permissions", get label() { return App.i18n.t("What people can do"); }, icon: "lock", group: "Workspace", needsTeam: true }
   ];
   const DEFAULT_SETTINGS_CATEGORY = "overview";
   let _settingsLastSaved = null;
-  function _updateLastSaved() { _settingsLastSaved = new Date().toLocaleTimeString(); const el = document.getElementById('settingsLastSaved'); if (el) { el.textContent = 'Last saved at ' + _settingsLastSaved; el.style.display = ''; } }
+  function _updateLastSaved() { _settingsLastSaved = new Date().toLocaleTimeString(); const el = document.getElementById('settingsLastSaved'); if (el) { App.i18n.setText(el, App.i18n.value(() => (App.i18n.t('Last saved at ') + _settingsLastSaved))); el.style.display = ''; } }
 
   async function renderSettings(container, category) {
-    App.app.setBreadcrumbs([{ label: "Settings" }]);
+    App.app.setBreadcrumbs([{ get label() { return App.i18n.t("Settings"); } }]);
     App.app.setTopActions("");
     // A category can arrive with a query attached, e.g.
     // /settings/team-permissions?member=<id>. The tab is chosen by the part
@@ -765,23 +766,24 @@ App.pages.release = (function () {
     const known = SETTINGS_CATEGORIES.some(c => c.id === catId && !c.route);
     const activeCat = known ? catId : DEFAULT_SETTINGS_CATEGORY;
 
-    const groupOrder = ["Profile", "Workspace", "Integrations", "Features", "Advanced"];
+    const groupOrder = ["Account & Preferences", "Workspace", "Integrations", "Features", "Advanced"];
     const teamOn = !!(App.customization && App.customization.isTeamMode());
     const canManageTeam = !!(App.workspace && App.workspace.can("team_manage"));
     const navHtml = groupOrder.map(group => {
       const rows = SETTINGS_CATEGORIES.filter(c => c.group === group && (!c.needsTeam || (teamOn && canManageTeam))).map(c => {
         const active = c.id === activeCat;
         const attr = c.route ? `data-settings-route="${U().esc(c.route)}"` : `data-settings-cat="${U().esc(c.id)}"`;
-        return `<button type="button" class="settings-nav-item${active?" active":""}" ${attr} aria-current="${active?"page":"false"}">${App.app.icon(c.icon)}${U().esc(c.id === "team-access" && !canManageTeam ? "Workspace membership" : c.label)}</button>`;
+        return App.i18n.html`<button type="button" class="settings-nav-item${App.i18n.value(() => (active?" active":""))}" ${App.i18n.value(() => (attr))} aria-current="${App.i18n.value(() => (active?"page":"false"))}">${App.i18n.value(() => (App.app.icon(c.icon)))}<span>${App.i18n.value(() => (U().esc(c.id === "team-access" && !canManageTeam ? App.i18n.t("Workspace membership") : c.label)))}</span><span class="settings-chevron" aria-hidden="true">›</span></button>`;
       }).join("");
-      if (group === "Advanced") return `<details class="settings-nav-section" ${SETTINGS_CATEGORIES.some(c => c.id === activeCat && c.group === "Advanced") ? "open" : ""}><summary class="settings-nav-section-title">Advanced</summary>${rows}</details>`;
-      return `<div class="settings-nav-section"><div class="settings-nav-section-title">${group}</div>${rows}</div>`;
+      if (group === "Advanced") return App.i18n.html`<details class="settings-nav-section" ${App.i18n.value(() => ((window.matchMedia && window.matchMedia("(max-width:900px)").matches) || SETTINGS_CATEGORIES.some(c => c.id === activeCat && c.group === "Advanced") ? "open" : ""))}><summary class="settings-nav-section-title">Advanced</summary>${App.i18n.value(() => (rows))}</details>`;
+      return App.i18n.html`<div class="settings-nav-section"><div class="settings-nav-section-title">${App.i18n.value(() => (group))}</div>${App.i18n.value(() => (rows))}</div>`;
     }).join("");
 
-    container.innerHTML = `
-      <div class="page-header"><div><div class="page-title">Settings</div><div class="page-desc">Manage your profile and workspace. Open Advanced for custom fields and data safety.</div></div></div>
-      <div class="settings-shell">
-        <nav class="settings-nav" aria-label="Settings categories">${navHtml}<div class="settings-last-saved" id="settingsLastSaved" style="${_settingsLastSaved?'':'display:none'}">${_settingsLastSaved?'Last saved at '+U().esc(_settingsLastSaved):''}</div></nav>
+    container.innerHTML = App.i18n.html`
+      ${App.i18n.value(() => (activeCat !== "overview" ? App.i18n.markup('<button type="button" class="btn btn-ghost settings-back" data-settings-back><span aria-hidden="true">←</span> Back to settings</button>') : ""))}
+      <div class="page-header"><div><div class="page-title">${App.i18n.value(() => (activeCat === "overview" ? App.i18n.t("Settings") : U().esc(SETTINGS_CATEGORIES.find(c => c.id === activeCat).label)))}</div><div class="page-desc">Manage your profile and workspace. Open Advanced for custom fields and data safety.</div></div></div>
+      <div class="settings-shell${App.i18n.value(() => (activeCat !== "overview" ? " settings-has-category" : ""))}">
+        <nav class="settings-nav" aria-label="Settings categories">${App.i18n.value(() => (navHtml))}<div class="settings-last-saved" id="settingsLastSaved" style="${App.i18n.value(() => (_settingsLastSaved?'':'display:none'))}">${App.i18n.value(() => (_settingsLastSaved?'Last saved at '+U().esc(_settingsLastSaved):''))}</div></nav>
         <div class="settings-content" id="settingsContent"></div>
       </div>`;
 
@@ -790,7 +792,7 @@ App.pages.release = (function () {
         const cat = btn.getAttribute("data-settings-cat");
         if (cat !== activeCat) {
           if (_bpDirty && activeCat === "business-profile") {
-            if (!confirm("You have unsaved changes in Business Profile. Leave without saving?")) return;
+            if (!confirm(App.i18n.t("You have unsaved changes in Business Profile. Leave without saving?"))) return;
             _bpClearDirty();
           }
           App.app.navigate("/settings/" + cat);
@@ -799,6 +801,14 @@ App.pages.release = (function () {
     });
     container.querySelectorAll("[data-settings-route]").forEach(btn => {
       btn.addEventListener("click", () => App.app.navigate(btn.getAttribute("data-settings-route")));
+    });
+    const back = container.querySelector("[data-settings-back]");
+    if (back) back.addEventListener("click", () => {
+      if (_bpDirty && activeCat === "business-profile") {
+        if (!confirm(App.i18n.t("You have unsaved changes in Business Profile. Leave without saving?"))) return;
+        _bpClearDirty();
+      }
+      App.app.navigate("/settings");
     });
 
     await renderSettingsCategory(container.querySelector("#settingsContent"), activeCat, catQuery);
@@ -821,6 +831,7 @@ App.pages.release = (function () {
     if (!pane) return;
     pane.innerHTML = App.app.loadingHtml ? App.app.loadingHtml() : "";
     if (cat === "overview") renderSettingsOverview(pane);
+    else if (cat === "appearance") renderAppearanceCategory(pane);
     else if (cat === "modules") renderModulesCategory(pane);
     else if (cat === "dashboard") renderDashboardCategory(pane);
     else if (cat === "pipeline") { await S().ensureLoaded(["deals"]); await renderPipelineCategory(pane); }
@@ -834,6 +845,26 @@ App.pages.release = (function () {
     else if (cat === "data-safety") renderDataSafetyCategory(pane);
     else renderBusinessProfileCategory(pane);
     wireGo(pane);
+  }
+
+  function renderAppearanceCategory(pane) {
+    const preferences = App.preferences ? App.preferences.get() : { theme:"system", language:"en" };
+    const languages = [["en","English"],["de","Deutsch"],["fr","Français"],["es","Español"],["it","Italiano"],["pt","Português"],["ar","العربية"]];
+    pane.innerHTML = App.i18n.html`<div class="settings-category-head"><div class="settings-category-title">Language & Appearance</div><p class="form-help">Personal preferences for this device and your account. Workspace records and currencies stay unchanged.</p></div>
+      <div class="form-field"><label for="appearanceTheme">Appearance</label><select id="appearanceTheme"><option value="light">Light</option><option value="dark">Dark</option><option value="system">System default</option></select></div>
+      <div class="form-field"><label for="appearanceLanguage">Language</label><select id="appearanceLanguage" translate="no">${App.i18n.value(() => (languages.map(([code,name]) => App.i18n.html`<option value="${App.i18n.value(() => (code))}" lang="${App.i18n.value(() => (code))}">${App.i18n.value(() => (name))}</option>`).join("")))}</select></div>
+      <p class="form-help">System default follows your device's appearance. Choose a language to override browser detection.</p><p id="appearanceStatus" role="status" class="form-help"></p>`;
+    const theme = pane.querySelector("#appearanceTheme"), language = pane.querySelector("#appearanceLanguage"), status = pane.querySelector("#appearanceStatus");
+    theme.value = preferences.theme; language.value = preferences.language;
+    const save = async () => {
+      if (!App.preferences) return;
+      App.i18n.setText(status, App.i18n.message("Saving preferences…"));
+      try {
+        await App.preferences.set({ theme:theme.value, language:language.value });
+        App.i18n.setText(status, App.i18n.value(() => (App.cloud && App.cloud.getUser() ? App.i18n.t("Preferences saved to this device and your account.") : App.i18n.t("Preferences saved on this device."))));
+      } catch (_) { App.i18n.setText(status, App.i18n.message("Saved on this device. Account sync failed; try again when online.")); }
+    };
+    theme.addEventListener("change", save); language.addEventListener("change", save);
   }
 
   /* ---- Business profile field checks (Phase 2C) ----
@@ -854,7 +885,7 @@ App.pages.release = (function () {
     if (!el) return;
     // textContent, not innerHTML: the message is ours, but the field value
     // it may quote is not.
-    el.textContent = message || "";
+    App.i18n.setText(el, App.i18n.value(() => (message || "")));
     el.style.display = message ? "block" : "none";
   }
 
@@ -956,33 +987,33 @@ App.pages.release = (function () {
 
   function renderSettingsOverview(pane) {
     const cards = [
-      { id: "business-profile", icon: "cog", title: "Business Profile", desc: "Set your name, brokerage, currency" },
-      { id: "pipeline", icon: "columns", title: "Pipeline", desc: "Customize your deal stages" },
-      { id: "modules", icon: "spark", title: "Modules", desc: "Choose what appears in your sidebar" },
-      { id: "google-sheets", icon: "grid", title: "Google Sheets", desc: "Import leads from a Google Sheet automatically" },
-      { id: "sheet-imports", icon: "activity", title: "Import History", desc: "Review Google Sheets and file imports, and fix rejected leads" },
-      { id: "email-sending", icon: "chart", title: "Email Sending", desc: "Configure your sender identity and safely test email delivery" },
-      { id: "notifications", icon: "bell", title: "Notifications", desc: "Get told on your phone when a lead replies, even with RealtorCRM closed" },
+      { id: "business-profile", icon: "cog", get title() { return App.i18n.t("Business Profile"); }, get desc() { return App.i18n.t("Set your name, brokerage, currency"); } },
+      { id: "pipeline", icon: "columns", get title() { return App.i18n.t("Pipeline"); }, get desc() { return App.i18n.t("Customize your deal stages"); } },
+      { id: "modules", icon: "spark", get title() { return App.i18n.t("Modules"); }, get desc() { return App.i18n.t("Choose what appears in your sidebar"); } },
+      { id: "google-sheets", icon: "grid", get title() { return App.i18n.t("Google Sheets"); }, get desc() { return App.i18n.t("Import leads from a Google Sheet automatically"); } },
+      { id: "sheet-imports", icon: "activity", get title() { return App.i18n.t("Import History"); }, get desc() { return App.i18n.t("Review Google Sheets and file imports, and fix rejected leads"); } },
+      { id: "email-sending", icon: "chart", get title() { return App.i18n.t("Email Sending"); }, get desc() { return App.i18n.t("Configure your sender identity and safely test email delivery"); } },
+      { id: "notifications", icon: "bell", get title() { return App.i18n.t("Notifications"); }, get desc() { return App.i18n.t("Get told on your phone when a lead replies, even with RealtorCRM closed"); } },
       // Not "browser-only" since the Supabase migration: buildExport() in
       // backup.js serialises the loaded workspace state, which is hydrated
       // from the account's cloud tables.
-      { id: "data-safety", icon: "save", title: "Backup & Safety", desc: "Export or restore your whole workspace as a JSON file" },
-      { id: "custom-fields", icon: "edit", title: "Custom Fields", desc: "Add custom fields to contacts, deals, properties and tasks." }
+      { id: "data-safety", icon: "save", get title() { return App.i18n.t("Backup & Safety"); }, get desc() { return App.i18n.t("Export or restore your whole workspace as a JSON file"); } },
+      { id: "custom-fields", icon: "edit", get title() { return App.i18n.t("Custom Fields"); }, get desc() { return App.i18n.t("Add custom fields to contacts, deals, properties and tasks."); } }
     ];
     const advanced = cards.filter(c => SETTINGS_CATEGORIES.some(cat => cat.id === c.id && cat.group === "Advanced"));
     const first = ["business-profile", "pipeline", "notifications", "modules"];
     const essential = first.map(id => cards.find(c => c.id === id)).concat(cards.filter(c => !advanced.includes(c) && !first.includes(c.id)));
-    const cardHtml = c => `<button type="button" class="settings-overview-card" data-overview-cat="${U().esc(c.id)}"><span class="icon-slot">${App.app.icon(c.icon)}</span><h3>${U().esc(c.title)}</h3><p>${U().esc(c.desc)}</p></button>`;
-    pane.innerHTML = `
+    const cardHtml = c => App.i18n.html`<button type="button" class="settings-overview-card" data-overview-cat="${App.i18n.value(() => (U().esc(c.id)))}"><span class="icon-slot">${App.i18n.value(() => (App.app.icon(c.icon)))}</span><h3>${App.i18n.value(() => (U().esc(c.title)))}</h3><p>${App.i18n.value(() => (U().esc(c.desc)))}</p></button>`;
+    pane.innerHTML = App.i18n.html`
       <div class="settings-category-head">
         <div class="settings-category-title">Settings Overview</div>
         <p class="form-help">Start with your Business Profile, Pipeline and Notifications. More options are grouped in the Settings menu.</p>
       </div>
       <div class="settings-overview-grid">
-        ${essential.map(cardHtml).join("")}
-        ${App.pages.onboarding ? `<button type="button" class="settings-overview-card" id="settingsReopenGuide"><span class="icon-slot">${App.app.icon("spark")}</span><h3>Setup Guide</h3><p>Walk through the first-run setup again, or finish what you skipped</p></button>` : ""}
+        ${App.i18n.value(() => (essential.map(cardHtml).join("")))}
+        ${App.i18n.value(() => (App.pages.onboarding ? App.i18n.html`<button type="button" class="settings-overview-card" id="settingsReopenGuide"><span class="icon-slot">${App.i18n.value(() => (App.app.icon("spark")))}</span><h3>Setup Guide</h3><p>Walk through the first-run setup again, or finish what you skipped</p></button>` : ""))}
       </div>`;
-    pane.insertAdjacentHTML("beforeend", `<details><summary>Advanced: Custom Fields and Backup &amp; Safety</summary><div class="settings-overview-grid">${advanced.map(cardHtml).join("")}</div></details>`);
+    pane.insertAdjacentHTML("beforeend", App.i18n.html`<details><summary>Advanced: Custom Fields and Backup &amp; Safety</summary><div class="settings-overview-grid">${App.i18n.value(() => (advanced.map(cardHtml).join("")))}</div></details>`);
     pane.querySelectorAll("[data-overview-cat]").forEach(card => card.onclick = () => App.app.navigate("/settings/" + card.getAttribute("data-overview-cat")));
     renderSetupGuideRow(pane);
     // Phase 3A. "Install the app" is a card rather than a settings
@@ -1014,10 +1045,10 @@ App.pages.release = (function () {
     }
     const initPreview = commPreview(cd.commissionRate||0, cd.teamSplit||0, cd.brokerageFee||0, cd.referralFee||0, cd.taxReserve||0);
     function commField(id, label, value) {
-      return `<label class="field" data-comm-field="${id}"><span>${U().esc(label)}</span><input type="number" min="0" max="100" step="0.1" id="${id}" value="${U().esc(value)}"><div class="field-error-hint" id="${id}Err">Must be between 0 and 100</div></label>`;
+      return App.i18n.html`<label class="field" data-comm-field="${App.i18n.value(() => (id))}"><span>${App.i18n.value(() => (U().esc(label)))}</span><input type="number" min="0" max="100" step="0.1" id="${App.i18n.value(() => (id))}" value="${App.i18n.value(() => (U().esc(value)))}"><div class="field-error-hint" id="${App.i18n.value(() => (id))}Err">Must be between 0 and 100</div></label>`;
     }
 
-    pane.innerHTML=`
+    pane.innerHTML=App.i18n.html`
       <div class="settings-category-head">
         <div class="settings-category-title">Business Profile</div>
         <p class="form-help">Set the identity, workspace preferences, branding, and commission defaults used for new deals.</p>
@@ -1027,46 +1058,46 @@ App.pages.release = (function () {
         <div class="settings-form-section"><div class="settings-section-title">Identity</div>
         <p class="form-help" style="margin:-4px 0 12px">This is your business identity — the name and details that appear on your deals, reports and branding. It is separate from the account you sign in with, which you change from the profile menu in the top-right.</p>
         <div class="form-grid">
-          <label class="field"><span>Agent Name</span><input id="setAgent" value="${U().esc(st.agentName||'')}"></label>
-          <label class="field"><span>Agency / Brokerage</span><input id="setAgency" value="${U().esc(st.agencyName||'')}"></label>
-          <label class="field"><span>Email</span><input type="email" id="setEmail" value="${U().esc(st.agentEmail||'')}"></label>
-          <label class="field"><span>Phone</span><input id="setPhone" value="${U().esc(st.agentPhone||'')}"></label>
+          <label class="field"><span>Agent Name</span><input id="setAgent" value="${App.i18n.value(() => (U().esc(st.agentName||'')))}"></label>
+          <label class="field"><span>Agency / Brokerage</span><input id="setAgency" value="${App.i18n.value(() => (U().esc(st.agencyName||'')))}"></label>
+          <label class="field"><span>Email</span><input type="email" id="setEmail" value="${App.i18n.value(() => (U().esc(st.agentEmail||'')))}"></label>
+          <label class="field"><span>Phone</span><input id="setPhone" value="${App.i18n.value(() => (U().esc(st.agentPhone||'')))}"></label>
         </div></div>
         <div class="settings-form-section"><div class="settings-section-title">Workspace Preferences</div><div class="form-grid">
-          <label class="field"><span>Currency</span><select id="setCurrency">${['USD','CAD','GBP','EUR','AUD'].map(x=>`<option ${st.currency===x?'selected':''}>${x}</option>`).join('')}</select></label>
-          <label class="field"><span>Default country code</span><input id="setCountryCode" maxlength="5" inputmode="tel" placeholder="e.g. +971" value="${U().esc(st.defaultCountryCode || '')}" aria-describedby="setCountryCodeHelp">
+          <label class="field"><span>Currency</span><select id="setCurrency">${App.i18n.value(() => (['USD','CAD','GBP','EUR','AUD'].map(x=>App.i18n.html`<option ${App.i18n.value(() => (st.currency===x?'selected':''))}>${App.i18n.value(() => (App.i18n.t(x)))}</option>`).join('')))}</select></label>
+          <label class="field"><span>Default country code</span><input id="setCountryCode" maxlength="5" inputmode="tel" placeholder="e.g. +971" value="${App.i18n.value(() => (U().esc(st.defaultCountryCode || '')))}" aria-describedby="setCountryCodeHelp">
             <span class="form-help" id="setCountryCodeHelp">Used when a contact's phone number has no country code, so Call, Text and WhatsApp still reach them. Leave blank to dial numbers exactly as they are stored.</span>
             <span class="field-error" id="setCountryCodeError" role="alert" style="display:none;color:var(--danger)"></span>
           </label>
           <label class="field"><span>Time zone</span>
-            <input id="setTimezone" list="setTimezoneList" maxlength="64" placeholder="e.g. Asia/Dubai" value="${U().esc(st.timezone || '')}" aria-describedby="setTimezoneHelp">
+            <input id="setTimezone" list="setTimezoneList" maxlength="64" placeholder="e.g. Asia/Dubai" value="${App.i18n.value(() => (U().esc(st.timezone || '')))}" aria-describedby="setTimezoneHelp">
             <datalist id="setTimezoneList"></datalist>
             <span class="form-help" id="setTimezoneHelp">Used to decide what counts as "today" for your daily reminders, and when birthday and anniversary messages go out. Start typing a city.</span>
             <span class="field-error" id="setTimezoneError" role="alert" style="display:none;color:var(--danger)"></span>
           </label>
           <label class="field"><span>Remind me if a new contact isn't contacted within</span>
             <span style="display:flex;align-items:center;gap:8px">
-              <input id="setReminderHours" type="number" min="1" max="72" step="1" style="max-width:6rem" value="${U().esc(st.followUpReminderHours == null ? 4 : st.followUpReminderHours)}" aria-describedby="setReminderHoursHelp">
+              <input id="setReminderHours" type="number" min="1" max="72" step="1" style="max-width:6rem" value="${App.i18n.value(() => (U().esc(st.followUpReminderHours == null ? 4 : st.followUpReminderHours)))}" aria-describedby="setReminderHoursHelp">
               <span>hours</span>
             </span>
             <span class="form-help" id="setReminderHoursHelp">You get a reminder about a new lead nobody has contacted yet. If it is still untouched after a day, whoever manages the team is told too.</span>
             <span class="field-error" id="setReminderHoursError" role="alert" style="display:none;color:var(--danger)"></span>
           </label>
-          <label class="field"><span>Business Type</span><select id="setBizType"><option value="">Not set</option>${BUSINESS_TYPES.map(([v,l])=>`<option value="${v}" ${bp.businessType===v?'selected':''}>${l}</option>`).join('')}</select></label>
-          <label class="field"><span>Date Format</span><select id="setDateFormat">${DATE_FORMATS.map(f=>`<option ${bp.dateFormat===f?'selected':''}>${f}</option>`).join('')}</select></label>
+          <label class="field"><span>Business Type</span><select id="setBizType"><option value="">Not set</option>${App.i18n.value(() => (BUSINESS_TYPES.map(([v,l])=>App.i18n.html`<option value="${App.i18n.value(() => (v))}" ${App.i18n.value(() => (bp.businessType===v?'selected':''))}>${App.i18n.value(() => (l))}</option>`).join('')))}</select></label>
+          <label class="field"><span>Date Format</span><select id="setDateFormat">${App.i18n.value(() => (DATE_FORMATS.map(f=>App.i18n.html`<option ${App.i18n.value(() => (bp.dateFormat===f?'selected':''))}>${App.i18n.value(() => (App.i18n.t(f)))}</option>`).join('')))}</select></label>
         </div></div>
         <div class="settings-form-section"><div class="settings-section-title">Branding</div>
           <div class="field"><span>Logo Upload</span><div style="display:flex;align-items:center;gap:10px;margin-top:6px">
-            <img id="setLogoPreview" src="${U().esc(bp.logoDataUri||'')}" alt="" style="height:44px;width:44px;object-fit:contain;border:1px solid var(--border);border-radius: var(--radius);background:var(--card);display:${bp.logoDataUri?'block':'none'}">
+            <img id="setLogoPreview" src="${App.i18n.value(() => (U().esc(bp.logoDataUri||'')))}" alt="" style="height:44px;width:44px;object-fit:contain;border:1px solid var(--border);border-radius: var(--radius);background:var(--card);display:${App.i18n.value(() => (bp.logoDataUri?'block':'none'))}">
             <input type="file" id="setLogoFile" accept="image/*" class="sr-only">
-            <button class="btn btn-sm" id="setLogoChoose" type="button">${bp.logoDataUri?'Replace Logo':'Upload Logo'}</button>
-            <button class="btn btn-sm" id="setLogoClear" type="button" style="display:${bp.logoDataUri?'inline-flex':'none'}">Remove</button>
+            <button class="btn btn-sm" id="setLogoChoose" type="button">${App.i18n.value(() => (bp.logoDataUri?App.i18n.t('Replace Logo'):App.i18n.t('Upload Logo')))}</button>
+            <button class="btn btn-sm" id="setLogoClear" type="button" style="display:${App.i18n.value(() => (bp.logoDataUri?'inline-flex':'none'))}">Remove</button>
           </div><div class="form-help">PNG/JPG recommended · Smaller files load faster</div></div>
         </div>
         <div class="settings-form-section"><div class="settings-section-title">Commission Defaults</div><div class="form-grid">
-          ${commField('setRate','Commission Rate %',cd.commissionRate)}${commField('setTeam','Team Split %',cd.teamSplit)}${commField('setBroker','Brokerage Fee %',cd.brokerageFee)}${commField('setReferral','Referral Fee %',cd.referralFee)}${commField('setTax','Tax Reserve %',cd.taxReserve)}
+          ${App.i18n.value(() => (commField('setRate','Commission Rate %',cd.commissionRate)))}${App.i18n.value(() => (commField('setTeam','Team Split %',cd.teamSplit)))}${App.i18n.value(() => (commField('setBroker','Brokerage Fee %',cd.brokerageFee)))}${App.i18n.value(() => (commField('setReferral','Referral Fee %',cd.referralFee)))}${App.i18n.value(() => (commField('setTax','Tax Reserve %',cd.taxReserve)))}
         </div><p class="form-help">Defaults apply to new deals only</p>
-        <div class="commission-preview-card" id="commPreview">On a $500,000 deal — estimated take-home: <span class="preview-amount" id="commPreviewAmt">${U().formatCurrency(initPreview, st.currency)}</span></div></div>
+        <div class="commission-preview-card" id="commPreview">On a $500,000 deal — estimated take-home: <span class="preview-amount" id="commPreviewAmt">${App.i18n.value(() => (U().formatCurrency(initPreview, st.currency)))}</span></div></div>
         <div class="settings-save-bar" id="bpStickySave"><strong>Unsaved changes</strong><span style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" id="cancelBP" type="button">Cancel</button><button class="btn btn-primary" id="saveAllBP" type="button">Save Changes</button></span></div>
       </div></section>`;
 
@@ -1080,7 +1111,7 @@ App.pages.release = (function () {
       const ref = parseFloat(pane.querySelector('#setReferral').value)||0;
       const tax = parseFloat(pane.querySelector('#setTax').value)||0;
       const amt = commPreview(r, t, b, ref, tax);
-      const el = pane.querySelector('#commPreviewAmt'); if (el) el.textContent = U().formatCurrency(amt, pane.querySelector('#setCurrency').value || st.currency);
+      const el = pane.querySelector('#commPreviewAmt'); if (el) App.i18n.setText(el, App.i18n.value(() => (U().formatCurrency(amt, pane.querySelector('#setCurrency').value || st.currency))));
       [['setRate',r],['setTeam',t],['setBroker',b],['setReferral',ref],['setTax',tax]].forEach(([id,v]) => {
         const err = pane.querySelector('#'+id+'Err'); const field = pane.querySelector('[data-comm-field="'+id+'"]');
         if (v > 100 || v < 0) { if(err) err.classList.add('visible'); if(field) field.classList.add('has-field-error'); }
@@ -1096,22 +1127,22 @@ App.pages.release = (function () {
     pane.querySelector('#cancelBP').onclick=()=>renderBusinessProfileCategory(pane);
     pane.querySelector('#saveAllBP').onclick=async ()=>{
       const btn = pane.querySelector('#saveAllBP'); const cancelBtn = pane.querySelector('#cancelBP');
-      btn.disabled = true; if (cancelBtn) cancelBtn.disabled = true; const orig = btn.textContent; btn.textContent = 'Saving…';
+      btn.disabled = true; if (cancelBtn) cancelBtn.disabled = true; const orig = btn.textContent; App.i18n.setText(btn, App.i18n.message("Saving…"));
       try {
         if (!validateBusinessProfileFields(pane)) return;
         await S().settings.update({agentName:qv(pane,'#setAgent'),agencyName:qv(pane,'#setAgency'),agentEmail:qv(pane,'#setEmail'),agentPhone:qv(pane,'#setPhone'),currency:qv(pane,'#setCurrency'),defaultCountryCode:normalizedCountryCode(pane),followUpReminderHours:Number(qv(pane,'#setReminderHours')),timezone:resolvedTimezone(pane)});
         const bpPatch={businessType:pane.querySelector('#setBizType').value||null,dateFormat:pane.querySelector('#setDateFormat').value};
         if (pendingLogoDataUri !== undefined) bpPatch.logoDataUri = pendingLogoDataUri;
         const bpRes=await S().settings.updateBusinessProfile(bpPatch);
-        if (!bpRes || !bpRes.ok) throw new Error((bpRes&&bpRes.error)||'Could not save business profile.');
+        if (!bpRes || !bpRes.ok) throw new Error((bpRes&&bpRes.error)||App.i18n.t('Could not save business profile.'));
         await S().settings.updateCommissionDefaults({commissionRate:nv(pane,'#setRate'),teamSplit:nv(pane,'#setTeam'),brokerageFee:nv(pane,'#setBroker'),referralFee:nv(pane,'#setReferral'),taxReserve:nv(pane,'#setTax')});
-        App.app.toast('Business profile saved.','success');
+        App.app.toast(App.i18n.t('Business profile saved.'),'success');
         _bpSetDirty(pane, false);
         _updateLastSaved();
       } catch (err) {
-        App.app.toast(err.message || 'Could not save.','danger');
+        App.app.toast(err.message || App.i18n.t('Could not save.'),'danger');
       } finally {
-        btn.disabled = false; if (cancelBtn) cancelBtn.disabled = false; btn.textContent = orig;
+        btn.disabled = false; if (cancelBtn) cancelBtn.disabled = false; App.i18n.setText(btn, App.i18n.value(() => (orig)));
       }
     };
     function setLogoPreview(value) {
@@ -1119,11 +1150,11 @@ App.pages.release = (function () {
       const choose = pane.querySelector('#setLogoChoose');
       const clear = pane.querySelector('#setLogoClear');
       if (img) { img.src = value || ''; img.style.display = value ? 'block' : 'none'; }
-      if (choose) choose.textContent = value ? 'Replace Logo' : 'Upload Logo';
+      if (choose) App.i18n.setText(choose, App.i18n.value(() => (value ? App.i18n.t('Replace Logo') : App.i18n.t('Upload Logo'))));
       if (clear) clear.style.display = value ? 'inline-flex' : 'none';
     }
     const logoFile=pane.querySelector('#setLogoFile'); const logoChoose=pane.querySelector('#setLogoChoose'); if(logoChoose) logoChoose.onclick=()=>logoFile.click();
-    if(logoFile) logoFile.onchange=()=>{ const f=logoFile.files&&logoFile.files[0]; if(!f) return; if(!/^image\//.test(f.type)){ App.app.toast('Choose an image file.','danger'); return; } const reader=new FileReader(); reader.onload=()=>{ const nextLogo=String(reader.result||''); const max=S().settings.LOGO_MAX_BYTES || 220000; if(nextLogo && nextLogo.length > max){ App.app.toast('Logo is too large. Choose an image under ~150 KB.','danger'); return; } pendingLogoDataUri=nextLogo; setLogoPreview(pendingLogoDataUri); _bpSetDirty(pane, true); App.app.toast('Logo ready. Click Save Changes to apply.','success'); }; reader.onerror=()=>App.app.toast('Could not read that image file.','danger'); reader.readAsDataURL(f); };
+    if(logoFile) logoFile.onchange=()=>{ const f=logoFile.files&&logoFile.files[0]; if(!f) return; if(!/^image\//.test(f.type)){ App.app.toast(App.i18n.t('Choose an image file.'),'danger'); return; } const reader=new FileReader(); reader.onload=()=>{ const nextLogo=String(reader.result||''); const max=S().settings.LOGO_MAX_BYTES || 220000; if(nextLogo && nextLogo.length > max){ App.app.toast(App.i18n.t('Logo is too large. Choose an image under ~150 KB.'),'danger'); return; } pendingLogoDataUri=nextLogo; setLogoPreview(pendingLogoDataUri); _bpSetDirty(pane, true); App.app.toast(App.i18n.t('Logo ready. Click Save Changes to apply.'),'success'); }; reader.onerror=()=>App.app.toast(App.i18n.t('Could not read that image file.'),'danger'); reader.readAsDataURL(f); };
     const logoClear=pane.querySelector('#setLogoClear'); if(logoClear) logoClear.onclick=()=>{ pendingLogoDataUri=null; setLogoPreview(null); _bpSetDirty(pane, true); };
   }
 
@@ -1151,40 +1182,40 @@ App.pages.release = (function () {
       const locked = cust.isModuleLocked(m.id);
       const enabled = cust.isModuleEnabled(m.id);
       const deps = widgetsByModule[m.id];
-      const hint = deps && deps.length ? ` <span class="settings-help-icon" title="${U().esc("Also hides: " + deps.join(", "))}">?</span>` : "";
+      const hint = deps && deps.length ? App.i18n.html` <span class="settings-help-icon" title="${App.i18n.value(() => (U().esc("Also hides: " + deps.join(", "))))}">?</span>` : "";
       const control = locked
-        ? `<span class="split-row-lock" title="Required module — always on" aria-label="Required module, always on">${App.app.icon("lock")}</span>`
-        : `<label class="toggle-switch" title="${enabled ? "Enabled" : "Disabled"}">
-             <input type="checkbox" class="cust-mod" data-mod="${U().esc(m.id)}" ${enabled ? "checked" : ""}>
+        ? App.i18n.html`<span class="split-row-lock" title="Required module — always on" aria-label="Required module, always on">${App.i18n.value(() => (App.app.icon("lock")))}</span>`
+        : App.i18n.html`<label class="toggle-switch" title="${App.i18n.value(() => (enabled ? "Enabled" : "Disabled"))}">
+             <input type="checkbox" class="cust-mod" data-mod="${App.i18n.value(() => (U().esc(m.id)))}" ${App.i18n.value(() => (enabled ? "checked" : ""))}>
              <span class="toggle-track"></span>
            </label>`;
       const sub = locked ? "Core module · Always on" : (enabled ? "Shown in sidebar" : "Hidden from sidebar · Data preserved");
-      return `<div class="split-row" data-mod-row="${U().esc(m.id)}" data-locked="${locked ? "1" : "0"}">
+      return App.i18n.html`<div class="split-row" data-mod-row="${App.i18n.value(() => (U().esc(m.id)))}" data-locked="${App.i18n.value(() => (locked ? "1" : "0"))}">
         <div class="split-row-main">
-          <span class="split-row-icon" aria-hidden="true">${App.app.icon(m.icon)}</span>
+          <span class="split-row-icon" aria-hidden="true">${App.i18n.value(() => (App.app.icon(m.icon)))}</span>
           <div class="split-row-label">
-            <strong>${U().esc(m.label)}</strong>
-            <div class="module-group-tag">${U().esc(m.group)}</div>
-            <div class="form-help" data-mod-sub>${sub}${hint}</div>
+            <strong>${App.i18n.value(() => (U().esc(m.label)))}</strong>
+            <div class="module-group-tag">${App.i18n.value(() => (U().esc(m.group)))}</div>
+            <div class="form-help" data-mod-sub>${App.i18n.value(() => (sub))}${App.i18n.value(() => (hint))}</div>
           </div>
         </div>
-        ${control}
+        ${App.i18n.value(() => (control))}
       </div>`;
     };
 
     const shown = mods.filter(m => cust.isModuleLocked(m.id) || cust.isModuleEnabled(m.id));
     const hiddenMods = mods.filter(m => !cust.isModuleLocked(m.id) && !cust.isModuleEnabled(m.id));
-    const column = (key, label, cls, rows) => `
-      <section class="card split-col" data-col="${key}">
+    const column = (key, label, cls, rows) => App.i18n.html`
+      <section class="card split-col" data-col="${App.i18n.value(() => (key))}">
         <div class="card-header">
-          <span class="group-pill ${cls}">${label} <span data-count="${key}">${rows.length}</span></span>
+          <span class="group-pill ${App.i18n.value(() => (cls))}">${App.i18n.value(() => (label))} <span data-count="${App.i18n.value(() => (key))}">${App.i18n.value(() => (rows.length))}</span></span>
         </div>
-        <div class="card-body zero split-list" data-list="${key}">
-          ${rows.length ? rows.map(modRow).join("") : `<p class="split-empty" data-empty="${key}">No ${key} modules.</p>`}
+        <div class="card-body zero split-list" data-list="${App.i18n.value(() => (key))}">
+          ${App.i18n.value(() => (rows.length ? rows.map(modRow).join("") : App.i18n.html`<p class="split-empty" data-empty="${App.i18n.value(() => (key))}">No ${App.i18n.value(() => (key))} modules.</p>`))}
         </div>
       </section>`;
 
-    root.innerHTML = `
+    root.innerHTML = App.i18n.html`
       <div class="settings-category-head">
         <div class="settings-category-title">Modules</div>
         <p class="form-help">Toggle a module to move it between Shown and Hidden, then save. Required modules cannot be turned off.</p>
@@ -1192,8 +1223,8 @@ App.pages.release = (function () {
       <div class="unsaved-banner" id="modUnsaved" style="display:none">You have unsaved module changes<button class="btn btn-primary btn-sm" id="modUnsavedSave">Save Changes</button></div>
       <input type="text" class="module-filter-input" id="modFilter" placeholder="Filter modules…">
       <div class="split-columns">
-        ${column("shown", "Shown", "group-pill-on", shown)}
-        ${column("hidden", "Hidden", "group-pill-off", hiddenMods)}
+        ${App.i18n.value(() => (column("shown", "Shown", "group-pill-on", shown)))}
+        ${App.i18n.value(() => (column("hidden", "Hidden", "group-pill-off", hiddenMods)))}
       </div>
       <div style="margin-top:16px;display:flex;gap:8px;flex-wrap:wrap">
         <button class="btn btn-primary" id="saveModules">Save Changes</button>
@@ -1210,13 +1241,13 @@ App.pages.release = (function () {
         if (!list) return;
         const n = list.querySelectorAll("[data-mod-row]").length;
         const countEl = root.querySelector(`[data-count="${key}"]`);
-        if (countEl) countEl.textContent = String(n);
+        if (countEl) App.i18n.setText(countEl, App.i18n.value(() => (String(n))));
         const empty = list.querySelector(`[data-empty="${key}"]`);
         if (n === 0 && !empty) {
           const ph = document.createElement("p");
           ph.className = "split-empty";
           ph.setAttribute("data-empty", key);
-          ph.textContent = "No " + key + " modules.";
+          App.i18n.setText(ph, App.i18n.value(() => (App.i18n.t("No ") + key + App.i18n.t(" modules."))));
           list.appendChild(ph);
         } else if (n > 0 && empty) empty.remove();
       });
@@ -1251,7 +1282,7 @@ App.pages.release = (function () {
       const sub = row.querySelector("[data-mod-sub]");
       if (sub) {
         const hint = sub.querySelector(".settings-help-icon");
-        sub.textContent = cb.checked ? "Shown in sidebar" : "Hidden from sidebar · Data preserved";
+        App.i18n.setText(sub, App.i18n.value(() => (cb.checked ? App.i18n.t("Shown in sidebar") : App.i18n.t("Hidden from sidebar · Data preserved"))));
         if (hint) { sub.appendChild(document.createTextNode(" ")); sub.appendChild(hint); }
       }
 
@@ -1283,28 +1314,28 @@ App.pages.release = (function () {
       try {
         await S().settings.updateEnabledModules(patch);
         App.app.refreshNav();
-        App.app.toast("Workspace updated.", "success");
+        App.app.toast(App.i18n.t("Workspace updated."), "success");
         _updateLastSaved();
         renderModulesCategory(root);
       } catch (err) {
-        App.app.toast("Could not save: " + err.message, "danger");
+        App.app.toast(App.i18n.t("Could not save: ") + err.message, "danger");
         btn.disabled = false;
       }
     };
 
     root.querySelector("#resetModules").onclick = () => {
       App.app.confirmDialog({
-        title: "Reset modules to default?",
-        message: "This resets enabled modules only. Records and dashboard settings are preserved.",
+        get title() { return App.i18n.t("Reset modules to default?"); },
+        get message() { return App.i18n.t("This resets enabled modules only. Records and dashboard settings are preserved."); },
         okLabel: "Reset modules"
       }, async () => {
         try {
           await S().settings.resetEnabledModules();
           App.app.refreshNav();
-          App.app.toast("Modules reset to default.", "success");
+          App.app.toast(App.i18n.t("Modules reset to default."), "success");
           renderModulesCategory(root);
         } catch (err) {
-          App.app.toast("Reset failed: " + err.message, "danger");
+          App.app.toast(App.i18n.t("Reset failed: ") + err.message, "danger");
         }
       });
     };
@@ -1326,18 +1357,18 @@ App.pages.release = (function () {
     const widgetRow = (w) => {
       const depMissing = w.requiresModule && !cust.isModuleEnabled(w.requiresModule);
       const depTag = depMissing
-        ? `<span class="badge badge-compact" style="background:var(--danger-soft);color:var(--danger)">Needs module</span>` : "";
+        ? App.i18n.markup(`<span class="badge badge-compact" style="background:var(--danger-soft);color:var(--danger)">Needs module</span>`) : "";
       const sub = depMissing ? "Hidden until supporting module is enabled" : "Drag to reorder";
-      return `<div class="split-row" data-widget-row="${U().esc(w.id)}" draggable="true">
+      return App.i18n.html`<div class="split-row" data-widget-row="${App.i18n.value(() => (U().esc(w.id)))}" draggable="true">
         <div class="split-row-main">
           <span class="drag-handle" aria-hidden="true">&#9776;</span>
           <div class="split-row-label">
-            <strong>${U().esc(w.label)}</strong> ${depTag}
-            <div class="form-help">${sub}<span class="settings-help-icon" title="${U().esc(w.description || '')}">?</span></div>
+            <strong>${App.i18n.value(() => (U().esc(w.label)))}</strong> ${App.i18n.value(() => (depTag))}
+            <div class="form-help">${App.i18n.value(() => (sub))}<span class="settings-help-icon" title="${App.i18n.value(() => (U().esc(w.description || '')))}">?</span></div>
           </div>
         </div>
-        <label class="toggle-switch" title="${isVisible(w) ? 'Visible' : 'Hidden'}">
-          <input type="checkbox" class="cust-widget" data-widget="${U().esc(w.id)}" ${isVisible(w) ? "checked" : ""}>
+        <label class="toggle-switch" title="${App.i18n.value(() => (isVisible(w) ? 'Visible' : 'Hidden'))}">
+          <input type="checkbox" class="cust-widget" data-widget="${App.i18n.value(() => (U().esc(w.id)))}" ${App.i18n.value(() => (isVisible(w) ? "checked" : ""))}>
           <span class="toggle-track"></span>
         </label>
       </div>`;
@@ -1345,24 +1376,24 @@ App.pages.release = (function () {
 
     const visible = orderedWidgets.filter(isVisible);
     const hidden  = orderedWidgets.filter(w => !isVisible(w));
-    const column = (key, label, cls, rows) => `
-      <section class="card split-col" data-col="${key}">
+    const column = (key, label, cls, rows) => App.i18n.html`
+      <section class="card split-col" data-col="${App.i18n.value(() => (key))}">
         <div class="card-header">
-          <span class="group-pill ${cls}">${label} <span data-count="${key}">${rows.length}</span></span>
+          <span class="group-pill ${App.i18n.value(() => (cls))}">${App.i18n.value(() => (label))} <span data-count="${App.i18n.value(() => (key))}">${App.i18n.value(() => (rows.length))}</span></span>
         </div>
-        <div class="card-body zero split-list" data-list="${key}">
-          ${rows.length ? rows.map(widgetRow).join("") : `<p class="split-empty" data-empty="${key}">No ${key} widgets.</p>`}
+        <div class="card-body zero split-list" data-list="${App.i18n.value(() => (key))}">
+          ${App.i18n.value(() => (rows.length ? rows.map(widgetRow).join("") : App.i18n.html`<p class="split-empty" data-empty="${App.i18n.value(() => (key))}">No ${App.i18n.value(() => (key))} widgets.</p>`))}
         </div>
       </section>`;
 
-    root.innerHTML = `
+    root.innerHTML = App.i18n.html`
       <div class="settings-category-head">
         <div class="settings-category-title">Dashboard</div>
         <p class="form-help">Toggle a widget to move it between Visible and Hidden. Drag to reorder within a list.</p>
       </div>
       <div class="split-columns">
-        ${column("visible", "Visible", "group-pill-on", visible)}
-        ${column("hidden", "Hidden", "group-pill-off", hidden)}
+        ${App.i18n.value(() => (column("visible", "Visible", "group-pill-on", visible)))}
+        ${App.i18n.value(() => (column("hidden", "Hidden", "group-pill-off", hidden)))}
       </div>
       <div style="margin-top:16px"><button class="btn" id="resetDashboard">Restore Default Dashboard</button></div>`;
 
@@ -1376,13 +1407,13 @@ App.pages.release = (function () {
         if (!list) return;
         const n = list.querySelectorAll("[data-widget-row]").length;
         const countEl = root.querySelector(`[data-count="${key}"]`);
-        if (countEl) countEl.textContent = String(n);
+        if (countEl) App.i18n.setText(countEl, App.i18n.value(() => (String(n))));
         const empty = list.querySelector(`[data-empty="${key}"]`);
         if (n === 0 && !empty) {
           const ph = document.createElement("p");
           ph.className = "split-empty";
           ph.setAttribute("data-empty", key);
-          ph.textContent = "No " + key + " widgets.";
+          App.i18n.setText(ph, App.i18n.value(() => (App.i18n.t("No ") + key + App.i18n.t(" widgets."))));
           list.appendChild(ph);
         } else if (n > 0 && empty) empty.remove();
       });
@@ -1404,12 +1435,12 @@ App.pages.release = (function () {
 
     root.querySelector("#resetDashboard").onclick = () => {
       App.app.confirmDialog({
-        title: "Restore default dashboard?",
-        message: "This will reset widget order and visibility. Nothing else in your workspace changes.",
+        get title() { return App.i18n.t("Restore default dashboard?"); },
+        get message() { return App.i18n.t("This will reset widget order and visibility. Nothing else in your workspace changes."); },
         okLabel: "Restore defaults"
       }, async () => {
-        try { await S().settings.resetDashboardWidgets(); App.app.toast("Dashboard restored to default.", "success"); renderDashboardCategory(root); }
-        catch (err) { App.app.toast("Reset failed: " + err.message, "danger"); }
+        try { await S().settings.resetDashboardWidgets(); App.app.toast(App.i18n.t("Dashboard restored to default."), "success"); renderDashboardCategory(root); }
+        catch (err) { App.app.toast(App.i18n.t("Reset failed: ") + err.message, "danger"); }
       });
     };
 
@@ -1454,7 +1485,7 @@ App.pages.release = (function () {
         patch[id] = Object.assign({}, patch[id], { visible: cb.checked });
         try { await S().settings.updateDashboardWidgets(patch); }
         catch (err) {
-          App.app.toast("Could not save: " + err.message, "danger");
+          App.app.toast(App.i18n.t("Could not save: ") + err.message, "danger");
           renderDashboardCategory(root);   // resync from stored truth
         }
       }, MOVE_MS);
@@ -1485,7 +1516,7 @@ App.pages.release = (function () {
         row.parentElement.insertBefore(source, rowIsAfter ? row.nextSibling : row);
         refreshColumns();
         try { await S().settings.updateDashboardWidgets(orderPatch()); }
-        catch (err) { App.app.toast("Could not save order: " + err.message, "danger"); renderDashboardCategory(root); }
+        catch (err) { App.app.toast(App.i18n.t("Could not save order: ") + err.message, "danger"); renderDashboardCategory(root); }
       });
     });
 
@@ -1497,9 +1528,9 @@ App.pages.release = (function () {
     const s = S().getState(); const stages = s.settings.pipelineStages.slice().sort((a,b) => a.order - b.order);
     const rows = (await Promise.all(stages.map(async st => {
       const usage = await S().settings.countDealsInStage(st.id);
-      return `<div class="stage-compact-row" draggable="true" data-stage-row="${U().esc(st.id)}"><div class="stage-compact-main"><span class="drag-handle" title="Drag to reorder">☰</span><span class="stage-dot" style="background:${U().esc(st.color)};display:inline-block;width:12px;height:12px;border-radius:50%;flex-shrink:0"></span><span class="stage-compact-name">${U().esc(st.name)}</span><button class="btn btn-sm btn-ghost stage-deal-link" data-deal-link>${usage} deal${usage===1?'':'s'}</button></div><div class="stage-compact-actions"><button class="btn btn-sm" data-stage-edit="${U().esc(st.id)}">Edit</button></div></div>`;
+      return App.i18n.html`<div class="stage-compact-row" draggable="true" data-stage-row="${App.i18n.value(() => (U().esc(st.id)))}"><div class="stage-compact-main"><span class="drag-handle" title="Drag to reorder">☰</span><span class="stage-dot" style="background:${App.i18n.value(() => (U().esc(st.color)))};display:inline-block;width:12px;height:12px;border-radius:50%;flex-shrink:0"></span><span class="stage-compact-name">${App.i18n.value(() => (U().esc(st.name)))}</span><button class="btn btn-sm btn-ghost stage-deal-link" data-deal-link>${App.i18n.value(() => (usage))} deal${App.i18n.value(() => (usage===1?'':'s'))}</button></div><div class="stage-compact-actions"><button class="btn btn-sm" data-stage-edit="${App.i18n.value(() => (U().esc(st.id)))}">Edit</button></div></div>`;
     }))).join("");
-    root.innerHTML = `<div class="settings-category-head"><div class="settings-category-title">Pipeline</div><p class="form-help">Compact stage list · Edit opens advanced controls.</p></div><div class="card"><div class="card-header"><div class="card-title">Deal Stages</div><button class="btn btn-primary btn-sm" id="addStageBtn">+ Add Stage</button></div><div class="card-body zero"><div id="stageList">${rows}</div></div></div>`;
+    root.innerHTML = App.i18n.html`<div class="settings-category-head"><div class="settings-category-title">Pipeline</div><p class="form-help">Compact stage list · Edit opens advanced controls.</p></div><div class="card"><div class="card-header"><div class="card-title">Deal Stages</div><button class="btn btn-primary btn-sm" id="addStageBtn">+ Add Stage</button></div><div class="card-body zero"><div id="stageList">${App.i18n.value(() => (rows))}</div></div></div>`;
     root.querySelectorAll("[data-deal-link]").forEach(el => el.addEventListener("click", () => App.app.navigate("/pipeline")));
     root.querySelectorAll("[data-stage-edit]").forEach(b => b.addEventListener("click", () => openStageEditModal(root, b.getAttribute("data-stage-edit"))));
     root.querySelector("#addStageBtn").onclick = () => openAddStageModal(root);
@@ -1507,15 +1538,15 @@ App.pages.release = (function () {
       e.preventDefault(); const targetId = row.getAttribute("data-stage-row"); if (!dragId || dragId === targetId) return; const ids = S().getState().settings.pipelineStages.slice().sort((a,b)=>a.order-b.order).map(x=>x.id); const from = ids.indexOf(dragId), to = ids.indexOf(targetId); if (from < 0 || to < 0) return; ids.splice(from,1); ids.splice(to,0,dragId);
       try {
         const next = await S().settings.reorderPipelineStages(ids);
-        if (!next) { App.app.toast("Could not reorder stages.", "danger"); return; }
-        App.app.toast("Stage order updated.", "success"); _updateLastSaved(); await renderPipelineCategory(root);
-      } catch (err) { App.app.toast("Could not reorder stages: " + err.message, "danger"); }
+        if (!next) { App.app.toast(App.i18n.t("Could not reorder stages."), "danger"); return; }
+        App.app.toast(App.i18n.t("Stage order updated."), "success"); _updateLastSaved(); await renderPipelineCategory(root);
+      } catch (err) { App.app.toast(App.i18n.t("Could not reorder stages: ") + err.message, "danger"); }
     }); });
   }
 
   function stageColorChoices(selected) {
     const colors = ["#94A3B8","#60A5FA","#818CF8","#A78BFA","#F59E0B","#10B981","#EF4444","#EC4899"];
-    return `<div class="color-swatch-grid" id="stageColorGrid">${colors.map(c => `<span class="color-swatch${c.toLowerCase()===(selected||'').toLowerCase()?' selected':''}" data-color="${U().esc(c)}" style="background:${U().esc(c)}" title="${U().esc(c)}"></span>`).join('')}</div>`;
+    return App.i18n.html`<div class="color-swatch-grid" id="stageColorGrid">${App.i18n.value(() => (colors.map(c => App.i18n.html`<span class="color-swatch${App.i18n.value(() => (c.toLowerCase()===(selected||'').toLowerCase()?' selected':''))}" data-color="${App.i18n.value(() => (U().esc(c)))}" style="background:${App.i18n.value(() => (U().esc(c)))}" title="${App.i18n.value(() => (U().esc(c)))}"></span>`).join('')))}</div>`;
   }
   function bindColorGrid(root) { root.querySelectorAll("#stageColorGrid .color-swatch").forEach(sw => sw.addEventListener("click", () => { root.querySelectorAll("#stageColorGrid .color-swatch").forEach(x => x.classList.remove("selected")); sw.classList.add("selected"); })); }
 
@@ -1523,15 +1554,15 @@ App.pages.release = (function () {
     const stage = S().getState().settings.pipelineStages.find(x => x.id === stageId); if (!stage) return;
     const usagePromise = S().settings.countDealsInStage(stageId); const isDefault = S().getState().settings.defaultStageId === stageId;
     usagePromise.then(usage => {
-    const h = App.app.openModal({ title: "Edit Pipeline Stage", body: `<div class="form-grid"><label class="field"><span>Stage Name</span><input id="stageEditName" value="${U().esc(stage.name)}"></label><label class="field"><span>Close probability %</span><input id="stageEditProb" type="number" min="0" max="100" step="1" value="${U().esc(stage.probability)}"></label><div class="field"><span>Color</span>${stageColorChoices(stage.color)}</div><label class="field"><span>Stage outcome</span><select id="stageEditTerminal"><option value="" ${!stage.terminal?'selected':''}>In progress</option><option value="won" ${stage.terminal==='won'?'selected':''}>Deal won (closed)</option><option value="lost" ${stage.terminal==='lost'?'selected':''}>Deal lost</option></select></label><label class="field full" style="flex-direction:row;align-items:center;gap:8px"><input type="checkbox" id="stageEditDefault" ${isDefault?'checked':''}> <span style="text-transform:none;letter-spacing:0;font-size: var(--font-size-sm)">Use as default stage for new deals</span></label></div><div class="release-callout" style="margin-top:14px">${usage} deal${usage===1?'':'s'} currently in this stage.</div>`, footer: `<button class="btn btn-danger" data-role="delete">Delete</button><span style="flex:1"></span><button class="btn" data-role="cancel">Cancel</button><button class="btn btn-primary" data-role="save">Save Changes</button>`, onOpen: m => { bindColorGrid(m); m.querySelector('[data-role="cancel"]').onclick = () => h.close(); m.querySelector('[data-role="delete"]').onclick = () => { h.close(); deleteStageFlow(root, stageId); }; m.querySelector('[data-role="save"]').onclick = async () => {
-      const name = m.querySelector('#stageEditName').value.trim(); if (!name) { App.app.toast('Stage name is required.', 'danger'); return; }
+    const h = App.app.openModal({ get title() { return App.i18n.t("Edit Pipeline Stage"); }, body: App.i18n.html`<div class="form-grid"><label class="field"><span>Stage Name</span><input id="stageEditName" value="${App.i18n.value(() => (U().esc(stage.name)))}"></label><label class="field"><span>Close probability %</span><input id="stageEditProb" type="number" min="0" max="100" step="1" value="${App.i18n.value(() => (U().esc(stage.probability)))}"></label><div class="field"><span>Color</span>${App.i18n.value(() => (stageColorChoices(stage.color)))}</div><label class="field"><span>Stage outcome</span><select id="stageEditTerminal"><option value="" ${App.i18n.value(() => (!stage.terminal?'selected':''))}>In progress</option><option value="won" ${App.i18n.value(() => (stage.terminal==='won'?'selected':''))}>Deal won (closed)</option><option value="lost" ${App.i18n.value(() => (stage.terminal==='lost'?'selected':''))}>Deal lost</option></select></label><label class="field full" style="flex-direction:row;align-items:center;gap:8px"><input type="checkbox" id="stageEditDefault" ${App.i18n.value(() => (isDefault?'checked':''))}> <span style="text-transform:none;letter-spacing:0;font-size: var(--font-size-sm)">Use as default stage for new deals</span></label></div><div class="release-callout" style="margin-top:14px">${App.i18n.value(() => (usage))} deal${App.i18n.value(() => (usage===1?'':'s'))} currently in this stage.</div>`, footer: App.i18n.markup(`<button class="btn btn-danger" data-role="delete">Delete</button><span style="flex:1"></span><button class="btn" data-role="cancel">Cancel</button><button class="btn btn-primary" data-role="save">Save Changes</button>`), onOpen: m => { bindColorGrid(m); m.querySelector('[data-role="cancel"]').onclick = () => h.close(); m.querySelector('[data-role="delete"]').onclick = () => { h.close(); deleteStageFlow(root, stageId); }; m.querySelector('[data-role="save"]').onclick = async () => {
+      const name = m.querySelector('#stageEditName').value.trim(); if (!name) { App.app.toast(App.i18n.t('Stage name is required.'), 'danger'); return; }
       const saveBtn = m.querySelector('[data-role="save"]'); saveBtn.disabled = true;
       try {
         const curState = S().getState();
-        if (curState.settings.pipelineStages.some(x => x.id !== stageId && x.name.toLowerCase() === name.toLowerCase())) { App.app.toast('Another stage already uses that name.', 'danger'); saveBtn.disabled = false; return; }
+        if (curState.settings.pipelineStages.some(x => x.id !== stageId && x.name.toLowerCase() === name.toLowerCase())) { App.app.toast(App.i18n.t('Another stage already uses that name.'), 'danger'); saveBtn.disabled = false; return; }
         if (name !== (curState.settings.pipelineStages.find(x=>x.id===stageId)||{}).name) {
           const renamed = await S().settings.renamePipelineStage(stageId, name);
-          if (!renamed) { App.app.toast('Could not rename stage.', 'danger'); saveBtn.disabled = false; return; }
+          if (!renamed) { App.app.toast(App.i18n.t('Could not rename stage.'), 'danger'); saveBtn.disabled = false; return; }
         }
         const color = (m.querySelector('#stageColorGrid .color-swatch.selected')||{}).getAttribute ? m.querySelector('#stageColorGrid .color-swatch.selected').getAttribute('data-color') : stage.color;
         const probability = U().clamp(m.querySelector('#stageEditProb').value, 0, 100);
@@ -1539,26 +1570,26 @@ App.pages.release = (function () {
         await S().settings.update({ pipelineStages: updatedStages });
         await S().settings.setStageTerminal(stageId, m.querySelector('#stageEditTerminal').value || null);
         if (m.querySelector('#stageEditDefault').checked) await S().settings.setDefaultStage(stageId);
-        h.close(); App.app.toast('Stage updated.', 'success'); _updateLastSaved(); await renderPipelineCategory(root);
+        h.close(); App.app.toast(App.i18n.t('Stage updated.'), 'success'); _updateLastSaved(); await renderPipelineCategory(root);
       } catch (err) {
-        App.app.toast('Could not save stage: ' + err.message, 'danger');
+        App.app.toast(App.i18n.t('Could not save stage: ') + err.message, 'danger');
         saveBtn.disabled = false;
       }
     }; } });
-    }).catch(err => App.app.toast("Could not load stage usage: " + err.message, "danger"));
+    }).catch(err => App.app.toast(App.i18n.t("Could not load stage usage: ") + err.message, "danger"));
   }
 
   function openAddStageModal(root) {
-    const h = App.app.openModal({ title: "Add Pipeline Stage", body: `<div class="form-grid"><label class="field"><span>Stage Name</span><input id="newStageName" placeholder="e.g. Property Visit"></label><label class="field"><span>Close probability %</span><input id="newStageProb" type="number" min="0" max="100" step="1" value="10"></label><div class="field full"><span>Color</span>${stageColorChoices('#94A3B8')}</div></div>`, footer: `<button class="btn" data-role="cancel">Cancel</button><button class="btn btn-primary" data-role="save">Add Stage</button>`, onOpen: m => { bindColorGrid(m); m.querySelector('[data-role="cancel"]').onclick = () => h.close(); m.querySelector('[data-role="save"]').onclick = async () => {
-      const name = m.querySelector('#newStageName').value.trim(); if (!name) { App.app.toast('Enter a name for the new stage.', 'danger'); return; }
+    const h = App.app.openModal({ get title() { return App.i18n.t("Add Pipeline Stage"); }, body: App.i18n.html`<div class="form-grid"><label class="field"><span>Stage Name</span><input id="newStageName" placeholder="e.g. Property Visit"></label><label class="field"><span>Close probability %</span><input id="newStageProb" type="number" min="0" max="100" step="1" value="10"></label><div class="field full"><span>Color</span>${App.i18n.value(() => (stageColorChoices('#94A3B8')))}</div></div>`, footer: App.i18n.markup(`<button class="btn" data-role="cancel">Cancel</button><button class="btn btn-primary" data-role="save">Add Stage</button>`), onOpen: m => { bindColorGrid(m); m.querySelector('[data-role="cancel"]').onclick = () => h.close(); m.querySelector('[data-role="save"]').onclick = async () => {
+      const name = m.querySelector('#newStageName').value.trim(); if (!name) { App.app.toast(App.i18n.t('Enter a name for the new stage.'), 'danger'); return; }
       const saveBtn = m.querySelector('[data-role="save"]'); saveBtn.disabled = true;
       const color = (m.querySelector('#stageColorGrid .color-swatch.selected')||{}).getAttribute ? m.querySelector('#stageColorGrid .color-swatch.selected').getAttribute('data-color') : '#94A3B8';
       try {
         const stage = await S().settings.addPipelineStage({ name, probability: nv(m,'#newStageProb'), color });
-        if (!stage) { App.app.toast('Could not add stage — that name may already be in use.', 'danger'); saveBtn.disabled = false; return; }
-        h.close(); App.app.toast(`Added "${stage.name}" to the pipeline.`, 'success'); await renderPipelineCategory(root);
+        if (!stage) { App.app.toast(App.i18n.t('Could not add stage — that name may already be in use.'), 'danger'); saveBtn.disabled = false; return; }
+        h.close(); App.app.toast(App.i18n.text`Added "${App.i18n.value(() => (stage.name))}" to the pipeline.`, 'success'); await renderPipelineCategory(root);
       } catch (err) {
-        App.app.toast('Could not add stage: ' + err.message, 'danger');
+        App.app.toast(App.i18n.t('Could not add stage: ') + err.message, 'danger');
         saveBtn.disabled = false;
       }
     }; } });
@@ -1567,31 +1598,31 @@ App.pages.release = (function () {
   function deleteStageFlow(root, id) {
     const stage = S().getState().settings.pipelineStages.find(x => x.id === id); if (!stage) return;
     S().settings.countDealsInStage(id).then(usage => {
-    if (usage === 0) { App.app.confirmDialog({ title: "Delete pipeline stage?", message: `"${App.util.esc(stage.name)}" has no deals in it.`, okLabel: "Delete stage", danger: true }, async () => {
+    if (usage === 0) { App.app.confirmDialog({ get title() { return App.i18n.t("Delete pipeline stage?"); }, message: `"${App.util.esc(stage.name)}" has no deals in it.`, okLabel: "Delete stage", danger: true }, async () => {
       try {
         const next = await S().settings.deletePipelineStage(id);
-        if (!next) { App.app.toast("Could not delete stage.", "danger"); return; }
-        App.app.toast("Stage deleted.", "success"); await renderPipelineCategory(root);
-      } catch (err) { App.app.toast("Could not delete stage: " + err.message, "danger"); }
+        if (!next) { App.app.toast(App.i18n.t("Could not delete stage."), "danger"); return; }
+        App.app.toast(App.i18n.t("Stage deleted."), "success"); await renderPipelineCategory(root);
+      } catch (err) { App.app.toast(App.i18n.t("Could not delete stage: ") + err.message, "danger"); }
     }); return; }
-    const otherStages = S().getState().settings.pipelineStages.filter(x => x.id !== id).sort((a,b) => a.order - b.order); if (!otherStages.length) { App.app.toast("Add another stage first.", "danger"); return; }
-    const options = otherStages.map(x => `<option value="${U().esc(x.id)}">${U().esc(x.name)}</option>`).join("");
-    const h = App.app.openModal({ title: "Move deals before deleting", body: `<p>"${App.util.esc(stage.name)}" has <strong>${usage} deal${usage===1?'':'s'}</strong>. Choose where to move ${usage===1?'it':'them'} first.</p><label class="field"><span>Move to</span><select id="moveTargetStage">${options}</select></label>`, footer: `<button class="btn" data-role="cancel">Cancel</button><button class="btn btn-primary" data-role="ok">Move &amp; Delete Stage</button>`, onOpen: m => { m.querySelector('[data-role="cancel"]').onclick = () => h.close(); m.querySelector('[data-role="ok"]').onclick = async () => {
+    const otherStages = S().getState().settings.pipelineStages.filter(x => x.id !== id).sort((a,b) => a.order - b.order); if (!otherStages.length) { App.app.toast(App.i18n.t("Add another stage first."), "danger"); return; }
+    const options = otherStages.map(x => App.i18n.html`<option value="${App.i18n.value(() => (U().esc(x.id)))}">${App.i18n.value(() => (U().esc(x.name)))}</option>`).join("");
+    const h = App.app.openModal({ get title() { return App.i18n.t("Move deals before deleting"); }, body: App.i18n.html`<p>"${App.i18n.value(() => (App.util.esc(stage.name)))}" has <strong>${App.i18n.value(() => (usage))} deal${App.i18n.value(() => (usage===1?'':'s'))}</strong>. Choose where to move ${App.i18n.value(() => (usage===1?'it':App.i18n.t('them')))} first.</p><label class="field"><span>Move to</span><select id="moveTargetStage">${App.i18n.value(() => (options))}</select></label>`, footer: App.i18n.markup(`<button class="btn" data-role="cancel">Cancel</button><button class="btn btn-primary" data-role="ok">Move &amp; Delete Stage</button>`), onOpen: m => { m.querySelector('[data-role="cancel"]').onclick = () => h.close(); m.querySelector('[data-role="ok"]').onclick = async () => {
       const targetId = m.querySelector('#moveTargetStage').value;
       const okBtn = m.querySelector('[data-role="ok"]'); okBtn.disabled = true;
       try {
         const moved = await S().settings.reassignDealsFromStage(id, targetId);
-        if (moved === null) { App.app.toast('Could not move deals.', 'danger'); okBtn.disabled = false; return; }
+        if (moved === null) { App.app.toast(App.i18n.t('Could not move deals.'), 'danger'); okBtn.disabled = false; return; }
         const next = await S().settings.deletePipelineStage(id);
         h.close();
-        if (!next) { App.app.toast(`Moved ${moved} deal(s), but the stage could not be deleted.`, 'danger'); await renderPipelineCategory(root); return; }
-        App.app.toast(`Moved ${moved} deal(s) and deleted "${stage.name}".`, 'success'); await renderPipelineCategory(root);
+        if (!next) { App.app.toast(App.i18n.text`Moved ${App.i18n.value(() => (moved))} deal(s), but the stage could not be deleted.`, 'danger'); await renderPipelineCategory(root); return; }
+        App.app.toast(App.i18n.text`Moved ${App.i18n.value(() => (moved))} deal(s) and deleted "${App.i18n.value(() => (stage.name))}".`, 'success'); await renderPipelineCategory(root);
       } catch (err) {
-        App.app.toast('Could not complete move: ' + err.message, 'danger');
+        App.app.toast(App.i18n.t('Could not complete move: ') + err.message, 'danger');
         okBtn.disabled = false;
       }
     }; } });
-    }).catch(err => App.app.toast("Could not load stage usage: " + err.message, "danger"));
+    }).catch(err => App.app.toast(App.i18n.t("Could not load stage usage: ") + err.message, "danger"));
   }
 
   // ---------- DATA & SAFETY ----------
@@ -1602,25 +1633,25 @@ App.pages.release = (function () {
   function renderDataSafetyCategory(root) {
     const s = S().getState();
     const lastBackup = s.metadata.lastBackupAt ? new Date(s.metadata.lastBackupAt).toLocaleString() : "No backup recorded yet";
-    root.innerHTML = `<div class="settings-category-head"><div class="settings-category-title">Data &amp; Safety</div><p class="form-help">Your data is stored in your account and synced live — regular exports are still a good idea before major changes.</p></div><div class="settings-status-grid"><div class="settings-status-card"><div class="k">Cloud-synced storage</div><div class="v">Your data is saved to your account</div></div><div class="settings-status-card"><div class="k">Last backup</div><div class="v">${U().esc(lastBackup)}</div></div></div>
+    root.innerHTML = App.i18n.html`<div class="settings-category-head"><div class="settings-category-title">Data &amp; Safety</div><p class="form-help">Your data is stored in your account and synced live — regular exports are still a good idea before major changes.</p></div><div class="settings-status-grid"><div class="settings-status-card"><div class="k">Cloud-synced storage</div><div class="v">Your data is saved to your account</div></div><div class="settings-status-card"><div class="k">Last backup</div><div class="v">${App.i18n.value(() => (U().esc(lastBackup)))}</div></div></div>
       <div class="release-grid release-grid-2">
-        <section class="card"><div class="card-header"><div class="card-title">Export Workspace Backup</div></div><div class="card-body"><p>Exports contacts, properties, deals, activities, tasks, showings, milestones, referrals, goals, scripts, prompts, income, expenses, scheduled items, team members, custom fields and their values, business profile, module and dashboard settings, pipeline stages, and metadata.</p><div class="release-callout release-callout-warning"><strong>Export a backup before making major changes, as an extra safety copy.</strong></div><button class="btn btn-primary" id="dsExportBackup" style="margin-top:12px">${App.app.icon('save')} Export JSON Backup</button></div></section>
+        <section class="card"><div class="card-header"><div class="card-title">Export Workspace Backup</div></div><div class="card-body"><p>Exports contacts, properties, deals, activities, tasks, showings, milestones, referrals, goals, scripts, prompts, income, expenses, scheduled items, team members, custom fields and their values, business profile, module and dashboard settings, pipeline stages, and metadata.</p><div class="release-callout release-callout-warning"><strong>Export a backup before making major changes, as an extra safety copy.</strong></div><button class="btn btn-primary" id="dsExportBackup" style="margin-top:12px">${App.i18n.value(() => (App.app.icon('save')))} Export JSON Backup</button></div></section>
         <section class="card"><div class="card-header"><div class="card-title">Restore Backup</div></div><div class="card-body"><p>Restoring a backup merges its records into your account — new records are added, and existing records with matching IDs are updated. Nothing is deleted. The file is validated and previewed before you confirm.</p><input type="file" id="backupFile" accept="application/json,.json" class="sr-only"><button class="btn" id="backupChoose">Choose JSON Backup</button><div id="backupPreview" style="margin-top:12px"></div></div></section>
       </div>
       <section class="card card-danger-zone"><div class="card-header"><div class="card-title">Workspace Maintenance</div></div><div class="card-body"><div class="release-maintenance"><div><strong>Reset entire workspace</strong><div>Permanently removes all workspace records and restores default settings in your account.</div></div><button class="btn btn-danger" id="dsReset">Reset All Data</button></div></div></section>`;
     const dsExport = root.querySelector("#dsExportBackup"); if (dsExport) dsExport.onclick = async () => {
-      dsExport.disabled = true; const orig = dsExport.innerHTML; dsExport.textContent = "Exporting…";
+      dsExport.disabled = true; const orig = dsExport.innerHTML; App.i18n.setText(dsExport, App.i18n.message("Exporting…"));
       try {
         await S().ensureLoaded(Object.keys(App.data.REGISTRY).concat(["settings"]));
         const res = await B().exportToFile(S().getState());
-        App.app.toast('Backup exported: ' + res.filename, 'success'); _updateLastSaved(); renderDataSafetyCategory(root);
+        App.app.toast(App.i18n.t('Backup exported: ') + res.filename, 'success'); _updateLastSaved(); renderDataSafetyCategory(root);
       } catch (err) {
-        App.app.toast('Backup export failed: ' + err.message, 'danger');
+        App.app.toast(App.i18n.t('Backup export failed: ') + err.message, 'danger');
         dsExport.disabled = false; dsExport.innerHTML = orig;
       }
     };
     const file = root.querySelector('#backupFile'); root.querySelector('#backupChoose').onclick = () => file.click();
-    file.onchange = () => { const f = file.files && file.files[0]; if (!f) return; const reader = new FileReader(); reader.onload = () => previewImport(root, String(reader.result || '')); reader.onerror = () => { root.querySelector('#backupPreview').innerHTML = '<div class="release-callout release-callout-danger">Could not read that file.</div>'; }; reader.readAsText(f); };
+    file.onchange = () => { const f = file.files && file.files[0]; if (!f) return; const reader = new FileReader(); reader.onload = () => previewImport(root, String(reader.result || '')); reader.onerror = () => { root.querySelector('#backupPreview').innerHTML = App.i18n.markup('<div class="release-callout release-callout-danger">Could not read that file.</div>'); }; reader.readAsText(f); };
     root.querySelector('#dsReset').onclick = () => openResetDialog();
   }
 
@@ -1629,26 +1660,26 @@ App.pages.release = (function () {
 
   function previewImport(container,text){
     const box=container.querySelector('#backupPreview'); const v=B().validateImport(text);
-    if(!v.valid){box.innerHTML=`<div class="release-callout release-callout-danger"><strong>Not imported.</strong> ${U().esc(v.error)}</div>`;return;}
-    const sum=v.summary; box.innerHTML=`<div class="release-callout"><strong>Valid RealtorCRM backup</strong><br>${sum.contacts} contacts · ${sum.properties} properties · ${sum.deals} deals · ${sum.tasks} tasks · ${sum.scheduledItems} scheduled item${sum.scheduledItems===1?'':'s'} · ${sum.income} income · ${sum.expenses} expenses · ${sum.teamMembers} team member${sum.teamMembers===1?'':'s'} · ${sum.customFields} custom field${sum.customFields===1?'':'s'}<br><button class="btn btn-primary btn-sm" id="commitBackup" style="margin-top:10px">Restore This Backup</button></div>`;
-    box.querySelector('#commitBackup').onclick=()=>App.app.confirmDialog({title:'Restore this backup?',message:'This will merge every record from the backup into your account. New records are added, existing records with matching IDs are updated, and nothing is deleted. Export your current workspace first if you may need it later.',okLabel:'Restore backup',danger:true},async ()=>{
-      const btn = box.querySelector('#commitBackup'); if (btn) { btn.disabled = true; btn.textContent = 'Restoring…'; }
+    if(!v.valid){box.innerHTML=App.i18n.html`<div class="release-callout release-callout-danger"><strong>Not imported.</strong> ${App.i18n.value(() => (U().esc(v.error)))}</div>`;return;}
+    const sum=v.summary; box.innerHTML=App.i18n.html`<div class="release-callout"><strong>Valid RealtorCRM backup</strong><br>${App.i18n.value(() => (sum.contacts))} contacts · ${App.i18n.value(() => (sum.properties))} properties · ${App.i18n.value(() => (sum.deals))} deals · ${App.i18n.value(() => (sum.tasks))} tasks · ${App.i18n.value(() => (sum.scheduledItems))} scheduled item${App.i18n.value(() => (sum.scheduledItems===1?'':'s'))} · ${App.i18n.value(() => (sum.income))} income · ${App.i18n.value(() => (sum.expenses))} expenses · ${App.i18n.value(() => (sum.teamMembers))} team member${App.i18n.value(() => (sum.teamMembers===1?'':'s'))} · ${App.i18n.value(() => (sum.customFields))} custom field${App.i18n.value(() => (sum.customFields===1?'':'s'))}<br><button class="btn btn-primary btn-sm" id="commitBackup" style="margin-top:10px">Restore This Backup</button></div>`;
+    box.querySelector('#commitBackup').onclick=()=>App.app.confirmDialog({get title() { return App.i18n.t("Restore this backup?"); },get message() { return App.i18n.t("This will merge every record from the backup into your account. New records are added, existing records with matching IDs are updated, and nothing is deleted. Export your current workspace first if you may need it later."); },okLabel:'Restore backup',danger:true},async ()=>{
+      const btn = box.querySelector('#commitBackup'); if (btn) { btn.disabled = true; App.i18n.setText(btn, App.i18n.message("Restoring…")); }
       const r=await B().commitImport(v.envelope);
       // restoreFromBackup already writes ui.onboardingStatus into the
       // restored settings bag; nothing reads it now that the old welcome
       // is gone, so there is no second write to make here.
-      if(r.ok){ App.data.resetAllCaches(); App.app.toast('Backup restored.','success'); App.app.navigate('/dashboard'); }
-      else { App.app.toast(r.error||'Backup could not be restored.','danger'); if (btn) { btn.disabled = false; btn.textContent = 'Restore This Backup'; } }
+      if(r.ok){ App.data.resetAllCaches(); App.app.toast(App.i18n.t('Backup restored.'),'success'); App.app.navigate('/dashboard'); }
+      else { App.app.toast(r.error||App.i18n.t('Backup could not be restored.'),'danger'); if (btn) { btn.disabled = false; App.i18n.setText(btn, App.i18n.message("Restore This Backup")); } }
     });
   }
 
   function openResetDialog(){
-    const h=App.app.openModal({title:'Reset Entire Workspace',body:`<p>This permanently removes every record in your account and restores default settings. This cannot be undone unless you have a JSON backup.</p><label class="field"><span>Type RESET to continue</span><input id="resetConfirm" autocomplete="off"></label>`,footer:`<button class="btn" data-role="cancel">Cancel</button><button class="btn btn-danger" data-role="reset">Reset all data</button>`,onOpen:m=>{m.querySelector('[data-role="cancel"]').onclick=()=>h.close();m.querySelector('[data-role="reset"]').onclick=async ()=>{
-      if(m.querySelector('#resetConfirm').value.trim()!=='RESET'){App.app.toast('Type RESET exactly to continue.','danger');return;}
-      const btn = m.querySelector('[data-role="reset"]'); btn.disabled = true; const orig = btn.textContent; btn.textContent = 'Resetting…';
+    const h=App.app.openModal({get title() { return App.i18n.t("Reset Entire Workspace"); },body:App.i18n.markup(`<p>This permanently removes every record in your account and restores default settings. This cannot be undone unless you have a JSON backup.</p><label class="field"><span>Type RESET to continue</span><input id="resetConfirm" autocomplete="off"></label>`),footer:App.i18n.markup(`<button class="btn" data-role="cancel">Cancel</button><button class="btn btn-danger" data-role="reset">Reset all data</button>`),onOpen:m=>{m.querySelector('[data-role="cancel"]').onclick=()=>h.close();m.querySelector('[data-role="reset"]').onclick=async ()=>{
+      if(m.querySelector('#resetConfirm').value.trim()!=='RESET'){App.app.toast(App.i18n.t('Type RESET exactly to continue.'),'danger');return;}
+      const btn = m.querySelector('[data-role="reset"]'); btn.disabled = true; const orig = btn.textContent; App.i18n.setText(btn, App.i18n.message("Resetting…"));
       const ok=await S().resetWorkspace();
-      if(!ok){App.app.toast('Reset failed. Please try again.','danger'); btn.disabled = false; btn.textContent = orig; return;}
-      h.close();App.app.toast('Workspace reset.','success');App.app.navigate('/dashboard');
+      if(!ok){App.app.toast(App.i18n.t('Reset failed. Please try again.'),'danger'); btn.disabled = false; App.i18n.setText(btn, App.i18n.value(() => (orig))); return;}
+      h.close();App.app.toast(App.i18n.t('Workspace reset.'),'success');App.app.navigate('/dashboard');
     };}});
   }
 

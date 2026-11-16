@@ -115,6 +115,8 @@ const REVERT_FOR = {
   "20261015170000_phase_3b_push.sql": "phase_3b_push_revert.sql",
   "20261029120000_phase_c1_deterministic_workspace_selection.sql": "phase_c1_deterministic_workspace_selection_revert.sql",
   "20261109120000_followup_complete_rpc_workspace.sql": "phase_followup_complete_rpc_revert.sql",
+  "20261116070656_crm_scoped_search.sql": "20261116070656_crm_scoped_search.sql",
+  "20261116070954_crm_notification_events.sql": "crm_notification_events_revert.sql",
 };
 
 // Runs without a database: it reads two directories.

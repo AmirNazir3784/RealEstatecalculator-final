@@ -87,33 +87,33 @@ App.pages.automation = (function () {
   const CONTACT_TYPE_OPTIONS = ["Buyer", "Seller", "Investor", "Referral Partner"];
   const TEMPERATURE_OPTIONS = ["Hot", "Warm", "Cold"];
   const RULE_STATUS_META = {
-    draft: { label: "Draft", cls: "badge-neutral" },
-    active: { label: "Active", cls: "badge-success" },
-    paused: { label: "Paused", cls: "badge-warning" },
-    archived: { label: "Archived", cls: "badge-neutral" }
+    draft: { get label() { return App.i18n.t("Draft"); }, cls: "badge-neutral" },
+    active: { get label() { return App.i18n.t("Active"); }, cls: "badge-success" },
+    paused: { get label() { return App.i18n.t("Paused"); }, cls: "badge-warning" },
+    archived: { get label() { return App.i18n.t("Archived"); }, cls: "badge-neutral" }
   };
   const ENROLLMENT_STATUS_META = {
-    active: { label: "Active", cls: "badge-success" },
-    paused: { label: "Paused", cls: "badge-warning" },
-    completed: { label: "Completed", cls: "badge-neutral" },
-    stopped: { label: "Stopped", cls: "badge-neutral" },
-    failed: { label: "Failed", cls: "badge-danger" }
+    active: { get label() { return App.i18n.t("Active"); }, cls: "badge-success" },
+    paused: { get label() { return App.i18n.t("Paused"); }, cls: "badge-warning" },
+    completed: { get label() { return App.i18n.t("Completed"); }, cls: "badge-neutral" },
+    stopped: { get label() { return App.i18n.t("Stopped"); }, cls: "badge-neutral" },
+    failed: { get label() { return App.i18n.t("Failed"); }, cls: "badge-danger" }
   };
   // Phase 4E. A stop is a normal, expected outcome — never an error — so
   // every one of these is a neutral tone, deliberately distinct from the
   // red used for genuine failures.
   const STOP_REASON_META = {
-    reply: { label: "Contact replied", cls: "badge-neutral" },
-    unsubscribe: { label: "Contact unsubscribed", cls: "badge-neutral" },
-    complaint: { label: "Contact reported spam", cls: "badge-neutral" },
-    bounce: { label: "Email bounced", cls: "badge-neutral" },
-    suppression: { label: "Email blocked", cls: "badge-neutral" },
-    rule_archived: { label: "Automation archived", cls: "badge-neutral" },
-    contact_opted_out: { label: "Contact opted out", cls: "badge-neutral" },
-    contact_suppressed: { label: "Email blocked", cls: "badge-neutral" },
-    enrollment_inactive: { label: "Follow-up already stopped", cls: "badge-neutral" },
-    contact_not_found: { label: "Contact deleted", cls: "badge-neutral" },
-    contact_ineligible: { label: "Contact not eligible", cls: "badge-neutral" }
+    reply: { get label() { return App.i18n.t("Contact replied"); }, cls: "badge-neutral" },
+    unsubscribe: { get label() { return App.i18n.t("Contact unsubscribed"); }, cls: "badge-neutral" },
+    complaint: { get label() { return App.i18n.t("Contact reported spam"); }, cls: "badge-neutral" },
+    bounce: { get label() { return App.i18n.t("Email bounced"); }, cls: "badge-neutral" },
+    suppression: { get label() { return App.i18n.t("Email blocked"); }, cls: "badge-neutral" },
+    rule_archived: { get label() { return App.i18n.t("Automation archived"); }, cls: "badge-neutral" },
+    contact_opted_out: { get label() { return App.i18n.t("Contact opted out"); }, cls: "badge-neutral" },
+    contact_suppressed: { get label() { return App.i18n.t("Email blocked"); }, cls: "badge-neutral" },
+    enrollment_inactive: { get label() { return App.i18n.t("Follow-up already stopped"); }, cls: "badge-neutral" },
+    contact_not_found: { get label() { return App.i18n.t("Contact deleted"); }, cls: "badge-neutral" },
+    contact_ineligible: { get label() { return App.i18n.t("Contact not eligible"); }, cls: "badge-neutral" }
   };
   // Phase 4E.2: why an email step was skipped while the rest of the
   // automation carried on.
@@ -154,11 +154,11 @@ App.pages.automation = (function () {
   }
 
   const JOB_STATUS_META = {
-    pending: { label: "Pending", cls: "badge-neutral" },
-    processing: { label: "Processing", cls: "badge-warning" },
-    completed: { label: "Completed", cls: "badge-success" },
-    failed: { label: "Failed", cls: "badge-danger" },
-    cancelled: { label: "Cancelled", cls: "badge-neutral" }
+    pending: { get label() { return App.i18n.t("Pending"); }, cls: "badge-neutral" },
+    processing: { get label() { return App.i18n.t("Processing"); }, cls: "badge-warning" },
+    completed: { get label() { return App.i18n.t("Completed"); }, cls: "badge-success" },
+    failed: { get label() { return App.i18n.t("Failed"); }, cls: "badge-danger" },
+    cancelled: { get label() { return App.i18n.t("Cancelled"); }, cls: "badge-neutral" }
   };
 
   // Never displays a real address anywhere in this module — first
@@ -189,7 +189,7 @@ App.pages.automation = (function () {
 
   async function render(pane, activityOnly = false) {
     if (!pane) return;
-    App.app.setBreadcrumbs([{ label: "Automation" }]);
+    App.app.setBreadcrumbs([{ get label() { return App.i18n.t("Automation"); } }]);
     App.app.setTopActions("");
 
     const state = {
@@ -205,7 +205,7 @@ App.pages.automation = (function () {
       contacts: [] // owner-scoped cache snapshot, for the manual-enroll picker only
     };
 
-    pane.innerHTML = App.app.loadingHtml ? App.app.loadingHtml("automation sequences") : "";
+    pane.innerHTML = App.app.loadingHtml ? App.app.loadingHtml(App.i18n.t("automation sequences")) : "";
     renderShell(pane, state);
     await loadRules(pane, state);
   }
@@ -221,36 +221,36 @@ App.pages.automation = (function () {
 
   function openStarterPackModal(pane, state) {
     const packs = (App.starterPacks && App.starterPacks.all()) || [];
-    if (!packs.length) { App.app.toast("No starter packs are available.", "danger"); return; }
+    if (!packs.length) { App.app.toast(App.i18n.t("No starter packs are available."), "danger"); return; }
 
     const h = App.app.openModal({
-      title: "Add starter sequences",
+      get title() { return App.i18n.t("Add starter sequences"); },
       wide: true,
-      body: `
+      body: App.i18n.html`
         <div class="release-callout release-callout-warning" style="margin-bottom:12px">
           <strong>Everything here is added as a draft.</strong>
           <p style="margin:6px 0 0">Nothing sends until you read it, make it sound like you, and activate it yourself.</p>
         </div>
         <div class="form-grid">
-          ${packs.map((pack) => `
+          ${App.i18n.value(() => (packs.map((pack) => App.i18n.html`
             <label class="field full" style="flex-direction:row;align-items:flex-start;gap:10px">
-              <input type="checkbox" class="pack-pick" value="${U().esc(pack.id)}" checked style="margin-top:4px">
+              <input type="checkbox" class="pack-pick" value="${App.i18n.value(() => (U().esc(pack.id)))}" checked style="margin-top:4px">
               <span style="font-weight:400">
-                <strong>${U().esc(pack.name)}</strong>
-                <div class="form-help" style="margin:2px 0 0">${U().esc(pack.blurb)}</div>
-                ${pack.note ? `<div class="form-help" style="margin:2px 0 0"><em>${U().esc(pack.note)}</em></div>` : ""}
+                <strong>${App.i18n.value(() => (U().esc(pack.name)))}</strong>
+                <div class="form-help" style="margin:2px 0 0">${App.i18n.value(() => (U().esc(pack.blurb)))}</div>
+                ${App.i18n.value(() => (pack.note ? App.i18n.html`<div class="form-help" style="margin:2px 0 0"><em>${App.i18n.value(() => (U().esc(pack.note)))}</em></div>` : ""))}
               </span>
-            </label>`).join("")}
+            </label>`).join("")))}
         </div>`,
-      footer: `<button class="btn" data-role="cancel">Cancel</button>
-               <button class="btn btn-primary" data-role="add">Add as drafts</button>`,
+      footer: App.i18n.markup(`<button class="btn" data-role="cancel">Cancel</button>
+               <button class="btn btn-primary" data-role="add">Add as drafts</button>`),
       onOpen: (m) => {
         m.querySelector('[data-role="cancel"]').onclick = () => h.close();
         const addBtn = m.querySelector('[data-role="add"]');
         addBtn.onclick = async () => {
           if (addBtn.disabled) return;
           const ids = Array.from(m.querySelectorAll(".pack-pick:checked")).map((c) => c.value);
-          if (!ids.length) { App.app.toast("Tick at least one, or cancel.", "danger"); return; }
+          if (!ids.length) { App.app.toast(App.i18n.t("Tick at least one, or cancel."), "danger"); return; }
           addBtn.disabled = true;
           let result;
           try {
@@ -258,13 +258,13 @@ App.pages.automation = (function () {
             result = await App.starterPacks.install(ids, { timezone: settings.timezone || "UTC" });
           } catch (err) {
             addBtn.disabled = false;
-            App.app.toast("Could not add: " + ((err && err.message) || "Unknown error"), "danger");
+            App.app.toast(App.i18n.t("Could not add: ") + ((err && err.message) || "Unknown error"), "danger");
             return;
           }
           h.close();
           App.app.toast(App.starterPacks.summarize(result), result.failed.length ? "danger" : "success");
           if (result.created.length) {
-            App.app.toast("They are all drafts - read them, then activate.", "info");
+            App.app.toast(App.i18n.t("They are all drafts - read them, then activate."), "info");
           }
           await loadRules(pane, state);
         };
@@ -275,19 +275,19 @@ App.pages.automation = (function () {
 
   function renderShell(pane, state) {
     if (state.activityOnly) {
-      App.app.setBreadcrumbs([{ label: "Follow-up Plans", route: "/automation" }, { label: "Activity" }]);
-      pane.innerHTML = `<div class="page-header"><div><div class="page-title">Activity</div><div class="page-desc">View enrollments, delivery history and failures for your follow-up plans.</div></div></div><p id="autoLiveStatus" aria-live="polite" role="status"></p><div id="autoRuleList"></div>`;
+      App.app.setBreadcrumbs([{ get label() { return App.i18n.t("Follow-up Plans"); }, route: "/automation" }, { get label() { return App.i18n.t("Activity"); } }]);
+      pane.innerHTML = App.i18n.markup(`<div class="page-header"><div><div class="page-title">Activity</div><div class="page-desc">View enrollments, delivery history and failures for your follow-up plans.</div></div></div><p id="autoLiveStatus" aria-live="polite" role="status"></p><div id="autoRuleList"></div>`);
       return;
     }
-    pane.innerHTML = `
+    pane.innerHTML = App.i18n.html`
       <div class="page-header">
         <div>
           <div class="page-title">Automation</div>
           <div class="page-desc">Prepare draft follow-up sequences using your Email Templates.</div>
         </div>
         <div class="page-actions">
-          <button type="button" class="btn btn-primary" id="autoCreateBtn">${App.app.icon("plus")} Create Draft Sequence</button>
-          <button type="button" class="btn" id="autoStarterPackBtn">${App.app.icon("plus")} Add starter sequences</button>
+          <button type="button" class="btn btn-primary" id="autoCreateBtn">${App.i18n.value(() => (App.app.icon("plus")))} Create Draft Sequence</button>
+          <button type="button" class="btn" id="autoStarterPackBtn">${App.i18n.value(() => (App.app.icon("plus")))} Add starter sequences</button>
         </div>
       </div>
 
@@ -307,7 +307,7 @@ App.pages.automation = (function () {
   function setLive(pane, text, kind) {
     const el = pane.querySelector("#autoLiveStatus");
     if (!el) return;
-    el.textContent = text || "";
+    App.i18n.setText(el, App.i18n.value(() => (text || "")));
     el.className = "profile-edit-message" + (kind ? " " + kind : "");
   }
 
@@ -355,10 +355,10 @@ App.pages.automation = (function () {
     if (!el) return;
 
     if (state.error) {
-      el.innerHTML = `
+      el.innerHTML = App.i18n.html`
         <div class="empty-state" role="alert">
           <div class="empty-title">Could not load automation sequences</div>
-          <div class="empty-desc">${U().esc(state.error)}</div>
+          <div class="empty-desc">${App.i18n.value(() => (U().esc(state.error)))}</div>
           <button type="button" class="btn btn-primary" id="autoRetry">Retry</button>
         </div>`;
       const retryBtn = el.querySelector("#autoRetry");
@@ -368,15 +368,15 @@ App.pages.automation = (function () {
 
     const visibleRules = state.activityOnly ? state.rules.filter(rule => rule.status !== "draft") : state.rules;
     if (state.activityOnly && !visibleRules.length) {
-      el.innerHTML = `<div class="empty-state"><div class="empty-title">No plan activity yet</div><div class="empty-desc">Activity is available after a plan leaves draft status.</div></div>`;
+      el.innerHTML = App.i18n.markup(`<div class="empty-state"><div class="empty-title">No plan activity yet</div><div class="empty-desc">Activity is available after a plan leaves draft status.</div></div>`);
       return;
     }
     if (!state.rules.length) {
-      el.innerHTML = `
+      el.innerHTML = App.i18n.markup(`
         <div class="empty-state">
           <div class="empty-title">No draft sequences yet</div>
           <div class="empty-desc">Build your first sequence: choose a trigger, add email and task steps, then activate it when you're ready. Editing a draft never sends anything.</div>
-        </div>`;
+        </div>`);
       return;
     }
 
@@ -439,7 +439,7 @@ App.pages.automation = (function () {
     const meta = safeLookup(RULE_STATUS_META, status);
     const label = meta ? meta.label : "Unknown";
     const cls = meta ? meta.cls : "badge-neutral";
-    return `<span class="badge ${cls}"><span class="dot"></span>${U().esc(label)}</span>`;
+    return App.i18n.html`<span class="badge ${App.i18n.value(() => (cls))}"><span class="dot"></span>${App.i18n.value(() => (U().esc(label)))}</span>`;
   }
 
   function renderRuleCard(state, rule) {
@@ -451,62 +451,62 @@ App.pages.automation = (function () {
       paused: "This sequence is paused: no new contacts are being enrolled and no further steps run until you resume it. Its steps stay locked while paused.",
       archived: "This sequence is archived: it can never run again. Its history stays visible below."
     }[rule.status];
-    return `
-      <div class="gsih-batch-card" data-rule-id="${U().esc(rule.id)}">
+    return App.i18n.html`
+      <div class="gsih-batch-card" data-rule-id="${App.i18n.value(() => (U().esc(rule.id)))}">
         <div class="gsih-batch-head">
           <div>
-            <div class="gsih-batch-conn">${U().esc(rule.name)}</div>
-            <div class="form-help">Trigger: ${U().esc(safeLookup(TRIGGER_LABELS, rule.trigger_type) || "Unknown")} · Timezone: ${U().esc(rule.timezone)}</div>
-            <div class="form-help">${U().esc(triggerSummaryText_(rule.trigger_type, rule.trigger_config, rule.timezone, rule.audience_filter))}</div>
+            <div class="gsih-batch-conn">${App.i18n.value(() => (U().esc(rule.name)))}</div>
+            <div class="form-help">Trigger: ${App.i18n.value(() => (U().esc(safeLookup(TRIGGER_LABELS, rule.trigger_type) || App.i18n.t("Unknown"))))} · Timezone: ${App.i18n.value(() => (U().esc(rule.timezone)))}</div>
+            <div class="form-help">${App.i18n.value(() => (U().esc(triggerSummaryText_(rule.trigger_type, rule.trigger_config, rule.timezone, rule.audience_filter))))}</div>
           </div>
-          ${ruleStatusBadge(rule.status)}
+          ${App.i18n.value(() => (ruleStatusBadge(rule.status)))}
         </div>
         <div class="settings-status-grid">
-          <div class="settings-status-card"><div class="k">Daily limit</div><div class="v">${U().esc(rule.daily_enrollment_limit)}</div></div>
+          <div class="settings-status-card"><div class="k">Daily limit</div><div class="v">${App.i18n.value(() => (U().esc(rule.daily_enrollment_limit)))}</div></div>
           <div class="settings-status-card">
             <div class="k">Stop on reply</div>
-            <div class="v">${isDraft ? (rule.stop_on_reply ? "Yes" : "No")
-              : `<span class="badge ${rule.stop_on_reply ? "badge-success" : "badge-neutral"}"><span class="dot"></span>${rule.stop_on_reply ? "On" : "Off"}</span>`}</div>
+            <div class="v">${App.i18n.value(() => (isDraft ? (rule.stop_on_reply ? App.i18n.t("Yes") : "No")
+              : App.i18n.html`<span class="badge ${App.i18n.value(() => (rule.stop_on_reply ? "badge-success" : "badge-neutral"))}"><span class="dot"></span>${App.i18n.value(() => (rule.stop_on_reply ? "On" : App.i18n.t("Off")))}</span>`))}</div>
           </div>
           <div class="settings-status-card">
             <div class="k">Stop on unsubscribe</div>
-            <div class="v">${isDraft ? (rule.stop_on_unsubscribe ? "Yes" : "No")
-              : `<span class="badge ${rule.stop_on_unsubscribe ? "badge-success" : "badge-neutral"}"><span class="dot"></span>${rule.stop_on_unsubscribe ? "On" : "Off"}</span>`}</div>
+            <div class="v">${App.i18n.value(() => (isDraft ? (rule.stop_on_unsubscribe ? App.i18n.t("Yes") : "No")
+              : App.i18n.html`<span class="badge ${App.i18n.value(() => (rule.stop_on_unsubscribe ? "badge-success" : "badge-neutral"))}"><span class="dot"></span>${App.i18n.value(() => (rule.stop_on_unsubscribe ? "On" : App.i18n.t("Off")))}</span>`))}</div>
           </div>
         </div>
-        ${readOnlyNote ? `
+        ${App.i18n.value(() => (readOnlyNote ? App.i18n.html`
         <div class="release-callout release-callout-warning" style="margin-top:10px">
-          <p style="margin:0">${U().esc(readOnlyNote)}</p>
-        </div>` : ""}
+          <p style="margin:0">${App.i18n.value(() => (U().esc(readOnlyNote)))}</p>
+        </div>` : ""))}
         <div class="gsih-batch-actions">
-          <button type="button" class="btn btn-sm" data-view-steps="${U().esc(rule.id)}">${expanded ? "Hide Steps" : "View Steps"}</button>
-          ${!isDraft ? `<button type="button" class="btn btn-sm" data-view-activity="${U().esc(rule.id)}">${activityExpanded ? "Hide Activity" : "View Activity"}</button>` : ""}
-          ${isDraft ? `<button type="button" class="btn btn-sm" data-edit-rule="${U().esc(rule.id)}">Edit</button>` : ""}
-          ${isDraft ? `<button type="button" class="btn btn-sm btn-danger" data-delete-rule="${U().esc(rule.id)}">Delete</button>` : ""}
-          ${isDraft ? `<button type="button" class="btn btn-sm btn-primary" data-activate-rule="${U().esc(rule.id)}">Activate</button>` : ""}
-          ${rule.status === "active" ? `<button type="button" class="btn btn-sm" data-pause-rule="${U().esc(rule.id)}">Pause</button>` : ""}
-          ${rule.status === "active" && rule.trigger_type === "manual" ? `<button type="button" class="btn btn-sm" data-manual-enroll-rule="${U().esc(rule.id)}">Manually Enroll…</button>` : ""}
-          ${rule.status === "paused" ? `<button type="button" class="btn btn-sm btn-primary" data-resume-rule="${U().esc(rule.id)}">Resume</button>` : ""}
-          ${(rule.status === "active" || rule.status === "paused") ? `<button type="button" class="btn btn-sm btn-danger" data-archive-rule="${U().esc(rule.id)}">Archive</button>` : ""}
+          <button type="button" class="btn btn-sm" data-view-steps="${App.i18n.value(() => (U().esc(rule.id)))}">${App.i18n.value(() => (expanded ? App.i18n.t("Hide Steps") : App.i18n.t("View Steps")))}</button>
+          ${App.i18n.value(() => (!isDraft ? App.i18n.html`<button type="button" class="btn btn-sm" data-view-activity="${App.i18n.value(() => (U().esc(rule.id)))}">${App.i18n.value(() => (activityExpanded ? App.i18n.t("Hide Activity") : App.i18n.t("View Activity")))}</button>` : ""))}
+          ${App.i18n.value(() => (isDraft ? App.i18n.html`<button type="button" class="btn btn-sm" data-edit-rule="${App.i18n.value(() => (U().esc(rule.id)))}">Edit</button>` : ""))}
+          ${App.i18n.value(() => (isDraft ? App.i18n.html`<button type="button" class="btn btn-sm btn-danger" data-delete-rule="${App.i18n.value(() => (U().esc(rule.id)))}">Delete</button>` : ""))}
+          ${App.i18n.value(() => (isDraft ? App.i18n.html`<button type="button" class="btn btn-sm btn-primary" data-activate-rule="${App.i18n.value(() => (U().esc(rule.id)))}">Activate</button>` : ""))}
+          ${App.i18n.value(() => (rule.status === "active" ? App.i18n.html`<button type="button" class="btn btn-sm" data-pause-rule="${App.i18n.value(() => (U().esc(rule.id)))}">Pause</button>` : ""))}
+          ${App.i18n.value(() => (rule.status === "active" && rule.trigger_type === "manual" ? App.i18n.html`<button type="button" class="btn btn-sm" data-manual-enroll-rule="${App.i18n.value(() => (U().esc(rule.id)))}">Manually Enroll…</button>` : ""))}
+          ${App.i18n.value(() => (rule.status === "paused" ? App.i18n.html`<button type="button" class="btn btn-sm btn-primary" data-resume-rule="${App.i18n.value(() => (U().esc(rule.id)))}">Resume</button>` : ""))}
+          ${App.i18n.value(() => ((rule.status === "active" || rule.status === "paused") ? App.i18n.html`<button type="button" class="btn btn-sm btn-danger" data-archive-rule="${App.i18n.value(() => (U().esc(rule.id)))}">Archive</button>` : ""))}
         </div>
-        <div class="gsih-row-panel" data-step-panel-for="${U().esc(rule.id)}" ${expanded ? "" : "hidden"}></div>
-        <div class="gsih-row-panel" data-activity-panel-for="${U().esc(rule.id)}" ${activityExpanded ? "" : "hidden"}></div>
+        <div class="gsih-row-panel" data-step-panel-for="${App.i18n.value(() => (U().esc(rule.id)))}" ${App.i18n.value(() => (expanded ? "" : "hidden"))}></div>
+        <div class="gsih-row-panel" data-activity-panel-for="${App.i18n.value(() => (U().esc(rule.id)))}" ${App.i18n.value(() => (activityExpanded ? "" : "hidden"))}></div>
       </div>`;
   }
 
   function confirmDeleteRule(pane, state, rule) {
     App.app.confirmDialog({
-      title: "Delete draft sequence?",
+      get title() { return App.i18n.t("Delete draft sequence?"); },
       message: `Delete &ldquo;${U().esc(rule.name)}&rdquo;? This also deletes its steps. This cannot be undone, and nothing was ever sent from it.`,
       okLabel: "Delete",
       danger: true
     }, async () => {
       try {
         await S().automationRules.delete(rule.id);
-        App.app.toast("Deleted.", "success");
+        App.app.toast(App.i18n.t("Deleted."), "success");
         await loadRules(pane, state);
       } catch (err) {
-        App.app.toast("Could not delete: " + ((err && err.message) || "Unknown error"), "danger");
+        App.app.toast(App.i18n.t("Could not delete: ") + ((err && err.message) || "Unknown error"), "danger");
       }
     });
   }
@@ -517,13 +517,13 @@ App.pages.automation = (function () {
 
   function confirmActivateRule(pane, state, rule) {
     App.app.confirmDialog({
-      title: "Activate this sequence?",
+      get title() { return App.i18n.t("Activate this sequence?"); },
       message: `Activate &ldquo;${U().esc(rule.name)}&rdquo;? Once email delivery is configured, RealtorCRM will begin automatically enrolling new matching contacts and running this sequence's steps — including sending real emails and creating real tasks. Its steps and settings will be locked: you can still pause, resume, or archive it, but you can't edit a non-draft sequence's configuration. Continue?`,
       okLabel: "Activate"
     }, async () => {
       try {
         await S().automationRuntime.activate(rule.id);
-        App.app.toast("Sequence activated.", "success");
+        App.app.toast(App.i18n.t("Sequence activated."), "success");
         await loadRules(pane, state);
       } catch (err) {
         App.app.toast(activationErrorMessage_(err), "danger");
@@ -556,16 +556,16 @@ App.pages.automation = (function () {
 
   function confirmPauseRule(pane, state, rule) {
     App.app.confirmDialog({
-      title: "Pause this sequence?",
+      get title() { return App.i18n.t("Pause this sequence?"); },
       message: `Pause &ldquo;${U().esc(rule.name)}&rdquo;? No new contacts will be enrolled and no further steps will run for contacts already in this sequence until you resume it. Nothing already sent is undone. Continue?`,
       okLabel: "Pause"
     }, async () => {
       try {
         await S().automationRuntime.pause(rule.id);
-        App.app.toast("Sequence paused.", "success");
+        App.app.toast(App.i18n.t("Sequence paused."), "success");
         await loadRules(pane, state);
       } catch (err) {
-        App.app.toast("Could not pause: " + ((err && err.message) || "Unknown error"), "danger");
+        App.app.toast(App.i18n.t("Could not pause: ") + ((err && err.message) || "Unknown error"), "danger");
       }
     });
   }
@@ -575,27 +575,27 @@ App.pages.automation = (function () {
     btn.disabled = true;
     try {
       await S().automationRuntime.resume(rule.id);
-      App.app.toast("Sequence resumed.", "success");
+      App.app.toast(App.i18n.t("Sequence resumed."), "success");
       await loadRules(pane, state);
     } catch (err) {
-      App.app.toast("Could not resume: " + ((err && err.message) || "Unknown error"), "danger");
+      App.app.toast(App.i18n.t("Could not resume: ") + ((err && err.message) || "Unknown error"), "danger");
       btn.disabled = false;
     }
   }
 
   function confirmArchiveRule(pane, state, rule) {
     App.app.confirmDialog({
-      title: "Archive this sequence?",
+      get title() { return App.i18n.t("Archive this sequence?"); },
       message: `Archive &ldquo;${U().esc(rule.name)}&rdquo;? Every contact currently active or paused in this sequence will be stopped, and their next scheduled step will be cancelled. This sequence can never be reactivated afterward. Its history (past enrollments, sends, and errors) is preserved and stays visible. This cannot be undone. Continue?`,
       okLabel: "Archive",
       danger: true
     }, async () => {
       try {
         await S().automationRuntime.archive(rule.id);
-        App.app.toast("Sequence archived.", "success");
+        App.app.toast(App.i18n.t("Sequence archived."), "success");
         await loadRules(pane, state);
       } catch (err) {
-        App.app.toast("Could not archive: " + ((err && err.message) || "Unknown error"), "danger");
+        App.app.toast(App.i18n.t("Could not archive: ") + ((err && err.message) || "Unknown error"), "danger");
       }
     });
   }
@@ -611,15 +611,15 @@ App.pages.automation = (function () {
     let searchTerm = "";
 
     const h = App.app.openModal({
-      title: "Manually Enroll a Contact",
+      get title() { return App.i18n.t("Manually Enroll a Contact"); },
       wide: true,
-      body: `
-        <p class="form-help">Enroll one contact into &ldquo;${U().esc(rule.name)}&rdquo;. Only contacts you own are shown, and their email is masked here for privacy.</p>
+      body: App.i18n.html`
+        <p class="form-help">Enroll one contact into &ldquo;${App.i18n.value(() => (U().esc(rule.name)))}&rdquo;. Only contacts you own are shown, and their email is masked here for privacy.</p>
         <label class="field full"><span>Search contacts</span><input id="autoEnrollSearch" placeholder="Search by name or email…" autocomplete="off"></label>
         <div id="autoEnrollList" class="release-maintenance-list" style="max-height:280px;overflow-y:auto;margin-top:8px"></div>
         <div data-enroll-lifecycle role="status" aria-live="polite"></div>
       `,
-      footer: `<button class="btn" data-role="cancel">Cancel</button><button class="btn btn-primary" data-role="save" disabled>Enroll Contact</button>`,
+      footer: App.i18n.markup(`<button class="btn" data-role="cancel">Cancel</button><button class="btn btn-primary" data-role="save" disabled>Enroll Contact</button>`),
       onOpen: (m) => {
         m.querySelector('[data-role="cancel"]').onclick = () => h.close();
         const saveBtn = m.querySelector('[data-role="save"]');
@@ -634,13 +634,13 @@ App.pages.automation = (function () {
             return name.indexOf(term) !== -1 || email.indexOf(term) !== -1;
           }).slice(0, 50);
           if (!filtered.length) {
-            listEl.innerHTML = '<p class="form-help">No matching contacts.</p>';
+            listEl.innerHTML = App.i18n.markup('<p class="form-help">No matching contacts.</p>');
             return;
           }
-          listEl.innerHTML = filtered.map((c) => `
+          listEl.innerHTML = filtered.map((c) => App.i18n.html`
             <label style="display:flex;align-items:center;gap:10px;padding:6px 4px;cursor:pointer">
-              <input type="radio" name="autoEnrollContact" value="${U().esc(c.id)}" ${selectedContactId === c.id ? "checked" : ""}>
-              <span>${U().esc(c.name || "Unnamed contact")} &middot; ${U().esc(maskEmail(c.email))}</span>
+              <input type="radio" name="autoEnrollContact" value="${App.i18n.value(() => (U().esc(c.id)))}" ${App.i18n.value(() => (selectedContactId === c.id ? "checked" : ""))}>
+              <span>${App.i18n.value(() => (U().esc(c.name || App.i18n.t("Unnamed contact"))))} &middot; ${App.i18n.value(() => (U().esc(maskEmail(c.email))))}</span>
             </label>
           `).join("");
           listEl.querySelectorAll('input[name="autoEnrollContact"]').forEach((input) => {
@@ -659,7 +659,7 @@ App.pages.automation = (function () {
           saveBtn.disabled = true;
           try {
             await S().automationRuntime.manualEnroll(rule.id, selectedContactId);
-            App.app.toast("Contact added to this automation.", "success");
+            App.app.toast(App.i18n.t("Contact added to this automation."), "success");
             h.close();
             if (state.expandedActivityRuleId === rule.id) await loadActivity(pane, state, rule);
           } catch (err) {
@@ -675,7 +675,7 @@ App.pages.automation = (function () {
               rule_not_eligible: "This automation can't take contacts manually right now.",
               invalid_contact_email: "This contact has no valid email address."
             };
-            App.app.toast(safeLookup(known, code) || "The contact couldn't be added. Please try again.", "danger");
+            App.app.toast(safeLookup(known, code) || App.i18n.t("The contact couldn't be added. Please try again."), "danger");
             saveBtn.disabled = false;
           }
         };
@@ -714,9 +714,9 @@ App.pages.automation = (function () {
         + (rule.stop_on_reply ? " This sequence stops on reply, so they will not be enrolled." : ""));
     }
     if (!notes.length) return;
-    target.innerHTML = `
+    target.innerHTML = App.i18n.html`
       <div class="release-callout release-callout-warning" style="margin-top:8px">
-        ${notes.map((n) => `<p style="margin:0">${U().esc(n)}</p>`).join("")}
+        ${App.i18n.value(() => (notes.map((n) => App.i18n.html`<p style="margin:0">${App.i18n.value(() => (U().esc(n)))}</p>`).join("")))}
       </div>`;
   }
 
@@ -780,10 +780,10 @@ App.pages.automation = (function () {
     if (!panel) return;
 
     if (bucket.error) {
-      panel.innerHTML = `
+      panel.innerHTML = App.i18n.html`
         <div class="empty-state" role="alert">
           <div class="empty-title">Could not load activity</div>
-          <div class="empty-desc">${U().esc(bucket.error)}</div>
+          <div class="empty-desc">${App.i18n.value(() => (U().esc(bucket.error)))}</div>
           <button type="button" class="btn btn-primary" data-activity-retry>Retry</button>
         </div>`;
       const retryBtn = panel.querySelector("[data-activity-retry]");
@@ -798,93 +798,93 @@ App.pages.automation = (function () {
     const stops = bucket.stops;
     const stopCounts = (stops && stops.stoppedCounts) ? stops.stoppedCounts : {};
     const stopCountKeys = Object.keys(stopCounts).filter((k) => Number(stopCounts[k]) > 0);
-    const stopCountsHtml = stopCountKeys.length ? `
+    const stopCountsHtml = stopCountKeys.length ? App.i18n.html`
       <div style="margin-bottom:12px">
         <strong>Stopped follow-ups</strong>
         <div class="settings-status-grid" style="margin-top:6px">
-          ${stopCountKeys.map((reason) => `
+          ${App.i18n.value(() => (stopCountKeys.map((reason) => App.i18n.html`
             <div class="settings-status-card">
-              <div class="k">${U().esc(stopReasonLabel(reason))}</div>
-              <div class="v">${U().esc(stopCounts[reason])}</div>
-            </div>`).join("")}
+              <div class="k">${App.i18n.value(() => (U().esc(stopReasonLabel(reason))))}</div>
+              <div class="v">${App.i18n.value(() => (U().esc(stopCounts[reason])))}</div>
+            </div>`).join("")))}
         </div>
       </div>` : "";
 
     const cancelledJobs = (stops && stops.cancelledJobs) ? stops.cancelledJobs : [];
-    const cancelledHtml = cancelledJobs.length ? `
+    const cancelledHtml = cancelledJobs.length ? App.i18n.html`
       <div style="margin-bottom:12px">
         <strong>Cancelled steps</strong>
         <p class="form-help" style="margin:2px 0 6px">These steps were deliberately cancelled because the automation stopped for that contact. They are not failures and need no action.</p>
-        ${cancelledJobs.map((j) => `
+        ${App.i18n.value(() => (cancelledJobs.map((j) => App.i18n.html`
           <div class="form-help">
-            ${U().esc(stepTypeLabel(j.job_type))}
-            &middot; <span class="badge badge-neutral">${U().esc(stopReasonLabel(j.cancelled_reason))}</span>
-            &middot; ${U().esc(formatDateTime(j.cancelled_at))}
-          </div>`).join("")}
+            ${App.i18n.value(() => (U().esc(stepTypeLabel(j.job_type))))}
+            &middot; <span class="badge badge-neutral">${App.i18n.value(() => (U().esc(stopReasonLabel(j.cancelled_reason))))}</span>
+            &middot; ${App.i18n.value(() => (U().esc(formatDateTime(j.cancelled_at))))}
+          </div>`).join("")))}
       </div>` : "";
 
     const skippedJobs = (stops && stops.skippedJobs) ? stops.skippedJobs : [];
-    const skippedHtml = skippedJobs.length ? `
+    const skippedHtml = skippedJobs.length ? App.i18n.html`
       <div style="margin-bottom:12px">
         <strong>Skipped emails</strong>
         <p class="form-help" style="margin:2px 0 6px">No email was sent for these steps. The rest of the automation carried on for that contact.</p>
-        ${skippedJobs.map((j) => {
+        ${App.i18n.value(() => (skippedJobs.map((j) => {
           const c = contactsById[j.contact_id];
-          return `
+          return App.i18n.html`
           <div class="form-help">
-            ${U().esc(c ? (c.name || "Unnamed contact") : "Contact")}
-            &middot; <span class="badge badge-neutral">${U().esc(safeLookup(SKIP_REASON_META, j.skipped_reason) || "Email skipped")}</span>
-            ${j.completed_at ? "&middot; " + U().esc(formatDateTime(j.completed_at)) : ""}
+            ${App.i18n.value(() => (U().esc(c ? (c.name || App.i18n.t("Unnamed contact")) : App.i18n.t("Contact"))))}
+            &middot; <span class="badge badge-neutral">${App.i18n.value(() => (U().esc(safeLookup(SKIP_REASON_META, j.skipped_reason) || App.i18n.t("Email skipped"))))}</span>
+            ${App.i18n.value(() => (j.completed_at ? "&middot; " + U().esc(formatDateTime(j.completed_at)) : ""))}
           </div>`;
-        }).join("")}
+        }).join("")))}
       </div>` : "";
 
-    const failuresHtml = bucket.failures.length ? `
+    const failuresHtml = bucket.failures.length ? App.i18n.html`
       <div style="margin-bottom:12px">
         <strong>Unresolved failures</strong>
-        ${bucket.failures.map((f) => `
+        ${App.i18n.value(() => (bucket.failures.map((f) => App.i18n.html`
           <div class="release-maintenance" style="align-items:center">
             <div style="flex:1;min-width:0">
-              <div>${U().esc(f.category)} &middot; ${U().esc(f.error_code || "—")}</div>
-              <div class="form-help">${U().esc(f.error_message || "")} &middot; ${U().esc(formatDateTime(f.created_at))}</div>
+              <div>${App.i18n.value(() => (U().esc(f.category)))} &middot; ${App.i18n.value(() => (U().esc(f.error_code || "—")))}</div>
+              <div class="form-help">${App.i18n.value(() => (U().esc(f.error_message || "")))} &middot; ${App.i18n.value(() => (U().esc(formatDateTime(f.created_at))))}</div>
             </div>
-            ${f.retriable ? `<button type="button" class="btn btn-sm" data-retry-job="${U().esc(f.job_id)}">Retry</button>` : '<span class="form-help">Not retriable</span>'}
+            ${App.i18n.value(() => (f.retriable ? App.i18n.html`<button type="button" class="btn btn-sm" data-retry-job="${App.i18n.value(() => (U().esc(f.job_id)))}">Retry</button>` : App.i18n.markup('<span class="form-help">Not retriable</span>')))}
           </div>
-        `).join("")}
+        `).join("")))}
       </div>` : "";
 
     if (!bucket.enrollments.length) {
-      panel.innerHTML = `${stopCountsHtml}${cancelledHtml}${skippedHtml}${failuresHtml}<p class="form-help">No contacts in this automation yet.</p>`;
+      panel.innerHTML = App.i18n.html`${App.i18n.value(() => (stopCountsHtml))}${App.i18n.value(() => (cancelledHtml))}${App.i18n.value(() => (skippedHtml))}${App.i18n.value(() => (failuresHtml))}<p class="form-help">No contacts in this automation yet.</p>`;
     } else {
-      panel.innerHTML = `
-        ${stopCountsHtml}
-        ${cancelledHtml}
-        ${skippedHtml}
-        ${failuresHtml}
+      panel.innerHTML = App.i18n.html`
+        ${App.i18n.value(() => (stopCountsHtml))}
+        ${App.i18n.value(() => (cancelledHtml))}
+        ${App.i18n.value(() => (skippedHtml))}
+        ${App.i18n.value(() => (failuresHtml))}
         <strong>Recent contacts</strong>
-        ${bucket.enrollments.map((e) => {
+        ${App.i18n.value(() => (bucket.enrollments.map((e) => {
           const contact = contactsById[e.contact_id];
           const contactLabel = contact ? U().esc(contact.name || "Unnamed contact") : U().esc(e.contact_id);
           const meta = safeLookup(ENROLLMENT_STATUS_META, e.status);
           const jobs = bucket.jobsByEnrollment[e.id];
-          return `
+          return App.i18n.html`
             <div class="release-maintenance" style="flex-direction:column;align-items:stretch;gap:6px">
               <div style="display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap">
                 <div>
-                  <strong>${contactLabel}</strong>
-                  <div class="form-help">Step ${U().esc(e.current_step_order)} &middot; Started ${U().esc(formatDateTime(e.started_at))}</div>
+                  <strong>${App.i18n.value(() => (contactLabel))}</strong>
+                  <div class="form-help">Step ${App.i18n.value(() => (U().esc(e.current_step_order)))} &middot; Started ${App.i18n.value(() => (U().esc(formatDateTime(e.started_at))))}</div>
                 </div>
-                <span class="badge ${meta ? meta.cls : "badge-neutral"}"><span class="dot"></span>${U().esc(meta ? meta.label : e.status)}</span>
+                <span class="badge ${App.i18n.value(() => (meta ? meta.cls : "badge-neutral"))}"><span class="dot"></span>${App.i18n.value(() => (U().esc(meta ? meta.label : e.status)))}</span>
               </div>
               <div class="form-help">
-                ${e.status === "active" || e.status === "paused" ? "Next action: " + U().esc(formatDateTime(e.next_action_at)) : ""}
-                ${e.status === "completed" ? "Completed: " + U().esc(formatDateTime(e.completed_at)) : ""}
-                ${e.status === "stopped" ? U().esc(stoppedSentence(e)) : ""}
-                ${e.status === "failed" ? "Failed: " + U().esc(formatDateTime(e.stopped_at)) + (e.stop_reason ? " (" + U().esc(e.stop_reason) + ")" : "") + " — see the failure below, or use Retry on the eligible job." : ""}
+                ${App.i18n.value(() => (e.status === "active" || e.status === "paused" ? "Next action: " + U().esc(formatDateTime(e.next_action_at)) : ""))}
+                ${App.i18n.value(() => (e.status === "completed" ? "Completed: " + U().esc(formatDateTime(e.completed_at)) : ""))}
+                ${App.i18n.value(() => (e.status === "stopped" ? U().esc(stoppedSentence(e)) : ""))}
+                ${App.i18n.value(() => (e.status === "failed" ? "Failed: " + U().esc(formatDateTime(e.stopped_at)) + (e.stop_reason ? " (" + U().esc(e.stop_reason) + ")" : "") + " — see the failure below, or use Retry on the eligible job." : ""))}
               </div>
-              ${jobs === null ? '<p class="form-help">Could not load recent steps.</p>' : (jobs && jobs.length ? `
+              ${App.i18n.value(() => (jobs === null ? App.i18n.markup('<p class="form-help">Could not load recent steps.</p>') : (jobs && jobs.length ? App.i18n.html`
                 <div style="display:flex;flex-direction:column;gap:4px">
-                  ${jobs.map((j) => {
+                  ${App.i18n.value(() => (jobs.map((j) => {
                     const jm = safeLookup(JOB_STATUS_META, j.status);
                     // A cancelled step reads as a deliberate stop, never
                     // as a failure: its reason replaces the error text.
@@ -897,11 +897,11 @@ App.pages.automation = (function () {
                         ? " &middot; " + U().esc(safeLookup(SKIP_REASON_META, j.skipped_reason) || "Email skipped")
                         : (j.last_error ? " &middot; " + U().esc(j.last_error) : "");
                     const label = skipped ? "Skipped" : (jm ? jm.label : j.status);
-                    return `<div class="form-help">${U().esc(stepTypeLabel(j.job_type))}: <span class="badge ${jm ? jm.cls : "badge-neutral"}">${U().esc(label)}</span> &middot; attempt ${U().esc(j.attempts)}/${U().esc(j.max_attempts)}${detail}</div>`;
-                  }).join("")}
-                </div>` : '<p class="form-help">No steps yet.</p>')}
+                    return App.i18n.html`<div class="form-help">${App.i18n.value(() => (U().esc(stepTypeLabel(j.job_type))))}: <span class="badge ${App.i18n.value(() => (jm ? jm.cls : "badge-neutral"))}">${App.i18n.value(() => (U().esc(label)))}</span> &middot; attempt ${App.i18n.value(() => (U().esc(j.attempts)))}/${App.i18n.value(() => (U().esc(j.max_attempts)))}${App.i18n.value(() => (detail))}</div>`;
+                  }).join("")))}
+                </div>` : App.i18n.markup('<p class="form-help">No steps yet.</p>'))))}
             </div>`;
-        }).join("")}
+        }).join("")))}
       `;
     }
 
@@ -911,11 +911,11 @@ App.pages.automation = (function () {
         btn.disabled = true;
         try {
           await S().automationRuntime.retryJob(btn.getAttribute("data-retry-job"));
-          App.app.toast("Step will be tried again.", "success");
+          App.app.toast(App.i18n.t("Step will be tried again."), "success");
           await loadActivity(pane, state, rule);
         } catch (err) {
           const code = err && err.code;
-          App.app.toast(code === "job_not_eligible" ? "This step can no longer be tried again." : "That couldn't be retried. Please try again.", "danger");
+          App.app.toast(code === "job_not_eligible" ? App.i18n.t("This step can no longer be tried again.") : App.i18n.t("That couldn't be retried. Please try again."), "danger");
           btn.disabled = false;
         }
       });
@@ -958,7 +958,7 @@ App.pages.automation = (function () {
       if (myToken !== bucket.token) return;
       bucket.loading = false;
       const p = findStepPanel(pane, rule.id);
-      if (p) p.innerHTML = `<div class="empty-state" role="alert"><div class="empty-title">Could not load steps</div><div class="empty-desc">${U().esc((err && err.message) || "Unknown error")}</div></div>`;
+      if (p) p.innerHTML = App.i18n.html`<div class="empty-state" role="alert"><div class="empty-title">Could not load steps</div><div class="empty-desc">${App.i18n.value(() => (U().esc((err && err.message) || App.i18n.t("Unknown error"))))}</div></div>`;
     }
   }
 
@@ -967,10 +967,10 @@ App.pages.automation = (function () {
     if (!panel) return;
     const isDraft = rule.status === "draft";
     const sorted = steps.slice().sort((a, b) => a.step_order - b.step_order);
-    panel.innerHTML = `
+    panel.innerHTML = App.i18n.html`
       <p class="form-help">Steps run in the order shown, using each step's own delay. Reordering isn't available yet — delete and re-add steps in the order you want.</p>
-      ${sorted.length ? sorted.map(step => renderStepRow(state, step, isDraft)).join("") : '<p class="form-help">No steps yet.</p>'}
-      ${isDraft ? `<button type="button" class="btn btn-sm" data-add-step style="margin-top:8px">Add Step</button>` : ""}
+      ${App.i18n.value(() => (sorted.length ? sorted.map(step => renderStepRow(state, step, isDraft)).join("") : App.i18n.markup('<p class="form-help">No steps yet.</p>')))}
+      ${App.i18n.value(() => (isDraft ? App.i18n.markup(`<button type="button" class="btn btn-sm" data-add-step style="margin-top:8px">Add Step</button>`) : ""))}
     `;
     if (isDraft) {
       const addBtn = panel.querySelector("[data-add-step]");
@@ -1003,34 +1003,34 @@ App.pages.automation = (function () {
     // entirely here (not just left unwired), so there is never a visible
     // but non-functional control for a step whose owning rule isn't draft.
     const actions = isDraft
-      ? `<span style="display:inline-flex;gap:6px;flex-wrap:wrap">
-          <button type="button" class="btn btn-sm" data-edit-step="${U().esc(step.id)}">Edit</button>
-          <button type="button" class="btn btn-sm btn-danger" data-delete-step="${U().esc(step.id)}">Delete</button>
+      ? App.i18n.html`<span style="display:inline-flex;gap:6px;flex-wrap:wrap">
+          <button type="button" class="btn btn-sm" data-edit-step="${App.i18n.value(() => (U().esc(step.id)))}">Edit</button>
+          <button type="button" class="btn btn-sm btn-danger" data-delete-step="${App.i18n.value(() => (U().esc(step.id)))}">Delete</button>
         </span>`
       : "";
-    return `
-      <div class="release-maintenance" style="align-items:center" data-step-row="${U().esc(step.id)}">
+    return App.i18n.html`
+      <div class="release-maintenance" style="align-items:center" data-step-row="${App.i18n.value(() => (U().esc(step.id)))}">
         <div style="flex:1;min-width:0">
-          <strong>#${U().esc(step.step_order)} — ${U().esc(actionLabel)}</strong>
-          <div class="form-help">${detail} · ${step.delay_minutes ? "Delay: " + U().esc(step.delay_minutes) + " min" : "No delay"}</div>
+          <strong>#${App.i18n.value(() => (U().esc(step.step_order)))} — ${App.i18n.value(() => (U().esc(actionLabel)))}</strong>
+          <div class="form-help">${App.i18n.value(() => (detail))} · ${App.i18n.value(() => (step.delay_minutes ? "Delay: " + U().esc(step.delay_minutes) + " min" : App.i18n.t("No delay")))}</div>
         </div>
-        ${actions}
+        ${App.i18n.value(() => (actions))}
       </div>`;
   }
 
   function confirmDeleteStep(pane, state, rule, step) {
     App.app.confirmDialog({
-      title: "Delete step?",
+      get title() { return App.i18n.t("Delete step?"); },
       message: `Delete step #${U().esc(step.step_order)} (${U().esc(safeLookup(ACTION_LABELS, step.action_type) || "Unknown")})? This cannot be undone.`,
       okLabel: "Delete",
       danger: true
     }, async () => {
       try {
         await S().automationSteps.delete(step.id);
-        App.app.toast("Step deleted.", "success");
+        App.app.toast(App.i18n.t("Step deleted."), "success");
         await loadSteps(pane, state, rule);
       } catch (err) {
-        App.app.toast("Could not delete: " + ((err && err.message) || "Unknown error"), "danger");
+        App.app.toast(App.i18n.t("Could not delete: ") + ((err && err.message) || "Unknown error"), "danger");
       }
     });
   }
@@ -1265,35 +1265,35 @@ App.pages.automation = (function () {
     const h = App.app.openModal({
       title: isEdit ? "Edit Draft Sequence" : "Create Draft Sequence",
       wide: true,
-      body: `
+      body: App.i18n.html`
         <div class="release-callout release-callout-warning" style="margin-bottom:12px">
-          <strong>${isEdit ? "This sequence stays a draft." : "New sequences are always saved as drafts."}</strong>
+          <strong>${App.i18n.value(() => (isEdit ? App.i18n.t("This sequence stays a draft.") : App.i18n.t("New sequences are always saved as drafts.")))}</strong>
           <p style="margin:6px 0 0">Saving here never sends an email or enrolls a contact — a sequence only starts running after you activate it.</p>
         </div>
         <div class="form-grid">
-          <label class="field full"><span>Sequence name</span><input id="autoName" maxlength="100" value="${U().esc(existing ? existing.name : "")}" required></label>
+          <label class="field full"><span>Sequence name</span><input id="autoName" maxlength="100" value="${App.i18n.value(() => (U().esc(existing ? existing.name : "")))}" required></label>
           <label class="field"><span>Trigger</span><select id="autoTrigger">
-            ${Object.keys(TRIGGER_LABELS).map(k => `<option value="${U().esc(k)}" ${existing && existing.trigger_type === k ? "selected" : ""}>${U().esc(TRIGGER_LABELS[k])}</option>`).join("")}
+            ${App.i18n.value(() => (Object.keys(TRIGGER_LABELS).map(k => App.i18n.html`<option value="${App.i18n.value(() => (U().esc(k)))}" ${App.i18n.value(() => (existing && existing.trigger_type === k ? "selected" : ""))}>${App.i18n.value(() => (U().esc(TRIGGER_LABELS[k])))}</option>`).join("")))}
           </select></label>
-          <label class="field"><span>Timezone</span><input id="autoTimezone" value="${U().esc(existing ? existing.timezone : "UTC")}" placeholder="e.g. America/New_York or UTC" required></label>
-          <label class="field"><span>Daily enrollment limit</span><input id="autoLimit" type="number" min="1" max="10000" value="${U().esc(dailyLimitValue)}"></label>
+          <label class="field"><span>Timezone</span><input id="autoTimezone" value="${App.i18n.value(() => (U().esc(existing ? existing.timezone : "UTC")))}" placeholder="e.g. America/New_York or UTC" required></label>
+          <label class="field"><span>Daily enrollment limit</span><input id="autoLimit" type="number" min="1" max="10000" value="${App.i18n.value(() => (U().esc(dailyLimitValue)))}"></label>
           <div data-audience-group="contact_status_changed" class="full" style="display:none">
             <label class="field"><span>New status equals</span><select id="autoStatusEquals">
               <option value="">Select a status…</option>
-              ${CONTACT_STATUS_OPTIONS.map(s => `<option value="${U().esc(s)}" ${existingStatusEquals === s ? "selected" : ""}>${U().esc(s)}</option>`).join("")}
+              ${App.i18n.value(() => (CONTACT_STATUS_OPTIONS.map(s => App.i18n.html`<option value="${App.i18n.value(() => (U().esc(s)))}" ${App.i18n.value(() => (existingStatusEquals === s ? "selected" : ""))}>${App.i18n.value(() => (U().esc(App.i18n.t(s))))}</option>`).join("")))}
             </select></label>
             <p class="form-help">This sequence only matches when a contact's status changes to exactly this value.</p>
           </div>
           <div data-audience-group="no_contact" class="full" style="display:none">
-            <label class="field"><span>Days without contact</span><input id="autoCfgDaysNoContact" type="number" min="1" max="365" value="${U().esc(cfgDays)}"></label>
+            <label class="field"><span>Days without contact</span><input id="autoCfgDaysNoContact" type="number" min="1" max="365" value="${App.i18n.value(() => (U().esc(cfgDays)))}"></label>
             <p class="form-help">Counts from the last contact date on the contact, or from when it was added if there is none.</p>
           </div>
           <div data-audience-group="status_stale" class="full" style="display:none">
-            <label class="field"><span>Days in the same status</span><input id="autoCfgDaysStale" type="number" min="1" max="365" value="${U().esc(cfgDays)}"></label>
+            <label class="field"><span>Days in the same status</span><input id="autoCfgDaysStale" type="number" min="1" max="365" value="${App.i18n.value(() => (U().esc(cfgDays)))}"></label>
             <fieldset class="field" style="border:0;padding:0;margin:0">
               <legend style="font:inherit;padding:0">Only these statuses (optional)</legend>
               <div id="autoCfgStatuses" style="display:flex;flex-wrap:wrap;gap:10px">
-                ${CONTACT_STATUS_OPTIONS.map(st => `<label style="display:flex;align-items:center;gap:6px;font-weight:400"><input type="checkbox" class="auto-cfg-status" value="${U().esc(st)}" ${cfgStatuses.indexOf(st) >= 0 ? "checked" : ""}>${U().esc(st)}</label>`).join("")}
+                ${App.i18n.value(() => (CONTACT_STATUS_OPTIONS.map(st => App.i18n.html`<label style="display:flex;align-items:center;gap:6px;font-weight:400"><input type="checkbox" class="auto-cfg-status" value="${App.i18n.value(() => (U().esc(st)))}" ${App.i18n.value(() => (cfgStatuses.indexOf(st) >= 0 ? "checked" : ""))}>${App.i18n.value(() => (U().esc(st)))}</label>`).join("")))}
               </div>
               <p class="form-help">Leave all unticked to watch every status.</p>
             </fieldset>
@@ -1301,31 +1301,31 @@ App.pages.automation = (function () {
           <div data-audience-group="deal_stage_changed" class="full" style="display:none">
             <label class="field"><span>Deal stage</span><select id="autoCfgToStage">
               <option value="">Any stage</option>
-              ${stageNames.map(st => `<option value="${U().esc(st)}" ${cfgToStage === st ? "selected" : ""}>${U().esc(st)}</option>`).join("")}
-              ${(cfgToStage && stageNames.indexOf(cfgToStage) === -1) ? `<option value="${U().esc(cfgToStage)}" selected>${U().esc(cfgToStage)}</option>` : ""}
+              ${App.i18n.value(() => (stageNames.map(st => App.i18n.html`<option value="${App.i18n.value(() => (U().esc(st)))}" ${App.i18n.value(() => (cfgToStage === st ? "selected" : ""))}>${App.i18n.value(() => (U().esc(st)))}</option>`).join("")))}
+              ${App.i18n.value(() => ((cfgToStage && stageNames.indexOf(cfgToStage) === -1) ? App.i18n.html`<option value="${App.i18n.value(() => (U().esc(cfgToStage)))}" selected>${App.i18n.value(() => (U().esc(cfgToStage)))}</option>` : ""))}
             </select></label>
             <label class="field"><span>Deal side</span><select id="autoCfgSide">
               <option value="">Buyer or seller</option>
-              ${DEAL_SIDES.map(sd => `<option value="${U().esc(sd)}" ${cfgSide === sd ? "selected" : ""}>${U().esc(sd)}</option>`).join("")}
+              ${App.i18n.value(() => (DEAL_SIDES.map(sd => App.i18n.html`<option value="${App.i18n.value(() => (U().esc(sd)))}" ${App.i18n.value(() => (cfgSide === sd ? "selected" : ""))}>${App.i18n.value(() => (U().esc(App.i18n.t(sd))))}</option>`).join("")))}
             </select></label>
             <p class="form-help">Starts when a deal linked to a contact moves to this stage. A deal with no contact attached starts nothing.</p>
           </div>
           <div data-audience-group="birthday" class="full" style="display:none">
-            <label class="field"><span>Send how many days before?</span><input id="autoCfgDaysBeforeBd" type="number" min="0" max="30" value="${U().esc(cfgDaysBefore)}"></label>
+            <label class="field"><span>Send how many days before?</span><input id="autoCfgDaysBeforeBd" type="number" min="0" max="30" value="${App.i18n.value(() => (U().esc(cfgDaysBefore)))}"></label>
             <p class="form-help">0 sends on the day itself. Needs a birthday on the contact; only the day and month are used.</p>
           </div>
           <div data-audience-group="home_anniversary" class="full" style="display:none">
-            <label class="field"><span>Send how many days before?</span><input id="autoCfgDaysBeforeHa" type="number" min="0" max="30" value="${U().esc(cfgDaysBefore)}"></label>
+            <label class="field"><span>Send how many days before?</span><input id="autoCfgDaysBeforeHa" type="number" min="0" max="30" value="${App.i18n.value(() => (U().esc(cfgDaysBefore)))}"></label>
             <p class="form-help">0 sends on the day itself. Starts from the first anniversary, never the purchase year.</p>
           </div>
           <div data-trigger-hour-group class="full" style="display:none">
             <label class="field"><span id="autoCfgHourLabel">Check each day at</span><select id="autoCfgHour" aria-labelledby="autoCfgHourLabel">
-              ${hourOptions.map(hr => `<option value="${hr}" ${cfgHour === hr ? "selected" : ""}>${U().esc(hourLabel(hr))}</option>`).join("")}
+              ${App.i18n.value(() => (hourOptions.map(hr => App.i18n.html`<option value="${App.i18n.value(() => (hr))}" ${App.i18n.value(() => (cfgHour === hr ? "selected" : ""))}>${App.i18n.value(() => (U().esc(hourLabel(hr))))}</option>`).join("")))}
             </select></label>
           </div>
           <div data-trigger-config-group class="full" style="display:none">
             <label class="field" style="flex-direction:row;align-items:flex-start;gap:10px">
-              <input type="checkbox" id="autoCfgIncludeExisting" ${cfgIncludeExisting ? "checked" : ""} style="margin-top:4px">
+              <input type="checkbox" id="autoCfgIncludeExisting" ${App.i18n.value(() => (cfgIncludeExisting ? "checked" : ""))} style="margin-top:4px">
               <span style="font-weight:400">Also include contacts who already match today</span>
             </label>
             <p class="form-help"><strong>Careful.</strong> Normally this sequence only starts for someone who newly matches after you turn it on. Tick this and everyone who already matches can be added at once — your daily limit above is what caps how many per day.</p>
@@ -1333,38 +1333,38 @@ App.pages.automation = (function () {
           <fieldset class="field full" style="border:0;padding:0;margin:0">
             <legend style="font:inherit;padding:0">Only contacts tagged (optional)</legend>
             <div id="autoCfgTags" style="display:flex;flex-wrap:wrap;gap:10px">
-              ${knownTags.length
+              ${App.i18n.value(() => (knownTags.length
                 ? pickList("auto-cfg-tag", knownTags, cfgTags)
-                : `<p class="form-help" style="margin:0">No tags on your contacts yet. Add tags to a contact and they will appear here.</p>`}
+                : App.i18n.markup(`<p class="form-help" style="margin:0">No tags on your contacts yet. Add tags to a contact and they will appear here.</p>`)))}
             </div>
             <p class="form-help">Leave all unticked to include everybody this sequence can reach. Tags are matched whatever the capitalisation.</p>
           </fieldset>
           <fieldset class="field full" style="border:0;padding:0;margin:0">
             <legend style="font:inherit;padding:0">Only these contact types (optional)</legend>
             <div id="autoCfgTypes" style="display:flex;flex-wrap:wrap;gap:10px">
-              ${pickList("auto-cfg-type", knownTypes, cfgTypes)}
+              ${App.i18n.value(() => (pickList("auto-cfg-type", knownTypes, cfgTypes)))}
             </div>
             <p class="form-help">The type on the contact itself — the one you pick on the Add Contact form. Leave all unticked for every type.</p>
           </fieldset>
           <fieldset class="field full" style="border:0;padding:0;margin:0">
             <legend style="font:inherit;padding:0">Only these temperatures (optional)</legend>
             <div id="autoCfgTemps" style="display:flex;flex-wrap:wrap;gap:10px">
-              ${pickList("auto-cfg-temp", knownTemps, cfgTemps)}
+              ${App.i18n.value(() => (pickList("auto-cfg-temp", knownTemps, cfgTemps)))}
             </div>
             <p class="form-help">Leave all unticked for every temperature.</p>
           </fieldset>
           <p class="form-help full" id="autoTriggerSummary" aria-live="polite"></p>
           <label class="field" style="flex-direction:row;align-items:center;gap:10px">
             <span>Stop on reply</span>
-            <span class="toggle-switch"><input type="checkbox" id="autoStopReply" ${stopReplyChecked ? "checked" : ""}><span class="toggle-track"></span></span>
+            <span class="toggle-switch"><input type="checkbox" id="autoStopReply" ${App.i18n.value(() => (stopReplyChecked ? "checked" : ""))}><span class="toggle-track"></span></span>
           </label>
           <label class="field" style="flex-direction:row;align-items:center;gap:10px">
             <span>Stop on unsubscribe</span>
-            <span class="toggle-switch"><input type="checkbox" id="autoStopUnsub" ${stopUnsubChecked ? "checked" : ""}><span class="toggle-track"></span></span>
+            <span class="toggle-switch"><input type="checkbox" id="autoStopUnsub" ${App.i18n.value(() => (stopUnsubChecked ? "checked" : ""))}><span class="toggle-track"></span></span>
           </label>
         </div>
       `,
-      footer: `<button class="btn" data-role="cancel">Cancel</button><button class="btn btn-primary" data-role="save">${isEdit ? "Save Changes" : "Create Draft"}</button>`,
+      footer: App.i18n.html`<button class="btn" data-role="cancel">Cancel</button><button class="btn btn-primary" data-role="save">${App.i18n.value(() => (isEdit ? App.i18n.t("Save Changes") : App.i18n.t("Create Draft")))}</button>`,
       onOpen: (m) => {
         m.querySelector('[data-role="cancel"]').onclick = () => h.close();
         const triggerSelect = m.querySelector("#autoTrigger");
@@ -1387,7 +1387,7 @@ App.pages.automation = (function () {
           if (hourLabel) {
             // A greeting is sent, a chase is checked for. Same field, and
             // the word that makes it obvious which one this is.
-            hourLabel.textContent = yearly ? "Send at" : "Check each day at";
+            App.i18n.setText(hourLabel, App.i18n.value(() => (yearly ? App.i18n.t("Send at") : App.i18n.t("Check each day at"))));
           }
           const cfgGroup = m.querySelector("[data-trigger-config-group]");
           if (cfgGroup) {
@@ -1401,8 +1401,8 @@ App.pages.automation = (function () {
           if (summary) {
             // Plain text, set as text rather than markup: it is built from
             // values the user typed.
-            summary.textContent = triggerSummaryText_(t, readConfigFromForm(),
-              timezoneInput.value.trim(), readAudienceLists_(m));
+            App.i18n.setText(summary, App.i18n.value(() => (triggerSummaryText_(t, readConfigFromForm(),
+              timezoneInput.value.trim(), readAudienceLists_(m)))));
           }
         };
         triggerSelect.addEventListener("change", syncAudienceGroup);
@@ -1424,14 +1424,14 @@ App.pages.automation = (function () {
           const stopOnReply = m.querySelector("#autoStopReply").checked;
           const stopOnUnsubscribe = m.querySelector("#autoStopUnsub").checked;
 
-          if (!name || name.length > 100) { App.app.toast("Sequence name must be 1-100 characters.", "danger"); return; }
-          if (!timezone) { App.app.toast("Timezone is required.", "danger"); return; }
-          if (!Number.isInteger(dailyLimit) || dailyLimit < 1 || dailyLimit > 10000) { App.app.toast("Daily limit must be an integer between 1 and 10,000.", "danger"); return; }
+          if (!name || name.length > 100) { App.app.toast(App.i18n.t("Sequence name must be 1-100 characters."), "danger"); return; }
+          if (!timezone) { App.app.toast(App.i18n.t("Timezone is required."), "danger"); return; }
+          if (!Number.isInteger(dailyLimit) || dailyLimit < 1 || dailyLimit > 10000) { App.app.toast(App.i18n.t("Daily limit must be an integer between 1 and 10,000."), "danger"); return; }
 
           let audienceFilter = {};
           if (triggerType === "contact_status_changed") {
             const statusEquals = m.querySelector("#autoStatusEquals").value;
-            if (CONTACT_STATUS_OPTIONS.indexOf(statusEquals) === -1) { App.app.toast("Select the status this sequence should match.", "danger"); return; }
+            if (CONTACT_STATUS_OPTIONS.indexOf(statusEquals) === -1) { App.app.toast(App.i18n.t("Select the status this sequence should match."), "danger"); return; }
             audienceFilter.status_equals = statusEquals;
           }
           // Phase 2E/2F: the tag, type and temperature audiences, for
@@ -1442,13 +1442,13 @@ App.pages.automation = (function () {
           const triggerConfig = collectTriggerConfig_(m, triggerType);
           if (triggerType === "no_contact" || triggerType === "status_stale") {
             if (!Number.isInteger(triggerConfig.days) || triggerConfig.days < 1 || triggerConfig.days > 365) {
-              App.app.toast("Days must be a whole number between 1 and 365.", "danger"); return;
+              App.app.toast(App.i18n.t("Days must be a whole number between 1 and 365."), "danger"); return;
             }
           }
           if (YEARLY_TRIGGER_TYPES.indexOf(triggerType) >= 0) {
             if (!Number.isInteger(triggerConfig.days_before)
                 || triggerConfig.days_before < 0 || triggerConfig.days_before > 30) {
-              App.app.toast("Days before must be a whole number between 0 and 30.", "danger"); return;
+              App.app.toast(App.i18n.t("Days before must be a whole number between 0 and 30."), "danger"); return;
             }
           }
 
@@ -1457,15 +1457,15 @@ App.pages.automation = (function () {
           try {
             if (isEdit) {
               await S().automationRules.update(existing.id, payload);
-              App.app.toast("Sequence saved.", "success");
+              App.app.toast(App.i18n.t("Sequence saved."), "success");
             } else {
               await S().automationRules.create(payload);
-              App.app.toast("Draft sequence created.", "success");
+              App.app.toast(App.i18n.t("Draft sequence created."), "success");
             }
             h.close();
             await loadRules(pane, state);
           } catch (err) {
-            App.app.toast("Could not save: " + ((err && err.message) || "Unknown error"), "danger");
+            App.app.toast(App.i18n.t("Could not save: ") + ((err && err.message) || "Unknown error"), "danger");
             saveBtn.disabled = false;
           }
         };
@@ -1490,37 +1490,37 @@ App.pages.automation = (function () {
     const h = App.app.openModal({
       title: isEdit ? "Edit Step" : "Add Step",
       wide: true,
-      body: `
+      body: App.i18n.html`
         <div class="form-grid">
           <label class="field"><span>Step type</span><select id="stepType">
-            <option value="send_email" ${actionType === "send_email" ? "selected" : ""}>Send Email</option>
-            <option value="wait" ${actionType === "wait" ? "selected" : ""}>Wait</option>
-            <option value="create_task" ${actionType === "create_task" ? "selected" : ""}>Create Task</option>
+            <option value="send_email" ${App.i18n.value(() => (actionType === "send_email" ? "selected" : ""))}>Send Email</option>
+            <option value="wait" ${App.i18n.value(() => (actionType === "wait" ? "selected" : ""))}>Wait</option>
+            <option value="create_task" ${App.i18n.value(() => (actionType === "create_task" ? "selected" : ""))}>Create Task</option>
           </select></label>
-          <label class="field"><span>Delay (minutes)</span><input id="stepDelay" type="number" min="0" max="525600" value="${existingStep ? U().esc(existingStep.delay_minutes) : 0}"></label>
+          <label class="field"><span>Delay (minutes)</span><input id="stepDelay" type="number" min="0" max="525600" value="${App.i18n.value(() => (existingStep ? U().esc(existingStep.delay_minutes) : 0))}"></label>
 
-          <div data-step-group="send_email" class="full" style="display:${actionType === "send_email" ? "flex" : "none"};flex-direction:column;gap:14px">
+          <div data-step-group="send_email" class="full" style="display:${App.i18n.value(() => (actionType === "send_email" ? "flex" : "none"))};flex-direction:column;gap:14px">
             <label class="field"><span>Email template</span><select id="stepTemplate">
               <option value="">Select a template…</option>
-              ${templateOptions.map(t => `<option value="${U().esc(t.id)}" ${existingStep && existingStep.template_id === t.id ? "selected" : ""}>${U().esc(t.name)}${t.is_active ? "" : " (inactive)"}</option>`).join("")}
+              ${App.i18n.value(() => (templateOptions.map(t => App.i18n.html`<option value="${App.i18n.value(() => (U().esc(t.id)))}" ${App.i18n.value(() => (existingStep && existingStep.template_id === t.id ? "selected" : ""))}>${App.i18n.value(() => (U().esc(t.name)))}${App.i18n.value(() => (t.is_active ? "" : App.i18n.t(" (inactive)")))}</option>`).join("")))}
             </select></label>
-            ${!templateOptions.length ? '<p class="form-help">No active email templates yet — create one on the Email Templates page first.</p>' : ""}
-            <label class="field"><span>Subject override (optional)</span><input id="stepSubjectOverride" maxlength="200" value="${U().esc(existingStep && existingStep.subject_override || "")}"></label>
+            ${App.i18n.value(() => (!templateOptions.length ? App.i18n.markup('<p class="form-help">No active email templates yet — create one on the Email Templates page first.</p>') : ""))}
+            <label class="field"><span>Subject override (optional)</span><input id="stepSubjectOverride" maxlength="200" value="${App.i18n.value(() => (U().esc(existingStep && existingStep.subject_override || "")))}"></label>
           </div>
 
-          <div data-step-group="create_task" class="full" style="display:${actionType === "create_task" ? "flex" : "none"};flex-direction:column;gap:14px">
-            <label class="field"><span>Task title</span><input id="stepTaskTitle" maxlength="200" value="${U().esc(existingTitle)}"></label>
+          <div data-step-group="create_task" class="full" style="display:${App.i18n.value(() => (actionType === "create_task" ? "flex" : "none"))};flex-direction:column;gap:14px">
+            <label class="field"><span>Task title</span><input id="stepTaskTitle" maxlength="200" value="${App.i18n.value(() => (U().esc(existingTitle)))}"></label>
             <label class="field"><span>Priority</span><select id="stepTaskPriority">
-              ${TASK_PRIORITIES.map(p => `<option value="${U().esc(p)}" ${existingPriority === p ? "selected" : ""}>${U().esc(p)}</option>`).join("")}
+              ${App.i18n.value(() => (TASK_PRIORITIES.map(p => App.i18n.html`<option value="${App.i18n.value(() => (U().esc(p)))}" ${App.i18n.value(() => (existingPriority === p ? "selected" : ""))}>${App.i18n.value(() => (U().esc(App.i18n.t(p))))}</option>`).join("")))}
             </select></label>
           </div>
 
-          <div data-step-group="wait" class="full" style="display:${actionType === "wait" ? "flex" : "none"};flex-direction:column;gap:14px">
+          <div data-step-group="wait" class="full" style="display:${App.i18n.value(() => (actionType === "wait" ? "flex" : "none"))};flex-direction:column;gap:14px">
             <p class="form-help">Wait steps only use the delay above — no template or task details are needed.</p>
           </div>
         </div>
       `,
-      footer: `<button class="btn" data-role="cancel">Cancel</button><button class="btn btn-primary" data-role="save">${isEdit ? "Save Changes" : "Add Step"}</button>`,
+      footer: App.i18n.html`<button class="btn" data-role="cancel">Cancel</button><button class="btn btn-primary" data-role="save">${App.i18n.value(() => (isEdit ? App.i18n.t("Save Changes") : App.i18n.t("Add Step")))}</button>`,
       onOpen: (m) => {
         m.querySelector('[data-role="cancel"]').onclick = () => h.close();
 
@@ -1539,20 +1539,20 @@ App.pages.automation = (function () {
           const type = typeSelect.value;
           const delayMinutes = Number(m.querySelector("#stepDelay").value);
           if (!Number.isInteger(delayMinutes) || delayMinutes < 0 || delayMinutes > 525600) {
-            App.app.toast("Delay must be an integer between 0 and 525,600 minutes.", "danger");
+            App.app.toast(App.i18n.t("Delay must be an integer between 0 and 525,600 minutes."), "danger");
             return;
           }
 
           const payload = { actionType: type, delayMinutes };
           if (type === "send_email") {
             const templateId = m.querySelector("#stepTemplate").value;
-            if (!templateId) { App.app.toast("Select an active email template.", "danger"); return; }
+            if (!templateId) { App.app.toast(App.i18n.t("Select an active email template."), "danger"); return; }
             payload.templateId = templateId;
             const subjectOverride = m.querySelector("#stepSubjectOverride").value.trim();
             if (subjectOverride) payload.subjectOverride = subjectOverride;
           } else if (type === "create_task") {
             const title = m.querySelector("#stepTaskTitle").value.trim();
-            if (!title) { App.app.toast("Task title is required.", "danger"); return; }
+            if (!title) { App.app.toast(App.i18n.t("Task title is required."), "danger"); return; }
             payload.config = { title, priority: m.querySelector("#stepTaskPriority").value };
           }
 
@@ -1560,16 +1560,16 @@ App.pages.automation = (function () {
           try {
             if (isEdit) {
               await S().automationSteps.update(existingStep.id, payload);
-              App.app.toast("Step saved.", "success");
+              App.app.toast(App.i18n.t("Step saved."), "success");
             } else {
               payload.stepOrder = nextStepOrder(currentSteps);
               await S().automationSteps.create(rule.id, payload);
-              App.app.toast("Step added.", "success");
+              App.app.toast(App.i18n.t("Step added."), "success");
             }
             h.close();
             await loadSteps(pane, state, rule);
           } catch (err) {
-            App.app.toast("Could not save: " + ((err && err.message) || "Unknown error"), "danger");
+            App.app.toast(App.i18n.t("Could not save: ") + ((err && err.message) || "Unknown error"), "danger");
             saveBtn.disabled = false;
           }
         };
