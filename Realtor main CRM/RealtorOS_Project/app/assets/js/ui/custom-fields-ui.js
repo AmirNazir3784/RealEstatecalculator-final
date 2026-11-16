@@ -19,42 +19,42 @@ App.customFieldsUI = (function () {
     // Inline-styled rather than relying on the ".form-field label .req" rule,
     // since this section is embedded inside both ".field"-style Settings
     // forms and ".form-field"-style record modals and must look right in both.
-    const reqMark = def.required ? ' <span style="color:var(--danger);margin-left:2px">*</span>' : "";
-    const help = def.helpText ? `<div class="form-help">${U().esc(def.helpText)}</div>` : "";
+    const reqMark = def.required ? App.i18n.markup(' <span style="color:var(--danger);margin-left:2px">*</span>') : "";
+    const help = def.helpText ? App.i18n.html`<div class="form-help">${App.i18n.value(() => (U().esc(def.helpText)))}</div>` : "";
     let inputHtml;
     switch (def.type) {
       case "longtext":
-        inputHtml = `<textarea ${name} rows="3">${U().esc(val || "")}</textarea>`;
+        inputHtml = App.i18n.html`<textarea ${App.i18n.value(() => (name))} rows="3">${App.i18n.value(() => (U().esc(val || "")))}</textarea>`;
         break;
       case "number":
-        inputHtml = `<input type="number" step="any" ${name} value="${U().esc(val === "" || val === undefined ? "" : val)}">`;
+        inputHtml = App.i18n.html`<input type="number" step="any" ${App.i18n.value(() => (name))} value="${App.i18n.value(() => (U().esc(val === "" || val === undefined ? "" : val)))}">`;
         break;
       case "currency":
-        inputHtml = `<input type="number" step="0.01" min="0" ${name} value="${U().esc(val === "" || val === undefined ? "" : val)}">`;
+        inputHtml = App.i18n.html`<input type="number" step="0.01" min="0" ${App.i18n.value(() => (name))} value="${App.i18n.value(() => (U().esc(val === "" || val === undefined ? "" : val)))}">`;
         break;
       case "percentage":
-        inputHtml = `<input type="number" step="0.1" min="0" max="100" ${name} value="${U().esc(val === "" || val === undefined ? "" : val)}">`;
+        inputHtml = App.i18n.html`<input type="number" step="0.1" min="0" max="100" ${App.i18n.value(() => (name))} value="${App.i18n.value(() => (U().esc(val === "" || val === undefined ? "" : val)))}">`;
         break;
       case "date":
-        inputHtml = `<input type="date" ${name} value="${U().esc(val || "")}">`;
+        inputHtml = App.i18n.html`<input type="date" ${App.i18n.value(() => (name))} value="${App.i18n.value(() => (U().esc(val || "")))}">`;
         break;
       case "boolean":
-        inputHtml = `<label style="display:flex;align-items:center;gap:8px;font-weight:400"><input type="checkbox" ${name} ${val ? "checked" : ""}> <span class="form-help" style="margin:0">${val ? "Yes" : "No"}</span></label>`;
+        inputHtml = App.i18n.html`<label style="display:flex;align-items:center;gap:8px;font-weight:400"><input type="checkbox" ${App.i18n.value(() => (name))} ${App.i18n.value(() => (val ? "checked" : ""))}> <span class="form-help" style="margin:0">${App.i18n.value(() => (val ? App.i18n.t("Yes") : "No"))}</span></label>`;
         break;
       case "select":
-        inputHtml = `<select ${name}><option value="">—</option>${(def.options || []).map(o =>
-          `<option value="${U().esc(o.id)}" ${val === o.id ? "selected" : ""}>${U().esc(o.label)}</option>`).join("")}</select>`;
+        inputHtml = App.i18n.html`<select ${App.i18n.value(() => (name))}><option value="">—</option>${App.i18n.value(() => ((def.options || []).map(o =>
+          App.i18n.html`<option value="${App.i18n.value(() => (U().esc(o.id)))}" ${App.i18n.value(() => (val === o.id ? "selected" : ""))}>${App.i18n.value(() => (U().esc(o.label)))}</option>`).join("")))}</select>`;
         break;
       case "multiselect": {
         const chosen = Array.isArray(val) ? val : [];
-        inputHtml = `<div ${name} class="cf-multiselect" style="display:flex;flex-wrap:wrap;gap:10px">${(def.options || []).map(o =>
-          `<label style="display:flex;align-items:center;gap:5px;font-weight:400"><input type="checkbox" value="${U().esc(o.id)}" ${chosen.indexOf(o.id) !== -1 ? "checked" : ""}> ${U().esc(o.label)}</label>`).join("") || '<span class="form-help">No options defined yet.</span>'}</div>`;
+        inputHtml = App.i18n.html`<div ${App.i18n.value(() => (name))} class="cf-multiselect" style="display:flex;flex-wrap:wrap;gap:10px">${App.i18n.value(() => ((def.options || []).map(o =>
+          App.i18n.html`<label style="display:flex;align-items:center;gap:5px;font-weight:400"><input type="checkbox" value="${App.i18n.value(() => (U().esc(o.id)))}" ${App.i18n.value(() => (chosen.indexOf(o.id) !== -1 ? "checked" : ""))}> ${App.i18n.value(() => (U().esc(o.label)))}</label>`).join("") || App.i18n.markup('<span class="form-help">No options defined yet.</span>')))}</div>`;
         break;
       }
       default: // text
-        inputHtml = `<input type="text" ${name} value="${U().esc(val || "")}">`;
+        inputHtml = App.i18n.html`<input type="text" ${App.i18n.value(() => (name))} value="${App.i18n.value(() => (U().esc(val || "")))}">`;
     }
-    return `<label class="field"><span>${U().esc(def.label)}${reqMark}</span>${inputHtml}${help}</label>`;
+    return App.i18n.html`<label class="field"><span>${App.i18n.value(() => (U().esc(def.label)))}${App.i18n.value(() => (reqMark))}</span>${App.i18n.value(() => (inputHtml))}${App.i18n.value(() => (help))}</label>`;
   }
 
   // Renders the whole "Custom Fields" fieldset for one entity + (optional,
@@ -67,7 +67,7 @@ App.customFieldsUI = (function () {
       const cur = recordId ? CF().getValue(entity, recordId, def.id) : undefined;
       return fieldInputHtml(def, cur);
     }).join("");
-    return `<div class="form-section-title" style="margin-top:18px">Custom Fields</div><div class="form-grid" data-cf-section="${U().esc(entity)}">${rows}</div>`;
+    return App.i18n.html`<div class="form-section-title" style="margin-top:18px">Custom Fields</div><div class="form-grid" data-cf-section="${App.i18n.value(() => (U().esc(entity)))}">${App.i18n.value(() => (rows))}</div>`;
   }
 
   // Reads every data-cf-input value currently in the DOM under `root` for

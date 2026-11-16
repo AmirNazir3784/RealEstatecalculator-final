@@ -15,19 +15,19 @@ App.app = (function () {
   // module catalog read ROUTES; the sidebar presentation reads HUBS.
   const NAV = [
     { id: "workspace", group: "Workspace", groupIcon: "grid", static: true, items: [
-      { id: "dashboard", label: "Dashboard",       icon: "grid",  route: "/dashboard", phase: "here" },
-      { id: "daily",     label: "Today",           icon: "sun",   route: "/daily",     phase: "here" }
+      { id: "dashboard", get label() { return App.i18n.t("Dashboard"); },       icon: "grid",  route: "/dashboard", phase: "here" },
+      { id: "daily",     get label() { return App.i18n.t("Today"); },           icon: "sun",   route: "/daily",     phase: "here" }
     ]},
     { id: "crm", group: "CRM", groupIcon: "users", items: [
-      { id: "contacts", label: "Contacts",        icon: "users", route: "/contacts",  phase: "here" },
-      { id: "buyer",    label: "Buyer Workspace", icon: "home",  route: "/buyer",     phase: "here" },
-      { id: "seller",   label: "Seller Workspace",icon: "tag",   route: "/seller",    phase: "here" },
-      { id: "referrals",label: "Referrals",       icon: "share", route: "/referrals", phase: "here", area: "finance" }
+      { id: "contacts", get label() { return App.i18n.t("Contacts"); },        icon: "users", route: "/contacts",  phase: "here" },
+      { id: "buyer",    get label() { return App.i18n.t("Buyer Workspace"); }, icon: "home",  route: "/buyer",     phase: "here" },
+      { id: "seller",   get label() { return App.i18n.t("Seller Workspace"); },icon: "tag",   route: "/seller",    phase: "here" },
+      { id: "referrals",get label() { return App.i18n.t("Referrals"); },       icon: "share", route: "/referrals", phase: "here", area: "finance" }
     ]},
     { id: "transactions", group: "Transactions", groupIcon: "map", items: [
-      { id: "properties", label: "Properties",     icon: "map",     route: "/properties",   phase: "here" },
-      { id: "pipeline",   label: "Deals Pipeline", icon: "columns", route: "/pipeline",     phase: "here" },
-      { id: "commission", label: "Commission",     icon: "dollar",  route: "/commission",   phase: "here", area: "finance" }
+      { id: "properties", get label() { return App.i18n.t("Properties"); },     icon: "map",     route: "/properties",   phase: "here" },
+      { id: "pipeline",   get label() { return App.i18n.t("Deals Pipeline"); }, icon: "columns", route: "/pipeline",     phase: "here" },
+      { id: "commission", get label() { return App.i18n.t("Commission"); },     icon: "dollar",  route: "/commission",   phase: "here", area: "finance" }
     ]},
     // Automation group: every outbound/content workflow in one place. The
     // group id "automation" deliberately matches the item id "automation";
@@ -35,25 +35,25 @@ App.app = (function () {
     // DOM now that the rail is gone, item ids only reach the module
     // system), so there is no collision.
     { id: "automation", group: "Automation", groupIcon: "zap", items: [
-      { id: "automation", label: "Automation",       icon: "zap",    route: "/automation",      phase: "here" },
+      { id: "automation", get label() { return App.i18n.t("Automation"); },       icon: "zap",    route: "/automation",      phase: "here" },
       // id stays "scripts" (unchanged) so existing per-workspace module
       // toggle state keeps applying to this item — only its label/route
       // moved to the new Email Templates page. /scripts itself still
       // works as a compatibility redirect (see route() below).
-      { id: "scripts",    label: "Email Templates", icon: "quote",  route: "/email-templates", phase: "here" },
-      { id: "scheduler",  label: "Scheduler",       icon: "clock",  route: "/scheduler",       phase: "here" },
-      { id: "content",    label: "Content Library", icon: "book",   route: "/content",         phase: "here" },
-      { id: "prompts",    label: "AI Prompts",      icon: "spark",  route: "/prompts",         phase: "here" }
+      { id: "scripts",    get label() { return App.i18n.t("Email Templates"); }, icon: "quote",  route: "/email-templates", phase: "here" },
+      { id: "scheduler",  get label() { return App.i18n.t("Scheduler"); },       icon: "clock",  route: "/scheduler",       phase: "here" },
+      { id: "content",    get label() { return App.i18n.t("Content Library"); }, icon: "book",   route: "/content",         phase: "here" },
+      { id: "prompts",    get label() { return App.i18n.t("AI Prompts"); },      icon: "spark",  route: "/prompts",         phase: "here" }
     ]},
     { id: "operations", group: "Operations", groupIcon: "check", items: [
-      { id: "activities", label: "Activities",      icon: "activity", route: "/activities", phase: "here" },
-      { id: "tasks",      label: "Tasks",           icon: "check",    route: "/tasks",      phase: "here" },
-      { id: "calendar",   label: "Calendar",        icon: "cal",      route: "/calendar",   phase: "here" }
+      { id: "activities", get label() { return App.i18n.t("Activities"); },      icon: "activity", route: "/activities", phase: "here" },
+      { id: "tasks",      get label() { return App.i18n.t("Tasks"); },           icon: "check",    route: "/tasks",      phase: "here" },
+      { id: "calendar",   get label() { return App.i18n.t("Calendar"); },        icon: "cal",      route: "/calendar",   phase: "here" }
     ]},
     { id: "business", group: "Business", groupIcon: "wallet", items: [
-      { id: "finances", label: "Income & Expenses", icon: "wallet", route: "/finances", phase: "here", area: "finance" },
-      { id: "goals",    label: "Goals",             icon: "target", route: "/goals",    phase: "here", area: "goals" },
-      { id: "reports",  label: "Reports",           icon: "chart",  route: "/reports",  phase: "here" }
+      { id: "finances", get label() { return App.i18n.t("Income & Expenses"); }, icon: "wallet", route: "/finances", phase: "here", area: "finance" },
+      { id: "goals",    get label() { return App.i18n.t("Goals"); },             icon: "target", route: "/goals",    phase: "here", area: "goals" },
+      { id: "reports",  get label() { return App.i18n.t("Reports"); },           icon: "chart",  route: "/reports",  phase: "here" }
     ]},
     { id: "system", group: "System", groupIcon: "cog", static: true, items: [
       // No needsSettings gate. It had one from 24e9417, and
@@ -64,8 +64,8 @@ App.app = (function () {
       // ever gated by that permission either, so the gate hid the whole
       // screen (including the theme, which is personal) and protected
       // nothing that RLS does not already protect on the write.
-      { id: "settings", label: "Settings",       icon: "cog",      route: "/settings", phase: "here" },
-      { id: "team", label: "Team", icon: "users", route: "/team", phase: "here", needsTeam: true, needsTeamManage: true }
+      { id: "settings", get label() { return App.i18n.t("Settings"); },       icon: "cog",      route: "/settings", phase: "here" },
+      { id: "team", get label() { return App.i18n.t("Team"); }, icon: "users", route: "/team", phase: "here", needsTeam: true, needsTeamManage: true }
     ]}
   ];
 
@@ -74,51 +74,51 @@ App.app = (function () {
   // only in U1a; they do not change URLs, rendering or the default landing page.
   const ROUTES = [
     { path: "/dashboard", handler: "release.renderDashboard", moduleId: "dashboard", permission: null, hub: "reports", tab: "overview",
-      moduleInfo: { label: "Dashboard", icon: "grid", group: "Workspace" } },
+      moduleInfo: { get label() { return App.i18n.t("Dashboard"); }, icon: "grid", group: "Workspace" } },
     { path: "/daily", handler: "release.renderDaily", moduleId: "daily", permission: null, hub: "today", tab: "today",
-      moduleInfo: { label: "Today", icon: "sun", group: "Workspace" } },
+      moduleInfo: { get label() { return App.i18n.t("Today"); }, icon: "sun", group: "Workspace" } },
     { path: "/contacts", handler: "contacts.renderList", moduleId: "contacts", permission: null, hub: "contacts", tab: "all",
-      moduleInfo: { label: "Contacts", icon: "users", group: "CRM" } },
+      moduleInfo: { get label() { return App.i18n.t("Contacts"); }, icon: "users", group: "CRM" } },
     { path: "/past-clients", handler: "contacts.renderPastClients", moduleId: "contacts", permission: null, hub: "contacts", tab: "past-clients" },
     { path: "/buyer", handler: "buyer.render", moduleId: "buyer", permission: null, hub: "contacts", tab: "buyers",
-      moduleInfo: { label: "Buyer Workspace", icon: "home", group: "CRM" } },
+      moduleInfo: { get label() { return App.i18n.t("Buyer Workspace"); }, icon: "home", group: "CRM" } },
     { path: "/seller", handler: "seller.render", moduleId: "seller", permission: null, hub: "contacts", tab: "sellers",
-      moduleInfo: { label: "Seller Workspace", icon: "tag", group: "CRM" } },
+      moduleInfo: { get label() { return App.i18n.t("Seller Workspace"); }, icon: "tag", group: "CRM" } },
     { path: "/referrals", handler: "referrals.render", moduleId: "referrals", permission: "finance.view", hub: "reports", tab: "referrals",
-      moduleInfo: { label: "Referrals", icon: "share", group: "CRM" } },
+      moduleInfo: { get label() { return App.i18n.t("Referrals"); }, icon: "share", group: "CRM" } },
     { path: "/properties", handler: "properties.renderList", moduleId: "properties", permission: null, hub: "deals", tab: "properties",
-      moduleInfo: { label: "Properties", icon: "map", group: "Transactions" } },
+      moduleInfo: { get label() { return App.i18n.t("Properties"); }, icon: "map", group: "Transactions" } },
     { path: "/pipeline", handler: "deals.renderPipeline", moduleId: "pipeline", permission: null, hub: "deals", tab: "pipeline",
-      moduleInfo: { label: "Deals Pipeline", icon: "columns", group: "Transactions" } },
+      moduleInfo: { get label() { return App.i18n.t("Deals Pipeline"); }, icon: "columns", group: "Transactions" } },
     { path: "/commission", handler: "commission.render", moduleId: "commission", permission: "finance.view", hub: "deals", tab: "commission",
-      moduleInfo: { label: "Commission", icon: "dollar", group: "Transactions" } },
+      moduleInfo: { get label() { return App.i18n.t("Commission"); }, icon: "dollar", group: "Transactions" } },
     { path: "/automation/activity", handler: "automation.renderActivity", moduleId: "automation", permission: null, hub: "plans", tab: "activity" },
     { path: "/automation", handler: "automation.render", moduleId: "automation", permission: null, hub: "plans", tab: "plans",
-      moduleInfo: { label: "Automation", icon: "zap", group: "Automation" } },
+      moduleInfo: { get label() { return App.i18n.t("Automation"); }, icon: "zap", group: "Automation" } },
     { path: "/email-templates", handler: "emailTemplates.render", moduleId: "scripts", permission: null, hub: "plans", tab: "templates",
-      moduleInfo: { label: "Email Templates", icon: "quote", group: "Automation" } },
+      moduleInfo: { get label() { return App.i18n.t("Email Templates"); }, icon: "quote", group: "Automation" } },
     { path: "/scheduler", handler: "scheduler.render", moduleId: "scheduler", permission: null, hub: "calendar", tab: "scheduled",
-      moduleInfo: { label: "Scheduler", icon: "clock", group: "Automation" } },
+      moduleInfo: { get label() { return App.i18n.t("Scheduler"); }, icon: "clock", group: "Automation" } },
     { path: "/content", handler: "release.renderContent", moduleId: "content", permission: null, hub: "plans", tab: "templates",
-      moduleInfo: { label: "Content Library", icon: "book", group: "Automation" } },
+      moduleInfo: { get label() { return App.i18n.t("Content Library"); }, icon: "book", group: "Automation" } },
     { path: "/prompts", handler: "release.renderPrompts", moduleId: "prompts", permission: null, hub: "plans", tab: "prompts",
-      moduleInfo: { label: "AI Prompts", icon: "spark", group: "Automation" } },
+      moduleInfo: { get label() { return App.i18n.t("AI Prompts"); }, icon: "spark", group: "Automation" } },
     { path: "/activities", handler: "activities.render", moduleId: "activities", permission: null, hub: "reports", tab: "activity-log",
-      moduleInfo: { label: "Activities", icon: "activity", group: "Operations" } },
+      moduleInfo: { get label() { return App.i18n.t("Activities"); }, icon: "activity", group: "Operations" } },
     { path: "/tasks", handler: "tasks.render", moduleId: "tasks", permission: null, hub: "calendar", tab: "tasks",
-      moduleInfo: { label: "Tasks", icon: "check", group: "Operations" } },
+      moduleInfo: { get label() { return App.i18n.t("Tasks"); }, icon: "check", group: "Operations" } },
     { path: "/calendar", handler: "calendar.render", moduleId: "calendar", permission: null, hub: "calendar", tab: "agenda",
-      moduleInfo: { label: "Calendar", icon: "cal", group: "Operations" } },
+      moduleInfo: { get label() { return App.i18n.t("Calendar"); }, icon: "cal", group: "Operations" } },
     { path: "/finances", handler: "finances.render", moduleId: "finances", permission: "finance.view", hub: "reports", tab: "income-expenses",
-      moduleInfo: { label: "Income & Expenses", icon: "wallet", group: "Business" } },
+      moduleInfo: { get label() { return App.i18n.t("Income & Expenses"); }, icon: "wallet", group: "Business" } },
     { path: "/goals", handler: "goals.render", moduleId: "goals", permission: "goals.view", hub: "reports", tab: "goals",
-      moduleInfo: { label: "Goals", icon: "target", group: "Business" } },
+      moduleInfo: { get label() { return App.i18n.t("Goals"); }, icon: "target", group: "Business" } },
     { path: "/reports", handler: "reports.render", moduleId: "reports", permission: null, hub: "reports", tab: "pipeline",
-      moduleInfo: { label: "Reports", icon: "chart", group: "Business" } },
+      moduleInfo: { get label() { return App.i18n.t("Reports"); }, icon: "chart", group: "Business" } },
     { path: "/settings", handler: "release.renderSettings", moduleId: "settings", permission: null, hub: "settings", tab: "overview",
-      moduleInfo: { label: "Settings", icon: "cog", group: "System" } },
+      moduleInfo: { get label() { return App.i18n.t("Settings"); }, icon: "cog", group: "System" } },
     { path: "/team", handler: "teamDashboard.render", moduleId: "team", permission: "teamMode + team_manage", hub: "team", tab: "overview",
-      moduleInfo: { label: "Team", icon: "users", group: "System" } },
+      moduleInfo: { get label() { return App.i18n.t("Team"); }, icon: "users", group: "System" } },
     { pattern: /^\/contacts\/([^/]+)$/, handler: "contacts.renderDetail", moduleId: "contacts", permission: null, hub: "contacts", tab: "all" },
     { pattern: /^\/properties\/([^/]+)$/, handler: "properties.renderDetail", moduleId: "properties", permission: null, hub: "deals", tab: "properties" },
     { pattern: /^\/pipeline\/([^/]+)$/, handler: "deals.renderDealDetail", moduleId: "pipeline", permission: null, hub: "deals", tab: "pipeline" },
@@ -154,18 +154,18 @@ App.app = (function () {
      /notifications, which is reached from the bell.
      ============================================================ */
   const HUBS = [
-    { id: "today",    label: "Today",           icon: "sun",     tabs: ["/daily"] },
-    { id: "contacts", label: "Contacts",        icon: "users",
+    { id: "today",    get label() { return App.i18n.t("Today"); },           icon: "sun",     tabs: ["/daily"] },
+    { id: "contacts", get label() { return App.i18n.t("Contacts"); },        icon: "users",
       tabs: ["/contacts", "/buyer", "/seller", "/past-clients"] },
-    { id: "deals",    label: "Deals",           icon: "columns",
+    { id: "deals",    get label() { return App.i18n.t("Deals"); },           icon: "columns",
       tabs: ["/pipeline", "/properties", "/commission"] },
-    { id: "calendar", label: "Calendar",        icon: "cal",
+    { id: "calendar", get label() { return App.i18n.t("Calendar"); },        icon: "cal",
       tabs: ["/calendar", "/tasks", "/scheduler"] },
-    { id: "plans",    label: "Follow-up Plans", icon: "zap",
+    { id: "plans",    get label() { return App.i18n.t("Follow-up Plans"); }, icon: "zap",
       tabs: ["/automation", "/email-templates", "/content", "/prompts", "/automation/activity"] },
-    { id: "reports",  label: "Reports",         icon: "chart",
+    { id: "reports",  get label() { return App.i18n.t("Reports"); },         icon: "chart",
       tabs: ["/dashboard", "/reports", "/finances", "/goals", "/referrals", "/activities"] },
-    { id: "team",     label: "Team",            icon: "users",   tabs: ["/team"] }
+    { id: "team",     get label() { return App.i18n.t("Team"); },            icon: "users",   tabs: ["/team"] }
   ];
 
   // The tab's own name. Short, because it sits next to five others -
@@ -202,7 +202,7 @@ App.app = (function () {
   const TEMPLATE_PATHS = ["/email-templates", "/content", "/prompts"];
   function templateSections() {
     const labels = ["Email Templates", "Content Library", "AI Prompts"];
-    return TEMPLATE_PATHS.map((path, i) => ({ path, label: labels[i] })).filter(tab => pathVisible(tab.path));
+    return TEMPLATE_PATHS.map((path, i) => ({ path, get label() { return App.i18n.t(labels[i]); } })).filter(tab => pathVisible(tab.path));
   }
 
   function hubTabs(hubId) {
@@ -211,14 +211,14 @@ App.app = (function () {
     if (hubId === "plans") {
       const sections = templateSections();
       return [
-        ...(pathVisible("/automation") ? [{ path: "/automation", label: "Plans" }] : []),
-        ...(sections.length ? [{ path: sections[0].path, label: "Templates" }] : []),
-        ...(pathVisible("/automation/activity") ? [{ path: "/automation/activity", label: "Activity" }] : [])
+        ...(pathVisible("/automation") ? [{ path: "/automation", get label() { return App.i18n.t("Plans"); } }] : []),
+        ...(sections.length ? [{ path: sections[0].path, get label() { return App.i18n.t("Templates"); } }] : []),
+        ...(pathVisible("/automation/activity") ? [{ path: "/automation/activity", get label() { return App.i18n.t("Activity"); } }] : [])
       ];
     }
     return hub.tabs
       .filter(pathVisible)
-      .map(path => ({ path: path, label: TAB_LABELS[path] || path }));
+      .map(path => ({ path: path, get label() { return App.i18n.t(TAB_LABELS[path] || path); } }));
   }
 
   /**
@@ -290,47 +290,47 @@ App.app = (function () {
 
   // ---------- INLINE SVG ICONS ----------
   const ICONS = {
-    grid:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-icon"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>',
-    sun:     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-icon"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>',
-    users:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-icon"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>',
-    home:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-icon"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>',
-    tag:     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>',
-    share:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-icon"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>',
-    map:     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-icon"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>',
-    columns: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-icon"><path d="M12 3h7a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-7m0-18H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h7m0-18v18"/></svg>',
-    dollar:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-icon"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>',
-    activity:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-icon"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>',
-    check:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-icon"><polyline points="20 6 9 17 4 12"/></svg>',
-    cal:     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-icon"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>',
-    wallet:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-icon"><path d="M20 12V8H6a2 2 0 0 1-2-2c0-1.1.9-2 2-2h12v4"/><path d="M4 6v12c0 1.1.9 2 2 2h14v-4"/><path d="M18 12a2 2 0 0 0-2 2c0 1.1.9 2 2 2h4v-4h-4z"/></svg>',
-    target:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-icon"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>',
-    chart:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-icon"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>',
-    book:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-icon"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>',
-    quote:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-icon"><path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z"/><path d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v3c0 1 0 1 1 1z"/></svg>',
-    spark:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-icon"><path d="M12 3v18M3 12h18M18.36 5.64l-12.72 12.72M5.64 5.64l12.72 12.72"/></svg>',
-    cog:     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-icon"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>',
-    save:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-icon"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>',
-    info:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-icon"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>',
-    search:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" class="search-icon"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>',
-    plus:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>',
-    close:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>',
-    back:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>',
-    trash:   '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-2 14a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>',
-    edit:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>',
+    grid:    App.i18n.markup('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-icon"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>'),
+    sun:     App.i18n.markup('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-icon"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>'),
+    users:   App.i18n.markup('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-icon"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87M16 3.13a4 4 0 0 1 0 7.75"/></svg>'),
+    home:    App.i18n.markup('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-icon"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>'),
+    tag:     App.i18n.markup('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-icon"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>'),
+    share:   App.i18n.markup('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-icon"><circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/><line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/></svg>'),
+    map:     App.i18n.markup('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-icon"><polygon points="1 6 1 22 8 18 16 22 23 18 23 2 16 6 8 2 1 6"/><line x1="8" y1="2" x2="8" y2="18"/><line x1="16" y1="6" x2="16" y2="22"/></svg>'),
+    columns: App.i18n.markup('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-icon"><path d="M12 3h7a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-7m0-18H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h7m0-18v18"/></svg>'),
+    dollar:  App.i18n.markup('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-icon"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>'),
+    activity:App.i18n.markup('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-icon"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>'),
+    check:   App.i18n.markup('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-icon"><polyline points="20 6 9 17 4 12"/></svg>'),
+    cal:     App.i18n.markup('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-icon"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>'),
+    wallet:  App.i18n.markup('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-icon"><path d="M20 12V8H6a2 2 0 0 1-2-2c0-1.1.9-2 2-2h12v4"/><path d="M4 6v12c0 1.1.9 2 2 2h14v-4"/><path d="M18 12a2 2 0 0 0-2 2c0 1.1.9 2 2 2h4v-4h-4z"/></svg>'),
+    target:  App.i18n.markup('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-icon"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>'),
+    chart:   App.i18n.markup('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-icon"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>'),
+    book:    App.i18n.markup('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-icon"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>'),
+    quote:   App.i18n.markup('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-icon"><path d="M3 21c3 0 7-1 7-8V5c0-1.25-.756-2.017-2-2H4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2 1 0 1 0 1 1v1c0 1-1 2-2 2s-1 .008-1 1.031V20c0 1 0 1 1 1z"/><path d="M15 21c3 0 7-1 7-8V5c0-1.25-.757-2.017-2-2h-4c-1.25 0-2 .75-2 1.972V11c0 1.25.75 2 2 2h.75c0 2.25.25 4-2.75 4v3c0 1 0 1 1 1z"/></svg>'),
+    spark:   App.i18n.markup('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-icon"><path d="M12 3v18M3 12h18M18.36 5.64l-12.72 12.72M5.64 5.64l12.72 12.72"/></svg>'),
+    cog:     App.i18n.markup('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-icon"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>'),
+    save:    App.i18n.markup('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-icon"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><polyline points="17 21 17 13 7 13 7 21"/><polyline points="7 3 7 8 15 8"/></svg>'),
+    info:    App.i18n.markup('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-icon"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>'),
+    search:  App.i18n.markup('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16" class="search-icon"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>'),
+    plus:    App.i18n.markup('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>'),
+    close:   App.i18n.markup('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="16" height="16"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>'),
+    back:    App.i18n.markup('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>'),
+    trash:   App.i18n.markup('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><polyline points="3 6 5 6 21 6"/><path d="M19 6l-2 14a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2L5 6"/><path d="M10 11v6M14 11v6M9 6V4a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2"/></svg>'),
+    edit:    App.i18n.markup('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="14" height="14"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"/><path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"/></svg>'),
     // Three icons added so no two sidebar items share a glyph: Automation
     // used to reuse `activity` (Activities), Scheduler reused `cal`
     // (Calendar), and Team Directory reused `users` (Contacts).
     // Automation — lightning bolt (fires by itself)
-    zap:      '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-icon"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>',
+    zap:      App.i18n.markup('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-icon"><polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"/></svg>'),
     // Scheduler — clock face
-    clock:    '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-icon"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>',
-    lock:     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-icon"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>',
+    clock:    App.i18n.markup('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-icon"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>'),
+    lock:     App.i18n.markup('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-icon"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>'),
     // Phase 3B: Settings → Notifications. The bell in the header has its
     // own copy in pages/notifications.js, which is sized for the header;
     // this one is a nav icon like everything else in this map.
-    bell:     '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-icon"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>',
+    bell:     App.i18n.markup('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-icon"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>'),
     // Team Directory — clipboard (a roster, distinct from Contacts' people)
-    clipboard:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-icon"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>'
+    clipboard:App.i18n.markup('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="nav-icon"><path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/><rect x="8" y="2" width="8" height="4" rx="1" ry="1"/></svg>')
   };
 
   function icon(name) { return ICONS[name] || ""; }
@@ -342,19 +342,19 @@ App.app = (function () {
   // through page names directly.
   function backLink(route, label) {
     if (!route) return "";
-    const arrow = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>';
-    return `<a class="back-link" href="#${escapeHtml(route)}">${arrow}<span>Back to ${escapeHtml(label || "list")}</span></a>`;
+    const arrow = App.i18n.markup('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>');
+    return App.i18n.html`<a class="back-link" href="#${App.i18n.value(() => (escapeHtml(route)))}">${App.i18n.value(() => (arrow))}<span>Back to ${App.i18n.value(() => (escapeHtml(label || App.i18n.t("list"))))}</span></a>`;
   }
 
   // ---------- SHELL RENDER ----------
 
   function renderShell() {
-    const shell = `
+    const shell = App.i18n.html`
 <div id="app-shell">
   <aside id="sidebar" aria-label="Primary navigation">
     <div class="brand" id="brandBlock"></div>
     <nav id="sidebarNav" aria-label="Main navigation">
-      ${renderNav()}
+      ${App.i18n.value(() => (renderNav()))}
     </nav>
     <div class="sidebar-footer">
       <!-- Settings, always. The System group's NAV item used to carry a
@@ -376,7 +376,7 @@ App.app = (function () {
            "More" tab opens, as well as on the desktop rail. -->
       <button type="button" class="sidebar-settings" id="sidebarSettingsBtn"
               data-nav="/settings" aria-label="Settings">
-        ${icon("cog")}<span>Settings</span>
+        ${App.i18n.value(() => (icon("cog")))}<span>Settings</span>
       </button>
       <div class="agent-name" id="sidebarAgent">Your Agency</div>
       <div class="sync-status" id="syncStatus" role="status" aria-live="polite"></div>
@@ -395,6 +395,7 @@ App.app = (function () {
         <nav class="breadcrumbs" id="breadcrumbs" aria-label="Breadcrumbs"></nav>
       </div>
       <button id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle light / dark theme"></button>
+      <div class="header-language">${App.i18n.value(() => (App.i18n ? App.i18n.languageControl("appLanguage") : ""))}</div>
       <div class="topbar-actions" id="topActions"></div>
       <div class="notif-control" id="notifControl"></div>
       <div class="profile-control" id="profileControl">
@@ -419,11 +420,13 @@ App.app = (function () {
           </div>
           <button type="button" class="profile-menu-item" id="profileEditBtn" role="menuitem">Edit account</button>
           <button type="button" class="profile-menu-item" id="profileSettingsBtn" role="menuitem">Settings</button>
+          <button type="button" class="profile-menu-item" id="profilePreferencesBtn" role="menuitem">Language & Appearance</button>
           <button type="button" class="profile-menu-item" id="profileBizBtn" role="menuitem">Business profile</button>
           <button type="button" class="profile-menu-item profile-menu-item-danger" id="profileSignOutBtn" role="menuitem">Sign out</button>
         </div>
       </div>
     </header>
+    <div id="pageContextActions" class="page-context-actions"></div>
     <div id="hubTabs" hidden></div>
     <main id="page" role="main" tabindex="-1"></main>
   </div>
@@ -433,6 +436,17 @@ App.app = (function () {
 <div id="toastRoot" aria-live="polite" aria-atomic="true"></div>
 `;
     document.getElementById("root").innerHTML = shell;
+    // Move the existing action slot, rather than clone action buttons or hide
+    // unique detail-page actions, when the compact phone header is active.
+    const compactHeader = window.matchMedia ? window.matchMedia("(max-width: 767px)") : null;
+    const placeContextActions = () => {
+      const actions = document.getElementById("topActions");
+      const target = compactHeader && compactHeader.matches ? document.getElementById("pageContextActions") : document.getElementById("topbar");
+      if (!actions || !target) return;
+      if (target.id === "topbar") target.insertBefore(actions, document.getElementById("notifControl"));
+      else target.appendChild(actions);
+    };
+    if (compactHeader && compactHeader.addEventListener) compactHeader.addEventListener("change", placeContextActions);
 
     // Phase 2F. The "+" belongs to the shell, not to a page: adding a
     // contact is the one thing an agent does from wherever they happen to
@@ -440,6 +454,7 @@ App.app = (function () {
     // sits beside it rather than inside it.
     if (App.quickAdd) App.quickAdd.mount(document);
     if (App.headerActions) App.headerActions.mount();
+    placeContextActions();
 
     // Phase 3A. The bottom tab bar and the offline line, both of which
     // live outside #page so a route change never takes them with it.
@@ -466,8 +481,8 @@ App.app = (function () {
     applyThemeFromSettings();
     renderThemeToggleIcon();
     document.getElementById("themeToggle").addEventListener("click", async () => {
-      const cur = (App.store.getState().settings.ui && App.store.getState().settings.ui.theme) || "light";
-      const next = cur === "dark" ? "light" : "dark";
+      const cur = App.preferences ? App.preferences.get().theme : (App.store.getState().settings.ui && App.store.getState().settings.ui.theme) || "light";
+      const next = cur === "light" ? "dark" : cur === "dark" ? "system" : "light";
       await setTheme(next);
     });
 
@@ -568,11 +583,11 @@ App.app = (function () {
   function renderNav() {
     const hubs = visibleHubs();
     if (!hubs.length) return "";
-    return hubs.map(({ hub, tabs }) => `
-      <a class="nav-item" data-nav="${tabs[0].path}" data-hub="${hub.id}"
-         href="#${tabs[0].path}" title="${escapeHtml(hub.label)}">
-        ${icon(hub.icon)}
-        <span class="nav-item-label">${escapeHtml(hub.label)}</span>
+    return hubs.map(({ hub, tabs }) => App.i18n.html`
+      <a class="nav-item" data-nav="${App.i18n.value(() => (tabs[0].path))}" data-hub="${App.i18n.value(() => (hub.id))}"
+         href="#${App.i18n.value(() => (tabs[0].path))}" title="${App.i18n.value(() => (escapeHtml(hub.label)))}">
+        ${App.i18n.value(() => (icon(hub.icon)))}
+        <span class="nav-item-label">${App.i18n.value(() => (escapeHtml(hub.label)))}</span>
       </a>`).join("");
   }
 
@@ -641,8 +656,8 @@ App.app = (function () {
     const hub = hubById(hubId);
     const links = tabs.map(tab => {
       const current = tab.path === activePath;
-      return `<a class="hub-tab${current ? " active" : ""}" href="#${tab.path}"
-         data-hub-tab="${tab.path}"${current ? ' aria-current="page"' : ""}>${escapeHtml(tab.label)}</a>`;
+      return App.i18n.html`<a class="hub-tab${App.i18n.value(() => (current ? " active" : ""))}" href="#${App.i18n.value(() => (tab.path))}"
+         data-hub-tab="${App.i18n.value(() => (tab.path))}"${App.i18n.value(() => (current ? ' aria-current="page"' : ""))}>${App.i18n.value(() => (escapeHtml(tab.label)))}</a>`;
     }).join("");
     // Below 640px the row becomes a select: six tabs do not fit on a
     // phone, and a horizontal scroller people have to discover is worse
@@ -650,16 +665,16 @@ App.app = (function () {
     // one. The select is labelled, because on its own it is a dropdown
     // with no visible name.
     const options = tabs.map(tab =>
-      `<option value="${tab.path}"${tab.path === activePath ? " selected" : ""}>${escapeHtml(tab.label)}</option>`).join("");
-    host.innerHTML = `
-      <nav class="hub-tabs" aria-label="${escapeHtml(hub.label)} sections">${links}</nav>
+      App.i18n.html`<option value="${App.i18n.value(() => (tab.path))}"${App.i18n.value(() => (tab.path === activePath ? " selected" : ""))}>${App.i18n.value(() => (escapeHtml(tab.label)))}</option>`).join("");
+    host.innerHTML = App.i18n.html`
+      <nav class="hub-tabs" aria-label="${App.i18n.value(() => (escapeHtml(hub.label)))} sections">${App.i18n.value(() => (links))}</nav>
       <label class="hub-tabs-select">
-        <span class="sr-only">${escapeHtml(hub.label)} section</span>
-        <select id="hubTabSelect">${options}</select>
+        <span class="sr-only">${App.i18n.value(() => (escapeHtml(hub.label)))} section</span>
+        <select id="hubTabSelect">${App.i18n.value(() => (options))}</select>
       </label>`;
     if (sections.length) {
-      host.insertAdjacentHTML("beforeend", `<nav class="hub-tabs" aria-label="Template sections">${sections.map(tab => `<a class="hub-tab${tab.path === path ? " active" : ""}" data-hub-tab="${tab.path}" href="#${tab.path}"${tab.path === path ? ' aria-current="page"' : ""}>${tab.label}</a>`).join("")}</nav>
-        <label class="hub-tabs-select"><span class="sr-only">Template section</span><select id="templateSectionSelect">${sections.map(tab => `<option value="${tab.path}"${tab.path === path ? " selected" : ""}>${tab.label}</option>`).join("")}</select></label>`);
+      host.insertAdjacentHTML("beforeend", App.i18n.html`<nav class="hub-tabs" aria-label="Template sections">${App.i18n.value(() => (sections.map(tab => App.i18n.html`<a class="hub-tab${App.i18n.value(() => (tab.path === path ? " active" : ""))}" data-hub-tab="${App.i18n.value(() => (tab.path))}" href="#${App.i18n.value(() => (tab.path))}"${App.i18n.value(() => (tab.path === path ? ' aria-current="page"' : ""))}>${App.i18n.value(() => (escapeHtml(tab.label)))}</a>`).join("")))}</nav>
+        <label class="hub-tabs-select"><span class="sr-only">Template section</span><select id="templateSectionSelect">${App.i18n.value(() => (sections.map(tab => App.i18n.html`<option value="${App.i18n.value(() => (tab.path))}"${App.i18n.value(() => (tab.path === path ? " selected" : ""))}>${App.i18n.value(() => (escapeHtml(tab.label)))}</option>`).join("")))}</select></label>`);
       host.querySelector("#templateSectionSelect").addEventListener("change", e => navigate(e.target.value));
     }
     const select = host.querySelector("#hubTabSelect");
@@ -694,11 +709,12 @@ App.app = (function () {
   // Inline SVG icons for the topbar theme toggle. Keeping them inline avoids
   // any network/asset dependency — the app must remain a single-file build.
   const THEME_ICONS = {
-    moon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>',
-    sun:  '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>'
+    moon: App.i18n.markup('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>'),
+    sun:  App.i18n.markup('<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>')
   };
 
   function applyThemeFromSettings() {
+    if (App.preferences) { App.preferences.apply(); return; }
     const ui = App.store.getState().settings.ui || {};
     const theme = ui.theme === "dark" ? "dark" : "light";
     document.documentElement.setAttribute("data-theme", theme);
@@ -712,10 +728,19 @@ App.app = (function () {
     // is legible: sun icon in dark mode, moon icon in light mode.
     btn.innerHTML = isDark ? THEME_ICONS.sun : THEME_ICONS.moon;
     btn.setAttribute("aria-pressed", isDark ? "true" : "false");
-    btn.setAttribute("title", isDark ? "Switch to light theme" : "Switch to dark theme");
+    const preference = App.preferences ? App.preferences.get().theme : isDark ? "dark" : "light";
+    const next = preference === "light" ? "Dark" : preference === "dark" ? "System default" : "Light";
+    btn.setAttribute("title", "Appearance: " + (preference === "system" ? "System default" : preference) + ". Switch to " + next);
+    btn.setAttribute("aria-label", btn.title);
   }
 
   async function setTheme(theme) {
+    if (App.preferences) {
+      try { await App.preferences.set({ theme }); }
+      catch (err) { toast(App.i18n.t("Appearance saved on this device. Account sync failed; try again when online."), "danger"); }
+      renderThemeToggleIcon();
+      return;
+    }
     const t = theme === "dark" ? "dark" : "light";
     // Merge into settings.ui so we don't clobber other ui keys the schema may hold.
     const curUi = App.store.getState().settings.ui || {};
@@ -727,7 +752,7 @@ App.app = (function () {
     try {
       await App.store.settings.update({ ui: merged });
     } catch (err) {
-      toast("Could not save theme preference: " + err.message, "danger");
+      toast(App.i18n.t("Could not save theme preference: ") + err.message, "danger");
     }
   }
 
@@ -749,13 +774,13 @@ App.app = (function () {
     state = state || (App.data && App.data.getSyncState ? App.data.getSyncState() : { status: "idle", message: "" });
     el.setAttribute("data-status", state.status);
     if (state.status === "saving") {
-      el.innerHTML = `<span class="dot"></span><span>Saving…</span>`;
+      el.innerHTML = App.i18n.markup(`<span class="dot"></span><span>Saving…</span>`);
     } else if (state.status === "synced") {
-      el.innerHTML = `<span class="dot"></span><span>Synced</span>`;
+      el.innerHTML = App.i18n.markup(`<span class="dot"></span><span>Synced</span>`);
     } else if (state.status === "offline") {
-      el.innerHTML = `<span class="dot"></span><span>Offline</span>`;
+      el.innerHTML = App.i18n.markup(`<span class="dot"></span><span>Offline</span>`);
     } else if (state.status === "error") {
-      el.innerHTML = `<span class="dot"></span><span>Sync failed — </span><button type="button" id="syncStatusRetry">Retry</button>`;
+      el.innerHTML = App.i18n.markup(`<span class="dot"></span><span>Sync failed — </span><button type="button" id="syncStatusRetry">Retry</button>`);
       const btn = document.getElementById("syncStatusRetry");
       if (btn) btn.addEventListener("click", () => { if (typeof state.retry === "function") state.retry(); });
     } else {
@@ -773,7 +798,7 @@ App.app = (function () {
     if (!el) return;
     state = state || (App.data && App.data.getSyncState ? App.data.getSyncState() : { status: "idle" });
     if (state.status === "error") {
-      el.innerHTML = `<div class="storage-warning" role="alert"><strong>A change could not be saved.</strong><span>${escapeHtml(state.message || "Sync failed.")}</span> <button type="button" class="btn btn-sm" id="storageWarningRetry">Retry</button></div>`;
+      el.innerHTML = App.i18n.html`<div class="storage-warning" role="alert"><strong>A change could not be saved.</strong><span>${App.i18n.value(() => (escapeHtml(state.message || App.i18n.t("Sync failed."))))}</span> <button type="button" class="btn btn-sm" id="storageWarningRetry">Retry</button></div>`;
       const btn = document.getElementById("storageWarningRetry");
       if (btn) btn.addEventListener("click", () => { if (typeof state.retry === "function") state.retry(); });
     } else {
@@ -786,7 +811,7 @@ App.app = (function () {
     const agent = (s.settings.agentName || s.metadata.agentName || "").trim();
     const agency = (s.settings.agencyName || s.metadata.agencyName || "").trim();
     const el = document.getElementById("sidebarAgent");
-    if (el) el.textContent = agency || agent || "Your Agency";
+    if (el) App.i18n.setText(el, App.i18n.value(() => (agency || agent || App.i18n.t("Your Agency"))));
 
     // Optional logo (v2) — purely cosmetic swap of the sidebar brand title.
     // No logo set (the default for every existing workspace) leaves the
@@ -844,7 +869,7 @@ App.app = (function () {
       img.addEventListener("error", () => paintAvatarEl(el, name, null));
       el.appendChild(img);
     } else {
-      el.textContent = initialsFromName(name);
+      App.i18n.setText(el, App.i18n.value(() => (initialsFromName(name))));
     }
   }
 
@@ -864,9 +889,9 @@ App.app = (function () {
     const displayName = resolveDisplayName(user);
     const phone = (user.user_metadata && user.user_metadata.phone || "").trim();
 
-    if (menuNameEl) menuNameEl.textContent = displayName;
-    if (menuEmailEl) menuEmailEl.textContent = user.email || "";
-    if (menuPhoneEl) { menuPhoneEl.textContent = phone; menuPhoneEl.hidden = !phone; }
+    if (menuNameEl) App.i18n.setText(menuNameEl, App.i18n.value(() => (displayName)));
+    if (menuEmailEl) App.i18n.setText(menuEmailEl, App.i18n.value(() => (user.email || "")));
+    if (menuPhoneEl) { App.i18n.setText(menuPhoneEl, App.i18n.value(() => (phone))); menuPhoneEl.hidden = !phone; }
     paintAvatarEl(avatarEl, displayName, null);
     paintAvatarEl(menuAvatarEl, displayName, null);
 
@@ -895,19 +920,51 @@ App.app = (function () {
       trigger.setAttribute("aria-expanded", "false");
       document.removeEventListener("click", onDocClick, true);
       document.removeEventListener("keydown", onDocKey, true);
+      window.removeEventListener("resize", positionMenu);
+      if (window.visualViewport) window.visualViewport.removeEventListener("resize", positionMenu);
+    }
+    function positionMenu() {
+      const viewport = window.visualViewport;
+      const left = viewport ? viewport.offsetLeft : 0, top = viewport ? viewport.offsetTop : 0;
+      const width = viewport ? viewport.width : window.innerWidth, height = viewport ? viewport.height : window.innerHeight;
+      const anchor = trigger.getBoundingClientRect();
+      menu.style.position = "fixed";
+      menu.style.width = Math.min(300, width - 24) + "px";
+      menu.style.maxHeight = Math.max(120, height - 24) + "px";
+      const rect = menu.getBoundingClientRect();
+      menu.style.left = Math.max(left + 12, Math.min(anchor.right - rect.width, left + width - rect.width - 12)) + "px";
+      menu.style.right = "auto";
+      menu.style.top = Math.max(top + 12, Math.min(anchor.bottom + 8, top + height - rect.height - 12)) + "px";
     }
     function openMenu() {
       menu.hidden = false;
       trigger.setAttribute("aria-expanded", "true");
+      positionMenu();
+      window.addEventListener("resize", positionMenu);
+      if (window.visualViewport) window.visualViewport.addEventListener("resize", positionMenu);
       document.addEventListener("click", onDocClick, true);
       document.addEventListener("keydown", onDocKey, true);
+      const first = menu.querySelector('[role="menuitem"]');
+      if (first) first.focus({ preventScroll:true });
     }
     function onDocClick(e) { if (!control.contains(e.target)) closeMenu(); }
-    function onDocKey(e) { if (e.key === "Escape") { closeMenu(); trigger.focus(); } }
+    function onDocKey(e) {
+      if (e.key === "Escape") { closeMenu(); trigger.focus(); }
+      if (["ArrowDown", "ArrowUp", "Home", "End"].includes(e.key)) {
+        e.preventDefault();
+        const items = Array.from(menu.querySelectorAll('[role="menuitem"]'));
+        const at = items.indexOf(document.activeElement);
+        const next = e.key === "Home" ? 0 : e.key === "End" ? items.length - 1 : (at + (e.key === "ArrowDown" ? 1 : -1) + items.length) % items.length;
+        items[next].focus();
+      }
+      if (e.key === "Tab") closeMenu();
+    }
 
     trigger.addEventListener("click", () => { if (menu.hidden) openMenu(); else closeMenu(); });
     editBtn.addEventListener("click", () => { closeMenu(); openEditProfileModal(); });
     if (settingsBtn) settingsBtn.addEventListener("click", () => { closeMenu(); navigate("/settings"); });
+    const preferencesBtn = document.getElementById("profilePreferencesBtn");
+    if (preferencesBtn) preferencesBtn.addEventListener("click", () => { closeMenu(); navigate("/settings/appearance"); });
     if (bizBtn) bizBtn.addEventListener("click", () => { closeMenu(); navigate("/settings/business-profile"); });
     signOutBtn.addEventListener("click", () => {
       closeMenu();
@@ -929,7 +986,7 @@ App.app = (function () {
     let pendingRemove = false;
     let previewUrl = null;
 
-    const body = `
+    const body = App.i18n.html`
       <form id="profileEditForm">
         <div class="profile-photo-row">
           <span class="profile-avatar profile-avatar-xl" id="profileEditAvatarPreview" aria-hidden="true"></span>
@@ -945,18 +1002,18 @@ App.app = (function () {
         </div>
         <div class="form-field" id="profileNameField">
           <label for="profileNameInput">Full name</label>
-          <input type="text" id="profileNameInput" autocomplete="name" value="${App.util.esc(meta.full_name || "")}">
+          <input type="text" id="profileNameInput" autocomplete="name" value="${App.i18n.value(() => (App.util.esc(meta.full_name || "")))}">
           <div class="hint">Your sign-in name and photo. The name shown on your deals, reports and branding is Agent Name, under Settings &rsaquo; Business Profile.</div>
           <div class="err">Please enter at least 2 characters.</div>
         </div>
         <div class="form-field">
           <label for="profileEmailInput">Email</label>
-          <input type="email" id="profileEmailInput" value="${App.util.esc(user.email || "")}" readonly>
+          <input type="email" id="profileEmailInput" value="${App.i18n.value(() => (App.util.esc(user.email || "")))}" readonly>
           <div class="hint">To change your sign-in email, contact support.</div>
         </div>
         <div class="form-field" id="profilePhoneField">
           <label for="profilePhoneInput">Phone (optional)</label>
-          <input type="tel" id="profilePhoneInput" autocomplete="tel" placeholder="+92 300 1234567" value="${App.util.esc(meta.phone || "")}">
+          <input type="tel" id="profilePhoneInput" autocomplete="tel" placeholder="+92 300 1234567" value="${App.i18n.value(() => (App.util.esc(meta.phone || "")))}">
           <div class="err">Enter a valid phone number.</div>
         </div>
         <p id="profileEditMessage" class="profile-edit-message" aria-live="polite"></p>
@@ -964,12 +1021,12 @@ App.app = (function () {
     `;
 
     const handle = openModal({
-      title: "Edit account",
+      get title() { return App.i18n.t("Edit account"); },
       body,
-      footer: `
+      footer: App.i18n.markup(`
         <button class="btn" data-role="cancel">Cancel</button>
         <button class="btn btn-primary" data-role="save" id="profileSaveBtn">Save changes</button>
-      `,
+      `),
       onOpen: (modal) => {
         const avatarPreview = modal.querySelector("#profileEditAvatarPreview");
         const fileInput = modal.querySelector("#profileAvatarInput");
@@ -993,13 +1050,13 @@ App.app = (function () {
           const file = fileInput.files && fileInput.files[0];
           if (!file) return;
           if (!["image/jpeg", "image/png", "image/webp"].includes(file.type)) {
-            avatarErr.textContent = "Please choose a JPG, PNG, or WebP image.";
+            App.i18n.setText(avatarErr, App.i18n.message("Please choose a JPG, PNG, or WebP image."));
             avatarErr.style.display = "block";
             fileInput.value = "";
             return;
           }
           if (file.size > 2 * 1024 * 1024) {
-            avatarErr.textContent = "That image is larger than 2MB. Choose a smaller file.";
+            App.i18n.setText(avatarErr, App.i18n.message("That image is larger than 2MB. Choose a smaller file."));
             avatarErr.style.display = "block";
             fileInput.value = "";
             return;
@@ -1026,7 +1083,7 @@ App.app = (function () {
           if (saving) return;
           nameField.classList.remove("has-error");
           phoneField.classList.remove("has-error");
-          msgEl.textContent = "";
+          App.i18n.setText(msgEl, App.i18n.value(() => ("")));
           msgEl.className = "profile-edit-message";
 
           const fullName = nameInput.value.trim();
@@ -1039,7 +1096,7 @@ App.app = (function () {
           saving = true;
           saveBtn.disabled = true;
           const originalLabel = saveBtn.textContent;
-          saveBtn.textContent = "Saving…";
+          App.i18n.setText(saveBtn, App.i18n.message("Saving…"));
           try {
             let avatarPath = currentAvatarPath;
             if (pendingFile) {
@@ -1050,16 +1107,16 @@ App.app = (function () {
             }
             const result = await App.cloud.updateProfile({ full_name: fullName, phone: phone, avatar_path: avatarPath });
             if (result.error) throw result.error;
-            msgEl.textContent = "Profile updated.";
+            App.i18n.setText(msgEl, App.i18n.message("Profile updated."));
             msgEl.classList.add("success");
             refreshProfileControl();
             setTimeout(() => handle.close(), 900);
           } catch (err) {
-            msgEl.textContent = (err && err.message) || "Could not save your profile. Please try again.";
+            App.i18n.setText(msgEl, App.i18n.value(() => ((err && err.message) || App.i18n.t("Could not save your profile. Please try again."))));
             msgEl.classList.add("error");
             saving = false;
             saveBtn.disabled = false;
-            saveBtn.textContent = originalLabel;
+            App.i18n.setText(saveBtn, App.i18n.value(() => (originalLabel)));
           }
         });
       },
@@ -1108,11 +1165,10 @@ App.app = (function () {
     el.innerHTML = items.map((it, i) => {
       const isLast = i === items.length - 1;
       const cls = isLast ? "crumb-current" : "crumb";
-      const label = escapeHtml(it.label);
       const inner = it.route && !isLast
-        ? `<a href="#${escapeHtml(it.route)}" class="link">${label}</a>`
-        : `<span class="${cls}">${label}</span>`;
-      return (i > 0 ? '<span class="crumb-sep">›</span>' : '') + inner;
+        ? App.i18n.html`<a href="#${App.i18n.value(() => (escapeHtml(it.route)))}" class="link">${App.i18n.value(() => (escapeHtml(it.label)))}</a>`
+        : App.i18n.html`<span class="${App.i18n.value(() => (cls))}">${App.i18n.value(() => (escapeHtml(it.label)))}</span>`;
+      return (i > 0 ? App.i18n.markup('<span class="crumb-sep">›</span>') : '') + inner;
     }).join("");
   }
 
@@ -1214,10 +1270,11 @@ App.app = (function () {
       const hub = hubById(hubForPath(path));
       if (hub && lastBreadcrumbs.length) {
         const trail = lastBreadcrumbs.slice();
-        trail[0] = Object.assign({}, trail[0], { label: hub.label });
+        trail[0] = Object.assign({}, trail[0]);
+        Object.defineProperty(trail[0], "label", { enumerable: true, get: () => hub.label });
         setBreadcrumbs(trail);
       } else if (hub) {
-        setBreadcrumbs([{ label: hub.label }]);
+        setBreadcrumbs([{ get label() { return hub.label; } }]);
       }
     }
 
@@ -1274,10 +1331,10 @@ App.app = (function () {
   // ---------- COMING SOON PAGES ----------
 
   function renderComingSoon(page, path) {
-    setBreadcrumbs([{ label: "Page Not Found" }]);
-    page.innerHTML = `
+    setBreadcrumbs([{ get label() { return App.i18n.t("Page Not Found"); } }]);
+    page.innerHTML = App.i18n.html`
       <div class="coming-soon-hero">
-        <div class="icon">${icon("info").replace('class="nav-icon"', 'width="28" height="28"')}</div>
+        <div class="icon">${App.i18n.value(() => (icon("info").replace('class="nav-icon"', 'width="28" height="28"')))}</div>
         <h1>Page not found</h1>
         <p>That section is not available at this address. Use the sidebar to continue working in Realtor Pipeline & Commission OS.</p>
         <button class="btn btn-primary" id="notFoundDashboard" style="margin-top:16px">Go to Dashboard</button>
@@ -1295,10 +1352,10 @@ App.app = (function () {
   // classes already used by emptyMessage() elsewhere, so no new visual
   // language is introduced.
   function loadingHtml(label) {
-    return `<div class="empty-state" role="status" aria-live="polite"><div class="empty-title"><span class="loading-spinner" aria-hidden="true"></span>Loading${label ? " " + App.util.esc(label) : ""}…</div></div>`;
+    return App.i18n.html`<div class="empty-state" role="status" aria-live="polite"><div class="empty-title"><span class="loading-spinner" aria-hidden="true"></span>Loading${App.i18n.value(() => (label ? " " + App.util.esc(label) : ""))}…</div></div>`;
   }
   function errorHtml(message) {
-    return `<div class="empty-state" role="alert"><div class="empty-title">${App.util.esc(message || "This page could not load.")}</div><div class="empty-desc">Check your connection, then try again.</div><button type="button" class="btn btn-primary" data-role="route-retry">Retry</button></div>`;
+    return App.i18n.html`<div class="empty-state" role="alert"><div class="empty-title">${App.i18n.value(() => (App.util.esc(message || App.i18n.t("This page could not load."))))}</div><div class="empty-desc">Check your connection, then try again.</div><button type="button" class="btn btn-primary" data-role="route-retry">Retry</button></div>`;
   }
 
   // ---------- MODAL SYSTEM ----------
@@ -1316,13 +1373,13 @@ App.app = (function () {
     modal.setAttribute("aria-modal", "true");
     const titleId = "modal-title-" + Date.now().toString(36) + Math.random().toString(36).slice(2,6);
     modal.setAttribute("aria-labelledby", titleId);
-    modal.innerHTML = `
+    modal.innerHTML = App.i18n.html`
       <div class="modal-header">
-        <div class="modal-title" id="${titleId}">${App.util.esc(opts.title || "")}</div>
-        <button class="modal-close" aria-label="Close">${icon("close")}</button>
+        <div class="modal-title" id="${App.i18n.value(() => (titleId))}">${App.i18n.value(() => (App.util.esc(opts.title || "")))}</div>
+        <button class="modal-close" aria-label="Close">${App.i18n.value(() => (icon("close")))}</button>
       </div>
-      <div class="modal-body">${opts.body || ""}</div>
-      ${opts.footer ? `<div class="modal-footer">${opts.footer}</div>` : ""}
+      <div class="modal-body">${App.i18n.value(() => (opts.body || ""))}</div>
+      ${App.i18n.value(() => (opts.footer ? App.i18n.html`<div class="modal-footer">${App.i18n.value(() => (opts.footer))}</div>` : ""))}
     `;
     overlay.appendChild(modal);
     document.getElementById("modalRoot").appendChild(overlay);
@@ -1330,7 +1387,17 @@ App.app = (function () {
 
     let closed = false;
     let handle;
+    const viewport = window.visualViewport;
+    const fitViewport = () => {
+      if (!viewport) return;
+      overlay.style.height = viewport.height + "px";
+      overlay.style.top = viewport.offsetTop + "px";
+      modal.style.maxHeight = "calc(100% - 24px)";
+    };
+    fitViewport();
+    if (viewport) { viewport.addEventListener("resize", fitViewport); viewport.addEventListener("scroll", fitViewport); }
     const onKey = (e) => {
+      if (modalStack[modalStack.length - 1] !== handle) return;
       if (e.key === "Escape") { wrappedClose(); return; }
       if (e.key !== "Tab") return;
       const focusables = Array.from(modal.querySelectorAll('button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), a[href], [tabindex]:not([tabindex="-1"])')).filter(x => x.offsetParent !== null || x === document.activeElement);
@@ -1342,6 +1409,7 @@ App.app = (function () {
     const wrappedClose = () => {
       if (closed) return;
       closed = true;
+      if (viewport) { viewport.removeEventListener("resize", fitViewport); viewport.removeEventListener("scroll", fitViewport); }
       document.removeEventListener("keydown", onKey);
       overlay.classList.remove("open");
       setTimeout(() => {
@@ -1370,13 +1438,13 @@ App.app = (function () {
   // ---------- CONFIRM DIALOG ----------
 
   function confirmDialog(opts, onOk) {
-    const impact = opts.impact ? `
+    const impact = opts.impact ? App.i18n.html`
       <div class="impact">
         <strong>Impact:</strong>
         <ul>
-          ${Object.keys(opts.impact).filter(k => opts.impact[k] > 0).map(k =>
-            `<li>${opts.impact[k]} ${App.util.esc(k)} will be ${k === "milestones" ? "deleted" : "unlinked"}</li>`
-          ).join("")}
+          ${App.i18n.value(() => (Object.keys(opts.impact).filter(k => opts.impact[k] > 0).map(k =>
+            App.i18n.html`<li>${App.i18n.value(() => (opts.impact[k]))} ${App.i18n.value(() => (App.util.esc(k)))} will be ${App.i18n.value(() => (k === "milestones" ? App.i18n.t("deleted") : App.i18n.t("unlinked")))}</li>`
+          ).join("")))}
         </ul>
       </div>
     ` : "";
@@ -1384,10 +1452,10 @@ App.app = (function () {
     const h = openModal({
       title: opts.title || "Confirm",
       extraClass: "confirm",
-      body: `<p>${opts.message || ""}</p>${impact}`,
-      footer: `
-        <button class="btn" data-role="cancel">${App.util.esc(opts.cancelLabel || "Cancel")}</button>
-        <button class="btn ${opts.danger ? "btn-danger" : "btn-primary"}" data-role="ok">${App.util.esc(opts.okLabel || "Confirm")}</button>
+      body: App.i18n.html`<p>${App.i18n.value(() => (opts.message || ""))}</p>${App.i18n.value(() => (impact))}`,
+      footer: App.i18n.html`
+        <button class="btn" data-role="cancel">${App.i18n.value(() => (App.util.esc(opts.cancelLabel || App.i18n.t("Cancel"))))}</button>
+        <button class="btn ${App.i18n.value(() => (opts.danger ? "btn-danger" : "btn-primary"))}" data-role="ok">${App.i18n.value(() => (App.util.esc(opts.okLabel || App.i18n.t("Confirm"))))}</button>
       `,
       onOpen: (modal) => {
         modal.querySelector('[data-role="cancel"]').addEventListener("click", () => h.close());
@@ -1417,7 +1485,7 @@ App.app = (function () {
     el.className = "toast" + (kind ? " " + kind : "") + (actions.length ? " toast-actions" : "");
     const text = document.createElement("span");
     text.className = "toast-text";
-    text.textContent = message;
+    App.i18n.setText(text, App.i18n.value(() => (message)));
     el.appendChild(text);
 
     let dismiss;
@@ -1426,7 +1494,7 @@ App.app = (function () {
       btn.type = "button";
       btn.className = "btn btn-sm toast-action";
       // textContent, not markup: a label may carry a contact's name.
-      btn.textContent = action.label || "";
+      App.i18n.setText(btn, App.i18n.value(() => (action.label || "")));
       btn.addEventListener("click", () => {
         dismiss();
         try { if (action.onClick) action.onClick(); } catch (e) { console.error(e); }
@@ -1450,13 +1518,13 @@ App.app = (function () {
 
   async function runMigrationStep() {
     const page = document.getElementById("page");
-    if (page) page.innerHTML = loadingHtml("your workspace");
+    if (page) page.innerHTML = loadingHtml(App.i18n.t("your workspace"));
     try {
       return await App.data.migrateLegacyIfNeeded();
     } catch (err) {
       console.error("Legacy migration failed:", err);
       if (page) {
-        page.innerHTML = errorHtml("We could not finish preparing your workspace: " + (err && err.message ? err.message : "Unknown error") + ". Nothing has been lost — your existing data is untouched, and it's safe to try again.");
+        page.innerHTML = errorHtml(App.i18n.t("We could not finish preparing your workspace: ") + (err && err.message ? err.message : "Unknown error") + App.i18n.t(". Nothing has been lost — your existing data is untouched, and it's safe to try again."));
         const retryBtn = page.querySelector('[data-role="route-retry"]');
         if (retryBtn) retryBtn.addEventListener("click", async () => {
           const result = await runMigrationStep();
@@ -1500,8 +1568,11 @@ App.app = (function () {
   }
 
   async function init() {
+    if (App.i18n) await App.i18n.setLocale(App.preferences ? App.preferences.get().language : "en");
     const user = await App.cloud.checkSession();
     if (!user) return; // no session: checkSession already shows the sign-in gate
+    if (App.preferences) App.preferences.hydrate(user);
+    if (App.i18n) await App.i18n.ready();
 
     renderShell();
     wireRowKeyboardActivation();
@@ -1520,7 +1591,7 @@ App.app = (function () {
       if (entityKey === "__settings__") { updateSidebarAgent(); return; }
       if (info && info.self) return;
       if (modalStack.length) return;
-      toast("Updated from another device", "info");
+      toast(App.i18n.t("Updated from another device"), "info");
       route();
     });
 
@@ -1530,6 +1601,7 @@ App.app = (function () {
     await finishBoot(migrationResult);
   }
 
+  window.addEventListener("realtorcrm:preferences", renderThemeToggleIcon);
   return {
     init, navigate, route, defaultHome,
     openModal, closeAllModals,

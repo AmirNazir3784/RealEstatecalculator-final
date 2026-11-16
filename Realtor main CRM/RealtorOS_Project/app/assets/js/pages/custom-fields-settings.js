@@ -12,7 +12,7 @@ App.pages.customFieldsSettings = (function () {
 
   const ENTITY_LABELS = { contact: "Contacts", property: "Properties", deal: "Deals", task: "Tasks" };
   const TYPE_LABELS = {
-    text: "Short Text", longtext: "Long Text", number: "Number", currency: "Currency",
+    get text() { return App.i18n.t("Short Text"); }, longtext: "Long Text", number: "Number", currency: "Currency",
     percentage: "Percentage", date: "Date", boolean: "Yes / No", select: "Dropdown", multiselect: "Multi-Select"
   };
   let activeEntity = "contact";
@@ -35,54 +35,54 @@ App.pages.customFieldsSettings = (function () {
     const entities = S().customFields.ENTITIES;
     const defs = S().customFields.definitionsFor(activeEntity);
 
-    const tabsHtml = entities.map(e => `<button type="button" class="btn btn-sm ${e===activeEntity?"btn-primary":""}" data-cf-tab="${e}">${U().esc(ENTITY_LABELS[e])}</button>`).join("");
+    const tabsHtml = entities.map(e => App.i18n.html`<button type="button" class="btn btn-sm ${App.i18n.value(() => (e===activeEntity?"btn-primary":""))}" data-cf-tab="${App.i18n.value(() => (e))}">${App.i18n.value(() => (U().esc(ENTITY_LABELS[e])))}</button>`).join("");
 
     const rowsHtml = defs.length ? defs.map((f, i) => {
       const usage = countValuesSync(f.id);
-      const optionsHtml = (f.type === "select" || f.type === "multiselect") ? `
+      const optionsHtml = (f.type === "select" || f.type === "multiselect") ? App.i18n.html`
         <div class="cf-options" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:6px">
-          ${f.options.map(o => `<span class="badge badge-neutral" style="display:inline-flex;align-items:center;gap:5px">${U().esc(o.label)}<button type="button" class="btn-icon" data-cf-opt-del="${U().esc(f.id)}::${U().esc(o.id)}" title="Delete option" style="border:none;background:none;cursor:pointer;color:var(--muted-text)">✕</button></span>`).join("")}
+          ${App.i18n.value(() => (f.options.map(o => App.i18n.html`<span class="badge badge-neutral" style="display:inline-flex;align-items:center;gap:5px">${App.i18n.value(() => (U().esc(o.label)))}<button type="button" class="btn-icon" data-cf-opt-del="${App.i18n.value(() => (U().esc(f.id)))}::${App.i18n.value(() => (U().esc(o.id)))}" title="Delete option" style="border:none;background:none;cursor:pointer;color:var(--muted-text)">✕</button></span>`).join("")))}
           <span style="display:inline-flex;gap:4px">
-            <input type="text" data-cf-opt-new="${U().esc(f.id)}" placeholder="Add option…" style="width:120px;padding:3px 6px;font-size: var(--font-size-xs)">
-            <button type="button" class="btn btn-sm" data-cf-opt-add="${U().esc(f.id)}">+</button>
+            <input type="text" data-cf-opt-new="${App.i18n.value(() => (U().esc(f.id)))}" placeholder="Add option…" style="width:120px;padding:3px 6px;font-size: var(--font-size-xs)">
+            <button type="button" class="btn btn-sm" data-cf-opt-add="${App.i18n.value(() => (U().esc(f.id)))}">+</button>
           </span>
         </div>` : "";
-      return `
-        <div class="release-maintenance" data-cf-row="${U().esc(f.id)}" style="align-items:flex-start;flex-wrap:wrap">
+      return App.i18n.html`
+        <div class="release-maintenance" data-cf-row="${App.i18n.value(() => (U().esc(f.id)))}" style="align-items:flex-start;flex-wrap:wrap">
           <div style="flex:1;min-width:220px">
-            <strong>${U().esc(f.label)}</strong> <button type="button" class="btn-icon" data-cf-rename="${U().esc(f.id)}" title="Rename field" style="border:none;background:none;cursor:pointer;color:var(--text-muted);padding:2px">${App.app.icon("edit")}</button>
-            <span class="badge badge-neutral">${U().esc(TYPE_LABELS[f.type] || f.type)}</span>
-            ${f.required ? '<span class="badge badge-neutral">Required</span>' : ""}
-            ${f.active === false ? '<span class="badge badge-neutral">Inactive</span>' : ""}
-            <div class="form-help" style="margin:2px 0 0">Appears on: ${U().esc(ENTITY_LABELS[activeEntity])}${f.helpText ? " · " + U().esc(f.helpText) : ""} · ${usage} record${usage===1?"":"s"} using this field</div>
-            ${optionsHtml}
+            <strong>${App.i18n.value(() => (U().esc(f.label)))}</strong> <button type="button" class="btn-icon" data-cf-rename="${App.i18n.value(() => (U().esc(f.id)))}" title="Rename field" style="border:none;background:none;cursor:pointer;color:var(--text-muted);padding:2px">${App.i18n.value(() => (App.app.icon("edit")))}</button>
+            <span class="badge badge-neutral">${App.i18n.value(() => (U().esc(TYPE_LABELS[f.type] || f.type)))}</span>
+            ${App.i18n.value(() => (f.required ? App.i18n.markup('<span class="badge badge-neutral">Required</span>') : ""))}
+            ${App.i18n.value(() => (f.active === false ? App.i18n.markup('<span class="badge badge-neutral">Inactive</span>') : ""))}
+            <div class="form-help" style="margin:2px 0 0">Appears on: ${App.i18n.value(() => (U().esc(ENTITY_LABELS[activeEntity])))}${App.i18n.value(() => (f.helpText ? " · " + U().esc(f.helpText) : ""))} · ${App.i18n.value(() => (usage))} record${App.i18n.value(() => (usage===1?"":"s"))} using this field</div>
+            ${App.i18n.value(() => (optionsHtml))}
           </div>
           <span style="display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap">
-            <button class="btn btn-sm" data-cf-up="${U().esc(f.id)}" ${i===0?"disabled":""} aria-label="Move up">↑</button>
-            <button class="btn btn-sm" data-cf-down="${U().esc(f.id)}" ${i===defs.length-1?"disabled":""} aria-label="Move down">↓</button>
-            <button class="btn btn-sm" data-cf-toggle="${U().esc(f.id)}">${f.active === false ? "Reactivate" : "Deactivate"}</button>
-            <button class="btn btn-sm btn-danger" data-cf-del="${U().esc(f.id)}">Delete</button>
+            <button class="btn btn-sm" data-cf-up="${App.i18n.value(() => (U().esc(f.id)))}" ${App.i18n.value(() => (i===0?"disabled":""))} aria-label="Move up">↑</button>
+            <button class="btn btn-sm" data-cf-down="${App.i18n.value(() => (U().esc(f.id)))}" ${App.i18n.value(() => (i===defs.length-1?"disabled":""))} aria-label="Move down">↓</button>
+            <button class="btn btn-sm" data-cf-toggle="${App.i18n.value(() => (U().esc(f.id)))}">${App.i18n.value(() => (f.active === false ? App.i18n.t("Reactivate") : App.i18n.t("Deactivate")))}</button>
+            <button class="btn btn-sm btn-danger" data-cf-del="${App.i18n.value(() => (U().esc(f.id)))}">Delete</button>
           </span>
         </div>`;
-    }).join("") : `<p class="form-help">No custom fields on ${U().esc(ENTITY_LABELS[activeEntity])} yet. Add one below.</p>`;
+    }).join("") : App.i18n.html`<p class="form-help">No custom fields on ${App.i18n.value(() => (U().esc(ENTITY_LABELS[activeEntity])))} yet. Add one below.</p>`;
 
-    root.innerHTML = `
+    root.innerHTML = App.i18n.html`
       <section class="card"><div class="card-header"><div class="card-title">Custom Fields</div></div>
         <div class="card-body">
           <p class="form-help" style="margin-top:0">Add your own fields to Contacts, Properties, Deals, or Tasks — things like Referral Fee, Property Type, or Lead Source. They show up on that record's form automatically. Deactivating a field hides it without losing any data already entered; deleting it permanently removes its recorded values too.</p>
-          <div style="display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap">${tabsHtml}</div>
-          <div id="cfRows">${rowsHtml}</div>
+          <div style="display:flex;gap:6px;margin-bottom:14px;flex-wrap:wrap">${App.i18n.value(() => (tabsHtml))}</div>
+          <div id="cfRows">${App.i18n.value(() => (rowsHtml))}</div>
           <hr style="border:none;border-top:1px solid var(--border);margin:16px 0">
           <div class="form-grid">
             <label class="field"><span>Field Name</span><input id="cfNewLabel" placeholder="e.g. Referral Fee"></label>
-            <label class="field"><span>Type</span><select id="cfNewType">${S().customFields.TYPES.map(t => `<option value="${t}">${U().esc(TYPE_LABELS[t])}</option>`).join("")}</select></label>
+            <label class="field"><span>Type</span><select id="cfNewType">${App.i18n.value(() => (S().customFields.TYPES.map(t => App.i18n.html`<option value="${App.i18n.value(() => (t))}">${App.i18n.value(() => (U().esc(TYPE_LABELS[t])))}</option>`).join("")))}</select></label>
             <label class="field"><span>Required?</span><select id="cfNewRequired"><option value="">Optional</option><option value="1">Required</option></select></label>
           </div>
           <div class="form-grid" id="cfNewOptionsWrap" style="display:none">
             <label class="field full"><span>Options (one per line)</span><textarea id="cfNewOptions" rows="3" placeholder="e.g.\nCondo\nSingle Family\nTownhouse"></textarea></label>
           </div>
           <label class="field"><span>Help text (optional)</span><input id="cfNewHelp" placeholder="Shown under the field on the form"></label>
-          <button class="btn btn-primary" id="cfAddBtn" style="margin-top:8px">+ Add Field to ${U().esc(ENTITY_LABELS[activeEntity])}</button>
+          <button class="btn btn-primary" id="cfAddBtn" style="margin-top:8px">+ Add Field to ${App.i18n.value(() => (U().esc(ENTITY_LABELS[activeEntity])))}</button>
         </div>
       </section>`;
 
@@ -96,7 +96,7 @@ App.pages.customFieldsSettings = (function () {
 
     root.querySelector("#cfAddBtn").onclick = async () => {
       const label = root.querySelector("#cfNewLabel").value.trim();
-      if (!label) { App.app.toast("Enter a name for the field.", "danger"); return; }
+      if (!label) { App.app.toast(App.i18n.t("Enter a name for the field."), "danger"); return; }
       const btn = root.querySelector("#cfAddBtn"); btn.disabled = true;
       const type = typeSel.value;
       const options = root.querySelector("#cfNewOptions").value.split("\n").map(s => s.trim()).filter(Boolean);
@@ -107,11 +107,11 @@ App.pages.customFieldsSettings = (function () {
           helpText: root.querySelector("#cfNewHelp").value.trim(),
           options
         });
-        if (!field) { App.app.toast("Could not add field — that name may already be in use, or options are missing for a dropdown type.", "danger"); btn.disabled = false; return; }
-        App.app.toast(`Added "${field.label}" to ${ENTITY_LABELS[activeEntity]}.`, "success");
+        if (!field) { App.app.toast(App.i18n.t("Could not add field — that name may already be in use, or options are missing for a dropdown type."), "danger"); btn.disabled = false; return; }
+        App.app.toast(App.i18n.text`Added "${App.i18n.value(() => (field.label))}" to ${App.i18n.value(() => (ENTITY_LABELS[activeEntity]))}.`, "success");
         await render(root);
       } catch (err) {
-        App.app.toast("Could not add field: " + err.message, "danger");
+        App.app.toast(App.i18n.t("Could not add field: ") + err.message, "danger");
         btn.disabled = false;
       }
     };
@@ -122,10 +122,10 @@ App.pages.customFieldsSettings = (function () {
       b.disabled = true;
       try {
         const ok = await S().customFields.setActive(id, f.active === false);
-        if (!ok) { App.app.toast("Could not update field.", "danger"); b.disabled = false; return; }
+        if (!ok) { App.app.toast(App.i18n.t("Could not update field."), "danger"); b.disabled = false; return; }
         await render(root);
       } catch (err) {
-        App.app.toast("Could not update field: " + err.message, "danger");
+        App.app.toast(App.i18n.t("Could not update field: ") + err.message, "danger");
         b.disabled = false;
       }
     }));
@@ -138,7 +138,7 @@ App.pages.customFieldsSettings = (function () {
       const f = S().customFields.getDefinition(id);
       const usage = countValuesSync(id);
       App.app.confirmDialog({
-        title: "Delete this custom field?",
+        get title() { return App.i18n.t("Delete this custom field?"); },
         message: usage > 0
           ? `"${U().esc(f.label)}" has data recorded on ${usage} record${usage===1?"":"s"}. Deleting it permanently removes that field and all ${usage} value${usage===1?"":"s"}. This cannot be undone.`
           : `"${U().esc(f.label)}" has no recorded data yet. This cannot be undone.`,
@@ -147,11 +147,11 @@ App.pages.customFieldsSettings = (function () {
       }, async () => {
         try {
           const ok = await S().customFields.deleteDefinition(id, { force: true });
-          if (!ok) { App.app.toast("Could not delete field.", "danger"); return; }
-          App.app.toast("Field deleted.", "success");
+          if (!ok) { App.app.toast(App.i18n.t("Could not delete field."), "danger"); return; }
+          App.app.toast(App.i18n.t("Field deleted."), "success");
           await render(root);
         } catch (err) {
-          App.app.toast("Could not delete field: " + err.message, "danger");
+          App.app.toast(App.i18n.t("Could not delete field: ") + err.message, "danger");
         }
       });
     }));
@@ -164,10 +164,10 @@ App.pages.customFieldsSettings = (function () {
       b.disabled = true;
       try {
         const ok = await S().customFields.addOption(fieldId, label);
-        if (!ok) { App.app.toast("Could not add option — it may already exist.", "danger"); b.disabled = false; return; }
+        if (!ok) { App.app.toast(App.i18n.t("Could not add option — it may already exist."), "danger"); b.disabled = false; return; }
         await render(root);
       } catch (err) {
-        App.app.toast("Could not add option: " + err.message, "danger");
+        App.app.toast(App.i18n.t("Could not add option: ") + err.message, "danger");
         b.disabled = false;
       }
     }));
@@ -175,14 +175,14 @@ App.pages.customFieldsSettings = (function () {
     root.querySelectorAll("[data-cf-opt-del]").forEach(b => b.addEventListener("click", async () => {
       const [fieldId, optionId] = b.getAttribute("data-cf-opt-del").split("::");
       const usage = countOptionUsageSync(fieldId, optionId);
-      if (usage > 0) { App.app.toast(`Cannot delete: ${usage} record(s) still use this option.`, "danger"); return; }
+      if (usage > 0) { App.app.toast(App.i18n.text`Cannot delete: ${App.i18n.value(() => (usage))} record(s) still use this option.`, "danger"); return; }
       b.disabled = true;
       try {
         const ok = await S().customFields.deleteOption(fieldId, optionId);
-        if (!ok) { App.app.toast("Could not delete option.", "danger"); b.disabled = false; return; }
+        if (!ok) { App.app.toast(App.i18n.t("Could not delete option."), "danger"); b.disabled = false; return; }
         await render(root);
       } catch (err) {
-        App.app.toast("Could not delete option: " + err.message, "danger");
+        App.app.toast(App.i18n.t("Could not delete option: ") + err.message, "danger");
         b.disabled = false;
       }
     }));
@@ -206,10 +206,10 @@ App.pages.customFieldsSettings = (function () {
         if (newLabel && newLabel !== oldLabel) {
           try {
             const ok = await S().customFields.update(fieldId, { label: newLabel });
-            if (ok) App.app.toast("Field renamed.", "success");
-            else App.app.toast("Could not rename field.", "danger");
+            if (ok) App.app.toast(App.i18n.t("Field renamed."), "success");
+            else App.app.toast(App.i18n.t("Could not rename field."), "danger");
           } catch (err) {
-            App.app.toast("Could not rename field: " + err.message, "danger");
+            App.app.toast(App.i18n.t("Could not rename field: ") + err.message, "danger");
           }
         }
         await render(root);
@@ -226,10 +226,10 @@ App.pages.customFieldsSettings = (function () {
     const tmp = defs[i]; defs[i] = defs[j]; defs[j] = tmp;
     try {
       const ok = await S().customFields.reorder(activeEntity, defs);
-      if (!ok) { App.app.toast("Could not reorder fields.", "danger"); return; }
+      if (!ok) { App.app.toast(App.i18n.t("Could not reorder fields."), "danger"); return; }
       await render(root);
     } catch (err) {
-      App.app.toast("Could not reorder fields: " + err.message, "danger");
+      App.app.toast(App.i18n.t("Could not reorder fields: ") + err.message, "danger");
     }
   }
 

@@ -17,7 +17,7 @@ async function settings({ team = false, manage = false } = {}) {
 dom("Settings groups essentials and keeps advanced options discoverable without writes", async () => {
   const p = await settings();
   assert.deepEqual(Array.from(p.pane.querySelectorAll(".settings-nav-section-title"), e => e.textContent),
-    ["Profile", "Workspace", "Integrations", "Features", "Advanced"]);
+    ["Account & Preferences", "Workspace", "Integrations", "Features", "Advanced"]);
   const advanced = p.pane.querySelector(".settings-nav details");
   assert.equal(advanced.open, false);
   assert.deepEqual(Array.from(advanced.querySelectorAll("[data-settings-cat]"), e => e.dataset.settingsCat),

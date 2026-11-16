@@ -22,23 +22,23 @@ App.customization = (function () {
   // data and its links are filtered by the route guard below, so it is
   // safe to make optional.
   const OPTIONAL_MODULES = [
-    { id: "daily",      label: "Daily View",         group: "Workspace" },
-    { id: "buyer",      label: "Buyer Workspace",    group: "CRM" },
-    { id: "seller",     label: "Seller Workspace",   group: "CRM" },
-    { id: "referrals",  label: "Referrals",          group: "CRM" },
-    { id: "activities", label: "Activities",         group: "Operations" },
-    { id: "tasks",      label: "Tasks",              group: "Operations" },
-    { id: "scheduler", label: "Scheduler",          group: "Automation" },
-    { id: "calendar",   label: "Calendar",           group: "Operations" },
-    { id: "finances",   label: "Income & Expenses",  group: "Business" },
-    { id: "goals",      label: "Goals",              group: "Business" },
-    { id: "reports",    label: "Reports",            group: "Business" },
-    { id: "content",    label: "Content Library",    group: "Marketing" },
+    { id: "daily",      get label() { return App.i18n.t("Daily View"); },         group: "Workspace" },
+    { id: "buyer",      get label() { return App.i18n.t("Buyer Workspace"); },    group: "CRM" },
+    { id: "seller",     get label() { return App.i18n.t("Seller Workspace"); },   group: "CRM" },
+    { id: "referrals",  get label() { return App.i18n.t("Referrals"); },          group: "CRM" },
+    { id: "activities", get label() { return App.i18n.t("Activities"); },         group: "Operations" },
+    { id: "tasks",      get label() { return App.i18n.t("Tasks"); },              group: "Operations" },
+    { id: "scheduler", get label() { return App.i18n.t("Scheduler"); },          group: "Automation" },
+    { id: "calendar",   get label() { return App.i18n.t("Calendar"); },           group: "Operations" },
+    { id: "finances",   get label() { return App.i18n.t("Income & Expenses"); },  group: "Business" },
+    { id: "goals",      get label() { return App.i18n.t("Goals"); },              group: "Business" },
+    { id: "reports",    get label() { return App.i18n.t("Reports"); },            group: "Business" },
+    { id: "content",    get label() { return App.i18n.t("Content Library"); },    group: "Marketing" },
     // id stays "scripts" so existing saved module-toggle state keeps
     // applying — only the user-facing label changed (Phase 4B).
-    { id: "scripts",    label: "Email Templates",    group: "Marketing" },
-    { id: "prompts",    label: "AI Prompts",         group: "Marketing" },
-    { id: "automation", label: "Automation",         group: "Marketing" }
+    { id: "scripts",    get label() { return App.i18n.t("Email Templates"); },    group: "Marketing" },
+    { id: "prompts",    get label() { return App.i18n.t("AI Prompts"); },         group: "Marketing" },
+    { id: "automation", get label() { return App.i18n.t("Automation"); },         group: "Marketing" }
   ];
   const OPTIONAL_IDS = new Set(OPTIONAL_MODULES.map(m => m.id));
 
@@ -46,34 +46,34 @@ App.customization = (function () {
   // (null when the widget only relies on locked/core modules).
   // Every widget id used here must match a case in renderDashboard's widget map.
   const WIDGETS = [
-    { id: "statOverview",     label: "Business At a Glance", requiresModule: null,
+    { id: "statOverview",     get label() { return App.i18n.t("Business At a Glance"); }, requiresModule: null,
       description: "Top summary tiles: pipeline value, expected commission, YTD net, attention count." },
-    { id: "pipelineSnapshot", label: "Pipeline Snapshot",    requiresModule: null,
+    { id: "pipelineSnapshot", get label() { return App.i18n.t("Pipeline Snapshot"); },    requiresModule: null,
       description: "Deal counts, values, and expected net by pipeline stage." },
-    { id: "needsAttention",   label: "Needs Attention",      requiresModule: null,
+    { id: "needsAttention",   get label() { return App.i18n.t("Needs Attention"); },      requiresModule: null,
       description: "Overdue follow-ups, tasks, showings, and deadlines that need action." },
-    { id: "upcomingClosings", label: "Upcoming Closings",    requiresModule: null,
+    { id: "upcomingClosings", get label() { return App.i18n.t("Upcoming Closings"); },    requiresModule: null,
       description: "Active deals closing in the next 30 days." },
-    { id: "goalsProgress",    label: "Goals Progress",       requiresModule: "goals",
+    { id: "goalsProgress",    get label() { return App.i18n.t("Goals Progress"); },       requiresModule: "goals",
       description: "Progress bars for your active business goals." },
-    { id: "recentActivity",   label: "Recent Activity",      requiresModule: "activities",
+    { id: "recentActivity",   get label() { return App.i18n.t("Recent Activity"); },      requiresModule: "activities",
       description: "Latest logged calls, texts, emails, meetings, and notes." },
     // v2 widgets — hidden by default (see defaultCustomization in store.js)
     // so every existing workspace's dashboard looks exactly the same after
     // upgrading; a customer opts in from Settings → Customize Dashboard.
-    { id: "activeDealsWidget", label: "Active Deals",        requiresModule: null,
+    { id: "activeDealsWidget", get label() { return App.i18n.t("Active Deals"); },        requiresModule: null,
       description: "Count and total value of every deal still in progress." },
-    { id: "newLeadsWidget",    label: "New Leads",           requiresModule: null,
+    { id: "newLeadsWidget",    get label() { return App.i18n.t("New Leads"); },           requiresModule: null,
       description: "Contacts currently sitting in your first pipeline stage." },
-    { id: "monthlyCommission", label: "Monthly Commission",  requiresModule: null,
+    { id: "monthlyCommission", get label() { return App.i18n.t("Monthly Commission"); },  requiresModule: null,
       description: "Net commission from deals that closed this calendar month." },
-    { id: "propertiesWidget",  label: "Properties",          requiresModule: null,
+    { id: "propertiesWidget",  get label() { return App.i18n.t("Properties"); },          requiresModule: null,
       description: "Property count broken down by listing status." },
-    { id: "conversionRate",    label: "Conversion Rate",     requiresModule: null,
+    { id: "conversionRate",    get label() { return App.i18n.t("Conversion Rate"); },     requiresModule: null,
       description: "Won deals as a share of every deal that's reached Won or Lost." },
-    { id: "teamPerformance",   label: "Team Performance",    requiresModule: null,
+    { id: "teamPerformance",   get label() { return App.i18n.t("Team Performance"); },    requiresModule: null,
       description: "Deal count and net commission by assigned team member." },
-    { id: "revenueWidget",     label: "Revenue",             requiresModule: "finances",
+    { id: "revenueWidget",     get label() { return App.i18n.t("Revenue"); },             requiresModule: "finances",
       description: "Net income vs. expenses this month and year-to-date." }
   ];
   const WIDGETS_BY_ID = {};

@@ -763,6 +763,7 @@ App.store = (function () {
     register: (subscription, label) => D().registerPushDevice(subscription, label),
     remove: (endpoint) => D().removePushDevice(endpoint),
     preferences: () => D().getNotificationPreferences(),
+    test: (endpoint) => D().requestPushTest(endpoint),
     savePreferences: (prefs) => D().saveNotificationPreferences(prefs)
   };
 
@@ -878,6 +879,7 @@ App.store = (function () {
 
   return {
     SCHEMA_VERSION,
+    search: (entity, query) => D().search(entity, query),
     getState, ensureLoaded,
     getSyncState, onSyncStateChange,
     migrateData: (raw) => normalize(runMigrations(raw)),

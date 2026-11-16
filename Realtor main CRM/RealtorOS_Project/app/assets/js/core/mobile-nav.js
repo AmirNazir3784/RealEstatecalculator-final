@@ -36,11 +36,11 @@ App.mobileNav = (function () {
   // navigating. module is the Settings → Modules id, so a tab for a page
   // somebody turned off does not sit there leading nowhere.
   const TABS = [
-    { id: "today",    label: "Today",    icon: "today",    route: "/daily",     module: "daily" },
-    { id: "contacts", label: "Contacts", icon: "contacts", route: "/contacts",  module: "contacts" },
-    { id: "add",      label: "+ New",      icon: "add",      action: "quickAdd",  primary: true },
-    { id: "pipeline", label: "Deals", icon: "pipeline", route: "/pipeline",  module: "pipeline" },
-    { id: "more",     label: "More",     icon: "more",     action: "menu" }
+    { id: "today",    get label() { return App.i18n.t("Today"); },    icon: "today",    route: "/daily",     module: "daily" },
+    { id: "contacts", get label() { return App.i18n.t("Contacts"); }, icon: "contacts", route: "/contacts",  module: "contacts" },
+    { id: "add",      get label() { return App.i18n.t("+ New"); },      icon: "add",      action: "quickAdd",  primary: true },
+    { id: "pipeline", get label() { return App.i18n.t("Deals"); }, icon: "pipeline", route: "/pipeline",  module: "pipeline" },
+    { id: "more",     get label() { return App.i18n.t("More"); },     icon: "more",     action: "menu" }
   ];
 
   function enabledTabs() {
@@ -88,10 +88,10 @@ App.mobileNav = (function () {
       const attr = t.route
         ? `data-tab-route="${t.route}"`
         : `data-tab-action="${t.action}"`;
-      return `<button type="button" class="mobile-tab${t.primary ? " mobile-tab-primary" : ""}"
-        ${attr} ${t.id === "more" ? 'aria-controls="sidebar" aria-expanded="false"' : ""} ${t.id === "add" ? 'aria-haspopup="menu" aria-controls="globalNewMenu" aria-expanded="false"' : ""} aria-label="${t.id === "add" ? "Create new" : t.label}">
-        <span class="mobile-tab-icon" aria-hidden="true">${ICONS[t.icon]}</span>
-        <span class="mobile-tab-label">${t.label}</span>
+      return App.i18n.html`<button type="button" class="mobile-tab${App.i18n.value(() => (t.primary ? " mobile-tab-primary" : ""))}"
+        ${App.i18n.value(() => (attr))} ${App.i18n.value(() => (t.id === "more" ? 'aria-controls="sidebar" aria-expanded="false"' : ""))} ${App.i18n.value(() => (t.id === "add" ? 'aria-haspopup="menu" aria-controls="globalNewMenu" aria-expanded="false"' : ""))} aria-label="${App.i18n.value(() => (t.id === "add" ? "Create new" : t.label))}">
+        <span class="mobile-tab-icon" aria-hidden="true">${App.i18n.value(() => (ICONS[t.icon]))}</span>
+        <span class="mobile-tab-label">${App.i18n.value(() => (t.label))}</span>
       </button>`;
     }).join("");
 

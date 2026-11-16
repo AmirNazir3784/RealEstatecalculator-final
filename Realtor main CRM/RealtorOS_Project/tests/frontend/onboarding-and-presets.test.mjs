@@ -389,7 +389,9 @@ domTest("the time zone nudge appears only on UTC, and either answer settles it",
   p.window.Intl = { DateTimeFormat: () => ({ resolvedOptions: () => ({ timeZone: "Asia/Dubai" }) }) };
 
   let html = p.O.timezoneNudgeHtml();
-  assert.match(html, /Your time zone is UTC. Use Asia\/Dubai\?/);
+  const rendered = p.document.createElement("div");
+  rendered.innerHTML = html;
+  assert.match(rendered.textContent, /Your time zone is UTC. Use Asia\/Dubai\?/);
 
   // Already answered, or already not UTC: no nudge either way.
   Object.assign(p.settings, { timezoneConfirmed: true });

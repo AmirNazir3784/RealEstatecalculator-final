@@ -32,7 +32,7 @@
 // Bump this when the shell changes. The cache name carries it, so a new
 // version installs beside the old one and the old one is deleted on
 // activate - never a half-old, half-new shell.
-const VERSION = "auth-final-refinement-20261116";
+const VERSION = "crm-device-refinement-20261116";
 const CACHE = "realtoros-shell-" + VERSION;
 
 // Everything the app needs to render its first screen without a network.
@@ -44,6 +44,17 @@ const SHELL = [
   "./manifest.webmanifest",
   "./assets/css/realtoros.css",
   "./assets/js/config.js",
+  "./assets/js/core/preferences.js",
+  "./assets/js/core/i18n.js",
+  "./assets/i18n/en.json",
+  "./assets/i18n/de.json",
+  "./assets/i18n/fr.json",
+  "./assets/i18n/es.json",
+  "./assets/i18n/it.json",
+  "./assets/i18n/pt.json",
+  "./assets/i18n/ar.json",
+  "./assets/images/home-architecture-768.avif",
+  "./assets/images/home-architecture-768.webp",
   "./assets/js/core/utils.js",
   "./assets/js/core/lead-file.js",
   "./assets/js/core/commission.js",

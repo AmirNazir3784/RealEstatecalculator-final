@@ -214,7 +214,7 @@ test("all five menu choices open their real existing forms", async t => {
   }
 });
 
-test("New uses theme contrast tokens and hidden controls stay hidden; header wraps on narrow screens", async t => {
+test("New uses theme contrast tokens and hidden controls stay hidden; mobile header stays on one row", async t => {
   const b = await setup(t);
   for (const theme of ["light", "dark"]) {
     b.document.documentElement.setAttribute("data-theme", theme);
@@ -224,7 +224,7 @@ test("New uses theme contrast tokens and hidden controls stay hidden; header wra
   }
   const css = readFileSync(new URL("../../app/assets/css/realtoros.css", import.meta.url), "utf8");
   assert.match(css, /\.header-new\[hidden\]\s*\{\s*display: none/);
-  assert.match(css, /#topbar\s*\{[^}]*flex-wrap: wrap/);
+    assert.match(css, /#topbar\s*\{[^}]*flex-wrap:nowrap/);
   assert.match(css, /\.header-search kbd\s*\{\s*display: none/);
 });
 

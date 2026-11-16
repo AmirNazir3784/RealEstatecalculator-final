@@ -27,7 +27,7 @@ App.pages.scheduler = (function () {
   }
 
   async function render(container) {
-    App.app.setBreadcrumbs([{ label: "Scheduler" }]);
+    App.app.setBreadcrumbs([{ get label() { return App.i18n.t("Scheduler"); } }]);
     App.app.setTopActions("");
     container.innerHTML = App.app.loadingHtml();
     await S().ensureLoaded(["scheduledItems", "scripts", "teamMembers"]);
@@ -56,54 +56,54 @@ App.pages.scheduler = (function () {
       const dateStr = dt.toLocaleDateString(undefined, { weekday: 'short', month: 'short', day: 'numeric', year: 'numeric' });
       const timeStr = dt.toLocaleTimeString(undefined, { hour: '2-digit', minute: '2-digit' });
       const statusBadge = isPast
-        ? (item.completed ? '<span class="badge badge-success">Done</span>' : '<span class="badge badge-warning">Missed</span>')
-        : '<span class="badge badge-info">Upcoming</span>';
+        ? (item.completed ? App.i18n.markup('<span class="badge badge-success">Done</span>') : App.i18n.markup('<span class="badge badge-warning">Missed</span>'))
+        : App.i18n.markup('<span class="badge badge-info">Upcoming</span>');
       const sourceBadge = isEmail
-        ? '<span class="badge badge-neutral">Email Template</span>'
-        : (script ? '<span class="badge badge-neutral">'+U().esc(script.category||"General")+'</span>' : '<span class="badge badge-danger">Script deleted</span>');
+        ? App.i18n.markup('<span class="badge badge-neutral">Email Template</span>')
+        : (script ? App.i18n.markup('<span class="badge badge-neutral">')+U().esc(script.category||"General")+'</span>' : App.i18n.markup('<span class="badge badge-danger">Script deleted</span>'));
 
-      return `
-        <div class="release-maintenance" data-sch-id="${U().esc(item.id)}" style="align-items:center">
+      return App.i18n.html`
+        <div class="release-maintenance" data-sch-id="${App.i18n.value(() => (U().esc(item.id)))}" style="align-items:center">
           <div style="flex:1;min-width:0">
             <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap">
-              <strong>${U().esc(displayTitle)}</strong>
-              ${statusBadge}
-              ${sourceBadge}
+              <strong>${App.i18n.value(() => (U().esc(displayTitle)))}</strong>
+              ${App.i18n.value(() => (statusBadge))}
+              ${App.i18n.value(() => (sourceBadge))}
             </div>
-            <div class="form-help" style="margin-top:3px">${U().esc(dateStr)} at ${U().esc(timeStr)}${item.notes ? ' · ' + U().esc(item.notes) : ''}</div>
-            ${item.assignedTo ? '<div class="form-help">Assigned to: <strong>' + U().esc(item.assignedToName || item.assignedTo) + '</strong></div>' : ''}
+            <div class="form-help" style="margin-top:3px">${App.i18n.value(() => (U().esc(dateStr)))} at ${App.i18n.value(() => (U().esc(timeStr)))}${App.i18n.value(() => (item.notes ? ' · ' + U().esc(item.notes) : ''))}</div>
+            ${App.i18n.value(() => (item.assignedTo ? App.i18n.markup('<div class="form-help">Assigned to: <strong>') + U().esc(item.assignedToName || item.assignedTo) + '</strong></div>' : ''))}
           </div>
           <span style="display:inline-flex;align-items:center;gap:6px;flex-wrap:wrap">
-            ${!isPast ? '<button class="btn btn-sm" data-sch-done="'+U().esc(item.id)+'">Mark done</button>' : ''}
-            ${isPast && !item.completed ? '<button class="btn btn-sm" data-sch-done="'+U().esc(item.id)+'">Mark done</button>' : ''}
-            <button class="btn btn-sm" data-sch-edit="${U().esc(item.id)}">Edit</button>
-            <button class="btn btn-sm btn-danger" data-sch-del="${U().esc(item.id)}">Delete</button>
+            ${App.i18n.value(() => (!isPast ? '<button class="btn btn-sm" data-sch-done="'+U().esc(item.id)+'">Mark done</button>' : ''))}
+            ${App.i18n.value(() => (isPast && !item.completed ? '<button class="btn btn-sm" data-sch-done="'+U().esc(item.id)+'">Mark done</button>' : ''))}
+            <button class="btn btn-sm" data-sch-edit="${App.i18n.value(() => (U().esc(item.id)))}">Edit</button>
+            <button class="btn btn-sm btn-danger" data-sch-del="${App.i18n.value(() => (U().esc(item.id)))}">Delete</button>
           </span>
         </div>`;
     }
 
-    container.innerHTML = `
-      <div class="page-header"><div><div class="page-title">Scheduler</div><div class="page-desc">Schedule a follow-up from a Script or an active Email Template, set a date and time, and optionally assign it to a team member. Nothing is sent automatically — you complete each item yourself.</div></div><div class="page-actions"><button class="btn btn-primary" id="schAddBtn">${App.app.icon("plus")} Schedule Follow-up</button></div></div>
-      ${templatesError ? `<div class="release-callout release-callout-warning" style="margin-bottom:16px">
+    container.innerHTML = App.i18n.html`
+      <div class="page-header"><div><div class="page-title">Scheduler</div><div class="page-desc">Schedule a follow-up from a Script or an active Email Template, set a date and time, and optionally assign it to a team member. Nothing is sent automatically — you complete each item yourself.</div></div><div class="page-actions"><button class="btn btn-primary" id="schAddBtn">${App.i18n.value(() => (App.app.icon("plus")))} Schedule Follow-up</button></div></div>
+      ${App.i18n.value(() => (templatesError ? App.i18n.html`<div class="release-callout release-callout-warning" style="margin-bottom:16px">
         <strong>Email Templates could not be loaded.</strong>
-        <p style="margin:6px 0 10px">${U().esc(templatesError)}</p>
+        <p style="margin:6px 0 10px">${App.i18n.value(() => (U().esc(templatesError)))}</p>
         <p class="form-help" style="margin:0 0 10px">Scripts and your existing scheduled items are still shown below.</p>
         <button type="button" class="btn btn-sm" id="schTemplatesRetry">Retry</button>
-      </div>` : ''}
+      </div>` : ''))}
       <div class="stat-row release-stat-grid">
-        <div class="stat-card"><div class="k">Total Scheduled</div><div class="v">${schedule.length}</div></div>
-        <div class="stat-card"><div class="k">Upcoming</div><div class="v">${upcoming.length}</div></div>
-        <div class="stat-card"><div class="k">Completed</div><div class="v">${schedule.filter(s=>s.completed).length}</div></div>
-        <div class="stat-card"><div class="k">Available Scripts</div><div class="v">${scripts.length}</div></div>
-        <div class="stat-card"><div class="k">Active Email Templates</div><div class="v">${templatesError ? "—" : templates.length}</div></div>
+        <div class="stat-card"><div class="k">Total Scheduled</div><div class="v">${App.i18n.value(() => (schedule.length))}</div></div>
+        <div class="stat-card"><div class="k">Upcoming</div><div class="v">${App.i18n.value(() => (upcoming.length))}</div></div>
+        <div class="stat-card"><div class="k">Completed</div><div class="v">${App.i18n.value(() => (schedule.filter(s=>s.completed).length))}</div></div>
+        <div class="stat-card"><div class="k">Available Scripts</div><div class="v">${App.i18n.value(() => (scripts.length))}</div></div>
+        <div class="stat-card"><div class="k">Active Email Templates</div><div class="v">${App.i18n.value(() => (templatesError ? "—" : templates.length))}</div></div>
       </div>
-      ${(!templatesError && scripts.length === 0 && templates.length === 0) ? '<div class="release-callout" style="margin-bottom:16px">Nothing to schedule from yet. <button class="btn btn-sm" data-go="/email-templates">Add an Email Template</button></div>' : ''}
+      ${App.i18n.value(() => ((!templatesError && scripts.length === 0 && templates.length === 0) ? App.i18n.markup('<div class="release-callout" style="margin-bottom:16px">Nothing to schedule from yet. <button class="btn btn-sm" data-go="/email-templates">Add an Email Template</button></div>') : ''))}
       <div class="card"><div class="card-header"><div class="card-title">Upcoming</div></div><div class="card-body zero">
-        ${upcoming.length ? upcoming.map(s => scheduleRow(s, false)).join("") : '<div class="empty-row"><p class="form-help" style="margin:0">Nothing scheduled. Click &ldquo;Schedule Follow-up&rdquo; to add one.</p></div>'}
+        ${App.i18n.value(() => (upcoming.length ? upcoming.map(s => scheduleRow(s, false)).join("") : App.i18n.markup('<div class="empty-row"><p class="form-help" style="margin:0">Nothing scheduled. Click &ldquo;Schedule Follow-up&rdquo; to add one.</p></div>')))}
       </div></div>
-      ${past.length ? `<div class="card" style="margin-top:16px"><div class="card-header"><div class="card-title">Past</div></div><div class="card-body zero">
-        ${past.map(s => scheduleRow(s, true)).join("")}
-      </div></div>` : ''}`;
+      ${App.i18n.value(() => (past.length ? App.i18n.html`<div class="card" style="margin-top:16px"><div class="card-header"><div class="card-title">Past</div></div><div class="card-body zero">
+        ${App.i18n.value(() => (past.map(s => scheduleRow(s, true)).join("")))}
+      </div></div>` : ''))}`;
 
     // Add button
     document.getElementById("schAddBtn").addEventListener("click", () => openScheduleModal(null, scripts, templates, templatesError, () => render(container)));
@@ -117,10 +117,10 @@ App.pages.scheduler = (function () {
       if (!item) return;
       try {
         await S().scheduledItems.update(item.id, { completed: true });
-        App.app.toast("Marked as done.", "success");
+        App.app.toast(App.i18n.t("Marked as done."), "success");
         render(container);
       } catch (err) {
-        App.app.toast("Could not update: " + err.message, "danger");
+        App.app.toast(App.i18n.t("Could not update: ") + err.message, "danger");
       }
     }));
 
@@ -133,13 +133,13 @@ App.pages.scheduler = (function () {
 
     // Delete
     container.querySelectorAll("[data-sch-del]").forEach(b => b.addEventListener("click", () => {
-      App.app.confirmDialog({ title: "Delete scheduled item?", message: "This removes the scheduled entry. The Script or Email Template itself is not affected.", okLabel: "Delete", danger: true }, async () => {
+      App.app.confirmDialog({ get title() { return App.i18n.t("Delete scheduled item?"); }, get message() { return App.i18n.t("This removes the scheduled entry. The Script or Email Template itself is not affected."); }, okLabel: "Delete", danger: true }, async () => {
         try {
           await S().scheduledItems.delete(b.getAttribute("data-sch-del"));
-          App.app.toast("Deleted.", "success");
+          App.app.toast(App.i18n.t("Deleted."), "success");
           render(container);
         } catch (err) {
-          App.app.toast("Could not delete: " + err.message, "danger");
+          App.app.toast(App.i18n.t("Could not delete: ") + err.message, "danger");
         }
       });
     }));
@@ -170,38 +170,38 @@ App.pages.scheduler = (function () {
     const h = App.app.openModal({
       title: existing ? "Edit Scheduled Item" : "Schedule a Follow-up",
       wide: true,
-      body: `<div class="form-grid">
+      body: App.i18n.html`<div class="form-grid">
         <label class="field full"><span>Source</span><select id="schSource">
-          <option value="script" ${initialSource === "script" ? "selected" : ""}>Script (legacy library)</option>
-          <option value="email" ${initialSource === "email" ? "selected" : ""}>Email Template</option>
+          <option value="script" ${App.i18n.value(() => (initialSource === "script" ? "selected" : ""))}>Script (legacy library)</option>
+          <option value="email" ${App.i18n.value(() => (initialSource === "email" ? "selected" : ""))}>Email Template</option>
         </select></label>
 
-        <div data-source-group="script" class="full" style="display:${initialSource === "script" ? "flex" : "none"};flex-direction:column;gap:14px">
+        <div data-source-group="script" class="full" style="display:${App.i18n.value(() => (initialSource === "script" ? "flex" : "none"))};flex-direction:column;gap:14px">
           <label class="field"><span>Script</span><select id="schScript">
             <option value="">Select a script…</option>
-            ${scripts.map(s => `<option value="${App.util.esc(s.id)}" ${existing && existing.type !== "email" && existing.scriptId === s.id ? "selected" : ""}>${App.util.esc(s.title)} (${App.util.esc(s.category||"General")})</option>`).join("")}
+            ${App.i18n.value(() => (scripts.map(s => App.i18n.html`<option value="${App.i18n.value(() => (App.util.esc(s.id)))}" ${App.i18n.value(() => (existing && existing.type !== "email" && existing.scriptId === s.id ? "selected" : ""))}>${App.i18n.value(() => (App.util.esc(s.title)))} (${App.i18n.value(() => (App.util.esc(s.category||App.i18n.t("General"))))})</option>`).join("")))}
           </select></label>
         </div>
 
-        <div data-source-group="email" class="full" style="display:${initialSource === "email" ? "flex" : "none"};flex-direction:column;gap:14px">
+        <div data-source-group="email" class="full" style="display:${App.i18n.value(() => (initialSource === "email" ? "flex" : "none"))};flex-direction:column;gap:14px">
           <label class="field"><span>Email Template</span><select id="schTemplate">
             <option value="">Select an active template…</option>
-            ${showSavedOption ? `<option value="__saved__" selected>${App.util.esc(existing.title || "Saved template")} (saved reference)</option>` : ""}
-            ${templates.map(t => `<option value="${App.util.esc(t.id)}" ${hasMatchingActiveTemplate && existing.title === t.name ? "selected" : ""}>${App.util.esc(t.name)}</option>`).join("")}
+            ${App.i18n.value(() => (showSavedOption ? App.i18n.html`<option value="__saved__" selected>${App.i18n.value(() => (App.util.esc(existing.title || App.i18n.t("Saved template"))))} (saved reference)</option>` : ""))}
+            ${App.i18n.value(() => (templates.map(t => App.i18n.html`<option value="${App.i18n.value(() => (App.util.esc(t.id)))}" ${App.i18n.value(() => (hasMatchingActiveTemplate && existing.title === t.name ? "selected" : ""))}>${App.i18n.value(() => (App.util.esc(t.name)))}</option>`).join("")))}
           </select></label>
-          ${showSavedOption ? '<p class="form-help">This item\'s original template was renamed, deactivated, deleted, or could not be loaded — its saved title is kept unless you pick a different template above.</p>' : ''}
-          ${templatesError ? `<div class="release-callout release-callout-warning" style="margin-top:4px"><strong>Could not load Email Templates.</strong><p style="margin:6px 0 0">${App.util.esc(templatesError)}</p></div>` : (!templates.length && !showSavedOption ? '<p class="form-help">No active Email Templates yet — create one on the Email Templates page.</p>' : '')}
+          ${App.i18n.value(() => (showSavedOption ? App.i18n.markup('<p class="form-help">This item\'s original template was renamed, deactivated, deleted, or could not be loaded — its saved title is kept unless you pick a different template above.</p>') : ''))}
+          ${App.i18n.value(() => (templatesError ? App.i18n.html`<div class="release-callout release-callout-warning" style="margin-top:4px"><strong>Could not load Email Templates.</strong><p style="margin:6px 0 0">${App.i18n.value(() => (App.util.esc(templatesError)))}</p></div>` : (!templates.length && !showSavedOption ? App.i18n.markup('<p class="form-help">No active Email Templates yet — create one on the Email Templates page.</p>') : '')))}
           <p class="form-help">Selecting a template only prefills the title and a note below. Nothing is sent — you still pick the date/time, save manually, and complete this yourself later.</p>
         </div>
 
-        <label class="field"><span>Date &amp; Time</span><input type="datetime-local" id="schDateTime" value="${App.util.esc(defaultDate)}"></label>
+        <label class="field"><span>Date &amp; Time</span><input type="datetime-local" id="schDateTime" value="${App.i18n.value(() => (App.util.esc(defaultDate)))}"></label>
         <label class="field"><span>Assign to</span><select id="schAssign">
           <option value="">Unassigned</option>
-          ${members.map(m => `<option value="${App.util.esc(m.id)}" ${existing && existing.assignedTo === m.id ? "selected" : ""}>${App.util.esc(m.name)} — ${App.util.esc(m.role)}</option>`).join("")}
+          ${App.i18n.value(() => (members.map(m => App.i18n.html`<option value="${App.i18n.value(() => (App.util.esc(m.id)))}" ${App.i18n.value(() => (existing && existing.assignedTo === m.id ? "selected" : ""))}>${App.i18n.value(() => (App.util.esc(m.name)))} — ${App.i18n.value(() => (App.util.esc(m.role)))}</option>`).join("")))}
         </select></label>
-        <label class="field full"><span>Notes (optional)</span><input id="schNotes" value="${App.util.esc(existing?.notes||"")}" placeholder="e.g. Call after showing"></label>
+        <label class="field full"><span>Notes (optional)</span><input id="schNotes" value="${App.i18n.value(() => (App.util.esc(existing?.notes||"")))}" placeholder="e.g. Call after showing"></label>
       </div>`,
-      footer: `<button class="btn" data-role="cancel">Cancel</button><button class="btn btn-primary" data-role="save">${existing ? "Save Changes" : "Schedule"}</button>`,
+      footer: App.i18n.html`<button class="btn" data-role="cancel">Cancel</button><button class="btn btn-primary" data-role="save">${App.i18n.value(() => (existing ? App.i18n.t("Save Changes") : App.i18n.t("Schedule")))}</button>`,
       onOpen: m => {
         m.querySelector('[data-role="cancel"]').onclick = () => h.close();
 
@@ -228,12 +228,12 @@ App.pages.scheduler = (function () {
           if (saveBtn.disabled) return;
           const source = sourceSelect.value;
           const dateTime = m.querySelector("#schDateTime").value;
-          if (!dateTime) { App.app.toast("Pick a date and time.", "danger"); return; }
+          if (!dateTime) { App.app.toast(App.i18n.t("Pick a date and time."), "danger"); return; }
 
           let entry;
           if (source === "email") {
             const selectedValue = m.querySelector("#schTemplate").value;
-            if (!selectedValue) { App.app.toast("Select an Email Template.", "danger"); return; }
+            if (!selectedValue) { App.app.toast(App.i18n.t("Select an Email Template."), "danger"); return; }
             // The template id itself is never stored anywhere on this row
             // (script_id is a foreign key into the legacy scripts table,
             // not message_templates) — only its name, as a plain snapshot.
@@ -248,7 +248,7 @@ App.pages.scheduler = (function () {
             }
           } else {
             const scriptId = m.querySelector("#schScript").value;
-            if (!scriptId) { App.app.toast("Select a script.", "danger"); return; }
+            if (!scriptId) { App.app.toast(App.i18n.t("Select a script."), "danger"); return; }
             const script = scripts.find(s => s.id === scriptId);
             entry = { type: "script", scriptId, scriptTitle: script ? script.title : "Unknown", title: script ? script.title : "Unknown" };
           }
@@ -269,10 +269,10 @@ App.pages.scheduler = (function () {
             if (existing) await S().scheduledItems.update(existing.id, entry);
             else await S().scheduledItems.create(entry);
             h.close();
-            App.app.toast(existing ? "Schedule updated." : "Item scheduled.", "success");
+            App.app.toast(existing ? App.i18n.t("Schedule updated.") : App.i18n.t("Item scheduled."), "success");
             if (onDone) onDone();
           } catch (err) {
-            App.app.toast("Could not save: " + err.message, "danger");
+            App.app.toast(App.i18n.t("Could not save: ") + err.message, "danger");
             saveBtn.disabled = false;
           }
         };

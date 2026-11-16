@@ -87,6 +87,16 @@ test("no browser storage of tokens (localStorage / sessionStorage / IndexedDB)",
 
   for (const file of FRONTEND_FILES) {
     let source = read(file);
+    if (rel(file) === "app/assets/js/core/preferences.js") {
+      // The presentation cache contains only validated theme/language fields.
+      // Continue scanning the rest of this file for any additional storage use.
+      const approvedPreferenceRead = "window.localStorage.getItem(KEY)";
+      const approvedPreferenceWrite = "window.localStorage.setItem(KEY, JSON.stringify(current))";
+      assert.match(source, /const KEY = "realtorcrm\.presentation\.v1";/);
+      assert.equal(countOccurrences(source, approvedPreferenceRead), 1);
+      assert.equal(countOccurrences(source, approvedPreferenceWrite), 1);
+      source = source.replace(approvedPreferenceRead, "APPROVED_PRESENTATION_READ").replace(approvedPreferenceWrite, "APPROVED_PRESENTATION_WRITE");
+    }
 
     if (rel(file) === approvedPwaFile) {
       // Only the fixed PWA installation-banner preference is allowed.

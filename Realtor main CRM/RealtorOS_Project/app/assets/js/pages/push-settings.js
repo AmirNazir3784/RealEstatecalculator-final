@@ -38,65 +38,77 @@ App.pages.pushSettings = (function () {
     followup_failed:   ["A sequence step fails", "Something in an automation could not run."],
     contact_untouched: ["A new lead goes untouched", "Nobody has replied to them yet."],
     overdue_followups: ["Follow-ups are overdue", "Your daily summary of what is late."],
+    new_lead:          ["A new lead arrives", "A new lead you can access is ready to review."],
+    task_reminder:     ["Tasks need attention", "A daily summary of upcoming, due and overdue tasks."],
+    deal_assigned:     ["A deal is assigned to me", "A deal is assigned to your active team account."],
+    push_test:         ["Test notification", "Sent only when you request a device test."],
   };
 
   const STATE_WORDS = {
     not_configured: {
-      line: "Phone notifications switch on when RealtorCRM goes live.",
-      help: "Everything else on this page is ready; the server just has no notification keys yet.",
+      get line() { return App.i18n.t("Phone notifications are not configured for this app."); },
+      get help() { return App.i18n.t("Ask your workspace administrator to finish notification setup."); },
     },
     ios_needs_install: {
-      line: "On an iPhone or iPad, notifications work once RealtorCRM is on your Home Screen.",
-      help: "Tap Share, then Add to Home Screen, then open RealtorCRM from the new icon and come back here. Needs iOS 16.4 or later.",
+      get line() { return App.i18n.t("On an iPhone or iPad, notifications work once RealtorCRM is on your Home Screen."); },
+      get help() { return App.i18n.t("Tap Share, then Add to Home Screen, then open RealtorCRM from the new icon and come back here. Needs iOS 16.4 or later."); },
     },
     unsupported: {
-      line: "This browser cannot show notifications.",
-      help: "Chrome, Edge, Firefox and Safari all can. On iPhone, add RealtorCRM to your Home Screen first.",
+      get line() { return App.i18n.t("This browser cannot show notifications."); },
+      get help() { return App.i18n.t("Chrome, Edge, Firefox and Safari all can. On iPhone, add RealtorCRM to your Home Screen first."); },
     },
     blocked: {
-      line: "Notifications are blocked for RealtorCRM in this browser.",
-      help: "The browser will not ask again, so this one has to be changed in its own settings: open the padlock or the site settings next to the address and allow Notifications.",
+      get line() { return App.i18n.t("Notifications are blocked for RealtorCRM in this browser."); },
+      get help() { return App.i18n.t("The browser will not ask again, so this one has to be changed in its own settings: open the padlock or the site settings next to the address and allow Notifications."); },
     },
     on: {
-      line: "Notifications are on for this device.",
-      help: "You will get these even when RealtorCRM is closed.",
+      get line() { return App.i18n.t("Notifications are on for this device."); },
+      get help() { return App.i18n.t("This browser is registered. Delivery also depends on your preferences and device settings."); },
     },
     off: {
-      line: "Notifications are off for this device.",
-      help: "Turn them on and your phone tells you when a lead replies, without RealtorCRM being open.",
+      get line() { return App.i18n.t("Notifications are off for this device."); },
+      get help() { return App.i18n.t("Turn them on and your phone tells you when a lead replies, without RealtorCRM being open."); },
+    },
+    renew: {
+      get line() { return App.i18n.t("This device needs notification renewal."); },
+      get help() { return App.i18n.t("Renew to register this browser again. This also replaces an expired subscription."); },
+    },
+    unknown: {
+      get line() { return App.i18n.t("Device registration could not be checked."); },
+      get help() { return App.i18n.t("Check your connection and refresh. Browser permission alone does not confirm delivery."); },
     },
   };
 
   function deviceRow(device) {
     const when = device.created_at ? U().formatDate(String(device.created_at).slice(0, 10)) : "";
     const failing = (device.failure_count || 0) >= 3;
-    return `<li class="push-device">
+    return App.i18n.html`<li class="push-device">
       <div class="push-device-main">
-        <strong>${U().esc(device.device_label || "A browser")}</strong>
-        <span class="form-help">${U().esc(when ? "Added " + when : "")}${
-          failing ? " · not accepting notifications lately" : ""}</span>
+        <strong>${App.i18n.value(() => (U().esc(device.device_label || App.i18n.t("A browser"))))}</strong>
+        <span class="form-help">${App.i18n.value(() => (U().esc(when ? "Added " + when : "")))}${
+          App.i18n.value(() => (failing ? App.i18n.t(" · not accepting notifications lately") : ""))}</span>
       </div>
-      <button type="button" class="btn btn-sm" data-remove-device="${U().esc(device.id)}">Remove</button>
+      <button type="button" class="btn btn-sm" data-remove-device="${App.i18n.value(() => (U().esc(device.id)))}">Remove</button>
     </li>`;
   }
 
   function typeRow(type, checked) {
     const words = TYPE_WORDS[type] || [type, ""];
-    return `<label class="push-type">
-      <input type="checkbox" class="push-type-box" value="${U().esc(type)}" ${checked ? "checked" : ""}>
-      <span><strong>${U().esc(words[0])}</strong>
-      ${words[1] ? `<span class="form-help">${U().esc(words[1])}</span>` : ""}</span>
+    return App.i18n.html`<label class="push-type">
+      <input type="checkbox" class="push-type-box" value="${App.i18n.value(() => (U().esc(type)))}" ${App.i18n.value(() => (checked ? "checked" : ""))}>
+      <span><strong>${App.i18n.value(() => (U().esc(App.i18n.t(words[0]))))}</strong>
+      ${App.i18n.value(() => (words[1] ? App.i18n.html`<span class="form-help">${App.i18n.value(() => (U().esc(App.i18n.t(words[1]))))}</span>` : ""))}</span>
     </label>`;
   }
 
   async function render(pane) {
     if (!pane) return;
-    pane.innerHTML = `
+    pane.innerHTML = App.i18n.html`
       <div class="settings-category-head">
         <div class="settings-category-title">Notifications</div>
         <p class="form-help">Get told when a lead replies, without having RealtorCRM open.</p>
       </div>
-      <div id="pushPanel">${App.app.loadingHtml ? App.app.loadingHtml("your notification settings") : ""}</div>`;
+      <div id="pushPanel">${App.i18n.value(() => (App.app.loadingHtml ? App.app.loadingHtml(App.i18n.t("your notification settings")) : ""))}</div>`;
     await paint(pane);
   }
 
@@ -110,34 +122,42 @@ App.pages.pushSettings = (function () {
 
     let devices = [];
     let prefs = null;
+    let loadFailed = false;
     if (live) {
-      try { devices = await S().push.devices(); } catch (e) { devices = []; }
-      try { prefs = await S().push.preferences(); } catch (e) { prefs = null; }
+      try { devices = await S().push.devices(); } catch (e) { loadFailed = true; }
+      try { prefs = await S().push.preferences(); } catch (e) { loadFailed = true; }
     }
-    const allTypes = (prefs && prefs.all_types) || Object.keys(TYPE_WORDS);
+    // Tests are deliberate button requests, not an automatic event to opt into.
+    const allTypes = ((prefs && prefs.all_types) || Object.keys(TYPE_WORDS)).filter((type) => type !== "push_test");
     const chosen = (prefs && prefs.push_types) || allTypes;
     const pushEnabled = !prefs || prefs.push_enabled !== false;
     const quietStart = (prefs && prefs.quiet_start) ? String(prefs.quiet_start).slice(0, 5) : "";
     const quietEnd = (prefs && prefs.quiet_end) ? String(prefs.quiet_end).slice(0, 5) : "";
 
-    panel.innerHTML = `
+    panel.innerHTML = App.i18n.html`
       <section class="card" id="pushDeviceCard">
         <div class="card-header"><div class="card-title">This device</div></div>
         <div class="card-body">
-          <p id="pushStateLine"><strong>${U().esc(words.line)}</strong></p>
-          <p class="form-help" id="pushStateHelp">${U().esc(words.help)}</p>
-          ${state === "off" ? `<button type="button" class="btn btn-primary" id="pushEnableBtn">Turn on notifications on this device</button>` : ""}
-          ${state === "on" ? `<button type="button" class="btn" id="pushDisableBtn">Turn off on this device</button>` : ""}
+          <p id="pushStateLine"><strong>${App.i18n.value(() => (U().esc(words.line)))}</strong></p>
+          <p class="form-help" id="pushStateHelp">${App.i18n.value(() => (U().esc(words.help)))}</p>
+          ${App.i18n.value(() => (state === "off" ? App.i18n.markup(`<button type="button" class="btn btn-primary" id="pushEnableBtn">Turn on notifications on this device</button>`) : ""))}
+          ${App.i18n.value(() => (state === "on" ? App.i18n.markup(`<button type="button" class="btn" id="pushDisableBtn">Turn off on this device</button>`) : ""))}
+          ${App.i18n.value(() => (state === "renew" ? App.i18n.html`<button type="button" class="btn btn-primary" id="pushRenewBtn">Renew notifications on this device</button>` : ""))}
+          ${App.i18n.value(() => (state === "on" ? App.i18n.html`<button type="button" class="btn" id="pushTestBtn">Send test notification</button><p class="form-help">A test is queued for this device. Delivery depends on the worker and your quiet hours.</p>` : ""))}
+          <button type="button" class="btn btn-sm" id="pushRefreshBtn">Refresh status</button>
+          <p class="form-help" id="pushActionStatus" role="status" aria-live="polite"></p>
         </div>
       </section>
 
-      ${live ? `
+      ${App.i18n.value(() => (loadFailed ? App.i18n.html`<p class="form-help" role="alert">Notification settings could not be loaded. Refresh before making changes.</p>` : ""))}
+
+      ${App.i18n.value(() => (live && !loadFailed ? App.i18n.html`
       <section class="card" id="pushDevicesCard">
         <div class="card-header"><div class="card-title">My devices</div></div>
         <div class="card-body">
-          ${devices.length
-            ? `<ul class="push-device-list" id="pushDeviceList">${devices.map(deviceRow).join("")}</ul>`
-            : `<p class="form-help" id="pushNoDevices">No devices yet. Turn notifications on above and this one appears here.</p>`}
+          ${App.i18n.value(() => (devices.length
+            ? App.i18n.html`<ul class="push-device-list" id="pushDeviceList">${App.i18n.value(() => (devices.map(deviceRow).join("")))}</ul>`
+            : App.i18n.markup(`<p class="form-help" id="pushNoDevices">No devices yet. Turn notifications on above and this one appears here.</p>`)))}
         </div>
       </section>
 
@@ -146,12 +166,12 @@ App.pages.pushSettings = (function () {
         <div class="card-body">
           <label class="field" style="flex-direction:row;align-items:center;gap:10px">
             <span>Send notifications to my devices</span>
-            <span class="toggle-switch"><input type="checkbox" id="pushEnabledToggle" ${pushEnabled ? "checked" : ""}><span class="toggle-track"></span></span>
+            <span class="toggle-switch"><input type="checkbox" id="pushEnabledToggle" ${App.i18n.value(() => (pushEnabled ? "checked" : ""))}><span class="toggle-track"></span></span>
           </label>
           <fieldset class="field" style="border:0;padding:0;margin:12px 0 0">
             <legend style="font:inherit;padding:0">Tell me when</legend>
             <div class="push-type-list" id="pushTypeList">
-              ${allTypes.map((t) => typeRow(t, chosen.indexOf(t) >= 0)).join("")}
+              ${App.i18n.value(() => (allTypes.map((t) => typeRow(t, chosen.indexOf(t) >= 0)).join("")))}
             </div>
           </fieldset>
           <fieldset class="field" style="border:0;padding:0;margin:12px 0 0">
@@ -159,9 +179,9 @@ App.pages.pushSettings = (function () {
             <p class="form-help">Nothing buzzes between these times. Anything that happens meanwhile arrives when they end — it is held, not dropped. Uses your workspace's time zone.</p>
             <div style="display:flex;gap:10px;align-items:center;flex-wrap:wrap">
               <label class="field" style="margin:0"><span>From</span>
-                <input type="time" id="pushQuietStart" value="${U().esc(quietStart)}"></label>
+                <input type="time" id="pushQuietStart" value="${App.i18n.value(() => (U().esc(quietStart)))}"></label>
               <label class="field" style="margin:0"><span>Until</span>
-                <input type="time" id="pushQuietEnd" value="${U().esc(quietEnd)}"></label>
+                <input type="time" id="pushQuietEnd" value="${App.i18n.value(() => (U().esc(quietEnd)))}"></label>
               <button type="button" class="btn btn-sm" id="pushQuietClear">Clear</button>
             </div>
           </fieldset>
@@ -169,13 +189,37 @@ App.pages.pushSettings = (function () {
             <button type="button" class="btn btn-primary" id="pushSavePrefs">Save</button>
           </div>
         </div>
-      </section>` : ""}
+      </section>` : ""))}
     `;
 
     wire(pane, panel);
   }
 
   function wire(pane, panel) {
+    const refresh = panel.querySelector("#pushRefreshBtn");
+    if (refresh) refresh.addEventListener("click", () => paint(pane));
+    const renew = panel.querySelector("#pushRenewBtn");
+    if (renew) renew.addEventListener("click", async () => {
+      renew.disabled = true;
+      const outcome = await App.push.renew(window);
+      App.app.toast(outcome === "on" ? App.i18n.t("Notifications renewed for this device.")
+        : App.i18n.t("Could not renew notifications. Check browser permission and try again."), outcome === "on" ? "success" : "danger");
+      await paint(pane);
+    });
+    const test = panel.querySelector("#pushTestBtn");
+    if (test) test.addEventListener("click", async () => {
+      test.disabled = true;
+      const result = await App.push.test(window);
+      const messages = {
+        queued: App.i18n.t("Test queued. It will arrive when the worker runs outside quiet hours."),
+        rate_limited: App.i18n.t("Wait a minute before sending another test notification."),
+        notifications_off: App.i18n.t("Turn on Send notifications to my devices before testing."),
+        no_device: App.i18n.t("Renew this device before sending a test notification."),
+      };
+      App.i18n.setText(panel.querySelector("#pushActionStatus"), messages[result && result.outcome]
+        || App.i18n.t("Could not queue the test notification. Try again."));
+      test.disabled = false;
+    });
     const enable = panel.querySelector("#pushEnableBtn");
     if (enable) {
       enable.addEventListener("click", async () => {
@@ -183,11 +227,11 @@ App.pages.pushSettings = (function () {
         const outcome = await App.push.enable(window);
         // Said in the words of what happened, because "failed" covers
         // four quite different things from the agent's side.
-        if (outcome === "on") App.app.toast("Notifications are on for this device.", "success");
-        else if (outcome === "blocked") App.app.toast("This browser has blocked notifications for RealtorCRM. Allow them in its site settings and try again.", "danger");
-        else if (outcome === "dismissed") App.app.toast("No change — the browser's permission box was closed.", "warning");
-        else if (outcome === "not_configured") App.app.toast("Phone notifications switch on when RealtorCRM goes live.", "warning");
-        else App.app.toast("Could not turn notifications on for this device.", "danger");
+        if (outcome === "on") App.app.toast(App.i18n.t("Notifications are on for this device."), "success");
+        else if (outcome === "blocked") App.app.toast(App.i18n.t("This browser has blocked notifications for RealtorCRM. Allow them in its site settings and try again."), "danger");
+        else if (outcome === "dismissed") App.app.toast(App.i18n.t("No change — the browser's permission box was closed."), "warning");
+        else if (outcome === "not_configured") App.app.toast(STATE_WORDS.not_configured.line, "warning");
+        else App.app.toast(App.i18n.t("Could not turn notifications on for this device."), "danger");
         await paint(pane);
       });
     }
@@ -198,8 +242,8 @@ App.pages.pushSettings = (function () {
         disable.disabled = true;
         const outcome = await App.push.disable(window);
         App.app.toast(outcome === "off"
-          ? "Notifications are off for this device."
-          : "Could not turn them off here — try again.", outcome === "off" ? "success" : "danger");
+          ? App.i18n.t("Notifications are off for this device.")
+          : App.i18n.t("Could not turn them off here — try again."), outcome === "off" ? "success" : "danger");
         await paint(pane);
       });
     }
@@ -219,9 +263,9 @@ App.pages.pushSettings = (function () {
           if (mine && mine.endpoint === device.endpoint) {
             try { await mine.unsubscribe(); } catch (e) { /* already gone */ }
           }
-          App.app.toast("Device removed.", "success");
+          App.app.toast(App.i18n.t("Device removed."), "success");
         } catch (e) {
-          App.app.toast("Could not remove that device.", "danger");
+          App.app.toast(App.i18n.t("Could not remove that device."), "danger");
         }
         await paint(pane);
       });
@@ -241,7 +285,7 @@ App.pages.pushSettings = (function () {
         const start = panel.querySelector("#pushQuietStart").value;
         const end = panel.querySelector("#pushQuietEnd").value;
         if (!!start !== !!end) {
-          App.app.toast("Quiet hours need both a start and an end.", "danger");
+          App.app.toast(App.i18n.t("Quiet hours need both a start and an end."), "danger");
           return;
         }
         save.disabled = true;
@@ -252,9 +296,9 @@ App.pages.pushSettings = (function () {
             quietStart: start || null,
             quietEnd: end || null,
           });
-          App.app.toast("Saved.", "success");
+          App.app.toast(App.i18n.t("Saved."), "success");
         } catch (e) {
-          App.app.toast("Could not save: " + ((e && e.message) || "Unknown error"), "danger");
+          App.app.toast(App.i18n.t("Could not save: ") + ((e && e.message) || "Unknown error"), "danger");
         }
         save.disabled = false;
       });
