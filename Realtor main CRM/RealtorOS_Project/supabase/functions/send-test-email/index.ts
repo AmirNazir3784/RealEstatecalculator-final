@@ -15,6 +15,14 @@
 // (Resend's own Idempotency-Key header makes that retry safe even if the
 // first attempt actually reached Resend).
 //
+// Mailbox test sends (2026-11-16): when the caller has connected a
+// personal Gmail/Outlook mailbox, a FRESH claim sends the test through
+// that mailbox instead (the row is pinned to the mailbox transport
+// first). Mailbox sends have no idempotency key, so an ambiguous mailbox
+// outcome leaves the row queued like a Resend ambiguity — but the leased
+// retry of a mailbox-pinned row NEVER sends again: it resolves the row
+// terminally as mailbox_outcome_unconfirmed.
+//
 // This function performs configuration-only, single-recipient sends. It
 // never enrolls a contact, never activates an automation rule, and never
 // writes to automation_enrollments/automation_jobs/automation_runs.
@@ -26,6 +34,13 @@ import {
   jsonResponse,
   readJsonBody,
 } from "../_shared/runtime.ts";
+import {
+  markConnectionError,
+  resolvePersonalConnection,
+  sendViaGmail,
+  sendViaMicrosoft,
+} from "../_shared/mailbox-send.ts";
+import { encryptRefreshToken } from "../_shared/mailbox-oauth.ts";
 
 const DISPLAY_NAME_MAX = 100;
 const REPLY_TO_MAX = 254;
@@ -203,17 +218,39 @@ Deno.serve(async (request: Request) => {
     }
 
     // 7. Provider configuration — read only from environment.
+    // A connected PERSONAL mailbox is the preferred test transport: the
+    // test then proves the exact path the member's automation mail will
+    // take. (Test sends are the member's own diagnostic — the shared
+    // mailbox and the workspace sending policy do not apply.) Resend is
+    // the fallback, and its configuration is required only when no usable
+    // mailbox route exists.
+    const encryptionKey = Deno.env.get("MAILBOX_TOKEN_ENCRYPTION_KEY") ?? "";
+    const personalConnection = await resolvePersonalConnection(admin, user.id);
+    const mailboxSecretsReady = Boolean(personalConnection && encryptionKey) &&
+      (personalConnection?.provider === "microsoft"
+        ? Boolean(Deno.env.get("MICROSOFT_CLIENT_ID") && Deno.env.get("MICROSOFT_CLIENT_SECRET"))
+        : Boolean(Deno.env.get("GOOGLE_CLIENT_ID") && Deno.env.get("GOOGLE_CLIENT_SECRET")));
+    const mailbox = mailboxSecretsReady ? personalConnection : null;
+
     const resendApiKey = Deno.env.get("RESEND_API_KEY");
     const resendSendingDomain = Deno.env.get("RESEND_SENDING_DOMAIN");
-    if (
-      !resendApiKey || !resendApiKey.trim() ||
-      !resendSendingDomain || !isValidDomain(resendSendingDomain.trim())
-    ) {
+    const resendReady = Boolean(
+      resendApiKey && resendApiKey.trim() &&
+      resendSendingDomain && isValidDomain(resendSendingDomain.trim()),
+    );
+    if (!mailbox && !resendReady) {
       // Never reveal which specific secret is missing.
       return jsonResponse({ error: "provider_not_configured" }, 503);
     }
 
-    const senderAddress = `${senderAliasFor(user.id)}@${resendSendingDomain.trim().toLowerCase()}`;
+    // The claim RPC always writes a sender address. On the mailbox path
+    // the row is re-pinned to the mailbox immediately after a fresh claim
+    // (below), so this value is only ever the Resend alias in practice;
+    // when Resend is not configured at all, the mailbox address is the
+    // truthful value to store.
+    const senderAddress = resendReady
+      ? `${senderAliasFor(user.id)}@${resendSendingDomain!.trim().toLowerCase()}`
+      : mailbox!.email_address;
 
     // 8-9. Atomic claim: idempotency + rate limit, one protected DB call.
     const { data: claimData, error: claimError } = await admin.rpc("realtoros_claim_test_send", {
@@ -273,6 +310,122 @@ Deno.serve(async (request: Request) => {
       return jsonResponse({ error: "internal_error" }, 500);
     }
     const messageId = claim.message_id;
+
+    // 9b. Leased retry of a MAILBOX-pinned row: a mailbox send cannot be
+    // retried safely (no idempotency key, and the send-only scope cannot
+    // verify the earlier attempt), so the row is resolved terminally
+    // instead of sending again. A Resend-pinned row falls through to the
+    // ordinary Resend retry below.
+    if (claim.outcome === "retry_claimed") {
+      const { data: pinnedRow } = await admin
+        .from("outbound_messages")
+        .select("provider")
+        .eq("id", messageId)
+        .eq("user_id", user.id)
+        .maybeSingle();
+      if (pinnedRow && (pinnedRow.provider === "gmail" || pinnedRow.provider === "microsoft")) {
+        const { data: resolvedRow, error: resolveError } = await admin
+          .from("outbound_messages")
+          .update({
+            status: "failed",
+            failed_at: new Date().toISOString(),
+            error_code: "mailbox_outcome_unconfirmed",
+            error_message: "The earlier mailbox send attempt could not be confirmed, and mailbox sends cannot be retried safely. Send a new test email to try again.",
+          })
+          .eq("id", messageId)
+          .eq("user_id", user.id)
+          .select(MESSAGE_SELECT_COLUMNS)
+          .single();
+        if (resolveError) return jsonResponse({ error: "message_update_failed" }, 500);
+        return jsonResponse({ ok: true, message: resolvedRow });
+      }
+    }
+
+    // 9c. Fresh claim + connected mailbox: pin the row to the mailbox
+    // transport BEFORE sending (so the record tells the truth even if
+    // this process dies mid-send), then send exactly once.
+    if (claim.outcome === "created" && mailbox) {
+      const { error: pinError } = await admin
+        .from("outbound_messages")
+        .update({ provider: mailbox.provider, sender_address: mailbox.email_address })
+        .eq("id", messageId)
+        .eq("user_id", user.id)
+        .eq("status", "queued");
+      if (pinError) return jsonResponse({ error: "internal_error" }, 500);
+
+      const mailboxMessage = {
+        fromName: senderProfile.display_name,
+        fromEmail: mailbox.email_address,
+        to: replyToEmail,
+        replyTo: [replyToEmail],
+        subject: templateSubject,
+        text: templateBody,
+      };
+      const sendResult = mailbox.provider === "microsoft"
+        ? await sendViaMicrosoft({
+          connection: mailbox, encryptionKey,
+          clientId: Deno.env.get("MICROSOFT_CLIENT_ID") ?? "",
+          clientSecret: Deno.env.get("MICROSOFT_CLIENT_SECRET") ?? "",
+          message: mailboxMessage,
+        })
+        : await sendViaGmail({
+          connection: mailbox, encryptionKey,
+          clientId: Deno.env.get("GOOGLE_CLIENT_ID") ?? "",
+          clientSecret: Deno.env.get("GOOGLE_CLIENT_SECRET") ?? "",
+          message: mailboxMessage,
+        });
+
+      if (sendResult.outcome === "sent" && "rotatedRefreshToken" in sendResult && sendResult.rotatedRefreshToken) {
+        try {
+          const encrypted = await encryptRefreshToken(encryptionKey, sendResult.rotatedRefreshToken);
+          await admin.from("mailbox_connections").update({
+            refresh_token_ciphertext: encrypted.ciphertext,
+            refresh_token_iv: encrypted.iv,
+          }).eq("id", mailbox.id);
+        } catch { /* best effort — a stale token surfaces as token_revoked later */ }
+      }
+      if (sendResult.outcome === "sent") {
+        const { data: sentRow, error: sentUpdateError } = await admin
+          .from("outbound_messages")
+          .update({ status: "sent", sent_at: new Date().toISOString(), provider_message_id: sendResult.providerMessageId })
+          .eq("id", messageId)
+          .eq("user_id", user.id)
+          .select(MESSAGE_SELECT_COLUMNS)
+          .single();
+        if (sentUpdateError) {
+          // The send DID succeed; like the Resend path below, report the
+          // outcome as ambiguous so the caller keeps the key — the leased
+          // retry then resolves the row terminally (9b) without resending.
+          return jsonResponse({ ok: false, error: "provider_ambiguous", retryable: true }, 200);
+        }
+        return jsonResponse({ ok: true, message: sentRow });
+      }
+      if (sendResult.outcome === "ambiguous") {
+        // Leave the row queued, exactly like a Resend ambiguity: the
+        // caller keeps the idempotency key, and the leased retry resolves
+        // the row terminally in 9b — never by sending again.
+        return jsonResponse({ ok: false, error: "provider_ambiguous", retryable: true }, 200);
+      }
+      // Definitive rejection — the provider accepted nothing.
+      if (sendResult.tokenInvalid) {
+        await markConnectionError(admin, mailbox.id, sendResult.code);
+      }
+      const label = mailbox.provider === "microsoft" ? "Microsoft" : "Gmail";
+      const { data: failedRow, error: failedUpdateError } = await admin
+        .from("outbound_messages")
+        .update({
+          status: "failed",
+          failed_at: new Date().toISOString(),
+          error_code: sendResult.code.slice(0, 100),
+          error_message: `${label} responded with status ${sendResult.httpStatus} (${sendResult.code}).`,
+        })
+        .eq("id", messageId)
+        .eq("user_id", user.id)
+        .select(MESSAGE_SELECT_COLUMNS)
+        .single();
+      if (failedUpdateError) return jsonResponse({ error: "message_update_failed" }, 500);
+      return jsonResponse({ ok: true, message: failedRow });
+    }
 
     // 10. Send — Resend only, from this Edge Function. The SAME
     // Idempotency-Key is used whether this is a first attempt or a leased
