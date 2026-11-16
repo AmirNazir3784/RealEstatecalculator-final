@@ -4,6 +4,7 @@ window.App = window.App || {};
 App.cloud = (function () {
   "use strict";
   let client = null, user = null, recoveryActive = false;
+  let appShellState = null;
   // Reassigned by gate() once the card exists, so the PASSWORD_RECOVERY
   // handler below (registered as soon as the client is created, which can be
   // before gate() has ever run) can switch an already-built card straight to
@@ -32,9 +33,18 @@ App.cloud = (function () {
   }
   function setMessage(text, kind, targetId) { const el = document.getElementById(targetId || "cloudAuthMessage"); if (el) { el.textContent = text || ""; el.className = "cloud-auth-message" + (kind ? " " + kind : ""); } }
   function gate() {
+    // The signed-out/recovery gate owns interaction while it is visible.
+    // Preserve the shell's prior state so a verified session restores it.
+    const shell = document.getElementById("root");
+    if (shell && !appShellState) {
+      appShellState = { shell, inert: shell.hasAttribute("inert"), ariaHidden: shell.getAttribute("aria-hidden") };
+      shell.setAttribute("inert", "");
+      shell.setAttribute("aria-hidden", "true");
+    }
     let root = document.getElementById("cloudAuth");
     if (root) { root.hidden = false; return; }
-    root = document.createElement("div"); root.id = "cloudAuth"; root.className = "cloud-auth";
+    root = document.createElement("main"); root.id = "cloudAuth"; root.className = "cloud-auth";
+    root.setAttribute("aria-label", "RealtorCRM account access");
     document.body.appendChild(root);
     // Small inline icons only — no icon library/CDN. currentColor follows the
     // muted text token set in CSS; the Google mark uses its official colors,
@@ -61,10 +71,11 @@ App.cloud = (function () {
         <div class="cloud-auth-form-panel" id="cloudAuthPanel">
           <form id="cloudAuthForm">
             <div class="cloud-auth-tabs" role="tablist" aria-label="Account access">
-              <button class="cloud-auth-tab" id="cloudSignInTab" type="button" role="tab" aria-selected="true" aria-controls="cloudAuthForm">Sign in</button>
-              <button class="cloud-auth-tab" id="cloudCreateTab" type="button" role="tab" aria-selected="false" aria-controls="cloudAuthForm">Create account</button>
+              <button class="cloud-auth-tab" id="cloudSignInTab" type="button" role="tab" aria-selected="true" aria-controls="cloudAuthFields">Sign in</button>
+              <button class="cloud-auth-tab" id="cloudCreateTab" type="button" role="tab" aria-selected="false" aria-controls="cloudAuthFields" tabindex="-1">Create account</button>
             </div>
-            <h2 class="cloud-auth-heading" id="cloudAuthHeading">Welcome back</h2>
+            <div id="cloudAuthFields" role="tabpanel" aria-labelledby="cloudSignInTab">
+            <h1 class="cloud-auth-heading" id="cloudAuthHeading">Welcome back</h1>
             <p class="cloud-auth-intro" id="cloudAuthIntro"></p>
             <div id="cloudOAuthBlock">
               <button type="button" class="cloud-auth-oauth-btn" id="cloudOAuthGoogle" aria-label="Continue with Google">${ICON_GOOGLE}<span>Continue with Google</span></button>
@@ -73,7 +84,7 @@ App.cloud = (function () {
             <div class="cloud-auth-field" id="cloudFullNameField" hidden>
               <label for="cloudFullName">Full name</label>
               <div class="cloud-auth-input-wrap"><span class="cloud-auth-input-icon">${ICON_USER}</span>
-                <input id="cloudFullName" type="text" autocomplete="name" minlength="2" maxlength="80" placeholder="Jane Doe"></div>
+                <input id="cloudFullName" type="text" autocomplete="name" minlength="2" maxlength="80" placeholder="Your full name"></div>
             </div>
             <div class="cloud-auth-field">
               <label for="cloudEmail">Email</label>
@@ -104,6 +115,7 @@ App.cloud = (function () {
             <button class="btn btn-primary cloud-auth-submit" id="cloudAuthSubmit" type="submit">Sign in</button>
             <p id="cloudAuthMessage" class="cloud-auth-message" aria-live="polite"></p>
             <p class="cloud-auth-switch"><span id="cloudAuthSwitchCopy"></span> <button id="cloudAuthSwitch" type="button"></button></p>
+            </div>
           </form>
           <form id="cloudResetForm" hidden>
             <p class="cloud-auth-subheading">Reset your password</p>
@@ -145,7 +157,7 @@ App.cloud = (function () {
             <p class="cloud-auth-switch"><button type="button" id="cloudConfirmBackBtn">Back to Sign in</button></p>
           </div>
         </div>
-        <div class="cloud-auth-illustration" aria-hidden="true">
+        <div class="cloud-auth-illustration">
           <p class="cloud-auth-illustration-label">RealtorCRM</p>
           <h2 class="cloud-auth-illustration-heading">Stay on top of contacts, deals and follow-ups.</h2>
           <p class="cloud-auth-illustration-desc">A simple and practical CRM for real estate professionals to organize contacts, manage deals, track follow-ups and keep your work on schedule.</p>
@@ -161,6 +173,7 @@ App.cloud = (function () {
 
     const card = root.querySelector("#cloudAuthCard");
     const authForm = root.querySelector("#cloudAuthForm");
+    const authFields = root.querySelector("#cloudAuthFields");
     const resetForm = root.querySelector("#cloudResetForm");
     const updateForm = root.querySelector("#cloudUpdateForm");
     const intro = root.querySelector("#cloudAuthIntro");
@@ -199,6 +212,16 @@ App.cloud = (function () {
     let creating = false;
     let currentMode = "sign-in";
     let switching = false;
+    let switchTimer = null;
+    let authPending = false;
+
+    // Keep a single request in flight across Google, email and mode switches.
+    // This is only a UI guard; Supabase remains the authentication boundary.
+    function setAuthPending(pending) {
+      authPending = pending;
+      authForm.setAttribute("aria-busy", String(pending));
+      [submitBtn, oauthGoogleBtn, signInTab, createTab, switchBtn, forgotLink].forEach(btn => { btn.disabled = pending; });
+    }
 
     // New-password rule for Create account and Update password (sign-in is
     // never re-judged: an existing password stays valid whatever it is).
@@ -242,7 +265,11 @@ App.cloud = (function () {
       if (!pwRules) return;
       PW_RULES.forEach(([key, test]) => {
         const item = pwRules.querySelector('[data-rule="' + key + '"]');
-        if (item) item.classList.toggle("met", !!test(v));
+        if (item) {
+          const met = !!test(v);
+          item.classList.toggle("met", met);
+          item.setAttribute("aria-label", item.textContent.trim() + (met ? ": met" : ": not yet met"));
+        }
       });
       pwRules.classList.toggle("all-met", v.length > 0 && pwMissing(v).length === 0);
     }
@@ -269,6 +296,9 @@ App.cloud = (function () {
       intro.textContent = creating ? "Start your workspace securely with email or Google." : "Sign in to continue to your RealtorCRM workspace.";
       signInTab.setAttribute("aria-selected", String(!creating));
       createTab.setAttribute("aria-selected", String(creating));
+      signInTab.tabIndex = creating ? -1 : 0;
+      createTab.tabIndex = creating ? 0 : -1;
+      authFields.setAttribute("aria-labelledby", creating ? "cloudCreateTab" : "cloudSignInTab");
       fullNameField.hidden = !creating;
       fullNameInput.required = creating;
       if (!creating) fullNameInput.value = "";
@@ -278,6 +308,9 @@ App.cloud = (function () {
       passwordInput.setAttribute("autocomplete", creating ? "new-password" : "current-password");
       passwordInput.minLength = creating ? 10 : 6;
       pwRules.hidden = !creating;
+      if (creating) passwordInput.setAttribute("aria-describedby", "cloudPwRules");
+      else passwordInput.removeAttribute("aria-describedby");
+      confirmInput.setAttribute("aria-describedby", "cloudConfirmLine");
       if (creating) {
         paintPwRules(passwordInput.value);
         paintConfirmLine(confirmLine, passwordInput.value, confirmInput.value);
@@ -294,13 +327,20 @@ App.cloud = (function () {
     // Desktop/tablet gets a brief fade+translate for every mode change;
     // mobile and reduced-motion just flip instantly.
     function transitionSwap(run) {
-      if (switching) { run(); return; }
+      if (switching) {
+        clearTimeout(switchTimer);
+        card.classList.remove("cloud-auth-switching");
+        switching = false;
+        run();
+        return;
+      }
       const reduceMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
       const isDesktop = window.matchMedia("(min-width: 780px)").matches;
       if (reduceMotion || !isDesktop) { run(); return; }
       switching = true;
       card.classList.add("cloud-auth-switching");
-      setTimeout(() => {
+      switchTimer = setTimeout(() => {
+        switchTimer = null;
         run();
         requestAnimationFrame(() => {
           card.classList.remove("cloud-auth-switching");
@@ -311,7 +351,7 @@ App.cloud = (function () {
 
     // mode: "sign-in" | "create" | "reset" | "update-password" | "confirm"
     function showMode(mode, opts) {
-      if (mode === currentMode && !(opts && opts.force)) return;
+      if (mode === currentMode && !switching && !(opts && opts.force)) return;
       transitionSwap(() => {
         currentMode = mode;
         authForm.hidden = mode !== "sign-in" && mode !== "create";
@@ -331,6 +371,13 @@ App.cloud = (function () {
           paintPwLine(updatePwLine, "");
           updateConfirmLine.hidden = true;
           setMessage("", null, "cloudUpdateMessage");
+        }
+        // A reset/confirmation action can hide the control that held focus.
+        // Move focus into the newly visible form without opening a keyboard
+        // on the initial page load.
+        if (root.contains(document.activeElement) && document.activeElement.closest("[hidden]")) {
+          const target = mode === "reset" ? resetEmailInput : mode === "update-password" ? newPasswordInput : mode === "confirm" ? resendBtn : creating ? createTab : signInTab;
+          target.focus();
         }
       });
     }
@@ -354,12 +401,20 @@ App.cloud = (function () {
 
     signInTab.addEventListener("click", () => showMode("sign-in"));
     createTab.addEventListener("click", () => showMode("create"));
+    [signInTab, createTab].forEach(tab => tab.addEventListener("keydown", e => {
+      if (authPending || !["ArrowLeft", "ArrowRight", "Home", "End"].includes(e.key)) return;
+      e.preventDefault();
+      const next = e.key === "Home" ? signInTab : e.key === "End" ? createTab : tab === signInTab ? createTab : signInTab;
+      next.focus();
+      showMode(next === createTab ? "create" : "sign-in");
+    }));
     switchBtn.addEventListener("click", () => showMode(creating ? "sign-in" : "create"));
     forgotLink.addEventListener("click", () => showMode("reset"));
     resetBackBtn.addEventListener("click", () => showMode("sign-in"));
 
     authForm.addEventListener("submit", async e => {
       e.preventDefault();
+      if (authPending) return;
       const email = emailInput.value.trim();
       const password = passwordInput.value;
       const emailErr = emailError(emailInput);
@@ -371,16 +426,16 @@ App.cloud = (function () {
         if (ruleErr) return setMessage(ruleErr, "error");
         const confirmPassword = confirmInput.value;
         if (password !== confirmPassword) return setMessage("Passwords do not match.", "error");
-        submitBtn.disabled = true;
+        setAuthPending(true);
         setMessage("Creating account…");
         let r;
         try {
           r = await initClient().auth.signUp({ email, password, options: { data: { full_name: fullName } } });
         } catch (err) {
-          submitBtn.disabled = false;
+          setAuthPending(false);
           return setMessage("Unable to create your account right now. Check your connection and try again.", "error");
         }
-        submitBtn.disabled = false;
+        setAuthPending(false);
         if (r.error) return setMessage(r.error.message, "error");
         if (!r.data.session) {
           // Email confirmation is on: no session exists yet, and nobody is
@@ -396,9 +451,18 @@ App.cloud = (function () {
         return;
       }
       setMessage("Signing in…");
-      const r = await initClient().auth.signInWithPassword({ email, password });
-      if (r.error) return setMessage(r.error.message, "error");
-      window.location.reload();
+      setAuthPending(true);
+      try {
+        const r = await initClient().auth.signInWithPassword({ email, password });
+        if (r.error) {
+          setAuthPending(false);
+          return setMessage(r.error.message, "error");
+        }
+        window.location.reload();
+      } catch (err) {
+        setAuthPending(false);
+        setMessage("Unable to sign in right now. Check your connection and try again.", "error");
+      }
     });
 
     // ---- Confirmation panel: resend (with cooldown), change email, back ----
@@ -514,20 +578,20 @@ App.cloud = (function () {
     // Supabase dashboard with Google Cloud credentials - if it is not,
     // Supabase returns an error and it is shown here, honestly.
     async function handleGoogleOAuth() {
-      const btn = oauthGoogleBtn;
-      btn.disabled = true;
+      if (authPending) return;
+      setAuthPending(true);
       setMessage("Redirecting to Google…");
       try {
         const { error } = await initClient().auth.signInWithOAuth({
           provider: "google",
           options: { redirectTo: window.location.origin + window.location.pathname }
         });
-        if (error) { setMessage(error.message, "error"); btn.disabled = false; }
+        if (error) { setMessage(error.message, "error"); setAuthPending(false); }
         // On success the browser navigates away to Google now, so there
         // is nothing further to do here.
       } catch (err) {
         setMessage((err && err.message) || "Unable to start sign-in.", "error");
-        btn.disabled = false;
+        setAuthPending(false);
       }
     }
     oauthGoogleBtn.addEventListener("click", handleGoogleOAuth);
@@ -549,7 +613,17 @@ App.cloud = (function () {
     const requestedMode = new URLSearchParams(window.location.search).get("mode");
     showMode(recoveryActive ? "update-password" : (requestedMode === "create" ? "create" : "sign-in"), { force: true });
   }
-  function hideGate() { const root = document.getElementById("cloudAuth"); if (root) root.hidden = true; }
+  function hideGate() {
+    const root = document.getElementById("cloudAuth");
+    if (root) root.hidden = true;
+    if (appShellState) {
+      const { shell, inert, ariaHidden } = appShellState;
+      if (!inert) shell.removeAttribute("inert");
+      if (ariaHidden === null) shell.removeAttribute("aria-hidden");
+      else shell.setAttribute("aria-hidden", ariaHidden);
+      appShellState = null;
+    }
+  }
 
   // The only thing boot needs from this module now: is someone signed in?
   // No workspace_state read/write happens here anymore — App.data owns the

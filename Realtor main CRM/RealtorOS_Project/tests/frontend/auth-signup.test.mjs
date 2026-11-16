@@ -11,7 +11,7 @@ import { browser, settle, SKIP_DOM } from "../helpers/browser.mjs";
 const SCRIPTS = ["assets/js/config.js", "assets/js/data/supabase-client.js"];
 const STRONG = "Str0ng!Pass";
 
-async function gate(t, { resendImpl } = {}) {
+async function gate(t, { resendImpl, signInImpl, signUpImpl, oauthImpl } = {}) {
   const b = await browser(SCRIPTS);
   if (!b) { t.skip(SKIP_DOM); return null; }
   const { window } = b;
@@ -21,14 +21,15 @@ async function gate(t, { resendImpl } = {}) {
   if (!window.matchMedia) {
     window.matchMedia = () => ({ matches: false, addEventListener() {}, addListener() {} });
   }
-  const calls = { signUp: [], resend: [], updateUser: [], signIn: [] };
+  const calls = { signUp: [], resend: [], updateUser: [], signIn: [], google: [] };
   let authCallback = null;
   const auth = {
     onAuthStateChange: (cb) => { authCallback = cb; return { data: { subscription: { unsubscribe() {} } } }; },
     getUser: async () => ({ data: { user: null }, error: null }),
-    signUp: async (args) => { calls.signUp.push(args); return { data: { user: { id: "u1" }, session: null }, error: null }; },
+    signUp: async (args) => { calls.signUp.push(args); return signUpImpl ? signUpImpl(args) : { data: { user: { id: "u1" }, session: null }, error: null }; },
     resend: async (args) => { calls.resend.push(args); return resendImpl ? resendImpl(args) : { data: {}, error: null }; },
-    signInWithPassword: async (args) => { calls.signIn.push(args); return { data: {}, error: null }; },
+    signInWithPassword: async (args) => { calls.signIn.push(args); return signInImpl ? signInImpl(args) : { data: {}, error: null }; },
+    signInWithOAuth: async (args) => { calls.google.push(args); return oauthImpl ? oauthImpl(args) : { error: { message: "Provider unavailable." } }; },
     resetPasswordForEmail: async () => ({ data: {}, error: null }),
     updateUser: async (args) => { calls.updateUser.push(args); return { data: { user: {} }, error: null }; },
     signOut: async () => ({ error: null }),
@@ -37,7 +38,7 @@ async function gate(t, { resendImpl } = {}) {
   await window.App.cloud.checkSession();
   await settle(window);
   return {
-    b, window, document: window.document, calls,
+    b, window, document: window.document, calls, auth,
     fireAuth: (ev, session) => { if (authCallback) authCallback(ev, session); },
   };
 }
@@ -260,5 +261,148 @@ test("update password enforces the same rule before calling the API", async (t) 
     await submit(g, "cloudUpdateForm");
     assert.match(msg(g, "cloudUpdateMessage"), /still needs/i);
     assert.equal(g.calls.updateUser.length, 0, "a weak new password never reaches the API");
+  } finally { g.b.close(); }
+});
+
+test("auth tabs expose their panel and support arrow, Home and End keys", async t => {
+  const g = await gate(t); if (!g) return;
+  try {
+    const d = g.document, signIn = d.getElementById("cloudSignInTab"), create = d.getElementById("cloudCreateTab");
+    const panel = d.getElementById(signIn.getAttribute("aria-controls"));
+    assert.equal(panel.getAttribute("role"), "tabpanel");
+    assert.equal(signIn.tabIndex, 0); assert.equal(create.tabIndex, -1);
+    signIn.focus();
+    for (const [key, expected] of [["ArrowRight", create], ["Home", signIn], ["End", create], ["ArrowLeft", signIn]]) {
+      d.activeElement.dispatchEvent(new g.window.KeyboardEvent("keydown", { key, bubbles: true, cancelable: true }));
+      assert.equal(d.activeElement, expected);
+      assert.equal(expected.tabIndex, 0);
+      assert.equal(expected.getAttribute("aria-selected"), "true");
+      assert.equal(panel.getAttribute("aria-labelledby"), expected.id);
+    }
+  } finally { g.b.close(); }
+});
+
+test("password guidance conveys rule status without relying on color", async t => {
+  const g = await gate(t); if (!g) return;
+  try {
+    fillCreate(g, { pw: "", confirm: "" });
+    const d = g.document, pw = d.getElementById("cloudPassword"), rules = d.getElementById("cloudPwRules");
+    pw.dispatchEvent(new g.window.Event("input", { bubbles: true }));
+    assert.equal(pw.getAttribute("aria-describedby"), rules.id);
+    assert.match(rules.firstElementChild.getAttribute("aria-label"), /not yet met$/);
+    pw.value = STRONG; pw.dispatchEvent(new g.window.Event("input", { bubbles: true }));
+    for (const item of rules.children) assert.match(item.getAttribute("aria-label"), /: met$/);
+    d.getElementById("cloudSignInTab").click();
+    assert.equal(pw.hasAttribute("aria-describedby"), false);
+  } finally { g.b.close(); }
+});
+
+test("sign-in blocks duplicate/cross-provider requests and recovers after a network failure", async t => {
+  let rejectRequest;
+  const g = await gate(t, { signInImpl: () => new Promise((_, reject) => { rejectRequest = reject; }) });
+  if (!g) return;
+  try {
+    const d = g.document, form = d.getElementById("cloudAuthForm"), submitBtn = d.getElementById("cloudAuthSubmit");
+    d.getElementById("cloudEmail").value = "jane@example.com";
+    d.getElementById("cloudPassword").value = "existing-password";
+    await submit(g); await submit(g);
+    d.getElementById("cloudOAuthGoogle").dispatchEvent(new g.window.Event("click"));
+    d.getElementById("cloudCreateTab").click();
+    assert.equal(g.calls.signIn.length, 1); assert.equal(g.calls.google.length, 0);
+    assert.equal(form.getAttribute("aria-busy"), "true");
+    assert.equal(submitBtn.disabled, true);
+    assert.equal(d.getElementById("cloudFullNameField").hidden, true);
+    rejectRequest(new Error("Offline")); await settle(g.window);
+    assert.match(msg(g), /check your connection/i);
+    assert.equal(submitBtn.disabled, false);
+    assert.equal(form.getAttribute("aria-busy"), "false");
+    assert.equal(d.getElementById("cloudOAuthGoogle").disabled, false);
+  } finally { g.b.close(); }
+});
+
+test("signup also allows only one request while pending", async t => {
+  let resolveRequest;
+  const g = await gate(t, { signUpImpl: () => new Promise(resolve => { resolveRequest = resolve; }) });
+  if (!g) return;
+  try {
+    fillCreate(g); await submit(g); await submit(g);
+    assert.equal(g.calls.signUp.length, 1);
+    assert.equal(g.document.getElementById("cloudAuthSubmit").disabled, true);
+    resolveRequest({ data: { user: { id: "u1" }, session: null }, error: null });
+    await settle(g.window);
+    assert.equal(g.document.getElementById("cloudConfirmPanel").hidden, false);
+    assert.equal(g.document.getElementById("cloudAuthForm").getAttribute("aria-busy"), "false");
+  } finally { g.b.close(); }
+});
+
+test("Google uses the app's own callback and releases controls after provider failure", async t => {
+  let resolveRequest;
+  const g = await gate(t, { oauthImpl: () => new Promise(resolve => { resolveRequest = resolve; }) });
+  if (!g) return;
+  try {
+    const d = g.document, btn = d.getElementById("cloudOAuthGoogle");
+    btn.click(); btn.dispatchEvent(new g.window.Event("click"));
+    assert.equal(g.calls.google.length, 1);
+    assert.equal(g.calls.google[0].provider, "google");
+    assert.equal(g.calls.google[0].options.redirectTo, "https://app.example.test/");
+    assert.equal(d.getElementById("cloudAuthSubmit").disabled, true);
+    resolveRequest({ error: { message: "Google provider is not enabled." } }); await settle(g.window);
+    assert.match(msg(g), /not enabled/);
+    assert.equal(btn.disabled, false);
+    assert.equal(d.getElementById("cloudAuthSubmit").disabled, false);
+    assert.equal(d.querySelectorAll('[id*="Facebook"]').length, 0);
+  } finally { g.b.close(); }
+});
+
+test("password toggles retain values and expose their state", async t => {
+  const g = await gate(t); if (!g) return;
+  try {
+    fillCreate(g);
+    const d = g.document, input = d.getElementById("cloudPassword"), toggle = input.parentElement.querySelector("button");
+    toggle.click();
+    assert.equal(input.type, "text"); assert.equal(input.value, STRONG);
+    assert.equal(toggle.getAttribute("aria-label"), "Hide password");
+    assert.equal(toggle.getAttribute("aria-pressed"), "true");
+    toggle.click(); assert.equal(input.type, "password");
+    assert.equal(toggle.getAttribute("aria-label"), "Show password");
+  } finally { g.b.close(); }
+});
+
+test("reset navigation keeps focus in the visible form", async t => {
+  const g = await gate(t); if (!g) return;
+  try {
+    const d = g.document, forgot = d.getElementById("cloudForgotLink"), back = d.getElementById("cloudResetBack");
+    forgot.focus(); forgot.click();
+    assert.equal(d.activeElement.id, "cloudResetEmail");
+    back.focus(); back.click();
+    assert.equal(d.activeElement.id, "cloudSignInTab");
+  } finally { g.b.close(); }
+});
+
+test("the auth gate hides the inactive shell and restores it after a verified session", async t => {
+  const g = await gate(t); if (!g) return;
+  try {
+    const root = g.document.getElementById("root");
+    assert.equal(root.hasAttribute("inert"), true);
+    assert.equal(root.getAttribute("aria-hidden"), "true");
+    g.auth.getUser = async () => ({ data: { user: { id: "verified" } }, error: null });
+    assert.equal((await g.window.App.cloud.checkSession()).id, "verified");
+    assert.equal(g.document.getElementById("cloudAuth").hidden, true);
+    assert.equal(root.hasAttribute("inert"), false);
+    assert.equal(root.hasAttribute("aria-hidden"), false);
+  } finally { g.b.close(); }
+});
+
+test("rapid desktop tab changes keep the last requested mode", async t => {
+  const g = await gate(t); if (!g) return;
+  try {
+    g.window.matchMedia = query => ({ matches: query.includes("min-width"), addEventListener() {} });
+    const d = g.document;
+    d.getElementById("cloudCreateTab").click();
+    d.getElementById("cloudSignInTab").click();
+    await new Promise(resolve => g.window.setTimeout(resolve, 220));
+    assert.equal(d.getElementById("cloudSignInTab").getAttribute("aria-selected"), "true");
+    assert.equal(d.getElementById("cloudFullNameField").hidden, true);
+    assert.equal(d.getElementById("cloudAuthCard").classList.contains("cloud-auth-switching"), false);
   } finally { g.b.close(); }
 });
