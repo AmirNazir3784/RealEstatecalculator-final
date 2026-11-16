@@ -19,12 +19,14 @@ authentication, permissions and business calculations.
   permission/configuration status, guarded device tests, fixed localized payloads,
   membership/endpoint checks, deduplication and safe deep links.
 
-Validation: **664/664 targeted tests across 55 serial file runs**, no skips;
+Validation: **766/766 targeted tests across 61 serial file runs**, no skips;
 **52 English + 120 locale/theme browser cases**, **557 assertions**, and **18 axe
 audits with zero violations**. The 79-file production package and deployment
 isolation checks pass. Existing tests were updated for new event types, actual
 rendered text and persisted fake device registrations; authentication and RLS
 assertions remain intact. Both new rollback paths preserve stored business data.
+
+The first broader Linux CI run exposed seven SQL compatibility assertions. Those are corrected with event-specific counts, a derived-column-only exclusion in the historical import snapshot, and exact scoped notification identity checks. Permission, workspace and import business-data assertions remain enforced; affected SQL and additional worker checks pass locally.
 
 An older Windows historical rollback checksum check fails on CRLF checkout text;
 its canonical LF body matches the embedded expected hash. That diagnostic and the

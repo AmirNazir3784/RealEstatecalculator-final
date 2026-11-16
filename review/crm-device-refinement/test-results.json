@@ -1,8 +1,8 @@
 {
   "summary": {
-    "files": 55,
-    "tests": 664,
-    "pass": 664,
+    "files": 61,
+    "tests": 766,
+    "pass": 766,
     "fail": 0,
     "skipped": 0
   },
@@ -490,6 +490,60 @@
       "exitCode": 0,
       "tests": 8,
       "pass": 8,
+      "fail": 0,
+      "skipped": 0
+    },
+    {
+      "file": "sql/phase_t2c_post_workspace_rpcs.test.mjs",
+      "command": "node --import ./helpers/register.mjs --test --test-concurrency=1 sql/phase_t2c_post_workspace_rpcs.test.mjs",
+      "exitCode": 0,
+      "tests": 29,
+      "pass": 29,
+      "fail": 0,
+      "skipped": 0
+    },
+    {
+      "file": "sql/phase_t2c_workspace_backend.test.mjs",
+      "command": "node --import ./helpers/register.mjs --test --test-concurrency=1 sql/phase_t2c_workspace_backend.test.mjs",
+      "exitCode": 0,
+      "tests": 21,
+      "pass": 21,
+      "fail": 0,
+      "skipped": 0
+    },
+    {
+      "file": "edge/worker-guards.test.mjs",
+      "command": "node --import ./helpers/register.mjs --test --test-concurrency=1 edge/worker-guards.test.mjs",
+      "exitCode": 0,
+      "tests": 15,
+      "pass": 15,
+      "fail": 0,
+      "skipped": 0
+    },
+    {
+      "file": "edge/time-trigger-wiring.test.mjs",
+      "command": "node --import ./helpers/register.mjs --test --test-concurrency=1 edge/time-trigger-wiring.test.mjs",
+      "exitCode": 0,
+      "tests": 8,
+      "pass": 8,
+      "fail": 0,
+      "skipped": 0
+    },
+    {
+      "file": "edge/first-attempt-at.test.mjs",
+      "command": "node --import ./helpers/register.mjs --test --test-concurrency=1 edge/first-attempt-at.test.mjs",
+      "exitCode": 0,
+      "tests": 6,
+      "pass": 6,
+      "fail": 0,
+      "skipped": 0
+    },
+    {
+      "file": "sql/file-import.test.mjs",
+      "command": "node --import ./helpers/register.mjs --test --test-concurrency=1 sql/file-import.test.mjs",
+      "exitCode": 0,
+      "tests": 23,
+      "pass": 23,
       "fail": 0,
       "skipped": 0
     },

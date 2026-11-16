@@ -79,9 +79,12 @@ Realtor main CRM/RealtorOS_Project/tests/helpers/browser.mjs
 Realtor main CRM/RealtorOS_Project/tests/security/scan.test.mjs
 Realtor main CRM/RealtorOS_Project/tests/sql/crm-notification-events.test.mjs
 Realtor main CRM/RealtorOS_Project/tests/sql/crm-scoped-search.test.mjs
+Realtor main CRM/RealtorOS_Project/tests/sql/file-import.test.mjs
 Realtor main CRM/RealtorOS_Project/tests/sql/notifications.test.mjs
 Realtor main CRM/RealtorOS_Project/tests/sql/phase_2c_response_tracking.test.mjs
 Realtor main CRM/RealtorOS_Project/tests/sql/phase_3b_push.test.mjs
+Realtor main CRM/RealtorOS_Project/tests/sql/phase_t2c_post_workspace_rpcs.test.mjs
+Realtor main CRM/RealtorOS_Project/tests/sql/phase_t2c_workspace_backend.test.mjs
 Realtor main CRM/RealtorOS_Project/tests/sql/rollback_files.test.mjs
 review/crm-device-refinement/.gitignore
 review/crm-device-refinement/BROWSER-QA.md

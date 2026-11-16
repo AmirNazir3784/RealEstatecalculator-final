@@ -125,7 +125,7 @@ Detailed operational instructions: [notification runbook](../../Realtor%20main%2
 
 ## Verification and screenshots
 
-Final local result: **664/664 tests passed across 55 targeted file runs**, zero skips; **52 English + 120 locale/theme screen cases**, **557 browser assertions**, and **18 axe audits with zero violations**. Production packaging/isolation passed. The historical Windows rollback diagnostic below is excluded from those passing targeted totals.
+Final local result: **766/766 tests passed across 61 targeted file runs**, zero skips; **52 English + 120 locale/theme screen cases**, **557 browser assertions**, and **18 axe audits with zero violations**. Production packaging/isolation passed. The historical Windows rollback diagnostic below is excluded from those passing targeted totals.
 
 
 Final machine-readable results and exact commands are recorded beside this report
@@ -236,6 +236,10 @@ External status explicitly excludes production and hardware verification.
 | Production build/packaging/PWA/deployment isolation | Completed and verified | 79-file package; isolation validator; real worker unit tests |
 | Eight attached screenshot comparisons | Blocked | The referenced eight attachments were unavailable; base-branch before/after evidence supplied instead |
 | Production-ready release approval | Blocked | Await owner review, hosted staging/configuration/advisors and real-device verification; nothing merged/deployed |
+
+## CI compatibility refinement
+
+The broader first Linux CI run passed all 528 frontend tests and identified seven SQL compatibility assertions. The follow-up scopes legacy unsubscribe-event counts to their event type, excludes only the new derived search document from pre-feature business-record snapshots, and enumerates the exact intentional creator/recipient identity comparisons in the two new notification functions. The latter still requires workspace equality, active membership and the row-permission helper; every other creator join remains rejected. All affected SQL files pass locally after the adjustment. The source-text phone-index assertion normalizes CRLF to LF before matching; its real EXPLAIN/index checks remain intact. No production logic or applied migration was changed by this refinement.
 
 ## Historical Windows test limitation
 
