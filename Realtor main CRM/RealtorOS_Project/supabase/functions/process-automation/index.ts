@@ -53,6 +53,7 @@ import {
 } from "../_shared/unsubscribe-token.ts";
 import { normalizeInboundDomain, replyAddress, replyTokenFor } from "../_shared/reply-detection.ts";
 import { buildPayload, sendPush, vapidFromEnv } from "../_shared/push.ts";
+import { notificationCopy, recipientLanguage } from "../_shared/notification-copy.ts";
 
 // Plain-text footer on every automated email. Fixed wording, appended
 // after rendering — not a template field.
@@ -71,6 +72,17 @@ export function withUnsubscribeFooter(body: string, unsubscribeUrl: string): str
  * title or body (they are about a contact), not the keys. The counters
  * returned are numbers only.
  */
+export async function localizedPushPayload(
+  item: Record<string,unknown>,
+  admin: ReturnType<typeof createAdminClient>,
+  languages: Map<string,string>,
+) {
+  const language = await recipientLanguage(item.user_id,
+    (userId) => admin.auth.admin.getUserById(userId), languages);
+  const copy = notificationCopy(item.type, language);
+  return copy ? buildPayload({ ...copy, url:item.url }) : null;
+}
+
 export async function runPushBatch(
   admin: ReturnType<typeof createAdminClient>,
   counters: { pushSent: number; pushFailed: number; pushSkipped: number; pushStepFailed: number },
@@ -90,13 +102,22 @@ export async function runPushBatch(
   counters.pushSkipped += typeof data.skipped === "number" ? data.skipped : 0;
 
   const claimed = Array.isArray(data.claimed) ? data.claimed : [];
+  const languages = new Map<string,string>();
   for (const item of claimed) {
     if (!isPlainObject(item)) continue;
     const id = typeof item.id === "string" ? item.id : null;
     const subscriptions = Array.isArray(item.subscriptions) ? item.subscriptions : [];
     if (!id) continue;
 
-    const payload = buildPayload(item as Record<string, unknown>);
+    const payload = await localizedPushPayload(item, admin, languages);
+    // A known system type always uses fixed copy, never customer text. Unknown
+    // types fail closed instead of accidentally publishing database free text.
+    if (!payload) {
+      try { await admin.rpc("realtoros_complete_push", { p_notification_id:id,p_outcome:"skipped",p_dead_endpoints:null }); }
+      catch { /* lease expiry retains retry semantics */ }
+      counters.pushSkipped++;
+      continue;
+    }
     const dead: string[] = [];
     let anyAccepted = false;
 
@@ -1265,6 +1286,7 @@ Deno.serve(async (request: Request) => {
       timeEventsCreated: 0, scanSkipped: 0, scanFailed: 0,
       // Phase 2C.
       remindersCreated: 0, reminderScanFailed: 0,
+      taskRemindersCreated: 0, taskReminderScanFailed: 0,
       // Phase 3B.
       pushSent: 0, pushFailed: 0, pushSkipped: 0, pushStepFailed: 0,
     };
@@ -1318,7 +1340,17 @@ Deno.serve(async (request: Request) => {
       counters.reminderScanFailed = 1;
     }
 
-    // ---------- Phase 3B: push what the two scans just created ----------
+    // Due-task reminders use the same queue and push delivery below. An optional
+    // scan failure must never interrupt the existing automation/email workload.
+    try {
+      const { data: tasks, error: taskError } = await admin.rpc("realtoros_scan_task_reminders", { p_limit: 100 });
+      if (taskError) counters.taskReminderScanFailed = 1;
+      else if (isPlainObject(tasks)) {
+        counters.taskRemindersCreated = typeof tasks.summaries === "number" ? tasks.summaries : 0;
+      }
+    } catch { counters.taskReminderScanFailed = 1; }
+
+    // ---------- Phase 3B: push what the scans just created ----------
     //
     // After the reminder scan, so a notification created a moment ago
     // goes out in this same run rather than waiting for the next one -

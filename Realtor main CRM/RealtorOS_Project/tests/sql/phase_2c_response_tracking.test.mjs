@@ -123,7 +123,7 @@ const reminders = (now) => svc(async () => (await one(db,
 
 const notes = async (userId) => (await db.query(
   `select type, title, dedupe_key, contact_id, metadata from public.notifications
-    where user_id = $1 order by dedupe_key`, [userId])).rows;
+    where user_id = $1 and type in ('contact_untouched','overdue_followups') order by dedupe_key`, [userId])).rows;
 
 const setHours = (w, hours) => svc(() => db.query(
   `insert into public.workspace_settings (id, user_id, workspace_id, settings_data)

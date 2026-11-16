@@ -67,10 +67,14 @@ checks(check_name, ok, detail) as (
                        = array['contact_id']),
          null
   union all
-  select 'type check lists the seven types',
+  select 'type check uses the thirteen supported event types',
          exists (select 1 from pg_constraint
                  where conrelid = 'public.notifications'::regclass and contype = 'c'
-                   and pg_get_constraintdef(oid) like '%lead_replied%hot_reply%unsubscribed%spam_report%email_bounced%import_finished%followup_failed%'),
+                   and pg_get_constraintdef(oid) like '%push_notification_types%')
+           and automation_internal.push_notification_types() = array[
+             'lead_replied','hot_reply','unsubscribed','spam_report','email_bounced',
+             'import_finished','followup_failed','contact_untouched','overdue_followups',
+             'new_lead','task_reminder','deal_assigned','push_test']::text[],
          null
   union all
   select 'link_route allow-list check',

@@ -40,7 +40,9 @@ const fileImport = (args) => asService(() => rpc(db, "realtoros_ingest_lead_file
 }));
 const notes = async (userId) => (await db.query(
   `select type, title, body, contact_id, link_route, dedupe_key, metadata, read_at from public.notifications
-   where user_id = $1 order by created_at, dedupe_key`, [userId])).rows;
+   where user_id = $1 and type <> 'new_lead' order by created_at, dedupe_key`, [userId])).rows;
+// This suite isolates the original event producers. New-lead production is
+// covered independently in crm-notification-events.test.mjs; never disable it.
 const EMAIL_SHAPE = /[^\s@]+@[^\s@]+\.[^\s@]+/;
 
 async function sheetConnection(userId, name = "Website leads") {
@@ -323,7 +325,7 @@ sqlTest("RLS: an owner sees only their own notifications", async () => {
     await record({ p_user_id: w.userId, p_contact_id: w.contactId, p_event_type: "hard_bounce", p_source: "provider_webhook", p_event_ref: "evt:rls" });
   }
   const seen = await asBrowser(a.userId, async () => (await db.query(`select user_id from public.notifications`)).rows);
-  assert.deepEqual(seen.map((r) => r.user_id), [a.userId]);
+  assert.deepEqual(seen.map((r) => r.user_id), [a.userId,a.userId], "both new-lead and bounce rows belong to the caller");
   const none = await asBrowser(randomUUID(), async () => (await db.query(`select count(*)::int n from public.notifications`)).rows[0].n);
   assert.equal(none, 0);
 });
@@ -336,7 +338,7 @@ sqlTest("RLS: the browser can set read_at on its own rows and nothing else", asy
   }
   await asBrowser(a.userId, async () => {
     const own = await db.query(`update public.notifications set read_at = now() where read_at is null returning id`);
-    assert.equal(own.rows.length, 1, "mark all read touches only own rows");
+    assert.equal(own.rows.length, 2, "mark all read touches both own event rows only");
     const other = await db.query(`update public.notifications set read_at = now() where user_id = $1 returning id`, [b.userId]);
     assert.equal(other.rows.length, 0, "cannot touch another owner's row");
     await assert.rejects(db.query(`update public.notifications set title = 'hacked'`), /permission denied/);

@@ -205,7 +205,7 @@ sqlTest("preferences validate, sort under COLLATE \"C\", and stay the caller's o
   assert.equal(prefs.out.push_enabled, true);
   assert.deepEqual(prefs.out.push_types, ["hot_reply", "overdue_followups"]);
   assert.equal(prefs.out.stored, true);
-  assert.equal(prefs.out.all_types.length, 9, "and the full list, so the UI needs no second copy");
+  assert.equal(prefs.out.all_types.length, 13, "and the full list, including four connected CRM/device events");
 
   // Somebody who has never opened the screen gets the defaults spelled out.
   const fresh = await owner();
@@ -213,7 +213,7 @@ sqlTest("preferences validate, sort under COLLATE \"C\", and stay the caller's o
     `select public.realtoros_notification_preferences() as out`));
   assert.equal(theirs.out.stored, false);
   assert.equal(theirs.out.push_enabled, true);
-  assert.equal(theirs.out.push_types.length, 9, "no row means every type, not none");
+  assert.equal(theirs.out.push_types.length, 13, "no row means every supported type, not none");
 });
 
 // ---------------------------------------------------------------- the claim
@@ -259,8 +259,9 @@ sqlTest("a claimed notification arrives with its devices, its route and no PII",
   const row = out.claimed.find((c) => c.id === id);
   assert.ok(row, "it was claimed: " + JSON.stringify(out));
   assert.deepEqual(Object.keys(row).sort(),
-    ["body", "id", "subscriptions", "title", "type", "url"],
-    "exactly what a payload needs and nothing more - no contact id, no email");
+    ["body", "id", "subscriptions", "title", "type", "url", "user_id"],
+    "service-only claim includes recipient for locale lookup, with no customer fields");
+  assert.equal(row.user_id, w.id, "locale lookup belongs to this recipient only");
   assert.equal(row.url, "/contacts", "the app route, not a URL");
   assert.equal(row.subscriptions.length, 1);
   assert.deepEqual(Object.keys(row.subscriptions[0]).sort(), ["auth", "endpoint", "p256dh"]);
