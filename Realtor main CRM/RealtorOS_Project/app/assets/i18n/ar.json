@@ -2173,5 +2173,12 @@
   "Follow-up emails will no longer be sent from this mailbox. You can reconnect at any time.": "لن تُرسل رسائل المتابعة بعد الآن من صندوق البريد هذا. يمكنك إعادة ربطه في أي وقت.",
   "Mailbox disconnected.": "تم قطع اتصال صندوق البريد.",
   "Sending policy saved.": "تم حفظ سياسة الإرسال.",
-  "Opening Google sign-in…": "جارٍ فتح تسجيل الدخول إلى Google…"
+  "Opening Google sign-in…": "جارٍ فتح تسجيل الدخول إلى Google…",
+  "Connect Outlook": "ربط Outlook",
+  "Reconnect Outlook": "إعادة ربط Outlook",
+  "Opening Microsoft sign-in…": "جارٍ فتح تسجيل الدخول إلى Microsoft…",
+  "The shared Outlook mailbox is connected.": "صندوق بريد Outlook المشترك متصل.",
+  "Outlook connected. Your follow-up emails will now be sent from your mailbox.": "تم ربط Outlook. ستُرسل رسائل المتابعة الخاصة بك الآن من صندوق البريد الخاص بك.",
+  "Connect your own Gmail or Outlook so follow-up emails are sent from your address. Replies come back to your own inbox. If no mailbox is connected, RealtorCRM's sending service is used instead.": "اربط حساب Gmail أو Outlook الخاص بك لكي تُرسل رسائل المتابعة من عنوانك. تصل الردود إلى صندوق الوارد الخاص بك. إذا لم يكن هناك صندوق بريد متصل، تُستخدم خدمة الإرسال الخاصة بـ RealtorCRM بدلاً من ذلك.",
+  "Workspace admins can connect a shared Gmail or Outlook mailbox for the whole team.": "يمكن لمسؤولي مساحة العمل ربط صندوق بريد Gmail أو Outlook مشترك للفريق بأكمله."
 }

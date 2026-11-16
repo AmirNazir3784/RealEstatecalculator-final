@@ -2173,5 +2173,12 @@
   "Follow-up emails will no longer be sent from this mailbox. You can reconnect at any time.": "Follow-up emails will no longer be sent from this mailbox. You can reconnect at any time.",
   "Mailbox disconnected.": "Mailbox disconnected.",
   "Sending policy saved.": "Sending policy saved.",
-  "Opening Google sign-in…": "Opening Google sign-in…"
+  "Opening Google sign-in…": "Opening Google sign-in…",
+  "Connect Outlook": "Connect Outlook",
+  "Reconnect Outlook": "Reconnect Outlook",
+  "Opening Microsoft sign-in…": "Opening Microsoft sign-in…",
+  "The shared Outlook mailbox is connected.": "The shared Outlook mailbox is connected.",
+  "Outlook connected. Your follow-up emails will now be sent from your mailbox.": "Outlook connected. Your follow-up emails will now be sent from your mailbox.",
+  "Connect your own Gmail or Outlook so follow-up emails are sent from your address. Replies come back to your own inbox. If no mailbox is connected, RealtorCRM's sending service is used instead.": "Connect your own Gmail or Outlook so follow-up emails are sent from your address. Replies come back to your own inbox. If no mailbox is connected, RealtorCRM's sending service is used instead.",
+  "Workspace admins can connect a shared Gmail or Outlook mailbox for the whole team.": "Workspace admins can connect a shared Gmail or Outlook mailbox for the whole team."
 }

@@ -123,10 +123,12 @@ App.pages.emailSendingSettings = (function () {
       const notice = {
         outcome,
         kind: params.get("kind") === "shared" ? "shared" : "personal",
+        provider: params.get("provider") === "microsoft" ? "microsoft" : "gmail",
         reason: params.get("reason") || ""
       };
       params.delete("mailbox");
       params.delete("kind");
+      params.delete("provider");
       params.delete("reason");
       const qs = params.toString();
       window.history.replaceState(null, "", window.location.pathname + (qs ? "?" + qs : "") + window.location.hash);
@@ -298,13 +300,19 @@ App.pages.emailSendingSettings = (function () {
     renderMailbox(pane, state);
   }
 
+  const MAILBOX_PROVIDERS = [
+    { id: "gmail", label: "Gmail", opening: "Opening Google sign-in\u2026" },
+    { id: "microsoft", label: "Outlook", opening: "Opening Microsoft sign-in\u2026" }
+  ];
+
   function mailboxNoticeHtml(state) {
     const notice = state.mailboxNotice;
     if (!notice) return "";
     if (notice.outcome === "connected") {
+      const outlook = notice.provider === "microsoft";
       const text = notice.kind === "shared"
-        ? App.i18n.t("The shared Gmail mailbox is connected.")
-        : App.i18n.t("Gmail connected. Your follow-up emails will now be sent from your mailbox.");
+        ? App.i18n.t(outlook ? "The shared Outlook mailbox is connected." : "The shared Gmail mailbox is connected.")
+        : App.i18n.t(outlook ? "Outlook connected. Your follow-up emails will now be sent from your mailbox." : "Gmail connected. Your follow-up emails will now be sent from your mailbox.");
       return App.i18n.html`<div class="release-callout" style="margin-bottom:12px"><p style="margin:0">${App.i18n.value(() => (U().esc(text)))}</p></div>`;
     }
     const text = notice.reason === "expired"
@@ -313,7 +321,7 @@ App.pages.emailSendingSettings = (function () {
     return App.i18n.html`<div class="release-callout release-callout-warning" style="margin-bottom:12px"><p style="margin:0">${App.i18n.value(() => (U().esc(text)))}</p></div>`;
   }
 
-  function connectionRowHtml(conn) {
+  function connectionBadgeHtml(conn) {
     if (!conn) {
       return App.i18n.html`<span class="badge badge-neutral"><span class="dot"></span>${App.i18n.value(() => (U().esc(App.i18n.t("Not connected"))))}</span>`;
     }
@@ -321,6 +329,24 @@ App.pages.emailSendingSettings = (function () {
       return App.i18n.html`<span class="badge badge-success"><span class="dot"></span>${App.i18n.value(() => (U().esc(App.i18n.t("Connected"))))}</span> <span class="form-help">${App.i18n.value(() => (maskEmail(conn.email_address)))}</span>`;
     }
     return App.i18n.html`<span class="badge badge-danger"><span class="dot"></span>${App.i18n.value(() => (U().esc(App.i18n.t("Needs attention"))))}</span> <span class="form-help">${App.i18n.value(() => (maskEmail(conn.email_address)))}</span>`;
+  }
+
+  function providerRowHtml(kind, providerMeta, conn) {
+    const pid = providerMeta.id;
+    const connectLabel = conn
+      ? App.i18n.t(pid === "microsoft" ? "Reconnect Outlook" : "Reconnect Gmail")
+      : App.i18n.t(pid === "microsoft" ? "Connect Outlook" : "Connect Gmail");
+    return App.i18n.html`
+      <div class="form-grid" style="margin-top:8px">
+        <label class="field full"><span>${App.i18n.value(() => (providerMeta.label))}</span>
+          <div>${App.i18n.value(() => (connectionBadgeHtml(conn)))}</div>
+        </label>
+      </div>
+      ${App.i18n.value(() => (conn && conn.status !== "connected" ? App.i18n.html`<p class="form-help">This connection needs attention. Reconnect to keep sending from your mailbox.</p>` : ""))}
+      <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap">
+        ${App.i18n.value(() => (!conn || conn.status !== "connected" ? App.i18n.html`<button type="button" class="btn ${App.i18n.value(() => (kind === "personal" ? "btn-primary" : ""))}" data-mb-connect="${App.i18n.value(() => (kind))}:${App.i18n.value(() => (pid))}">${App.i18n.value(() => (U().esc(connectLabel)))}</button>` : ""))}
+        ${App.i18n.value(() => (conn ? App.i18n.html`<button type="button" class="btn" data-mb-disconnect="${App.i18n.value(() => (kind))}:${App.i18n.value(() => (pid))}">Disconnect</button>` : ""))}
+      </div>`;
   }
 
   function renderMailbox(pane, state) {
@@ -340,38 +366,28 @@ App.pages.emailSendingSettings = (function () {
 
     const mb = state.mailbox;
     if (!mb) return;
-    const personal = mb.personal;
-    const showShared = !!(mb.shared || mb.canManageShared);
+    const hasShared = !!(mb.shared.gmail || mb.shared.microsoft);
+    const showShared = !!(hasShared || mb.canManageShared);
+    const personalRows = MAILBOX_PROVIDERS.map((pm) => providerRowHtml("personal", pm, mb.personal[pm.id])).join("");
+    const sharedRows = MAILBOX_PROVIDERS.map((pm) => providerRowHtml("shared", pm, mb.shared[pm.id])).join("");
 
     el.innerHTML = App.i18n.html`
       ${App.i18n.value(() => (mailboxNoticeHtml(state)))}
-      <p class="form-help" style="margin-top:0">Connect your own Gmail so follow-up emails are sent from your address. Replies come back to your own inbox. If no mailbox is connected, RealtorCRM's sending service is used instead.</p>
+      <p class="form-help" style="margin-top:0">Connect your own Gmail or Outlook so follow-up emails are sent from your address. Replies come back to your own inbox. If no mailbox is connected, RealtorCRM's sending service is used instead.</p>
 
       <div class="form-grid" style="margin-top:12px">
-        <label class="field full"><span>Your mailbox</span>
-          <div>${App.i18n.value(() => (connectionRowHtml(personal)))}</div>
-        </label>
+        <label class="field full"><span>Your mailbox</span></label>
       </div>
-      ${App.i18n.value(() => (personal && personal.status !== "connected" ? App.i18n.html`<p class="form-help">This connection needs attention. Reconnect to keep sending from your mailbox.</p>` : ""))}
-      <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
-        ${App.i18n.value(() => (!personal || personal.status !== "connected" ? App.i18n.html`<button type="button" class="btn btn-primary" id="epMailboxConnectPersonal">${App.i18n.value(() => (U().esc(App.i18n.t(personal ? "Reconnect Gmail" : "Connect Gmail"))))}</button>` : ""))}
-        ${App.i18n.value(() => (personal ? App.i18n.html`<button type="button" class="btn" id="epMailboxDisconnectPersonal">Disconnect</button>` : ""))}
-      </div>
+      ${App.i18n.value(() => (personalRows))}
 
       ${App.i18n.value(() => (showShared ? App.i18n.html`
       <hr style="margin:16px 0;border:none;border-top:1px solid var(--border, #e5e7eb)">
       <div class="form-grid">
-        <label class="field full"><span>Shared mailbox</span>
-          <div>${App.i18n.value(() => (connectionRowHtml(mb.shared)))}</div>
-        </label>
+        <label class="field full"><span>Shared mailbox</span></label>
       </div>
-      <p class="form-help">Workspace admins can connect one shared mailbox for the whole team.</p>
+      <p class="form-help">Workspace admins can connect a shared Gmail or Outlook mailbox for the whole team.</p>
+      ${App.i18n.value(() => (sharedRows))}
       ${App.i18n.value(() => (mb.canManageShared ? App.i18n.html`
-      <div style="margin-top:10px;display:flex;gap:8px;flex-wrap:wrap">
-        ${App.i18n.value(() => (!mb.shared || mb.shared.status !== "connected" ? App.i18n.html`<button type="button" class="btn" id="epMailboxConnectShared">${App.i18n.value(() => (U().esc(App.i18n.t(mb.shared ? "Reconnect Gmail" : "Connect Gmail"))))}</button>` : ""))}
-        ${App.i18n.value(() => (mb.shared ? App.i18n.html`<button type="button" class="btn" id="epMailboxDisconnectShared">Disconnect</button>` : ""))}
-      </div>
-
       <div class="form-grid" style="margin-top:16px">
         <label class="field full"><span>Sending policy</span>
           <label class="field" style="flex-direction:row;align-items:flex-start;gap:8px">
@@ -398,15 +414,15 @@ App.pages.emailSendingSettings = (function () {
       statusEl.className = "profile-edit-message" + (cls ? " " + cls : "");
     };
 
-    const wireConnect = (id, kind) => {
-      const btn = el.querySelector(id);
-      if (!btn) return;
+    el.querySelectorAll("[data-mb-connect]").forEach((btn) => {
       btn.addEventListener("click", async () => {
         if (btn.disabled) return;
+        const [kind, provider] = String(btn.getAttribute("data-mb-connect") || "").split(":");
+        const meta = MAILBOX_PROVIDERS.find((pm) => pm.id === provider) || MAILBOX_PROVIDERS[0];
         btn.disabled = true;
-        setStatus(App.i18n.t("Opening Google sign-in…"));
+        setStatus(App.i18n.t(meta.opening));
         try {
-          const { authUrl } = await S().mailbox.start(kind);
+          const { authUrl } = await S().mailbox.start(kind, provider);
           window.location.assign(authUrl);
         } catch (err) {
           setStatus(friendlyMailboxError(err), "error");
@@ -414,11 +430,10 @@ App.pages.emailSendingSettings = (function () {
           btn.disabled = false;
         }
       });
-    };
-    const wireDisconnect = (id, kind) => {
-      const btn = el.querySelector(id);
-      if (!btn) return;
+    });
+    el.querySelectorAll("[data-mb-disconnect]").forEach((btn) => {
       btn.addEventListener("click", () => {
+        const [kind, provider] = String(btn.getAttribute("data-mb-disconnect") || "").split(":");
         App.app.confirmDialog({
           title: App.i18n.t("Disconnect this mailbox?"),
           message: App.i18n.t("Follow-up emails will no longer be sent from this mailbox. You can reconnect at any time."),
@@ -426,7 +441,7 @@ App.pages.emailSendingSettings = (function () {
         }, async () => {
           btn.disabled = true;
           try {
-            await S().mailbox.disconnect(kind);
+            await S().mailbox.disconnect(kind, provider);
             App.app.toast(App.i18n.t("Mailbox disconnected."), "success");
             await loadMailbox(pane, state);
           } catch (err) {
@@ -436,11 +451,7 @@ App.pages.emailSendingSettings = (function () {
           }
         });
       });
-    };
-    wireConnect("#epMailboxConnectPersonal", "personal");
-    wireDisconnect("#epMailboxDisconnectPersonal", "personal");
-    wireConnect("#epMailboxConnectShared", "shared");
-    wireDisconnect("#epMailboxDisconnectShared", "shared");
+    });
 
     const policySave = el.querySelector("#epMailboxPolicySave");
     if (policySave) {
@@ -449,7 +460,7 @@ App.pages.emailSendingSettings = (function () {
         const checked = el.querySelector("input[name='epMailboxPolicy']:checked");
         if (!checked) return;
         policySave.disabled = true;
-        setStatus(App.i18n.t("Saving…"));
+        setStatus(App.i18n.t("Saving\u2026"));
         try {
           const { mode } = await S().mailbox.setPolicy(checked.value);
           if (state.mailbox) state.mailbox.policy.mode = mode;
@@ -471,7 +482,7 @@ App.pages.emailSendingSettings = (function () {
       unauthorized: "Please sign in again to manage your mailbox connection.",
       no_workspace: "You are not part of a workspace yet, so there is nowhere to connect a mailbox.",
       admin_required: "Only a workspace owner or admin can manage the shared mailbox and sending policy.",
-      not_configured: "Mailbox connections are not fully set up for this workspace yet. This card will work once the Google connection is configured.",
+      not_configured: "Mailbox connections are not fully set up for this workspace yet. This card will work once the provider connection is configured.",
       provider_not_available_yet: "That mailbox provider is not available yet.",
       mailbox_request_failed: "Could not reach the mailbox service. Please try again."
     };

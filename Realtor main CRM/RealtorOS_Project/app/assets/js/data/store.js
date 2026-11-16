@@ -862,8 +862,8 @@ App.store = (function () {
   // reaches the browser.
   const mailbox = {
     status: () => D().getMailboxStatus(),
-    start: (kind) => D().startMailboxConnect(kind),
-    disconnect: (kind) => D().disconnectMailbox(kind),
+    start: (kind, provider) => D().startMailboxConnect(kind, provider),
+    disconnect: (kind, provider) => D().disconnectMailbox(kind, provider),
     setPolicy: (mode) => D().setMailboxPolicy(mode)
   };
 

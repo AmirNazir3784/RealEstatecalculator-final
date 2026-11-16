@@ -2519,6 +2519,15 @@ App.data = (function () {
       connected_at: value.connected_at || null
     };
   }
+  function validateMailboxConnectionMap_(value) {
+    if (!value || typeof value !== "object" || Array.isArray(value)) throw mailboxUnexpected_();
+    const gmail = validateMailboxConnection_(value.gmail);
+    const microsoft = validateMailboxConnection_(value.microsoft);
+    // A connection view must sit under its own provider key.
+    if (gmail && gmail.provider !== "gmail") throw mailboxUnexpected_();
+    if (microsoft && microsoft.provider !== "microsoft") throw mailboxUnexpected_();
+    return { gmail, microsoft };
+  }
   function validateMailboxStatus_(data) {
     if (!data || typeof data !== "object" || Array.isArray(data)) throw mailboxUnexpected_();
     if (typeof data.workspaceId !== "string" || !UUID_PATTERN_.test(data.workspaceId)) throw mailboxUnexpected_();
@@ -2529,8 +2538,8 @@ App.data = (function () {
       workspaceId: data.workspaceId,
       role: data.role,
       canManageShared: data.canManageShared,
-      personal: validateMailboxConnection_(data.personal),
-      shared: validateMailboxConnection_(data.shared),
+      personal: validateMailboxConnectionMap_(data.personal),
+      shared: validateMailboxConnectionMap_(data.shared),
       policy: { mode: data.policy.mode }
     };
   }
@@ -2567,21 +2576,26 @@ App.data = (function () {
     requireUser();
     return validateMailboxStatus_(await invokeMailbox_({ action: "status" }));
   }
-  async function startMailboxConnect(kind) {
+  async function startMailboxConnect(kind, provider) {
     requireUser();
     if (MAILBOX_KINDS_.indexOf(kind) === -1) throw new Error("A valid mailbox kind is required.");
-    const data = await invokeMailbox_({ action: "start", kind });
+    if (MAILBOX_PROVIDERS_.indexOf(provider) === -1) throw new Error("A valid mailbox provider is required.");
+    const data = await invokeMailbox_({ action: "start", kind, provider });
     // The consent URL is validated before the page navigates anywhere:
-    // Google's authorization host over HTTPS, nothing else.
-    if (typeof data.authUrl !== "string" || !/^https:\/\/accounts\.google\.com\//.test(data.authUrl)) {
+    // only the provider's own authorization host over HTTPS.
+    const hostPattern = provider === "microsoft"
+      ? /^https:\/\/login\.microsoftonline\.com\//
+      : /^https:\/\/accounts\.google\.com\//;
+    if (typeof data.authUrl !== "string" || !hostPattern.test(data.authUrl)) {
       throw mailboxUnexpected_();
     }
     return { authUrl: data.authUrl };
   }
-  async function disconnectMailbox(kind) {
+  async function disconnectMailbox(kind, provider) {
     requireUser();
     if (MAILBOX_KINDS_.indexOf(kind) === -1) throw new Error("A valid mailbox kind is required.");
-    const data = await invokeMailbox_({ action: "disconnect", kind });
+    if (MAILBOX_PROVIDERS_.indexOf(provider) === -1) throw new Error("A valid mailbox provider is required.");
+    const data = await invokeMailbox_({ action: "disconnect", kind, provider });
     return { disconnected: data.disconnected === true };
   }
   async function setMailboxPolicy(mode) {
