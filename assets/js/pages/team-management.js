@@ -32,10 +32,10 @@ App.pages.teamManagement = (function () {
 
   // What an invitation's state is called in the UI, and what it means.
   const INVITE_STATE = {
-    pending:  { label: "Waiting to be accepted", cls: "badge-info" },
-    accepted: { label: "Joined", cls: "badge-success" },
-    revoked:  { label: "Cancelled", cls: "badge-neutral" },
-    expired:  { label: "Expired", cls: "badge-warning" }
+    pending:  { get label() { return App.i18n.t("Waiting to be accepted"); }, cls: "badge-info" },
+    accepted: { get label() { return App.i18n.t("Joined"); }, cls: "badge-success" },
+    revoked:  { get label() { return App.i18n.t("Cancelled"); }, cls: "badge-neutral" },
+    expired:  { get label() { return App.i18n.t("Expired"); }, cls: "badge-warning" }
   };
 
   function lookup(map, key) {
@@ -44,11 +44,11 @@ App.pages.teamManagement = (function () {
   }
   function roleLabel(role) { return lookup(ROLE_LABEL, role) || "Member"; }
   function roleBadge(role) {
-    return `<span class="badge ${lookup(ROLE_BADGE, role) || "badge-neutral"}">${U().esc(roleLabel(role))}</span>`;
+    return App.i18n.html`<span class="badge ${App.i18n.value(() => (lookup(ROLE_BADGE, role) || "badge-neutral"))}">${App.i18n.value(() => (U().esc(roleLabel(role))))}</span>`;
   }
   function inviteBadge(status) {
-    const meta = lookup(INVITE_STATE, status) || { label: "Unknown", cls: "badge-neutral" };
-    return `<span class="badge ${meta.cls}">${U().esc(meta.label)}</span>`;
+    const meta = lookup(INVITE_STATE, status) || { get label() { return App.i18n.t("Unknown"); }, cls: "badge-neutral" };
+    return App.i18n.html`<span class="badge ${App.i18n.value(() => (meta.cls))}">${App.i18n.value(() => (U().esc(meta.label)))}</span>`;
   }
 
   // "in 5 days" / "today" / "3 days ago", from a timestamp. Days rather
@@ -91,13 +91,13 @@ App.pages.teamManagement = (function () {
   async function render(pane) {
     if (!pane) return;
     lastPane = pane;
-    pane.innerHTML = App.app.loadingHtml("your team");
+    pane.innerHTML = App.app.loadingHtml(App.i18n.t("your team"));
 
     try {
       await W().load();
       await S().ensureLoaded(["settings"]);
     } catch (err) {
-      pane.innerHTML = App.app.errorHtml("Your team could not load.");
+      pane.innerHTML = App.app.errorHtml(App.i18n.t("Your team could not load."));
       wireRetry(pane);
       return;
     }
@@ -106,8 +106,8 @@ App.pages.teamManagement = (function () {
     // be able to leave, so they get that one card and nothing else - and no
     // roster is requested, because the server would refuse it.
     if (!W().can("team_manage")) {
-      pane.innerHTML = `
-        ${head("Team & Access", "Who is in this workspace, and what each person can do.")}
+      pane.innerHTML = App.i18n.html`
+        ${App.i18n.value(() => (head("Team & Access", "Who is in this workspace, and what each person can do.")))}
         <section class="card">
           <div class="card-body">
             <div class="empty-state">
@@ -116,7 +116,7 @@ App.pages.teamManagement = (function () {
             </div>
           </div>
         </section>
-        ${leaveCard()}`;
+        ${App.i18n.value(() => (leaveCard()))}`;
       wireLeave(pane);
       return;
     }
@@ -149,10 +149,10 @@ App.pages.teamManagement = (function () {
     }
 
     if (failed) {
-      pane.innerHTML = `
-        ${head("Team & Access", "Who is in this workspace, and what each person can do.")}
-        ${teamModeCard(true)}
-        <section class="card"><div class="card-body">${App.app.errorHtml("Your team could not load.")}</div></section>`;
+      pane.innerHTML = App.i18n.html`
+        ${App.i18n.value(() => (head("Team & Access", "Who is in this workspace, and what each person can do.")))}
+        ${App.i18n.value(() => (teamModeCard(true)))}
+        <section class="card"><div class="card-body">${App.i18n.value(() => (App.app.errorHtml(App.i18n.t("Your team could not load."))))}</div></section>`;
       wireTeamMode(pane);
       wireRetry(pane);
       return;
@@ -162,26 +162,26 @@ App.pages.teamManagement = (function () {
     const former = members.filter(m => m.status !== "active");
     const isOwner = W().isOwner();
 
-    pane.innerHTML = `
-      ${head("Team & Access", "Who is in this workspace, and what each person can do.")}
-      ${teamModeCard(true)}
-      ${viewingAsCard()}
+    pane.innerHTML = App.i18n.html`
+      ${App.i18n.value(() => (head("Team & Access", "Who is in this workspace, and what each person can do.")))}
+      ${App.i18n.value(() => (teamModeCard(true)))}
+      ${App.i18n.value(() => (viewingAsCard()))}
       <section aria-label="Members">
         <h2 class="settings-category-title">Members</h2>
-        ${membersCard(active, isOwner)}
-        ${formerCard(former)}
+        ${App.i18n.value(() => (membersCard(active, isOwner)))}
+        ${App.i18n.value(() => (formerCard(former)))}
       </section>
       <section aria-label="Invitations">
         <h2 class="settings-category-title">Invitations</h2>
-        ${inviteCard()}
-        ${invitationsCard(invitations)}
+        ${App.i18n.value(() => (inviteCard()))}
+        ${App.i18n.value(() => (invitationsCard(invitations)))}
       </section>
       <section aria-label="Assignments">
         <h2 class="settings-category-title">Assignments</h2>
         <div class="card"><div class="card-body">
           <p class="form-help">Review workloads in Team. Assign leads using the existing Contacts controls.</p>
           <button type="button" class="btn" data-go-workload>View team workload</button>
-          ${W().can("contacts_assign") ? '<button type="button" class="btn" data-go-assignments>Assign leads in Contacts</button>' : ""}
+          ${App.i18n.value(() => (W().can("contacts_assign") ? App.i18n.markup('<button type="button" class="btn" data-go-assignments>Assign leads in Contacts</button>') : ""))}
         </div></div>
       </section>
       <section aria-label="Permissions">
@@ -191,8 +191,8 @@ App.pages.teamManagement = (function () {
           <button type="button" class="btn" data-go-permissions>Set what each role can do</button>
         </div></div>
       </section>
-      ${leaveCard()}
-      ${isOwner ? dangerCard() : ""}`;
+      ${App.i18n.value(() => (leaveCard()))}
+      ${App.i18n.value(() => (isOwner ? dangerCard() : ""))}`;
 
     wireTeamMode(pane);
     wireViewingAs(pane);
@@ -207,9 +207,9 @@ App.pages.teamManagement = (function () {
   }
 
   function head(title, desc) {
-    return `<div class="settings-category-head">
-      <div class="settings-category-title">${U().esc(title)}</div>
-      <p class="form-help">${U().esc(desc)}</p>
+    return App.i18n.html`<div class="settings-category-head">
+      <div class="settings-category-title">${App.i18n.value(() => (U().esc(title)))}</div>
+      <p class="form-help">${App.i18n.value(() => (U().esc(desc)))}</p>
     </div>`;
   }
 
@@ -225,7 +225,7 @@ App.pages.teamManagement = (function () {
   // ---------- TEAM MODE ----------
 
   function teamModeCard(on) {
-    return `
+    return App.i18n.html`
       <section class="card">
         <div class="card-header"><div class="card-title">Work as a team</div></div>
         <div class="card-body">
@@ -233,18 +233,18 @@ App.pages.teamManagement = (function () {
             <div class="split-row-main">
               <div class="split-row-label">
                 <strong>Team features</strong>
-                <div class="form-help" id="teamModeSub">${on
-                  ? "On. You can invite people, assign leads, and set what each person can do."
-                  : "Off. This workspace works as a single agent. Turn this on to invite people and share work."}</div>
+                <div class="form-help" id="teamModeSub">${App.i18n.value(() => (on
+                  ? App.i18n.t("On. You can invite people, assign leads, and set what each person can do.")
+                  : App.i18n.t("Off. This workspace works as a single agent. Turn this on to invite people and share work.")))}</div>
               </div>
             </div>
-            <label class="toggle-switch" title="${on ? "On" : "Off"}">
-              <input type="checkbox" id="teamModeToggle" ${on ? "checked" : ""}
+            <label class="toggle-switch" title="${App.i18n.value(() => (on ? "On" : "Off"))}">
+              <input type="checkbox" id="teamModeToggle" ${App.i18n.value(() => (on ? "checked" : ""))}
                      aria-label="Team features">
               <span class="toggle-track"></span>
             </label>
           </div>
-          ${on ? "" : `<p class="form-help" style="margin-top:12px">Turning this on does not change any of your records. It adds the team pages, and lets you give other people their own sign-in.</p>`}
+          ${App.i18n.value(() => (on ? "" : App.i18n.markup(`<p class="form-help" style="margin-top:12px">Turning this on does not change any of your records. It adds the team pages, and lets you give other people their own sign-in.</p>`)))}
         </div>
       </section>`;
   }
@@ -258,7 +258,7 @@ App.pages.teamManagement = (function () {
       try {
         await S().settings.setTeamMode(on);
         App.app.refreshNav();
-        App.app.toast(on ? "Team features are on." : "Team features are off.", "success");
+        App.app.toast(on ? App.i18n.t("Team features are on.") : App.i18n.t("Team features are off."), "success");
         await refresh();
       } catch (err) {
         cb.checked = !on;
@@ -291,11 +291,11 @@ App.pages.teamManagement = (function () {
     const id = s.settings && s.settings.currentTeamMemberId;
     if (!id) return "";
     const member = (s.teamMembers || []).find(m => m.id === id);
-    return `
+    return App.i18n.html`
       <section class="card" data-card="viewing-as">
         <div class="card-header"><div class="card-title">Restricted view</div></div>
         <div class="card-body">
-          <p class="form-help">This browser is showing a narrowed view${member ? " for " + U().esc(member.name) : ""}. It is left over from an older version and is not access control.</p>
+          <p class="form-help">This browser is showing a narrowed view${App.i18n.value(() => (member ? " for " + U().esc(member.name) : ""))}. It is left over from an older version and is not access control.</p>
           <button class="btn" id="clearViewingAs">Show everything again</button>
         </div>
       </section>`;
@@ -308,11 +308,11 @@ App.pages.teamManagement = (function () {
       btn.disabled = true;
       try {
         await S().settings.update({ currentTeamMemberId: null });
-        App.app.toast("Showing everything again.", "success");
+        App.app.toast(App.i18n.t("Showing everything again."), "success");
         await refresh();
       } catch (err) {
         btn.disabled = false;
-        App.app.toast("Could not save: " + (err && err.message ? err.message : "please try again."), "danger");
+        App.app.toast(App.i18n.t("Could not save: ") + (err && err.message ? err.message : "please try again."), "danger");
       }
     });
   }
@@ -321,7 +321,7 @@ App.pages.teamManagement = (function () {
 
   function membersCard(active, isOwner) {
     if (!active.length) {
-      return `
+      return App.i18n.markup(`
         <section class="card" data-card="members">
           <div class="card-header"><div class="card-title">People</div></div>
           <div class="card-body">
@@ -331,7 +331,7 @@ App.pages.teamManagement = (function () {
               <button type="button" class="btn btn-primary" id="membersInviteCta">Invite someone</button>
             </div>
           </div>
-        </section>`;
+        </section>`);
     }
 
     const rows = active.map(m => {
@@ -340,45 +340,45 @@ App.pages.teamManagement = (function () {
       const canAct = !self && !owner;
       const actions = [];
       if (canAct) {
-        actions.push(`<select class="member-role" data-member="${U().esc(m.member_id)}"
-            aria-label="Role for ${U().esc(memberName(m))}">
-            <option value="admin" ${m.role === "admin" ? "selected" : ""}>Admin</option>
-            <option value="agent" ${m.role === "agent" ? "selected" : ""}>Agent</option>
+        actions.push(App.i18n.html`<select class="member-role" data-member="${App.i18n.value(() => (U().esc(m.member_id)))}"
+            aria-label="Role for ${App.i18n.value(() => (U().esc(memberName(m))))}">
+            <option value="admin" ${App.i18n.value(() => (m.role === "admin" ? "selected" : ""))}>Admin</option>
+            <option value="agent" ${App.i18n.value(() => (m.role === "agent" ? "selected" : ""))}>Agent</option>
           </select>`);
-        actions.push(`<button class="btn btn-sm" data-perms="${U().esc(m.member_id)}"
-            data-name="${U().esc(memberName(m))}">What they can do</button>`);
+        actions.push(App.i18n.html`<button class="btn btn-sm" data-perms="${App.i18n.value(() => (U().esc(m.member_id)))}"
+            data-name="${App.i18n.value(() => (U().esc(memberName(m))))}">What they can do</button>`);
         if (isOwner) {
-          actions.push(`<button class="btn btn-sm" data-transfer="${U().esc(m.member_id)}"
-            data-name="${U().esc(memberName(m))}">Make owner</button>`);
+          actions.push(App.i18n.html`<button class="btn btn-sm" data-transfer="${App.i18n.value(() => (U().esc(m.member_id)))}"
+            data-name="${App.i18n.value(() => (U().esc(memberName(m))))}">Make owner</button>`);
         }
-        actions.push(`<button class="btn btn-sm btn-danger" data-remove="${U().esc(m.member_id)}"
-            data-name="${U().esc(memberName(m))}">Remove</button>`);
+        actions.push(App.i18n.html`<button class="btn btn-sm btn-danger" data-remove="${App.i18n.value(() => (U().esc(m.member_id)))}"
+            data-name="${App.i18n.value(() => (U().esc(memberName(m))))}">Remove</button>`);
       }
-      return `
-        <tr data-member-row="${U().esc(m.member_id)}">
+      return App.i18n.html`
+        <tr data-member-row="${App.i18n.value(() => (U().esc(m.member_id)))}">
           <td data-label="Name" class="primary-cell">
-            <strong>${U().esc(memberName(m))}</strong>
-            ${self ? ` <span class="badge badge-neutral">You</span>` : ""}
-            ${hasOverrides(m) ? ` <span class="badge badge-info" title="Some permissions were set just for this person">Custom permissions</span>` : ""}
-            <div class="form-help">${U().esc(m.email || "")}</div>
+            <strong>${App.i18n.value(() => (U().esc(memberName(m))))}</strong>
+            ${App.i18n.value(() => (self ? App.i18n.markup(` <span class="badge badge-neutral">You</span>`) : ""))}
+            ${App.i18n.value(() => (hasOverrides(m) ? App.i18n.markup(` <span class="badge badge-info" title="Some permissions were set just for this person">Custom permissions</span>`) : ""))}
+            <div class="form-help">${App.i18n.value(() => (U().esc(m.email || "")))}</div>
           </td>
-          <td data-label="Role">${roleBadge(m.role)}</td>
+          <td data-label="Role">${App.i18n.value(() => (roleBadge(m.role)))}</td>
           <td class="actions" data-label="">
-            <span style="display:inline-flex;gap:6px;flex-wrap:wrap;align-items:center">${actions.join("") || `<span class="form-help">${owner ? "Owners cannot be changed here" : "This is you"}</span>`}</span>
+            <span style="display:inline-flex;gap:6px;flex-wrap:wrap;align-items:center">${App.i18n.value(() => (actions.join("") || App.i18n.html`<span class="form-help">${App.i18n.value(() => (owner ? App.i18n.t("Owners cannot be changed here") : App.i18n.t("This is you")))}</span>`))}</span>
           </td>
         </tr>`;
     }).join("");
 
-    return `
+    return App.i18n.html`
       <section class="card" data-card="members">
         <div class="card-header">
-          <div class="card-title">People <span class="badge badge-neutral">${active.length}</span></div>
+          <div class="card-title">People <span class="badge badge-neutral">${App.i18n.value(() => (active.length))}</span></div>
         </div>
         <div class="card-body zero">
           <div class="table-wrap">
             <table class="tbl tbl-responsive">
               <thead><tr><th>Name</th><th>Role</th><th class="actions">&nbsp;</th></tr></thead>
-              <tbody>${rows}</tbody>
+              <tbody>${App.i18n.value(() => (rows))}</tbody>
             </table>
           </div>
         </div>
@@ -387,29 +387,29 @@ App.pages.teamManagement = (function () {
 
   function formerCard(former) {
     if (!former.length) return "";
-    const rows = former.map(m => `
+    const rows = former.map(m => App.i18n.html`
       <tr>
         <td data-label="Name" class="primary-cell">
-          <strong>${U().esc(memberName(m))}</strong>
-          <div class="form-help">${U().esc(m.email || "")}</div>
+          <strong>${App.i18n.value(() => (U().esc(memberName(m))))}</strong>
+          <div class="form-help">${App.i18n.value(() => (U().esc(m.email || "")))}</div>
         </td>
-        <td data-label="Role">${roleBadge(m.role)}</td>
-        <td data-label="Status">${m.status === "suspended"
-          ? `<span class="badge badge-warning">Paused</span>`
-          : `<span class="badge badge-neutral">No longer here</span>`}</td>
+        <td data-label="Role">${App.i18n.value(() => (roleBadge(m.role)))}</td>
+        <td data-label="Status">${App.i18n.value(() => (m.status === "suspended"
+          ? App.i18n.markup(`<span class="badge badge-warning">Paused</span>`)
+          : App.i18n.markup(`<span class="badge badge-neutral">No longer here</span>`)))}</td>
       </tr>`).join("");
-    return `
+    return App.i18n.html`
       <section class="card" data-card="former">
         <details>
           <summary class="card-header" style="cursor:pointer">
-            <div class="card-title">People who have left <span class="badge badge-neutral">${former.length}</span></div>
+            <div class="card-title">People who have left <span class="badge badge-neutral">${App.i18n.value(() => (former.length))}</span></div>
           </summary>
           <div class="card-body zero">
             <p class="form-help" style="padding:12px 16px 0">Their records stay in the workspace, and their name still shows on anything they worked on.</p>
             <div class="table-wrap">
               <table class="tbl tbl-responsive">
                 <thead><tr><th>Name</th><th>Role</th><th>Status</th></tr></thead>
-                <tbody>${rows}</tbody>
+                <tbody>${App.i18n.value(() => (rows))}</tbody>
               </table>
             </div>
           </div>
@@ -436,7 +436,7 @@ App.pages.teamManagement = (function () {
         try {
           const out = await S().team.changeRole(memberId, role);
           if (out && out.outcome === "changed") {
-            App.app.toast("Role changed.", "success");
+            App.app.toast(App.i18n.t("Role changed."), "success");
             await refresh();
             return;
           }
@@ -463,24 +463,24 @@ App.pages.teamManagement = (function () {
         const name = btn.getAttribute("data-name");
         App.app.confirmDialog({
           title: "Remove " + name + "?",
-          message: "They lose access to this workspace straight away. Their leads, deals and tasks stay here and become unassigned, and their name still shows on everything they worked on. You can invite them again later.",
+          get message() { return App.i18n.t("They lose access to this workspace straight away. Their leads, deals and tasks stay here and become unassigned, and their name still shows on everything they worked on. You can invite them again later."); },
           okLabel: "Remove",
           danger: true
         }, async () => {
           try {
             const out = await S().team.remove(memberId);
             if (out && out.outcome === "removed") {
-              App.app.toast(name + " was removed.", "success");
+              App.app.toast(name + App.i18n.t(" was removed."), "success");
             } else if (out && out.outcome === "cannot_remove_owner") {
-              App.app.toast("Make somebody else the owner first.", "danger");
+              App.app.toast(App.i18n.t("Make somebody else the owner first."), "danger");
             } else if (out && out.outcome === "cannot_remove_self") {
-              App.app.toast("Use Leave this team instead.", "danger");
+              App.app.toast(App.i18n.t("Use Leave this team instead."), "danger");
             } else if (out && out.outcome === "already_removed") {
-              App.app.toast("They had already been removed.", "info");
+              App.app.toast(App.i18n.t("They had already been removed."), "info");
             } else if (out && out.outcome === "not_found") {
-              App.app.toast("That person is no longer in this workspace.", "info");
+              App.app.toast(App.i18n.t("That person is no longer in this workspace."), "info");
             } else {
-              App.app.toast("Could not remove them.", "danger");
+              App.app.toast(App.i18n.t("Could not remove them."), "danger");
             }
           } catch (err) {
             App.app.toast(serverRefusal(err, "Only an owner or admin can remove people."), "danger");
@@ -496,22 +496,22 @@ App.pages.teamManagement = (function () {
         const name = btn.getAttribute("data-name");
         App.app.confirmDialog({
           title: "Make " + name + " the owner?",
-          message: "They become the owner of this workspace and you become an admin. Only they can hand it back. This cannot be undone by you.",
+          get message() { return App.i18n.t("They become the owner of this workspace and you become an admin. Only they can hand it back. This cannot be undone by you."); },
           okLabel: "Make owner",
           danger: true
         }, async () => {
           try {
             const out = await S().team.transferOwnership(memberId);
             if (out && out.outcome === "transferred") {
-              App.app.toast(name + " is now the owner. You are an admin.", "success");
+              App.app.toast(name + App.i18n.t(" is now the owner. You are an admin."), "success");
             } else if (out && out.outcome === "target_not_active") {
-              App.app.toast("That person is no longer in this workspace.", "danger");
+              App.app.toast(App.i18n.t("That person is no longer in this workspace."), "danger");
             } else if (out && out.outcome === "already_owner") {
-              App.app.toast("They are already the owner.", "info");
+              App.app.toast(App.i18n.t("They are already the owner."), "info");
             } else if (out && out.outcome === "not_found") {
-              App.app.toast("That person is no longer in this workspace.", "info");
+              App.app.toast(App.i18n.t("That person is no longer in this workspace."), "info");
             } else {
-              App.app.toast("Could not hand over the workspace.", "danger");
+              App.app.toast(App.i18n.t("Could not hand over the workspace."), "danger");
             }
           } catch (err) {
             App.app.toast(serverRefusal(err, "Only the owner can hand over a workspace."), "danger");
@@ -547,7 +547,7 @@ App.pages.teamManagement = (function () {
   // ---------- INVITE ----------
 
   function inviteCard() {
-    return `
+    return App.i18n.markup(`
       <section class="card" data-card="invite">
         <div class="card-header"><div class="card-title">Invite someone</div></div>
         <div class="card-body">
@@ -569,7 +569,7 @@ App.pages.teamManagement = (function () {
           <div class="field-error-hint" id="inviteError" role="alert" hidden></div>
           <div id="invitePanel"></div>
         </div>
-      </section>`;
+      </section>`);
   }
 
   function wireInvite(pane) {
@@ -581,10 +581,10 @@ App.pages.teamManagement = (function () {
 
     const showError = (msg) => {
       if (!errEl) return;
-      errEl.textContent = msg;
+      App.i18n.setText(errEl, App.i18n.value(() => (msg)));
       errEl.hidden = false;
     };
-    const clearError = () => { if (errEl) { errEl.textContent = ""; errEl.hidden = true; } };
+    const clearError = () => { if (errEl) { App.i18n.setText(errEl, App.i18n.value(() => (""))); errEl.hidden = true; } };
 
     emailEl.addEventListener("input", clearError);
     emailEl.addEventListener("keydown", (e) => { if (e.key === "Enter") { e.preventDefault(); btn.click(); } });
@@ -630,15 +630,15 @@ App.pages.teamManagement = (function () {
     if (!host) return;
     const link = joinUrl(out.token);
     const days = daysFromNow(out.expires_at);
-    host.innerHTML = `
+    host.innerHTML = App.i18n.html`
       <div class="release-callout" data-panel="invite-link" style="margin-top:14px">
-        <strong>Send this link to ${U().esc(out.email)}</strong>
+        <strong>Send this link to ${App.i18n.value(() => (U().esc(out.email)))}</strong>
         <p class="form-help" style="margin:6px 0 10px">
-          It works only for ${U().esc(out.email)}, and ${days !== null && days >= 0 ? "stops working in " + days + (days === 1 ? " day" : " days") : "is already past its date"}.
+          It works only for ${App.i18n.value(() => (U().esc(out.email)))}, and ${App.i18n.value(() => (days !== null && days >= 0 ? "stops working in " + days + (days === 1 ? App.i18n.t(" day") : App.i18n.t(" days")) : App.i18n.t("is already past its date")))}.
           This is the only time the link is shown — we cannot show it again. If it gets lost, cancel the invite and make a new one.
         </p>
         <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
-          <input type="text" id="inviteLink" readonly value="${U().esc(link)}"
+          <input type="text" id="inviteLink" readonly value="${App.i18n.value(() => (U().esc(link)))}"
                  aria-label="Invite link" style="flex:1 1 280px">
           <button class="btn btn-primary" id="copyInviteLink">Copy link</button>
           <button class="btn" id="dismissInviteLink">I have copied it</button>
@@ -653,9 +653,9 @@ App.pages.teamManagement = (function () {
 
     if (copyBtn) copyBtn.addEventListener("click", async () => {
       const ok = await copyText(link, input);
-      if (state) state.textContent = ok
-        ? "Copied. Paste it into an email or a message."
-        : "Could not copy automatically — the link is selected, so copy it by hand.";
+      if (state) App.i18n.setText(state, App.i18n.value(() => (ok
+        ? App.i18n.t("Copied. Paste it into an email or a message.")
+        : App.i18n.t("Could not copy automatically — the link is selected, so copy it by hand."))));
     });
     if (done) done.addEventListener("click", () => { host.innerHTML = ""; });
     if (input) input.addEventListener("focus", () => { try { input.select(); } catch (e) {} });
@@ -687,42 +687,42 @@ App.pages.teamManagement = (function () {
   // ---------- INVITATIONS ----------
 
   function invitationsCard(invitations) {
-    const body = invitations.length ? `
+    const body = invitations.length ? App.i18n.html`
       <div class="table-wrap">
         <table class="tbl tbl-responsive">
           <thead><tr><th>Email</th><th>Joining as</th><th>Status</th><th class="actions">&nbsp;</th></tr></thead>
           <tbody>
-            ${invitations.map(inv => `
-              <tr data-invite-row="${U().esc(inv.id)}">
+            ${App.i18n.value(() => (invitations.map(inv => App.i18n.html`
+              <tr data-invite-row="${App.i18n.value(() => (U().esc(inv.id)))}">
                 <td data-label="Email" class="primary-cell">
-                  <strong>${U().esc(inv.email || "")}</strong>
-                  <div class="form-help">${U().esc(expiryText(inv))}${inv.invited_by_email ? " · invited by " + U().esc(inv.invited_by_email) : ""}</div>
+                  <strong>${App.i18n.value(() => (U().esc(inv.email || "")))}</strong>
+                  <div class="form-help">${App.i18n.value(() => (U().esc(expiryText(inv))))}${App.i18n.value(() => (inv.invited_by_email ? " · invited by " + U().esc(inv.invited_by_email) : ""))}</div>
                 </td>
-                <td data-label="Joining as">${roleBadge(inv.role)}</td>
-                <td data-label="Status">${inviteBadge(inv.status)}</td>
+                <td data-label="Joining as">${App.i18n.value(() => (roleBadge(inv.role)))}</td>
+                <td data-label="Status">${App.i18n.value(() => (inviteBadge(inv.status)))}</td>
                 <td class="actions" data-label="">
-                  ${inv.status === "pending"
-                    ? `<button class="btn btn-sm" data-revoke="${U().esc(inv.id)}" data-email="${U().esc(inv.email || "")}">Cancel</button>`
+                  ${App.i18n.value(() => (inv.status === "pending"
+                    ? App.i18n.html`<button class="btn btn-sm" data-revoke="${App.i18n.value(() => (U().esc(inv.id)))}" data-email="${App.i18n.value(() => (U().esc(inv.email || "")))}">Cancel</button>`
                     : inv.status === "expired"
-                      ? `<button class="btn btn-sm" data-revoke="${U().esc(inv.id)}" data-email="${U().esc(inv.email || "")}">Clear</button>`
-                      : ""}
+                      ? App.i18n.html`<button class="btn btn-sm" data-revoke="${App.i18n.value(() => (U().esc(inv.id)))}" data-email="${App.i18n.value(() => (U().esc(inv.email || "")))}">Clear</button>`
+                      : ""))}
                 </td>
-              </tr>`).join("")}
+              </tr>`).join("")))}
           </tbody>
         </table>
       </div>
-      ${invitations.some(i => i.status === "expired")
-        ? `<p class="form-help" style="padding:10px 16px 0">An expired link no longer works. Invite the person again to send a new one.</p>`
-        : ""}` : `
+      ${App.i18n.value(() => (invitations.some(i => i.status === "expired")
+        ? App.i18n.markup(`<p class="form-help" style="padding:10px 16px 0">An expired link no longer works. Invite the person again to send a new one.</p>`)
+        : ""))}` : App.i18n.markup(`
       <div class="empty-state">
         <div class="empty-title">No invites yet</div>
         <div class="empty-desc">Invite someone above, then send them the link yourself.</div>
-      </div>`;
+      </div>`);
 
-    return `
+    return App.i18n.html`
       <section class="card" data-card="invitations">
         <div class="card-header"><div class="card-title">Invites</div></div>
-        <div class="card-body ${invitations.length ? "zero" : ""}">${body}</div>
+        <div class="card-body ${App.i18n.value(() => (invitations.length ? "zero" : ""))}">${App.i18n.value(() => (body))}</div>
       </section>`;
   }
 
@@ -746,16 +746,16 @@ App.pages.teamManagement = (function () {
         try {
           const out = await S().team.revokeInvitation(id);
           if (out && out.outcome === "revoked") {
-            App.app.toast("The invite for " + email + " no longer works.", "success");
+            App.app.toast(App.i18n.t("The invite for ") + email + App.i18n.t(" no longer works."), "success");
           } else if (out && out.outcome === "already_accepted") {
-            App.app.toast("They have already joined — remove them from People instead.", "info");
+            App.app.toast(App.i18n.t("They have already joined — remove them from People instead."), "info");
           } else if (out && out.outcome === "not_found") {
-            App.app.toast("That invite is already gone.", "info");
+            App.app.toast(App.i18n.t("That invite is already gone."), "info");
           } else {
-            App.app.toast("Could not cancel the invite.", "danger");
+            App.app.toast(App.i18n.t("Could not cancel the invite."), "danger");
           }
         } catch (err) {
-          App.app.toast("Only an owner or admin can cancel invites.", "danger");
+          App.app.toast(App.i18n.t("Only an owner or admin can cancel invites."), "danger");
         }
         await refresh();
       });
@@ -767,14 +767,14 @@ App.pages.teamManagement = (function () {
   function leaveCard() {
     // The owner cannot leave: they hand the workspace over or delete it.
     if (W().isOwner() || !W().id()) return "";
-    return `
+    return App.i18n.markup(`
       <section class="card" data-card="leave">
         <div class="card-header"><div class="card-title">Leave this team</div></div>
         <div class="card-body">
           <p class="form-help">You keep your sign-in and get a workspace of your own. You lose access to this one.</p>
           <button class="btn btn-danger" id="leaveTeamBtn">Leave this team</button>
         </div>
-      </section>`;
+      </section>`);
   }
 
   function wireLeave(pane) {
@@ -782,8 +782,8 @@ App.pages.teamManagement = (function () {
     if (!btn) return;
     btn.addEventListener("click", () => {
       App.app.confirmDialog({
-        title: "Leave this team?",
-        message: "Your leads, deals and tasks stay with the team and become unassigned. Anything you made just for yourself — your templates, scripts, prompts and automations — goes to the owner. You get a fresh empty workspace of your own. You cannot undo this yourself.",
+        get title() { return App.i18n.t("Leave this team?"); },
+        get message() { return App.i18n.t("Your leads, deals and tasks stay with the team and become unassigned. Anything you made just for yourself — your templates, scripts, prompts and automations — goes to the owner. You get a fresh empty workspace of your own. You cannot undo this yourself."); },
         okLabel: "Leave this team",
         danger: true
       }, async () => {
@@ -791,19 +791,19 @@ App.pages.teamManagement = (function () {
         try {
           const out = await S().team.leave();
           if (out && out.outcome === "left") {
-            App.app.toast("You have left the team. This is your own workspace now.", "success");
+            App.app.toast(App.i18n.t("You have left the team. This is your own workspace now."), "success");
             App.app.navigate("/dashboard");
             return;
           }
           if (out && out.outcome === "owner_cannot_leave") {
-            App.app.toast("Make somebody else the owner first, or delete the team.", "danger");
+            App.app.toast(App.i18n.t("Make somebody else the owner first, or delete the team."), "danger");
           } else if (out && out.outcome === "not_a_member") {
-            App.app.toast("You are not in this team.", "info");
+            App.app.toast(App.i18n.t("You are not in this team."), "info");
           } else {
-            App.app.toast("Could not leave the team.", "danger");
+            App.app.toast(App.i18n.t("Could not leave the team."), "danger");
           }
         } catch (err) {
-          App.app.toast("Could not leave the team.", "danger");
+          App.app.toast(App.i18n.t("Could not leave the team."), "danger");
         }
         btn.disabled = false;
         await refresh();
@@ -814,14 +814,14 @@ App.pages.teamManagement = (function () {
   // ---------- DELETE ----------
 
   function dangerCard() {
-    return `
+    return App.i18n.markup(`
       <section class="card" data-card="danger">
         <div class="card-header"><div class="card-title">Delete this team</div></div>
         <div class="card-body">
           <p class="form-help">Everything in this workspace is deleted — every contact, deal, property, task and record of what the team did. This cannot be undone. Remove everybody else first.</p>
           <button class="btn btn-danger" id="deleteTeamBtn">Delete this team</button>
         </div>
-      </section>`;
+      </section>`);
   }
 
   function wireDanger(pane) {
@@ -831,24 +831,24 @@ App.pages.teamManagement = (function () {
       const s = S().getState();
       const name = (s.settings && s.settings.agencyName) || "";
       const h = App.app.openModal({
-        title: "Delete this team",
+        get title() { return App.i18n.t("Delete this team"); },
         extraClass: "confirm",
-        body: `
+        body: App.i18n.html`
           <p>Everything in this workspace is deleted: every contact, deal, property, task, and the record of what the team did. It cannot be brought back.</p>
           <label class="field">
             <span>Type the workspace name to confirm</span>
             <input type="text" id="deleteConfirmName" autocomplete="off" placeholder="Workspace name">
           </label>
-          <p class="form-help">Type it exactly, including capital letters.${name ? "" : ""}</p>
+          <p class="form-help">Type it exactly, including capital letters.${App.i18n.value(() => (name ? "" : ""))}</p>
           <div class="field-error-hint" id="deleteError" role="alert" hidden></div>`,
-        footer: `
+        footer: App.i18n.markup(`
           <button class="btn" data-role="cancel">Keep this team</button>
-          <button class="btn btn-danger" data-role="ok">Delete for good</button>`,
+          <button class="btn btn-danger" data-role="ok">Delete for good</button>`),
         onOpen: (modal) => {
           const input = modal.querySelector("#deleteConfirmName");
           const err = modal.querySelector("#deleteError");
           const ok = modal.querySelector('[data-role="ok"]');
-          const showErr = (m) => { if (err) { err.textContent = m; err.hidden = false; } };
+          const showErr = (m) => { if (err) { App.i18n.setText(err, App.i18n.value(() => (m))); err.hidden = false; } };
           modal.querySelector('[data-role="cancel"]').addEventListener("click", () => h.close());
           ok.addEventListener("click", async () => {
             const typed = input ? input.value : "";
@@ -858,7 +858,7 @@ App.pages.teamManagement = (function () {
               const out = await S().team.deleteTeam(typed);
               if (out && out.outcome === "deleted") {
                 h.close();
-                App.app.toast("The team was deleted. This is your own workspace now.", "success");
+                App.app.toast(App.i18n.t("The team was deleted. This is your own workspace now."), "success");
                 App.app.navigate("/dashboard");
                 return;
               }

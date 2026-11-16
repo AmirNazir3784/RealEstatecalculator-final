@@ -25,12 +25,12 @@ App.pages.activities = (function () {
   function outcomeBadge(o) {
     if (!o) return "";
     const cls = o === "Positive" ? "badge-success" : o === "Negative" ? "badge-danger" : "badge-neutral";
-    return `<span class="badge ${cls}">${U().esc(o)}</span>`;
+    return App.i18n.html`<span class="badge ${App.i18n.value(() => (cls))}">${App.i18n.value(() => (U().esc(o)))}</span>`;
   }
   // ---------- LIST PAGE ----------
 
   async function render(container) {
-    App.app.setBreadcrumbs([{ label: "Activities" }]);
+    App.app.setBreadcrumbs([{ get label() { return App.i18n.t("Activities"); } }]);
     App.app.setTopActions("");
     container.innerHTML = App.app.loadingHtml();
     await S().ensureLoaded(["activities", "contacts", "deals"]);
@@ -39,36 +39,36 @@ App.pages.activities = (function () {
     const contacts = s.contacts.slice().sort((a,b) => a.name.localeCompare(b.name));
     const deals = s.deals.slice().sort((a,b) => (a.name||"").localeCompare(b.name||""));
 
-    container.innerHTML = `
+    container.innerHTML = App.i18n.html`
       <div class="page-header">
         <div>
           <div class="page-title">Activities</div>
           <div class="page-desc">Every call, email, text, meeting, and note across your business — searchable and filterable.</div>
         </div>
         <div class="page-actions">
-          <button class="btn btn-primary" id="addActBtn">${App.app.icon("plus")} Log Activity</button>
+          <button class="btn btn-primary" id="addActBtn">${App.i18n.value(() => (App.app.icon("plus")))} Log Activity</button>
         </div>
       </div>
       <div class="filter-bar">
         <div class="search-wrap">
-          ${App.app.icon("search")}
-          <input type="search" id="aSearch" placeholder="Search subject or notes…" value="${U().esc(filters.search)}">
+          ${App.i18n.value(() => (App.app.icon("search")))}
+          <input type="search" id="aSearch" placeholder="Search subject or notes…" value="${App.i18n.value(() => (U().esc(filters.search)))}">
         </div>
         <select id="aType" aria-label="Type">
           <option value="">All types</option>
-          ${s.settings.activityTypes.map(t => `<option value="${t}" ${filters.type===t?"selected":""}>${t}</option>`).join("")}
+          ${App.i18n.value(() => (s.settings.activityTypes.map(t => App.i18n.html`<option value="${App.i18n.value(() => (t))}" ${App.i18n.value(() => (filters.type===t?"selected":""))}>${App.i18n.value(() => (t))}</option>`).join("")))}
         </select>
         <select id="aContact" aria-label="Contact">
           <option value="">All contacts</option>
-          ${contacts.map(c => `<option value="${c.id}" ${filters.contactId===c.id?"selected":""}>${U().esc(c.name)}</option>`).join("")}
+          ${App.i18n.value(() => (contacts.map(c => App.i18n.html`<option value="${App.i18n.value(() => (c.id))}" ${App.i18n.value(() => (filters.contactId===c.id?"selected":""))}>${App.i18n.value(() => (U().esc(c.name)))}</option>`).join("")))}
         </select>
         <select id="aDeal" aria-label="Deal">
           <option value="">All deals</option>
-          ${deals.map(d => `<option value="${d.id}" ${filters.dealId===d.id?"selected":""}>${U().esc(d.name)}</option>`).join("")}
+          ${App.i18n.value(() => (deals.map(d => App.i18n.html`<option value="${App.i18n.value(() => (d.id))}" ${App.i18n.value(() => (filters.dealId===d.id?"selected":""))}>${App.i18n.value(() => (U().esc(d.name)))}</option>`).join("")))}
         </select>
         <select id="aSort" aria-label="Sort">
-          <option value="date-desc" ${filters.sort==="date-desc"?"selected":""}>Newest first</option>
-          <option value="date-asc" ${filters.sort==="date-asc"?"selected":""}>Oldest first</option>
+          <option value="date-desc" ${App.i18n.value(() => (filters.sort==="date-desc"?"selected":""))}>Newest first</option>
+          <option value="date-asc" ${App.i18n.value(() => (filters.sort==="date-asc"?"selected":""))}>Oldest first</option>
         </select>
       </div>
       <div class="card">
@@ -101,34 +101,34 @@ App.pages.activities = (function () {
     if (f.dealId) out = out.filter(a => a.dealId === f.dealId);
     out.sort((a,b) => f.sort === "date-asc" ? (a.date||"").localeCompare(b.date||"") : (b.date||"").localeCompare(a.date||""));
 
-    document.getElementById("aCount").textContent = `${out.length} of ${all.length} activit${all.length===1?"y":"ies"}`;
+    App.i18n.setText(document.getElementById("aCount"), App.i18n.text`${App.i18n.value(() => (out.length))} of ${App.i18n.value(() => (all.length))} activit${App.i18n.value(() => (all.length===1?"y":"ies"))}`);
     const wrap = document.getElementById("aListWrap");
 
     if (!out.length) {
       wrap.innerHTML = all.length === 0
-        ? `<div class="empty"><div class="empty-icon">${App.app.icon("plus")}</div><h3>No activities logged yet</h3><p>Log your first call, email, meeting, or note. Activities are also created automatically when an automation sequence sends an email.</p><button class="btn btn-primary" onclick="App.pages.activities.openActivityModal(null)">Log Activity</button></div>`
-        : `<div class="empty"><h3>No matches</h3><p>Adjust your filters.</p></div>`;
+        ? App.i18n.html`<div class="empty"><div class="empty-icon">${App.i18n.value(() => (App.app.icon("plus")))}</div><h3>No activities logged yet</h3><p>Log your first call, email, meeting, or note. Activities are also created automatically when an automation sequence sends an email.</p><button class="btn btn-primary" onclick="App.pages.activities.openActivityModal(null)">Log Activity</button></div>`
+        : App.i18n.markup(`<div class="empty"><h3>No matches</h3><p>Adjust your filters.</p></div>`);
       return;
     }
 
     wrap.innerHTML = out.map(a => {
       const c = a.contactId ? state.contacts.find(x => x.id === a.contactId) : null;
       const d = a.dealId ? state.deals.find(x => x.id === a.dealId) : null;
-      return `
-        <div class="item-row clickable" data-act-id="${a.id}">
-          <div class="icon-slot">${actIcon(a.type)}</div>
+      return App.i18n.html`
+        <div class="item-row clickable" data-act-id="${App.i18n.value(() => (a.id))}">
+          <div class="icon-slot">${App.i18n.value(() => (actIcon(a.type)))}</div>
           <div class="body">
-            <div class="title">${U().esc(a.subject || a.type)} ${outcomeBadge(a.outcome)}</div>
+            <div class="title">${App.i18n.value(() => (U().esc(a.subject || a.type)))} ${App.i18n.value(() => (outcomeBadge(a.outcome)))}</div>
             <div class="sub">
-              ${U().esc(a.type)}
-              ${c ? ' · <a class="link" href="#/contacts/'+c.id+'" onclick="event.stopPropagation()">'+U().esc(c.name)+'</a>' : ""}
-              ${d ? ' · <a class="link" href="#/pipeline/'+d.id+'" onclick="event.stopPropagation()">'+U().esc(d.name)+'</a>' : ""}
-              ${a.notes ? " · " + U().esc(U().truncate(a.notes, 80)) : ""}
+              ${App.i18n.value(() => (U().esc(a.type)))}
+              ${App.i18n.value(() => (c ? ' · <a class="link" href="#/contacts/'+c.id+'" onclick="event.stopPropagation()">'+U().esc(c.name)+'</a>' : ""))}
+              ${App.i18n.value(() => (d ? ' · <a class="link" href="#/pipeline/'+d.id+'" onclick="event.stopPropagation()">'+U().esc(d.name)+'</a>' : ""))}
+              ${App.i18n.value(() => (a.notes ? " · " + U().esc(U().truncate(a.notes, 80)) : ""))}
             </div>
           </div>
           <div class="meta-right">
-            ${a.date ? U().relativeDayLabel(a.date.slice(0,10)) : "—"}
-            <div style="font-size: var(--font-size-xs);color:var(--text-soft)">${a.date ? a.date.slice(11,16) : ""}</div>
+            ${App.i18n.value(() => (a.date ? U().relativeDayLabel(a.date.slice(0,10)) : "—"))}
+            <div style="font-size: var(--font-size-xs);color:var(--text-soft)">${App.i18n.value(() => (a.date ? a.date.slice(11,16) : ""))}</div>
           </div>
         </div>
       `;
@@ -150,7 +150,7 @@ App.pages.activities = (function () {
     await S().ensureLoaded(["activities", "contacts", "deals"]);
     const state = S().getState();
     const existing = editing ? state.activities.find(x => x.id === id) : null;
-    if (editing && !existing) { App.app.toast("Activity not found.", "danger"); return; }
+    if (editing && !existing) { App.app.toast(App.i18n.t("Activity not found."), "danger"); return; }
 
     const s = state;
     const defaults = { type: "Call", date: U().todayISO(), subject: "", contactId: null, dealId: null, outcome: "", notes: "" };
@@ -161,50 +161,50 @@ App.pages.activities = (function () {
     const contacts = state.contacts.slice().sort((x,y) => x.name.localeCompare(y.name));
     const deals = state.deals.slice().sort((x,y) => (x.name||"").localeCompare(y.name||""));
 
-    const body = `
+    const body = App.i18n.html`
       <form id="actForm" novalidate>
         <div class="form-grid">
           <div class="form-field">
             <label for="afType">Type <span class="req">*</span></label>
-            <select id="afType">${s.settings.activityTypes.map(t => `<option value="${t}" ${a.type===t?"selected":""}>${t}</option>`).join("")}</select>
+            <select id="afType">${App.i18n.value(() => (s.settings.activityTypes.map(t => App.i18n.html`<option value="${App.i18n.value(() => (t))}" ${App.i18n.value(() => (a.type===t?"selected":""))}>${App.i18n.value(() => (t))}</option>`).join("")))}</select>
           </div>
           <div class="form-field">
             <label for="afOutcome">Outcome</label>
-            <select id="afOutcome"><option value="">—</option>${["Positive","Neutral","Negative"].map(o => `<option value="${o}" ${a.outcome===o?"selected":""}>${o}</option>`).join("")}</select>
+            <select id="afOutcome"><option value="">—</option>${App.i18n.value(() => (["Positive","Neutral","Negative"].map(o => App.i18n.html`<option value="${App.i18n.value(() => (o))}" ${App.i18n.value(() => (a.outcome===o?"selected":""))}>${App.i18n.value(() => (App.i18n.t(o)))}</option>`).join("")))}</select>
           </div>
           <div class="form-field full">
             <label for="afSubject">Subject <span class="req">*</span></label>
-            <input type="text" id="afSubject" value="${U().esc(a.subject)}" required>
+            <input type="text" id="afSubject" value="${App.i18n.value(() => (U().esc(a.subject)))}" required>
             <div class="err">Subject is required.</div>
           </div>
           <div class="form-field">
             <label for="afDate">Date</label>
-            <input type="date" id="afDate" value="${dateVal}">
+            <input type="date" id="afDate" value="${App.i18n.value(() => (dateVal))}">
           </div>
           <div class="form-field">
             <label for="afTime">Time</label>
-            <input type="time" id="afTime" value="${timeVal}">
+            <input type="time" id="afTime" value="${App.i18n.value(() => (timeVal))}">
           </div>
           <div class="form-field">
             <label for="afContact">Contact</label>
-            <select id="afContact"><option value="">— none —</option>${contacts.map(c => `<option value="${c.id}" ${a.contactId===c.id?"selected":""}>${U().esc(c.name)}</option>`).join("")}</select>
+            <select id="afContact"><option value="">— none —</option>${App.i18n.value(() => (contacts.map(c => App.i18n.html`<option value="${App.i18n.value(() => (c.id))}" ${App.i18n.value(() => (a.contactId===c.id?"selected":""))}>${App.i18n.value(() => (U().esc(c.name)))}</option>`).join("")))}</select>
           </div>
           <div class="form-field">
             <label for="afDeal">Deal</label>
-            <select id="afDeal"><option value="">— none —</option>${deals.map(d => `<option value="${d.id}" ${a.dealId===d.id?"selected":""}>${U().esc(d.name)}</option>`).join("")}</select>
+            <select id="afDeal"><option value="">— none —</option>${App.i18n.value(() => (deals.map(d => App.i18n.html`<option value="${App.i18n.value(() => (d.id))}" ${App.i18n.value(() => (a.dealId===d.id?"selected":""))}>${App.i18n.value(() => (U().esc(d.name)))}</option>`).join("")))}</select>
           </div>
           <div class="form-field full">
             <label for="afNotes">Notes</label>
-            <textarea id="afNotes" rows="4">${U().esc(a.notes)}</textarea>
+            <textarea id="afNotes" rows="4">${App.i18n.value(() => (U().esc(a.notes)))}</textarea>
           </div>
         </div>
       </form>
     `;
 
-    const footer = `
-      ${editing ? '<button class="btn btn-danger" data-role="delete">Delete</button>' : ''}
+    const footer = App.i18n.html`
+      ${App.i18n.value(() => (editing ? App.i18n.markup('<button class="btn btn-danger" data-role="delete">Delete</button>') : ''))}
       <button class="btn" data-role="cancel">Cancel</button>
-      <button class="btn btn-primary" data-role="save">${editing ? "Save" : "Log Activity"}</button>
+      <button class="btn btn-primary" data-role="save">${App.i18n.value(() => (editing ? App.i18n.t("Save") : App.i18n.t("Log Activity")))}</button>
     `;
 
     const handle = App.app.openModal({
@@ -235,25 +235,25 @@ App.pages.activities = (function () {
           const saveBtn = modal.querySelector('[data-role="save"]');
           saveBtn.disabled = true;
           try {
-            if (editing) { await S().activities.update(id, patch); App.app.toast("Activity updated.", "success"); }
-            else { await S().activities.create(patch); App.app.toast("Activity logged.", "success"); }
+            if (editing) { await S().activities.update(id, patch); App.app.toast(App.i18n.t("Activity updated."), "success"); }
+            else { await S().activities.create(patch); App.app.toast(App.i18n.t("Activity logged."), "success"); }
             handle.close();
             App.app.route();
           } catch (err) {
-            App.app.toast("Could not save activity: " + err.message, "danger");
+            App.app.toast(App.i18n.t("Could not save activity: ") + err.message, "danger");
             saveBtn.disabled = false;
           }
         });
         const delBtn = modal.querySelector('[data-role="delete"]');
         if (delBtn) delBtn.addEventListener("click", () => {
-          App.app.confirmDialog({ title: "Delete Activity?", message: "This will permanently delete this activity log.", okLabel: "Delete", danger: true }, async () => {
+          App.app.confirmDialog({ get title() { return App.i18n.t("Delete Activity?"); }, get message() { return App.i18n.t("This will permanently delete this activity log."); }, okLabel: "Delete", danger: true }, async () => {
             try {
               await S().activities.delete(id);
-              App.app.toast("Activity deleted.", "success");
+              App.app.toast(App.i18n.t("Activity deleted."), "success");
               handle.close();
               App.app.route();
             } catch (err) {
-              App.app.toast("Could not delete activity: " + err.message, "danger");
+              App.app.toast(App.i18n.t("Could not delete activity: ") + err.message, "danger");
             }
           });
         });

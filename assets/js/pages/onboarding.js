@@ -55,12 +55,12 @@ App.pages.onboarding = (function () {
     if ((s.timezone || "UTC") !== "UTC") return "";
     const zone = browserZone();
     if (!zone || zone === "UTC") return "";
-    return `
-      <section class="card" id="tzNudge" data-zone="${U().esc(zone)}">
+    return App.i18n.html`
+      <section class="card" id="tzNudge" data-zone="${App.i18n.value(() => (U().esc(zone)))}">
         <div class="card-body">
           <div class="split-row">
             <div class="split-row-main"><div class="split-row-label">
-              <strong>Your time zone is UTC. Use ${U().esc(zone)}?</strong>
+              <strong>Your time zone is UTC. Use ${App.i18n.value(() => (U().esc(zone)))}?</strong>
               <div class="form-help">This decides what counts as "today" in your reminders, and when birthday messages go out.</div>
             </div></div>
             <div style="display:flex;gap:8px;flex-wrap:wrap">
@@ -82,12 +82,12 @@ App.pages.onboarding = (function () {
         // Either answer records that we asked, so this never comes back.
         await S().settings.update(tz ? { timezone: tz, timezoneConfirmed: true }
                                     : { timezoneConfirmed: true });
-        App.app.toast(tz ? "Time zone set to " + tz + "." : "Staying on UTC.", "success");
+        App.app.toast(tz ? App.i18n.t("Time zone set to ") + tz + "." : App.i18n.t("Staying on UTC."), "success");
         card.remove();
         if (typeof onDone === "function") onDone();
       } catch (err) {
         card.querySelectorAll("button").forEach((b) => { b.disabled = false; });
-        App.app.toast("Could not save: " + ((err && err.message) || "Unknown error"), "danger");
+        App.app.toast(App.i18n.t("Could not save: ") + ((err && err.message) || "Unknown error"), "danger");
       }
     };
     const use = card.querySelector("#tzNudgeUse");
@@ -110,18 +110,18 @@ App.pages.onboarding = (function () {
     const activities = (state && state.activities) || [];
     const rules = (state && state.onboardingRules) || [];
     return [
-      { id: "profile", label: "Add your name and time zone",
+      { id: "profile", get label() { return App.i18n.t("Add your name and time zone"); },
         done: !!(String(s.agentName || "").trim()) && s.timezoneConfirmed === true,
         route: "/settings/business-profile" },
-      { id: "contacts", label: "Bring in your contacts",
+      { id: "contacts", get label() { return App.i18n.t("Bring in your contacts"); },
         done: contacts.length > 0, route: "/contacts" },
-      { id: "pack", label: "Add a starter sequence",
+      { id: "pack", get label() { return App.i18n.t("Add a starter sequence"); },
         done: rules.length > 0, route: "/automation" },
-      { id: "review", label: "Read one sequence and make it sound like you",
+      { id: "review", get label() { return App.i18n.t("Read one sequence and make it sound like you"); },
         // "Reviewed" is not a thing we can observe, so this counts the one
         // observable proxy: a rule that is no longer a untouched draft.
         done: rules.some((r) => r.status && r.status !== "draft"), route: "/automation" },
-      { id: "logged", label: "Log your first follow-up",
+      { id: "logged", get label() { return App.i18n.t("Log your first follow-up"); },
         done: activities.length > 0, route: "/daily" }
     ];
   }
@@ -132,22 +132,22 @@ App.pages.onboarding = (function () {
     const items = checklist(state);
     const doneCount = items.filter((i) => i.done).length;
     if (doneCount === items.length) return "";
-    return `
+    return App.i18n.html`
       <section class="card" id="gettingStarted">
         <div class="card-header">
           <div class="card-title">Getting started
-            <span class="today-count">${doneCount} of ${items.length}</span>
+            <span class="today-count">${App.i18n.value(() => (doneCount))} of ${App.i18n.value(() => (items.length))}</span>
           </div>
           <button type="button" class="btn btn-sm" id="gsDismiss">Hide this</button>
         </div>
         <div class="card-body zero">
-          ${items.map((i) => `
+          ${App.i18n.value(() => (items.map((i) => App.i18n.html`
             <div class="today-row">
               <div class="today-row-main">
-                <div class="today-row-name">${i.done ? "\\u2713 " : ""}${U().esc(i.label)}</div>
+                <div class="today-row-name">${App.i18n.value(() => (i.done ? "\\u2713 " : ""))}${App.i18n.value(() => (U().esc(i.label)))}</div>
               </div>
-              ${i.done ? "" : `<div class="fu-bar"><button type="button" class="btn btn-sm" data-gs-go="${U().esc(i.route)}">Do it</button></div>`}
-            </div>`).join("")}
+              ${App.i18n.value(() => (i.done ? "" : App.i18n.html`<div class="fu-bar"><button type="button" class="btn btn-sm" data-gs-go="${App.i18n.value(() => (U().esc(i.route)))}">Do it</button></div>`))}
+            </div>`).join("")))}
           <div class="today-more">
             <button type="button" class="btn btn-sm" id="gsReopen">Open the setup guide</button>
           </div>
@@ -168,7 +168,7 @@ App.pages.onboarding = (function () {
           card.remove();
           if (typeof onChanged === "function") onChanged();
         } catch (err) {
-          App.app.toast("Could not save: " + ((err && err.message) || "Unknown error"), "danger");
+          App.app.toast(App.i18n.t("Could not save: ") + ((err && err.message) || "Unknown error"), "danger");
         }
       }
     });
@@ -191,10 +191,10 @@ App.pages.onboarding = (function () {
     try {
       await S().settings.update({ onboardingDone: true, onboardingStep: LAST_STEP });
     } catch (err) {
-      App.app.toast("Could not save: " + ((err && err.message) || "Unknown error"), "danger");
+      App.app.toast(App.i18n.t("Could not save: ") + ((err && err.message) || "Unknown error"), "danger");
       return false;
     }
-    if (!skipped) App.app.toast("You are set up. This is your day.", "success");
+    if (!skipped) App.app.toast(App.i18n.t("You are set up. This is your day."), "success");
     App.app.navigate("/daily");
     return true;
   }
@@ -205,20 +205,20 @@ App.pages.onboarding = (function () {
 
     if (step === 1) {
       return {
-        title: "Your business",
-        body: `
+        get title() { return App.i18n.t("Your business"); },
+        body: App.i18n.html`
           <p class="form-help">Three things, then we are out of your way.</p>
           <div class="form-grid">
             <label class="field full"><span>Your name</span>
-              <input id="obName" maxlength="120" value="${U().esc(draft.agentName != null ? draft.agentName : (s.agentName || ""))}">
+              <input id="obName" maxlength="120" value="${App.i18n.value(() => (U().esc(draft.agentName != null ? draft.agentName : (s.agentName || ""))))}">
               <span class="form-help">Used to sign the emails you send.</span>
             </label>
             <label class="field"><span>Default country code</span>
-              <input id="obCountry" maxlength="5" inputmode="tel" placeholder="e.g. +971" value="${U().esc(draft.defaultCountryCode != null ? draft.defaultCountryCode : (s.defaultCountryCode || ""))}">
+              <input id="obCountry" maxlength="5" inputmode="tel" placeholder="e.g. +971" value="${App.i18n.value(() => (U().esc(draft.defaultCountryCode != null ? draft.defaultCountryCode : (s.defaultCountryCode || ""))))}">
               <span class="form-help">So Call and WhatsApp reach numbers stored without one.</span>
             </label>
             <label class="field"><span>Time zone</span>
-              <input id="obZone" list="obZoneList" maxlength="64" value="${U().esc(zone)}">
+              <input id="obZone" list="obZoneList" maxlength="64" value="${App.i18n.value(() => (U().esc(zone)))}">
               <datalist id="obZoneList"></datalist>
               <span class="form-help">Decides what counts as "today".</span>
             </label>
@@ -229,53 +229,53 @@ App.pages.onboarding = (function () {
 
     if (step === 2) {
       return {
-        title: "Bring in your contacts",
-        body: `
+        get title() { return App.i18n.t("Bring in your contacts"); },
+        body: App.i18n.markup(`
           <p class="form-help">However you have them now. You can do this later, or more than once.</p>
           <div class="form-grid">
             <button type="button" class="btn btn-block" data-ob-action="file">Import a spreadsheet or CSV</button>
             <button type="button" class="btn btn-block" data-ob-action="sheets">Connect a Google Sheet</button>
             <button type="button" class="btn btn-block" data-ob-action="manual">Add one by hand</button>
           </div>
-          <p class="form-help">Each of these opens the normal screen for it. Your place is saved. Reopen the Setup Guide in Settings when you are ready to continue.</p>`
+          <p class="form-help">Each of these opens the normal screen for it. Your place is saved. Reopen the Setup Guide in Settings when you are ready to continue.</p>`)
       };
     }
 
     if (step === 3) {
       const packs = (App.starterPacks && App.starterPacks.all()) || [];
       return {
-        title: "Follow-ups to start from",
-        body: `
+        get title() { return App.i18n.t("Follow-ups to start from"); },
+        body: App.i18n.html`
           <p class="form-help">Added as <strong>drafts</strong>. Nothing sends until you read it and switch it on.</p>
           <div class="form-grid">
-            ${packs.map((pack) => `
+            ${App.i18n.value(() => (packs.map((pack) => App.i18n.html`
               <label class="field full" style="flex-direction:row;align-items:flex-start;gap:10px">
-                <input type="checkbox" class="ob-pack" value="${U().esc(pack.id)}"
-                  ${(draft.packs || []).indexOf(pack.id) >= 0 ? "checked" : ""} style="margin-top:4px">
+                <input type="checkbox" class="ob-pack" value="${App.i18n.value(() => (U().esc(pack.id)))}"
+                  ${App.i18n.value(() => ((draft.packs || []).indexOf(pack.id) >= 0 ? "checked" : ""))} style="margin-top:4px">
                 <span style="font-weight:400">
-                  <strong>${U().esc(pack.name)}</strong>
-                  <div class="form-help" style="margin:2px 0 0">${U().esc(pack.blurb)}</div>
+                  <strong>${App.i18n.value(() => (U().esc(pack.name)))}</strong>
+                  <div class="form-help" style="margin:2px 0 0">${App.i18n.value(() => (U().esc(pack.blurb)))}</div>
                 </span>
-              </label>`).join("")}
-            ${packs.length ? "" : `<p class="form-help">No starter sequences are available.</p>`}
+              </label>`).join("")))}
+            ${App.i18n.value(() => (packs.length ? "" : App.i18n.markup(`<p class="form-help">No starter sequences are available.</p>`)))}
           </div>`
       };
     }
 
     if (step === 4) {
       return {
-        title: "Who your emails come from",
-        body: `
+        get title() { return App.i18n.t("Who your emails come from"); },
+        body: App.i18n.html`
           <div class="release-callout release-callout-warning" style="margin-bottom:12px">
             <strong>This does not start sending.</strong>
             <p style="margin:6px 0 0">Email delivery is set up separately, later. This just records the name and address your follow-ups will use when it is.</p>
           </div>
           <div class="form-grid">
             <label class="field full"><span>From name</span>
-              <input id="obSenderName" maxlength="120" value="${U().esc(draft.senderName != null ? draft.senderName : (draft.agentName || s.agentName || ""))}">
+              <input id="obSenderName" maxlength="120" value="${App.i18n.value(() => (U().esc(draft.senderName != null ? draft.senderName : (draft.agentName || s.agentName || ""))))}">
             </label>
             <label class="field full"><span>Reply-to address</span>
-              <input id="obSenderReply" type="email" maxlength="254" value="${U().esc(draft.senderReply != null ? draft.senderReply : (s.agentEmail || ""))}">
+              <input id="obSenderReply" type="email" maxlength="254" value="${App.i18n.value(() => (U().esc(draft.senderReply != null ? draft.senderReply : (s.agentEmail || ""))))}">
               <span class="form-help">Where replies go. Your own address is fine.</span>
             </label>
           </div>
@@ -284,10 +284,10 @@ App.pages.onboarding = (function () {
     }
 
     return {
-      title: "That is it",
-      body: `
+      get title() { return App.i18n.t("That is it"); },
+      body: App.i18n.markup(`
         <p>You are set up. Next stop is <strong>Today</strong> - who to contact, and what is due.</p>
-        <p class="form-help">Anything you skipped is in Settings, and you can reopen this guide from Settings. Follow-up plans and email setup are optional and available there later.</p>`
+        <p class="form-help">Anything you skipped is in Settings, and you can reopen this guide from Settings. Follow-up plans and email setup are optional and available there later.</p>`)
     };
   }
 
@@ -309,11 +309,11 @@ App.pages.onboarding = (function () {
         title: content.title + "  (" + (solo && !optional ? (step === LAST_STEP ? 3 : step) : step) + " of " + (solo && !optional ? 3 : LAST_STEP) + ")",
         wide: true,
         body: content.body,
-        footer: `
-          ${solo && step === 2 ? '<button class="btn" data-role="optional">Optional follow-up setup</button>' : ""}
-          ${step > 1 ? `<button class="btn" data-role="back">Back</button>` : ""}
-          <button class="btn" data-role="skip">${step === LAST_STEP ? "Close" : "Skip for now"}</button>
-          <button class="btn btn-primary" data-role="next">${step === LAST_STEP ? "Go to Today" : "Continue"}</button>`,
+        footer: App.i18n.html`
+          ${App.i18n.value(() => (solo && step === 2 ? App.i18n.markup('<button class="btn" data-role="optional">Optional follow-up setup</button>') : ""))}
+          ${App.i18n.value(() => (step > 1 ? App.i18n.markup(`<button class="btn" data-role="back">Back</button>`) : ""))}
+          <button class="btn" data-role="skip">${App.i18n.value(() => (step === LAST_STEP ? App.i18n.t("Close") : App.i18n.t("Skip for now")))}</button>
+          <button class="btn btn-primary" data-role="next">${App.i18n.value(() => (step === LAST_STEP ? App.i18n.t("Go to Today") : App.i18n.t("Continue")))}</button>`,
         onOpen: (m) => {
           if (step === 1 && S().settings.listTimezones) {
             // Best effort: the field is a plain text input until it loads,
@@ -382,7 +382,7 @@ App.pages.onboarding = (function () {
   async function commitStep(step, m) {
     const fail = (id, message) => {
       const el = m.querySelector(id);
-      if (el) { el.textContent = message; el.style.display = "block"; }
+      if (el) { App.i18n.setText(el, App.i18n.value(() => (message))); el.style.display = "block"; }
       return false;
     };
 
@@ -440,7 +440,7 @@ App.pages.onboarding = (function () {
       const message = (err && err.message) || "Unknown error";
       if (step === 1) return fail("#obStep1Error", message);
       if (step === 4) return fail("#obStep4Error", message);
-      App.app.toast("Could not save: " + message, "danger");
+      App.app.toast(App.i18n.t("Could not save: ") + message, "danger");
       return false;
     }
   }

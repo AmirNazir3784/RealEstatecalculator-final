@@ -34,7 +34,7 @@ App.pages.emailTemplates = (function () {
   const BODY_MAX = 50000;
 
   function copyPlainText(text) {
-    const done = () => App.app.toast("Copied to clipboard.", "success");
+    const done = () => App.app.toast(App.i18n.t("Copied to clipboard."), "success");
     const fail = () => {
       const ta = document.createElement("textarea");
       ta.value = text;
@@ -43,7 +43,7 @@ App.pages.emailTemplates = (function () {
       document.body.appendChild(ta);
       ta.select();
       try { document.execCommand("copy"); done(); }
-      catch (e) { App.app.toast("Copy failed. Select the text manually.", "danger"); }
+      catch (e) { App.app.toast(App.i18n.t("Copy failed. Select the text manually."), "danger"); }
       document.body.removeChild(ta);
     };
     if (navigator.clipboard && navigator.clipboard.writeText) {
@@ -59,7 +59,7 @@ App.pages.emailTemplates = (function () {
 
   async function render(pane) {
     if (!pane) return;
-    App.app.setBreadcrumbs([{ label: "Email Templates" }]);
+    App.app.setBreadcrumbs([{ get label() { return App.i18n.t("Email Templates"); } }]);
     App.app.setTopActions("");
 
     const state = {
@@ -70,13 +70,13 @@ App.pages.emailTemplates = (function () {
       statusFilter: "" // "" | "active" | "inactive"
     };
 
-    pane.innerHTML = App.app.loadingHtml ? App.app.loadingHtml("email templates") : "";
+    pane.innerHTML = App.app.loadingHtml ? App.app.loadingHtml(App.i18n.t("email templates")) : "";
     renderShell(pane, state);
     await loadTemplates(pane, state);
   }
 
   function renderShell(pane, state) {
-    pane.innerHTML = `
+    pane.innerHTML = App.i18n.html`
       <div class="page-header">
         <div>
           <div class="page-title">Email Templates</div>
@@ -84,7 +84,7 @@ App.pages.emailTemplates = (function () {
         </div>
         <div class="page-actions">
           <button type="button" class="btn" id="etImportBtn">Import Existing Scripts</button>
-          <button type="button" class="btn btn-primary" id="etCreateBtn">${App.app.icon("plus")} Create Template</button>
+          <button type="button" class="btn btn-primary" id="etCreateBtn">${App.i18n.value(() => (App.app.icon("plus")))} Create Template</button>
         </div>
       </div>
 
@@ -94,7 +94,7 @@ App.pages.emailTemplates = (function () {
       </div>
 
       <div class="filter-bar">
-        <div class="search-wrap">${App.app.icon("search")}<input id="etSearch" type="search" placeholder="Search templates…" aria-label="Search templates"></div>
+        <div class="search-wrap">${App.i18n.value(() => (App.app.icon("search")))}<input id="etSearch" type="search" placeholder="Search templates…" aria-label="Search templates"></div>
         <label class="field" style="margin:0">
           <span class="sr-only">Status</span>
           <select id="etStatusFilter" aria-label="Filter by status">
@@ -124,7 +124,7 @@ App.pages.emailTemplates = (function () {
   function setLive(pane, text, kind) {
     const el = pane.querySelector("#etLiveStatus");
     if (!el) return;
-    el.textContent = text || "";
+    App.i18n.setText(el, App.i18n.value(() => (text || "")));
     el.className = "profile-edit-message" + (kind ? " " + kind : "");
   }
 
@@ -162,10 +162,10 @@ App.pages.emailTemplates = (function () {
     if (!grid) return;
 
     if (state.error) {
-      grid.innerHTML = `
+      grid.innerHTML = App.i18n.html`
         <div class="empty-state" role="alert">
           <div class="empty-title">Could not load templates</div>
-          <div class="empty-desc">${U().esc(state.error)}</div>
+          <div class="empty-desc">${App.i18n.value(() => (U().esc(state.error)))}</div>
           <button type="button" class="btn btn-primary" id="etRetry">Retry</button>
         </div>`;
       const retryBtn = grid.querySelector("#etRetry");
@@ -174,21 +174,21 @@ App.pages.emailTemplates = (function () {
     }
 
     if (!state.templates.length) {
-      grid.innerHTML = `
+      grid.innerHTML = App.i18n.markup(`
         <div class="empty-state">
           <div class="empty-title">No email templates yet</div>
           <div class="empty-desc">Create your first template, or import your existing Scripts using the button above.</div>
-        </div>`;
+        </div>`);
       return;
     }
 
     const filtered = state.templates.filter(t => matchesFilters(t, state));
     if (!filtered.length) {
-      grid.innerHTML = `
+      grid.innerHTML = App.i18n.markup(`
         <div class="empty-state">
           <div class="empty-title">No templates match</div>
           <div class="empty-desc">Try a different search or status filter.</div>
-        </div>`;
+        </div>`);
       return;
     }
 
@@ -198,20 +198,20 @@ App.pages.emailTemplates = (function () {
 
   function renderCard(t) {
     const statusBadge = t.is_active
-      ? '<span class="badge badge-success"><span class="dot"></span>Active</span>'
-      : '<span class="badge badge-neutral"><span class="dot"></span>Inactive</span>';
-    const subjectHtml = t.subject ? U().esc(t.subject) : "<em>(no subject yet — edit to add one)</em>";
-    return `
-      <article class="card release-library-card" data-tpl-id="${U().esc(t.id)}">
+      ? App.i18n.markup('<span class="badge badge-success"><span class="dot"></span>Active</span>')
+      : App.i18n.markup('<span class="badge badge-neutral"><span class="dot"></span>Inactive</span>');
+    const subjectHtml = t.subject ? U().esc(t.subject) : App.i18n.markup("<em>(no subject yet — edit to add one)</em>");
+    return App.i18n.html`
+      <article class="card release-library-card" data-tpl-id="${App.i18n.value(() => (U().esc(t.id)))}">
         <div class="card-body">
           <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:space-between">
-            <h3 style="margin:0;word-break:break-word">${U().esc(t.name)}</h3>
-            ${statusBadge}
+            <h3 style="margin:0;word-break:break-word">${App.i18n.value(() => (U().esc(t.name)))}</h3>
+            ${App.i18n.value(() => (statusBadge))}
           </div>
           <div class="form-help" style="margin:8px 0 2px">Subject</div>
-          <p style="margin:0">${subjectHtml}</p>
+          <p style="margin:0">${App.i18n.value(() => (subjectHtml))}</p>
           <div class="form-help" style="margin:8px 0 2px">Body</div>
-          <p>${U().esc(U().truncate(t.body_text || "", 220))}</p>
+          <p>${App.i18n.value(() => (U().esc(U().truncate(t.body_text || "", 220))))}</p>
           <!-- Seven flat buttons buried the one people actually want. Edit,
                the active toggle and Delete stay on the card; the four
                read-only/copy helpers move behind a More menu. Every action is
@@ -224,20 +224,20 @@ App.pages.emailTemplates = (function () {
                .action-more wrapper, so moving it to the end needs no CSS
                change. -->
           <div class="release-card-actions">
-            <button type="button" class="btn btn-sm" data-edit="${U().esc(t.id)}">Edit</button>
-            <button type="button" class="btn btn-sm" data-toggle-active="${U().esc(t.id)}">${t.is_active ? "Deactivate" : "Activate"}</button>
-            <button type="button" class="btn btn-sm btn-danger" data-delete="${U().esc(t.id)}">Delete</button>
+            <button type="button" class="btn btn-sm" data-edit="${App.i18n.value(() => (U().esc(t.id)))}">Edit</button>
+            <button type="button" class="btn btn-sm" data-toggle-active="${App.i18n.value(() => (U().esc(t.id)))}">${App.i18n.value(() => (t.is_active ? App.i18n.t("Deactivate") : App.i18n.t("Activate")))}</button>
+            <button type="button" class="btn btn-sm btn-danger" data-delete="${App.i18n.value(() => (U().esc(t.id)))}">Delete</button>
             <span class="action-more">
-              <button type="button" class="btn btn-sm action-more-toggle" data-more-toggle="${U().esc(t.id)}"
+              <button type="button" class="btn btn-sm action-more-toggle" data-more-toggle="${App.i18n.value(() => (U().esc(t.id)))}"
                       aria-haspopup="true" aria-expanded="false"
-                      aria-label="More actions for ${U().esc(t.name)}" title="More actions">
+                      aria-label="More actions for ${App.i18n.value(() => (U().esc(t.name)))}" title="More actions">
                 <svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16" aria-hidden="true"><circle cx="5" cy="12" r="1.6"/><circle cx="12" cy="12" r="1.6"/><circle cx="19" cy="12" r="1.6"/></svg>
               </button>
-              <span class="action-more-menu" data-more-menu="${U().esc(t.id)}" role="menu" hidden>
-                <button type="button" class="dropdown-action" role="menuitem" data-preview="${U().esc(t.id)}">Preview</button>
-                <button type="button" class="dropdown-action" role="menuitem" data-copy-subject="${U().esc(t.id)}">Copy Subject</button>
-                <button type="button" class="dropdown-action" role="menuitem" data-copy-body="${U().esc(t.id)}">Copy Body</button>
-                <button type="button" class="dropdown-action" role="menuitem" data-duplicate="${U().esc(t.id)}">Duplicate</button>
+              <span class="action-more-menu" data-more-menu="${App.i18n.value(() => (U().esc(t.id)))}" role="menu" hidden>
+                <button type="button" class="dropdown-action" role="menuitem" data-preview="${App.i18n.value(() => (U().esc(t.id)))}">Preview</button>
+                <button type="button" class="dropdown-action" role="menuitem" data-copy-subject="${App.i18n.value(() => (U().esc(t.id)))}">Copy Subject</button>
+                <button type="button" class="dropdown-action" role="menuitem" data-copy-body="${App.i18n.value(() => (U().esc(t.id)))}">Copy Body</button>
+                <button type="button" class="dropdown-action" role="menuitem" data-duplicate="${App.i18n.value(() => (U().esc(t.id)))}">Duplicate</button>
               </span>
             </span>
           </div>
@@ -326,27 +326,27 @@ App.pages.emailTemplates = (function () {
       // this way; deactivating has no such requirement.
       if (nextActive) await S().messageTemplates.activate(tpl.id);
       else await S().messageTemplates.setActive(tpl.id, false);
-      App.app.toast(nextActive ? "Template activated." : "Template deactivated.", "success");
+      App.app.toast(nextActive ? App.i18n.t("Template activated.") : App.i18n.t("Template deactivated."), "success");
       await loadTemplates(pane, state);
     } catch (err) {
-      App.app.toast("Could not update: " + ((err && err.message) || "Unknown error"), "danger");
+      App.app.toast(App.i18n.t("Could not update: ") + ((err && err.message) || "Unknown error"), "danger");
       btn.disabled = false;
     }
   }
 
   function confirmDelete(pane, state, tpl) {
     App.app.confirmDialog({
-      title: "Delete template?",
+      get title() { return App.i18n.t("Delete template?"); },
       message: `Delete &ldquo;${U().esc(tpl.name)}&rdquo;? This cannot be undone. No email has ever been sent from this template.`,
       okLabel: "Delete",
       danger: true
     }, async () => {
       try {
         await S().messageTemplates.delete(tpl.id);
-        App.app.toast("Deleted.", "success");
+        App.app.toast(App.i18n.t("Deleted."), "success");
         await loadTemplates(pane, state);
       } catch (err) {
-        App.app.toast("Could not delete: " + ((err && err.message) || "Unknown error"), "danger");
+        App.app.toast(App.i18n.t("Could not delete: ") + ((err && err.message) || "Unknown error"), "danger");
       }
     });
   }
@@ -357,21 +357,21 @@ App.pages.emailTemplates = (function () {
 
   function openPreviewModal(tpl) {
     const h = App.app.openModal({
-      title: "Preview",
+      get title() { return App.i18n.t("Preview"); },
       wide: true,
-      body: `
+      body: App.i18n.html`
         <div class="release-callout" style="margin-bottom:12px">
           <strong>Plain-text preview only.</strong>
           <p style="margin:6px 0 0">This shows exactly what is saved. No HTML is rendered from the body, and previewing never sends anything.</p>
         </div>
         <label class="field full"><span>Template name</span></label>
-        <p style="margin:0 0 10px;word-break:break-word">${U().esc(tpl.name)}</p>
+        <p style="margin:0 0 10px;word-break:break-word">${App.i18n.value(() => (U().esc(tpl.name)))}</p>
         <label class="field full"><span>Subject</span></label>
-        <p style="margin:0 0 10px;white-space:pre-wrap;word-break:break-word">${tpl.subject ? U().esc(tpl.subject) : "(no subject yet)"}</p>
+        <p style="margin:0 0 10px;white-space:pre-wrap;word-break:break-word">${App.i18n.value(() => (tpl.subject ? U().esc(tpl.subject) : App.i18n.t("(no subject yet)")))}</p>
         <label class="field full"><span>Body</span></label>
-        <p style="margin:0;white-space:pre-wrap;word-break:break-word;max-height:50vh;overflow:auto">${U().esc(tpl.body_text || "")}</p>
+        <p style="margin:0;white-space:pre-wrap;word-break:break-word;max-height:50vh;overflow:auto">${App.i18n.value(() => (U().esc(tpl.body_text || "")))}</p>
       `,
-      footer: `<button class="btn btn-primary" data-role="close">Close</button>`,
+      footer: App.i18n.markup(`<button class="btn btn-primary" data-role="close">Close</button>`),
       onOpen: (m) => { m.querySelector('[data-role="close"]').onclick = () => h.close(); }
     });
   }
@@ -391,15 +391,15 @@ App.pages.emailTemplates = (function () {
     const h = App.app.openModal({
       title: isEdit ? "Edit Template" : (duplicateFrom ? "Duplicate Template" : "Create Template"),
       wide: true,
-      body: `
+      body: App.i18n.html`
         <div class="release-callout" style="margin-bottom:12px">
           <strong>Saving does not send an email.</strong>
           <p style="margin:6px 0 0">Sending only happens from a test send, a Scheduler item, or an active Automation sequence step that uses this template.</p>
         </div>
         <div class="form-grid">
-          <label class="field full"><span>Template name</span><input id="etName" maxlength="${NAME_MAX}" value="${U().esc(initialName)}" required></label>
-          <label class="field full"><span>Subject</span><input id="etSubject" maxlength="${SUBJECT_MAX}" value="${U().esc(initialSubject)}" required></label>
-          <label class="field full"><span>Email body</span><textarea id="etBody" rows="10" required>${U().esc(initialBody)}</textarea></label>
+          <label class="field full"><span>Template name</span><input id="etName" maxlength="${App.i18n.value(() => (NAME_MAX))}" value="${App.i18n.value(() => (U().esc(initialName)))}" required></label>
+          <label class="field full"><span>Subject</span><input id="etSubject" maxlength="${App.i18n.value(() => (SUBJECT_MAX))}" value="${App.i18n.value(() => (U().esc(initialSubject)))}" required></label>
+          <label class="field full"><span>Email body</span><textarea id="etBody" rows="10" required>${App.i18n.value(() => (U().esc(initialBody)))}</textarea></label>
           <p class="form-help full" style="margin:-6px 0 0">
             Merge fields (Automation sequences only): <code>{{first_name}}</code>, <code>{{full_name}}</code>,
             <code>{{email}}</code>, <code>{{agent_name}}</code>. Plain text only — a missing value is left blank,
@@ -407,11 +407,11 @@ App.pages.emailTemplates = (function () {
           </p>
           <label class="field" style="flex-direction:row;align-items:center;gap:10px">
             <span>Active</span>
-            <span class="toggle-switch"><input type="checkbox" id="etActive" ${initialActive ? "checked" : ""}><span class="toggle-track"></span></span>
+            <span class="toggle-switch"><input type="checkbox" id="etActive" ${App.i18n.value(() => (initialActive ? "checked" : ""))}><span class="toggle-track"></span></span>
           </label>
         </div>
       `,
-      footer: `<button class="btn" data-role="cancel">Cancel</button><button class="btn btn-primary" data-role="save">${isEdit ? "Save Changes" : "Create Template"}</button>`,
+      footer: App.i18n.html`<button class="btn" data-role="cancel">Cancel</button><button class="btn btn-primary" data-role="save">${App.i18n.value(() => (isEdit ? App.i18n.t("Save Changes") : App.i18n.t("Create Template")))}</button>`,
       onOpen: (m) => {
         m.querySelector('[data-role="cancel"]').onclick = () => h.close();
         const saveBtn = m.querySelector('[data-role="save"]');
@@ -421,23 +421,23 @@ App.pages.emailTemplates = (function () {
           const subject = m.querySelector("#etSubject").value.trim();
           const body = m.querySelector("#etBody").value.trim();
           const isActive = m.querySelector("#etActive").checked;
-          if (!name || name.length > NAME_MAX) { App.app.toast("Template name must be 1-100 characters.", "danger"); return; }
-          if (!subject || subject.length > SUBJECT_MAX) { App.app.toast("Subject must be 1-200 characters.", "danger"); return; }
-          if (!body || body.length > BODY_MAX) { App.app.toast("Email body must be non-empty and at most 50,000 characters.", "danger"); return; }
+          if (!name || name.length > NAME_MAX) { App.app.toast(App.i18n.t("Template name must be 1-100 characters."), "danger"); return; }
+          if (!subject || subject.length > SUBJECT_MAX) { App.app.toast(App.i18n.t("Subject must be 1-200 characters."), "danger"); return; }
+          if (!body || body.length > BODY_MAX) { App.app.toast(App.i18n.t("Email body must be non-empty and at most 50,000 characters."), "danger"); return; }
 
           saveBtn.disabled = true;
           try {
             if (isEdit) {
               await S().messageTemplates.update(existing.id, { name, subject, bodyText: body, isActive });
-              App.app.toast("Template saved.", "success");
+              App.app.toast(App.i18n.t("Template saved."), "success");
             } else {
               await S().messageTemplates.create({ name, subject, bodyText: body, isActive });
-              App.app.toast("Template created.", "success");
+              App.app.toast(App.i18n.t("Template created."), "success");
             }
             h.close();
             await loadTemplates(pane, state);
           } catch (err) {
-            App.app.toast("Could not save: " + ((err && err.message) || "Unknown error"), "danger");
+            App.app.toast(App.i18n.t("Could not save: ") + ((err && err.message) || "Unknown error"), "danger");
             saveBtn.disabled = false;
           }
         };
@@ -451,10 +451,10 @@ App.pages.emailTemplates = (function () {
 
   function openImportModal(pane, state) {
     const h = App.app.openModal({
-      title: "Import Existing Scripts",
+      get title() { return App.i18n.t("Import Existing Scripts"); },
       wide: true,
-      body: `<div id="etImportBody">${App.app.loadingHtml ? App.app.loadingHtml("eligible Scripts") : ""}</div>`,
-      footer: `<button class="btn" data-role="cancel">Close</button><button class="btn btn-primary" data-role="import" disabled>Import Selected</button>`,
+      body: App.i18n.html`<div id="etImportBody">${App.i18n.value(() => (App.app.loadingHtml ? App.app.loadingHtml(App.i18n.t("eligible Scripts")) : ""))}</div>`,
+      footer: App.i18n.markup(`<button class="btn" data-role="cancel">Close</button><button class="btn btn-primary" data-role="import" disabled>Import Selected</button>`),
       onOpen: (m) => {
         m.querySelector('[data-role="cancel"]').onclick = () => h.close();
         loadImportEligibility(m, pane, state);
@@ -468,19 +468,19 @@ App.pages.emailTemplates = (function () {
     try {
       const result = await S().legacyScriptImport.listEligible();
       if (!result.eligible.length) {
-        bodyEl.innerHTML = `<p class="form-help">No eligible Scripts to import right now (${U().esc(result.totalScripts)} Script(s) total, ${U().esc(result.alreadyImportedCount)} already imported).</p>`;
+        bodyEl.innerHTML = App.i18n.html`<p class="form-help">No eligible Scripts to import right now (${App.i18n.value(() => (U().esc(result.totalScripts)))} Script(s) total, ${App.i18n.value(() => (U().esc(result.alreadyImportedCount)))} already imported).</p>`;
         return;
       }
-      bodyEl.innerHTML = `
-        <p class="form-help">${U().esc(result.eligible.length)} eligible Script(s) found — ${U().esc(result.totalScripts)} total, ${U().esc(result.alreadyImportedCount)} already imported. Importing copies each selected Script into Email Templates; the original Script is never changed or deleted, and importing again never creates a duplicate.</p>
+      bodyEl.innerHTML = App.i18n.html`
+        <p class="form-help">${App.i18n.value(() => (U().esc(result.eligible.length)))} eligible Script(s) found — ${App.i18n.value(() => (U().esc(result.totalScripts)))} total, ${App.i18n.value(() => (U().esc(result.alreadyImportedCount)))} already imported. Importing copies each selected Script into Email Templates; the original Script is never changed or deleted, and importing again never creates a duplicate.</p>
         <p class="form-help">Legacy Scripts don't have an email subject, so every imported template is created <strong>inactive</strong> with an empty subject and needs review — add a subject, review the body, then activate it before it can be used in a Scheduler item or a Send Email step.</p>
         <label class="release-maintenance" style="align-items:center"><input type="checkbox" id="etImportAll" checked><span>Select all</span></label>
         <div style="max-height:320px;overflow:auto;margin-top:8px" id="etImportList">
-          ${result.eligible.map(s => `
+          ${App.i18n.value(() => (result.eligible.map(s => App.i18n.html`
             <label class="release-maintenance" style="align-items:center">
-              <input type="checkbox" class="et-import-check" value="${U().esc(s.id)}" checked>
-              <span>${U().esc(s.title || "Untitled")} <span class="badge badge-neutral">${U().esc(s.category || "General")}</span></span>
-            </label>`).join("")}
+              <input type="checkbox" class="et-import-check" value="${App.i18n.value(() => (U().esc(s.id)))}" checked>
+              <span>${App.i18n.value(() => (U().esc(s.title || App.i18n.t("Untitled"))))} <span class="badge badge-neutral">${App.i18n.value(() => (U().esc(s.category || App.i18n.t("General"))))}</span></span>
+            </label>`).join("")))}
         </div>
         <div id="etImportConfirm" hidden style="margin-top:12px"></div>
         <p id="etImportResult" aria-live="polite" class="profile-edit-message" style="margin-top:10px"></p>
@@ -494,10 +494,10 @@ App.pages.emailTemplates = (function () {
       }));
       importBtn.onclick = () => showImportConfirmation(m, pane, state, importBtn);
     } catch (err) {
-      bodyEl.innerHTML = `
+      bodyEl.innerHTML = App.i18n.html`
         <div class="empty-state" role="alert">
           <div class="empty-title">Could not load Scripts</div>
-          <div class="empty-desc">${U().esc((err && err.message) || "Unknown error")}</div>
+          <div class="empty-desc">${App.i18n.value(() => (U().esc((err && err.message) || App.i18n.t("Unknown error"))))}</div>
         </div>`;
     }
   }
@@ -512,15 +512,15 @@ App.pages.emailTemplates = (function () {
   function showImportConfirmation(m, pane, state, importBtn) {
     if (importBtn.disabled) return;
     const selectedIds = Array.from(m.querySelectorAll(".et-import-check:checked")).map(c => c.value);
-    if (!selectedIds.length) { App.app.toast("Select at least one Script to import.", "danger"); return; }
+    if (!selectedIds.length) { App.app.toast(App.i18n.t("Select at least one Script to import."), "danger"); return; }
 
     importBtn.disabled = true;
     const confirmArea = m.querySelector("#etImportConfirm");
     if (!confirmArea) return;
     confirmArea.hidden = false;
-    confirmArea.innerHTML = `
+    confirmArea.innerHTML = App.i18n.html`
       <div class="release-callout release-callout-warning">
-        <strong>Import ${selectedIds.length} Script${selectedIds.length === 1 ? "" : "s"}?</strong>
+        <strong>Import ${App.i18n.value(() => (selectedIds.length))} Script${App.i18n.value(() => (selectedIds.length === 1 ? "" : "s"))}?</strong>
         <p style="margin:6px 0 10px">Each selected Script is copied into Email Templates as an <strong>inactive</strong>, needs-review draft (empty subject). The original Script is not changed or deleted.</p>
         <button type="button" class="btn" id="etImportCancel">Cancel / Keep Editing</button>
         <button type="button" class="btn btn-primary" id="etImportConfirmBtn">Yes, Import</button>
@@ -541,18 +541,18 @@ App.pages.emailTemplates = (function () {
     confirmArea.querySelectorAll("button").forEach(b => { b.disabled = true; });
     m.querySelectorAll(".et-import-check, #etImportAll").forEach(c => { c.disabled = true; });
     const resultEl = m.querySelector("#etImportResult");
-    if (resultEl) resultEl.textContent = "Importing…";
+    if (resultEl) App.i18n.setText(resultEl, App.i18n.message("Importing…"));
     try {
       const result = await S().legacyScriptImport.importByIds(selectedIds);
       const summary = "Imported " + result.imported + " (inactive — add a subject, review, then activate), skipped " + result.skipped + ", failed " + result.failed + ".";
-      if (resultEl) resultEl.textContent = summary;
+      if (resultEl) App.i18n.setText(resultEl, App.i18n.value(() => (summary)));
       App.app.toast(summary, result.failed ? "danger" : "success");
       confirmArea.hidden = true;
       confirmArea.innerHTML = "";
       await loadTemplates(pane, state);
     } catch (err) {
       const message = "Import failed: " + ((err && err.message) || "Unknown error");
-      if (resultEl) resultEl.textContent = message;
+      if (resultEl) App.i18n.setText(resultEl, App.i18n.value(() => (message)));
       App.app.toast(message, "danger");
       confirmArea.hidden = true;
       confirmArea.innerHTML = "";

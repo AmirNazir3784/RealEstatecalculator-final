@@ -282,7 +282,7 @@ App.quickAdd = (function () {
       btn.className = "quick-add-btn";
       btn.setAttribute("aria-label", "Add a contact");
       btn.title = "Add a contact";
-      btn.textContent = "+";
+      App.i18n.setText(btn, App.i18n.value(() => ("+")));
       btn.addEventListener("click", () => open());
       const slot = d.getElementById("topActions");
       if (slot && slot.parentNode) slot.parentNode.insertBefore(btn, slot);
@@ -295,7 +295,7 @@ App.quickAdd = (function () {
       fab.className = "quick-add-fab";
       fab.setAttribute("aria-label", "Add a contact");
       fab.title = "Add a contact";
-      fab.textContent = "+";
+      App.i18n.setText(fab, App.i18n.value(() => ("+")));
       fab.addEventListener("click", () => open());
       d.body.appendChild(fab);
     }
@@ -329,31 +329,31 @@ App.quickAdd = (function () {
     // lazily rather than the value, which does not exist yet.
     let h;
     h = App.app.openModal({
-      title: "Add a contact",
+      get title() { return App.i18n.t("Add a contact"); },
       body: ''
-        + '<form id="quickAddForm" novalidate>'
-        + '  <div class="form-grid">'
-        + '    <label class="field full"><span>Name</span>'
+        + App.i18n.markup('<form id="quickAddForm" novalidate>')
+        + App.i18n.markup('  <div class="form-grid">')
+        + App.i18n.markup('    <label class="field full"><span>Name</span>')
         + '      <input id="qaName" maxlength="120" value="' + U().esc(prefill.name || "") + '" required></label>'
-        + '    <label class="field"><span>Phone</span>'
+        + App.i18n.markup('    <label class="field"><span>Phone</span>')
         + '      <input id="qaPhone" type="tel" maxlength="40" value="' + U().esc(prefill.phone || "") + '"></label>'
-        + '    <label class="field"><span>Email</span>'
+        + App.i18n.markup('    <label class="field"><span>Email</span>')
         + '      <input id="qaEmail" type="email" maxlength="200" value="' + U().esc(prefill.email || "") + '"></label>'
-        + '    <label class="field"><span>Type</span><select id="qaType">' + options(types, "Buyer") + '</select></label>'
-        + '    <label class="field"><span>Source</span><select id="qaSource">' + options(sources, sources[0]) + '</select></label>'
-        + '    <label class="field full"><span>Note</span>'
-        + '      <textarea id="qaNote" rows="2" maxlength="2000"></textarea></label>'
-        + '    <fieldset class="field full" style="border:0;padding:0;margin:0">'
-        + '      <legend style="font:inherit;padding:0">Paste a message</legend>'
+        + App.i18n.markup('    <label class="field"><span>Type</span><select id="qaType">') + options(types, "Buyer") + '</select></label>'
+        + App.i18n.markup('    <label class="field"><span>Source</span><select id="qaSource">') + options(sources, sources[0]) + '</select></label>'
+        + App.i18n.markup('    <label class="field full"><span>Note</span>')
+        + App.i18n.markup('      <textarea id="qaNote" rows="2" maxlength="2000"></textarea></label>')
+        + App.i18n.markup('    <fieldset class="field full" style="border:0;padding:0;margin:0">')
+        + App.i18n.markup('      <legend style="font:inherit;padding:0">Paste a message</legend>')
         + '      <textarea id="qaPaste" rows="3" maxlength="8000"'
         + '        placeholder="Paste the portal email or text message here and the fields above fill in."></textarea>'
-        + '      <p class="form-help" id="qaPasteNote" aria-live="polite">Nothing is saved until you press Save — check what it filled in first.</p>'
+        + App.i18n.markup('      <p class="form-help" id="qaPasteNote" aria-live="polite">Nothing is saved until you press Save — check what it filled in first.</p>')
         + '    </fieldset>'
         + '  </div>'
-        + '  <div id="qaDuplicate" hidden></div>'
+        + App.i18n.markup('  <div id="qaDuplicate" hidden></div>')
         + '</form>',
-      footer: '<button class="btn" data-role="cancel">Cancel</button>'
-        + '<button class="btn btn-primary" data-role="save">Save</button>',
+      footer: App.i18n.markup('<button class="btn" data-role="cancel">Cancel</button>')
+        + App.i18n.markup('<button class="btn btn-primary" data-role="save">Save</button>'),
       onOpen: (m) => wireForm(m, { close: () => h.close() })
     });
     return h;
@@ -392,9 +392,9 @@ App.quickAdd = (function () {
         });
       // Said plainly, including when it found nothing: a paste box that
       // silently does nothing reads as broken.
-      noteEl.textContent = filled.length
-        ? "Filled in the " + filled.join(", ") + " from your paste. Check it, then press Save."
-        : "Could not find a name, phone or email in that. Type them in above.";
+      App.i18n.setText(noteEl, App.i18n.value(() => (filled.length
+        ? App.i18n.t("Filled in the ") + filled.join(", ") + App.i18n.t(" from your paste. Check it, then press Save.")
+        : App.i18n.t("Could not find a name, phone or email in that. Type them in above."))));
     };
     // Both, because a paste event fires before the value lands in some
     // browsers and a drop or a keyboard paste is still a paste.
@@ -417,15 +417,15 @@ App.quickAdd = (function () {
       dupEl.hidden = false;
       dupEl.className = "release-callout release-callout-warning";
       dupEl.style.marginTop = "12px";
-      dupEl.innerHTML = '<strong>Looks like ' + U().esc(existing.name || "this contact")
+      dupEl.innerHTML = App.i18n.markup('<strong>Looks like ') + U().esc(existing.name || "this contact")
         + ' is already here — open them instead?</strong>'
-        + '<p style="margin:6px 0 0">'
+        + App.i18n.markup('<p style="margin:6px 0 0">')
         + (existing.email ? U().esc(existing.email) + " " : "")
         + (existing.phone ? U().esc(existing.phone) : "") + '</p>'
-        + '<div style="display:flex;gap:8px;margin-top:8px">'
-        + '<button type="button" class="btn btn-sm" data-role="qa-open-dup">Open '
+        + App.i18n.markup('<div style="display:flex;gap:8px;margin-top:8px">')
+        + App.i18n.markup('<button type="button" class="btn btn-sm" data-role="qa-open-dup">Open ')
         + U().esc(existing.name || "contact") + '</button>'
-        + '<button type="button" class="btn btn-sm" data-role="qa-save-anyway">Save anyway</button>'
+        + App.i18n.markup('<button type="button" class="btn btn-sm" data-role="qa-save-anyway">Save anyway</button>')
         + '</div>';
       dupEl.querySelector('[data-role="qa-open-dup"]').onclick = () => {
         h.close();
@@ -441,10 +441,10 @@ App.quickAdd = (function () {
     async function save() {
       if (saveBtn.disabled) return;
       const name = nameEl.value.trim();
-      if (!name) { App.app.toast("A name is the one thing this needs.", "danger"); return; }
+      if (!name) { App.app.toast(App.i18n.t("A name is the one thing this needs."), "danger"); return; }
       const email = emailEl.value.trim();
       if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-        App.app.toast("That email address does not look right.", "danger"); return;
+        App.app.toast(App.i18n.t("That email address does not look right."), "danger"); return;
       }
       const phone = phoneEl.value.trim();
 
@@ -472,7 +472,7 @@ App.quickAdd = (function () {
         h.close();
         savedToast(contact);
       } catch (err) {
-        App.app.toast("Could not save: " + ((err && err.message) || "Unknown error"), "danger");
+        App.app.toast(App.i18n.t("Could not save: ") + ((err && err.message) || "Unknown error"), "danger");
         saveBtn.disabled = false;
       }
     }
@@ -486,11 +486,11 @@ App.quickAdd = (function () {
    * sheet the Today screen opens.
    */
   function savedToast(contact) {
-    App.app.toast("Added " + (contact.name || "contact") + ".", "success", {
+    App.app.toast(App.i18n.t("Added ") + (contact.name || "contact") + ".", "success", {
       actions: [
-        { label: "Open", onClick: () => App.app.navigate("/contacts/" + contact.id) },
+        { get label() { return App.i18n.t("Open"); }, onClick: () => App.app.navigate("/contacts/" + contact.id) },
         {
-          label: "Log a call",
+          get label() { return App.i18n.t("Log a call"); },
           onClick: () => App.followUp.openQuickLog(contact, { channel: "call" })
         }
       ]

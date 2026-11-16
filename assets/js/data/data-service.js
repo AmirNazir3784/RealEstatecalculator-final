@@ -502,6 +502,23 @@ App.data = (function () {
   }
 
   // ---------- GENERIC CRUD ----------
+  const SEARCH_COLUMNS = { contacts:"id,full_name,email,phone", deals:"id,title,stage", properties:"id,address,status,mls", tasks:"id,title,status,due_date" };
+  async function search(entityKey, query) {
+    const columns = Object.hasOwn(SEARCH_COLUMNS,entityKey) ? SEARCH_COLUMNS[entityKey] : null;
+    if (!columns) throw new Error("Unsupported search entity.");
+    const user = requireUser(), userId = user.id, workspaceId = await requireWorkspaceId_();
+    const area = entityKey === "tasks" ? "work" : entityKey;
+    if (!App.workspace.ready() || !App.workspace.canView(area)) return { rows:[], hasMore:false };
+    const terms = String(query || "").trim().slice(0,200).match(/[\p{L}\p{N}]+/gu) || [];
+    if (!terms.length) return { rows:[], hasMore:false };
+    const expression = terms.slice(0,12).map(term => term + ":*").join(" & ");
+    const {data,error} = await client().from(REGISTRY[entityKey].table).select(columns)
+      .eq("workspace_id",workspaceId).textSearch("crm_search_document",expression,{config:"simple"}).order("id").limit(21);
+    if (error) throw error;
+    const active = App.cloud.getUser();
+    if (!active || active.id !== userId || App.workspace.id() !== workspaceId) throw new Error("Search context changed.");
+    return { rows:(data || []).slice(0,20).map(REGISTRY[entityKey].fromRow), hasMore:(data || []).length>20 };
+  }
   async function list(entityKey, opts) {
     opts = opts || {};
     const def = REGISTRY[entityKey];
@@ -1052,6 +1069,13 @@ App.data = (function () {
   // owner and the workspace on a device row are not the browser's to
   // choose - the function takes them from the session. There is no
   // INSERT or UPDATE grant on either table for this reason.
+  async function requestPushTest(endpoint) {
+    requireUser();
+    const {data,error} = await client().rpc("realtoros_request_push_test",{p_endpoint:String(endpoint || "")});
+    if (error) throw error;
+    if (!data || !["queued","rate_limited","notifications_off","no_device","not_signed_in","no_workspace"].includes(data.outcome)) throw new Error("Test notification could not be queued. Check this device and your notification preferences.");
+    return data;
+  }
   async function listPushDevices() {
     requireUser();
     const { data, error } = await client()
@@ -2896,13 +2920,13 @@ App.data = (function () {
     listTimezones,
 
     REGISTRY,
-    list, get, create, update, remove, getCached,
+    list, search, get, create, update, remove, getCached,
     loadSettings, updateSettings, updateMetadata, getSettingsSync, getMetadataSync,
     createDealWithMilestones, completeFollowUp, resetWorkspace,
     listSheetConnections, createOrRotateSheetConnection,
     listImportBatches, listImportRows, importLeadFile, getLeadFileImportQuota,
     listNotifications, countUnreadNotifications, markNotificationRead, markAllNotificationsRead,
-    listPushDevices, registerPushDevice, removePushDevice,
+    listPushDevices, requestPushTest, registerPushDevice, removePushDevice,
     getNotificationPreferences, saveNotificationPreferences,
     listMessageTemplates, createMessageTemplate, updateMessageTemplate, deleteMessageTemplate,
     activateMessageTemplate,

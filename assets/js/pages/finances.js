@@ -43,7 +43,7 @@ App.pages.finances = (function () {
   // ---------- RENDER ----------
 
   async function render(container) {
-    App.app.setBreadcrumbs([{ label: "Income & Expenses" }]);
+    App.app.setBreadcrumbs([{ get label() { return App.i18n.t("Income & Expenses"); } }]);
     App.app.setTopActions("");
     container.innerHTML = App.app.loadingHtml();
     await S().ensureLoaded(["income", "expenses", "contacts", "deals"]);
@@ -53,45 +53,45 @@ App.pages.finances = (function () {
     const fmt = (v) => U().formatCurrency(v, cur);
     const fmtS = (v) => U().formatCompact(v, cur);
 
-    container.innerHTML = `
+    container.innerHTML = App.i18n.html`
       <div class="page-header">
         <div>
           <div class="page-title">Income & Expenses</div>
           <div class="page-desc">Track business income and expenses. All numbers calculated live from your records.</div>
         </div>
         <div class="page-actions">
-          <button class="btn" id="addIncBtn">${App.app.icon("plus")} Add Income</button>
-          <button class="btn btn-primary" id="addExpBtn">${App.app.icon("plus")} Add Expense</button>
+          <button class="btn" id="addIncBtn">${App.i18n.value(() => (App.app.icon("plus")))} Add Income</button>
+          <button class="btn btn-primary" id="addExpBtn">${App.i18n.value(() => (App.app.icon("plus")))} Add Expense</button>
         </div>
       </div>
 
       <div class="stat-row" style="grid-template-columns:repeat(3,1fr);">
-        <div class="stat-card"><div class="k">Total Income</div><div class="v" style="color:var(--success)">${fmtS(kpi.totalIncome)}</div><div class="sub">${fmt(kpi.totalIncome)}</div></div>
-        <div class="stat-card"><div class="k">Total Expenses</div><div class="v" style="color:var(--danger)">${fmtS(kpi.totalExpenses)}</div><div class="sub">${fmt(kpi.totalExpenses)}</div></div>
-        <div class="stat-card"><div class="k">Net Income</div><div class="v" style="color:${kpi.netIncome>=0?'var(--success)':'var(--danger)'}">${fmtS(kpi.netIncome)}</div><div class="sub">${fmt(kpi.netIncome)}</div></div>
+        <div class="stat-card"><div class="k">Total Income</div><div class="v" style="color:var(--success)">${App.i18n.value(() => (fmtS(kpi.totalIncome)))}</div><div class="sub">${App.i18n.value(() => (fmt(kpi.totalIncome)))}</div></div>
+        <div class="stat-card"><div class="k">Total Expenses</div><div class="v" style="color:var(--danger)">${App.i18n.value(() => (fmtS(kpi.totalExpenses)))}</div><div class="sub">${App.i18n.value(() => (fmt(kpi.totalExpenses)))}</div></div>
+        <div class="stat-card"><div class="k">Net Income</div><div class="v" style="color:${App.i18n.value(() => (kpi.netIncome>=0?'var(--success)':'var(--danger)'))}">${App.i18n.value(() => (fmtS(kpi.netIncome)))}</div><div class="sub">${App.i18n.value(() => (fmt(kpi.netIncome)))}</div></div>
       </div>
       <div class="stat-row" style="grid-template-columns:repeat(3,1fr);">
-        <div class="stat-card"><div class="k">This Month Income</div><div class="v">${fmt(kpi.monthInc)}</div></div>
-        <div class="stat-card"><div class="k">This Month Expenses</div><div class="v">${fmt(kpi.monthExp)}</div></div>
-        <div class="stat-card"><div class="k">This Month Net</div><div class="v" style="color:${kpi.monthNet>=0?'var(--success)':'var(--danger)'}">${fmt(kpi.monthNet)}</div></div>
+        <div class="stat-card"><div class="k">This Month Income</div><div class="v">${App.i18n.value(() => (fmt(kpi.monthInc)))}</div></div>
+        <div class="stat-card"><div class="k">This Month Expenses</div><div class="v">${App.i18n.value(() => (fmt(kpi.monthExp)))}</div></div>
+        <div class="stat-card"><div class="k">This Month Net</div><div class="v" style="color:${App.i18n.value(() => (kpi.monthNet>=0?'var(--success)':'var(--danger)'))}">${App.i18n.value(() => (fmt(kpi.monthNet)))}</div></div>
       </div>
 
       <div class="filter-bar">
-        <button class="btn btn-sm ${tab==='income'?'btn-primary':''}" id="tabIncome">Income</button>
-        <button class="btn btn-sm ${tab==='expenses'?'btn-primary':''}" id="tabExpenses">Expenses</button>
+        <button class="btn btn-sm ${App.i18n.value(() => (tab==='income'?'btn-primary':''))}" id="tabIncome">Income</button>
+        <button class="btn btn-sm ${App.i18n.value(() => (tab==='expenses'?'btn-primary':''))}" id="tabExpenses">Expenses</button>
         <div style="flex:1"></div>
         <div class="search-wrap" style="min-width:180px;">
-          ${App.app.icon("search")}
-          <input type="search" id="fSearch" placeholder="Search…" value="${U().esc(filters.search)}">
+          ${App.i18n.value(() => (App.app.icon("search")))}
+          <input type="search" id="fSearch" placeholder="Search…" value="${App.i18n.value(() => (U().esc(filters.search)))}">
         </div>
         <select id="fCat" aria-label="Category">
           <option value="">All categories</option>
-          ${(tab === "income" ? INCOME_CATS : EXPENSE_CATS).map(c => `<option value="${c}" ${filters.category===c?"selected":""}>${c}</option>`).join("")}
+          ${App.i18n.value(() => ((tab === "income" ? INCOME_CATS : EXPENSE_CATS).map(c => App.i18n.html`<option value="${App.i18n.value(() => (c))}" ${App.i18n.value(() => (filters.category===c?"selected":""))}>${App.i18n.value(() => (c))}</option>`).join("")))}
         </select>
         <select id="fSort" aria-label="Sort">
-          <option value="date-desc" ${filters.sort==="date-desc"?"selected":""}>Newest</option>
-          <option value="date-asc" ${filters.sort==="date-asc"?"selected":""}>Oldest</option>
-          <option value="amount-desc" ${filters.sort==="amount-desc"?"selected":""}>Highest amount</option>
+          <option value="date-desc" ${App.i18n.value(() => (filters.sort==="date-desc"?"selected":""))}>Newest</option>
+          <option value="date-asc" ${App.i18n.value(() => (filters.sort==="date-asc"?"selected":""))}>Oldest</option>
+          <option value="amount-desc" ${App.i18n.value(() => (filters.sort==="amount-desc"?"selected":""))}>Highest amount</option>
         </select>
       </div>
 
@@ -128,43 +128,43 @@ App.pages.finances = (function () {
       default:            out.sort((a,b) => (b.date||"").localeCompare(a.date||""));
     }
 
-    document.getElementById("fCount").textContent = `${out.length} of ${all.length} ${tab === "income" ? "income" : "expense"} record${all.length===1?"":"s"}`;
+    App.i18n.setText(document.getElementById("fCount"), App.i18n.text`${App.i18n.value(() => (out.length))} of ${App.i18n.value(() => (all.length))} ${App.i18n.value(() => (tab === "income" ? "income" : "expense"))} record${App.i18n.value(() => (all.length===1?"":"s"))}`);
     const wrap = document.getElementById("fListWrap");
 
     if (!out.length) {
       const label = tab === "income" ? "income" : "expense";
       wrap.innerHTML = all.length === 0
-        ? `<div class="empty"><div class="empty-icon">${App.app.icon("wallet")}</div><h3>No ${label} records yet</h3><p>Add your first ${label} record to start tracking your business finances.</p></div>`
-        : `<div class="empty"><h3>No matches</h3><p>Adjust your filters.</p></div>`;
+        ? App.i18n.html`<div class="empty"><div class="empty-icon">${App.i18n.value(() => (App.app.icon("wallet")))}</div><h3>No ${App.i18n.value(() => (label))} records yet</h3><p>Add your first ${App.i18n.value(() => (label))} record to start tracking your business finances.</p></div>`
+        : App.i18n.markup(`<div class="empty"><h3>No matches</h3><p>Adjust your filters.</p></div>`);
       return;
     }
 
-    wrap.innerHTML = `
+    wrap.innerHTML = App.i18n.html`
       <div class="table-wrap">
         <table class="tbl tbl-responsive">
           <thead><tr><th>Description</th><th>Category</th><th class="num">Amount</th><th>Date</th><th>Related</th><th class="actions">&nbsp;</th></tr></thead>
           <tbody>
-            ${out.map(r => {
+            ${App.i18n.value(() => (out.map(r => {
               const c = r.contactId ? state.contacts.find(x => x.id === r.contactId) : null;
               const d = r.dealId ? state.deals.find(x => x.id === r.dealId) : null;
-              return `
-                <tr data-fin-id="${r.id}">
-                  <td data-label="Description" class="primary-cell">${U().esc(r.description)}</td>
-                  <td data-label="Category"><span class="badge badge-neutral">${U().esc(r.category)}</span></td>
-                  <td data-label="Amount" class="num" style="font-weight:600;color:${tab==='income'?'var(--success)':'var(--danger)'}">${U().formatCurrency(r.amount, cur)}</td>
-                  <td data-label="Date">${r.date ? U().formatDate(r.date) : "—"}</td>
+              return App.i18n.html`
+                <tr data-fin-id="${App.i18n.value(() => (r.id))}">
+                  <td data-label="Description" class="primary-cell">${App.i18n.value(() => (U().esc(r.description)))}</td>
+                  <td data-label="Category"><span class="badge badge-neutral">${App.i18n.value(() => (U().esc(r.category)))}</span></td>
+                  <td data-label="Amount" class="num" style="font-weight:600;color:${App.i18n.value(() => (tab==='income'?'var(--success)':'var(--danger)'))}">${App.i18n.value(() => (U().formatCurrency(r.amount, cur)))}</td>
+                  <td data-label="Date">${App.i18n.value(() => (r.date ? U().formatDate(r.date) : "—"))}</td>
                   <td data-label="Related">
-                    ${c ? `<a class="link" href="#/contacts/${c.id}">${U().esc(c.name)}</a>` : ""}
-                    ${c && d ? " · " : ""}
-                    ${d ? `<a class="link" href="#/pipeline/${d.id}">${U().esc(U().truncate(d.name, 20))}</a>` : ""}
-                    ${!c && !d ? '<span style="color:var(--text-soft)">—</span>' : ""}
+                    ${App.i18n.value(() => (c ? App.i18n.html`<a class="link" href="#/contacts/${App.i18n.value(() => (c.id))}">${App.i18n.value(() => (U().esc(c.name)))}</a>` : ""))}
+                    ${App.i18n.value(() => (c && d ? " · " : ""))}
+                    ${App.i18n.value(() => (d ? App.i18n.html`<a class="link" href="#/pipeline/${App.i18n.value(() => (d.id))}">${App.i18n.value(() => (U().esc(U().truncate(d.name, 20))))}</a>` : ""))}
+                    ${App.i18n.value(() => (!c && !d ? App.i18n.markup('<span style="color:var(--text-soft)">—</span>') : ""))}
                   </td>
                   <td class="actions" data-label="">
-                    <button class="btn btn-sm btn-ghost" data-edit-fin="${r.id}" aria-label="Edit">${App.app.icon("edit")}</button>
+                    <button class="btn btn-sm btn-ghost" data-edit-fin="${App.i18n.value(() => (r.id))}" aria-label="Edit">${App.i18n.value(() => (App.app.icon("edit")))}</button>
                   </td>
                 </tr>
               `;
-            }).join("")}
+            }).join("")))}
           </tbody>
         </table>
       </div>
@@ -184,7 +184,7 @@ App.pages.finances = (function () {
     await S().ensureLoaded(["income", "expenses", "contacts", "deals"]);
     const state = S().getState();
     const existing = editing ? (isIncome ? state.income : state.expenses).find(x => x.id === id) : null;
-    if (editing && !existing) { App.app.toast("Record not found.", "danger"); return; }
+    if (editing && !existing) { App.app.toast(App.i18n.t("Record not found."), "danger"); return; }
 
     const cats = isIncome ? INCOME_CATS : EXPENSE_CATS;
     const r = existing || { description: "", amount: 0, date: U().todayISO(), category: cats[0], contactId: null, dealId: null, notes: "" };
@@ -192,47 +192,47 @@ App.pages.finances = (function () {
     const deals = state.deals.slice().sort((a,b) => (a.name||"").localeCompare(b.name||""));
     const cur = state.settings.currency;
 
-    const body = `
+    const body = App.i18n.html`
       <form id="finForm" novalidate>
         <div class="form-grid">
           <div class="form-field full">
             <label for="ffDesc">Description <span class="req">*</span></label>
-            <input type="text" id="ffDesc" value="${U().esc(r.description)}" required>
+            <input type="text" id="ffDesc" value="${App.i18n.value(() => (U().esc(r.description)))}" required>
             <div class="err">Description is required.</div>
           </div>
           <div class="form-field">
-            <label for="ffAmount">Amount (${U().currencySymbol(cur)}) <span class="req">*</span></label>
-            <input type="number" id="ffAmount" min="0" step="0.01" value="${r.amount || ""}" required>
+            <label for="ffAmount">Amount (${App.i18n.value(() => (U().currencySymbol(cur)))}) <span class="req">*</span></label>
+            <input type="number" id="ffAmount" min="0" step="0.01" value="${App.i18n.value(() => (r.amount || ""))}" required>
             <div class="err">Amount must be greater than zero.</div>
           </div>
           <div class="form-field">
             <label for="ffDate">Date</label>
-            <input type="date" id="ffDate" value="${r.date || U().todayISO()}">
+            <input type="date" id="ffDate" value="${App.i18n.value(() => (r.date || U().todayISO()))}">
           </div>
           <div class="form-field">
             <label for="ffCat">Category</label>
-            <select id="ffCat">${cats.map(c => `<option value="${c}" ${r.category===c?"selected":""}>${c}</option>`).join("")}</select>
+            <select id="ffCat">${App.i18n.value(() => (cats.map(c => App.i18n.html`<option value="${App.i18n.value(() => (c))}" ${App.i18n.value(() => (r.category===c?"selected":""))}>${App.i18n.value(() => (c))}</option>`).join("")))}</select>
           </div>
           <div class="form-field">
             <label for="ffContact">Contact</label>
-            <select id="ffContact"><option value="">— none —</option>${contacts.map(c => `<option value="${c.id}" ${r.contactId===c.id?"selected":""}>${U().esc(c.name)}</option>`).join("")}</select>
+            <select id="ffContact"><option value="">— none —</option>${App.i18n.value(() => (contacts.map(c => App.i18n.html`<option value="${App.i18n.value(() => (c.id))}" ${App.i18n.value(() => (r.contactId===c.id?"selected":""))}>${App.i18n.value(() => (U().esc(c.name)))}</option>`).join("")))}</select>
           </div>
           <div class="form-field full">
             <label for="ffDeal">Deal</label>
-            <select id="ffDeal"><option value="">— none —</option>${deals.map(d => `<option value="${d.id}" ${r.dealId===d.id?"selected":""}>${U().esc(d.name)}</option>`).join("")}</select>
+            <select id="ffDeal"><option value="">— none —</option>${App.i18n.value(() => (deals.map(d => App.i18n.html`<option value="${App.i18n.value(() => (d.id))}" ${App.i18n.value(() => (r.dealId===d.id?"selected":""))}>${App.i18n.value(() => (U().esc(d.name)))}</option>`).join("")))}</select>
           </div>
           <div class="form-field full">
             <label for="ffNotes">Notes</label>
-            <textarea id="ffNotes" rows="2">${U().esc(r.notes)}</textarea>
+            <textarea id="ffNotes" rows="2">${App.i18n.value(() => (U().esc(r.notes)))}</textarea>
           </div>
         </div>
       </form>
     `;
 
-    const footer = `
-      ${editing ? '<button class="btn btn-danger" data-role="delete">Delete</button>' : ''}
+    const footer = App.i18n.html`
+      ${App.i18n.value(() => (editing ? App.i18n.markup('<button class="btn btn-danger" data-role="delete">Delete</button>') : ''))}
       <button class="btn" data-role="cancel">Cancel</button>
-      <button class="btn btn-primary" data-role="save">${editing ? "Save" : "Add " + (isIncome ? "Income" : "Expense")}</button>
+      <button class="btn btn-primary" data-role="save">${App.i18n.value(() => (editing ? App.i18n.t("Save") : "Add " + (isIncome ? App.i18n.t("Income") : App.i18n.t("Expense"))))}</button>
     `;
 
     const handle = App.app.openModal({
@@ -264,25 +264,25 @@ App.pages.finances = (function () {
           const saveBtn = modal.querySelector('[data-role="save"]');
           saveBtn.disabled = true;
           try {
-            if (editing) { await collection.update(id, patch); App.app.toast("Record updated.", "success"); }
-            else { await collection.create(patch); App.app.toast("Record added.", "success"); }
+            if (editing) { await collection.update(id, patch); App.app.toast(App.i18n.t("Record updated."), "success"); }
+            else { await collection.create(patch); App.app.toast(App.i18n.t("Record added."), "success"); }
             handle.close();
             App.app.route();
           } catch (err) {
-            App.app.toast("Could not save record: " + err.message, "danger");
+            App.app.toast(App.i18n.t("Could not save record: ") + err.message, "danger");
             saveBtn.disabled = false;
           }
         });
         const delBtn = modal.querySelector('[data-role="delete"]');
         if (delBtn) delBtn.addEventListener("click", () => {
-          App.app.confirmDialog({ title: "Delete Record?", message: "This will permanently delete this finance record.", okLabel: "Delete", danger: true }, async () => {
+          App.app.confirmDialog({ get title() { return App.i18n.t("Delete Record?"); }, get message() { return App.i18n.t("This will permanently delete this finance record."); }, okLabel: "Delete", danger: true }, async () => {
             try {
               await collection.delete(id);
-              App.app.toast("Record deleted.", "success");
+              App.app.toast(App.i18n.t("Record deleted."), "success");
               handle.close();
               App.app.route();
             } catch (err) {
-              App.app.toast("Could not delete record: " + err.message, "danger");
+              App.app.toast(App.i18n.t("Could not delete record: ") + err.message, "danger");
             }
           });
         });

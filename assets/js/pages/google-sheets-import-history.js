@@ -28,20 +28,20 @@ App.pages.googleSheetsImportHistory = (function () {
   const ROW_PAGE_SIZE = 50;
 
   const BATCH_STATUS_META = {
-    received:   { label: "Received", cls: "badge-info" },
-    processing: { label: "Processing", cls: "badge-warning" },
-    completed:  { label: "Completed", cls: "badge-success" },
-    partial:    { label: "Completed with rejected rows", cls: "badge-warning" },
-    failed:     { label: "Failed", cls: "badge-danger" }
+    received:   { get label() { return App.i18n.t("Received"); }, cls: "badge-info" },
+    processing: { get label() { return App.i18n.t("Processing"); }, cls: "badge-warning" },
+    completed:  { get label() { return App.i18n.t("Completed"); }, cls: "badge-success" },
+    partial:    { get label() { return App.i18n.t("Completed with rejected rows"); }, cls: "badge-warning" },
+    failed:     { get label() { return App.i18n.t("Failed"); }, cls: "badge-danger" }
   };
   const BATCH_STATUSES = ["received", "processing", "completed", "partial", "failed"];
 
   const ROW_STATUS_META = {
-    accepted:  { label: "Accepted", cls: "badge-info" },
-    imported:  { label: "Imported", cls: "badge-success" },
-    duplicate: { label: "Duplicate (matched existing contact)", cls: "badge-neutral" },
-    rejected:  { label: "Rejected", cls: "badge-danger" },
-    failed:    { label: "Failed", cls: "badge-danger" }
+    accepted:  { get label() { return App.i18n.t("Accepted"); }, cls: "badge-info" },
+    imported:  { get label() { return App.i18n.t("Imported"); }, cls: "badge-success" },
+    duplicate: { get label() { return App.i18n.t("Duplicate (matched existing contact)"); }, cls: "badge-neutral" },
+    rejected:  { get label() { return App.i18n.t("Rejected"); }, cls: "badge-danger" },
+    failed:    { get label() { return App.i18n.t("Failed"); }, cls: "badge-danger" }
   };
   const ROW_STATUSES = ["accepted", "imported", "duplicate", "rejected", "failed"];
 
@@ -72,7 +72,7 @@ App.pages.googleSheetsImportHistory = (function () {
     const found = meta || null;
     const label = found ? found.label : "Unknown";
     const cls = found ? found.cls : "badge-neutral";
-    return `<span class="badge ${cls}"><span class="dot"></span>${U().esc(label)}</span>`;
+    return App.i18n.html`<span class="badge ${App.i18n.value(() => (cls))}"><span class="dot"></span>${App.i18n.value(() => (U().esc(label)))}</span>`;
   }
   function batchStatusBadge(status) { return statusBadge(safeLookup(BATCH_STATUS_META, status), status); }
   function rowStatusBadge(status) { return statusBadge(safeLookup(ROW_STATUS_META, status), status); }
@@ -86,7 +86,7 @@ App.pages.googleSheetsImportHistory = (function () {
 
   function contactLinkHtml(contactId) {
     if (typeof contactId !== "string" || !CONTACT_ID_PATTERN.test(contactId)) return "";
-    return `<a class="link" href="#/contacts/${U().esc(contactId)}">View Contact</a>`;
+    return App.i18n.html`<a class="link" href="#/contacts/${App.i18n.value(() => (U().esc(contactId)))}">View Contact</a>`;
   }
 
   /* ============================================================
@@ -120,7 +120,7 @@ App.pages.googleSheetsImportHistory = (function () {
       rowState: {} // batchId -> { status, offset, rows, total, loaded, loading, token }
     };
 
-    pane.innerHTML = App.app.loadingHtml ? App.app.loadingHtml("your import history") : "";
+    pane.innerHTML = App.app.loadingHtml ? App.app.loadingHtml(App.i18n.t("your import history")) : "";
 
     try {
       state.connections = await S().sheetConnections.list();
@@ -152,13 +152,13 @@ App.pages.googleSheetsImportHistory = (function () {
 
   function renderShell(pane, state) {
     const connectionOptions = (state.connections || []).map(c =>
-      `<option value="${U().esc(c.id)}">${U().esc(c.name || "Google Sheets")}</option>`
+      App.i18n.html`<option value="${App.i18n.value(() => (U().esc(c.id)))}">${App.i18n.value(() => (U().esc(c.name || App.i18n.t("Google Sheets"))))}</option>`
     ).join("");
     const statusOptions = BATCH_STATUSES.map(s =>
-      `<option value="${U().esc(s)}">${U().esc(BATCH_STATUS_META[s].label)}</option>`
+      App.i18n.html`<option value="${App.i18n.value(() => (U().esc(s)))}">${App.i18n.value(() => (U().esc(BATCH_STATUS_META[s].label)))}</option>`
     ).join("");
 
-    pane.innerHTML = `
+    pane.innerHTML = App.i18n.html`
       <div class="settings-category-head">
         <div class="settings-category-title">Import History</div>
         <p class="form-help">Review imports from Google Sheets and from uploaded files, and fix rejected leads.</p>
@@ -175,9 +175,9 @@ App.pages.googleSheetsImportHistory = (function () {
         specific import; individual results are always the current, latest outcome for that row.</p>
       </div>
 
-      <div class="release-callout release-callout-warning" id="gsihConnWarning" ${state.connectionsError ? "" : "hidden"}>
+      <div class="release-callout release-callout-warning" id="gsihConnWarning" ${App.i18n.value(() => (state.connectionsError ? "" : "hidden"))}>
         <strong>Connection names could not be loaded.</strong>
-        <p id="gsihConnWarningMsg" style="margin:6px 0 10px">${state.connectionsError ? U().esc(state.connectionsError) : ""}</p>
+        <p id="gsihConnWarningMsg" style="margin:6px 0 10px">${App.i18n.value(() => (state.connectionsError ? U().esc(state.connectionsError) : ""))}</p>
         <p class="form-help" style="margin:0 0 10px">Imports below are still shown using "Unknown connection" where a name could not be found.</p>
         <button type="button" class="btn btn-sm" id="gsihConnRetryBtn">Retry Connections</button>
       </div>
@@ -202,14 +202,14 @@ App.pages.googleSheetsImportHistory = (function () {
               <span>Connection</span>
               <select id="gsihConnFilter">
                 <option value="">All connections</option>
-                ${connectionOptions}
+                ${App.i18n.value(() => (connectionOptions))}
               </select>
             </label>
             <label class="field">
               <span>Import status</span>
               <select id="gsihStatusFilter">
                 <option value="">All statuses</option>
-                ${statusOptions}
+                ${App.i18n.value(() => (statusOptions))}
               </select>
             </label>
             <button type="button" class="btn" id="gsihRefreshBtn">Refresh History</button>
@@ -364,7 +364,7 @@ App.pages.googleSheetsImportHistory = (function () {
     const msgEl = pane.querySelector("#gsihConnWarningMsg");
     if (!el) return;
     el.hidden = !state.connectionsError;
-    if (msgEl) msgEl.textContent = state.connectionsError || "";
+    if (msgEl) App.i18n.setText(msgEl, App.i18n.value(() => (state.connectionsError || "")));
   }
 
   // Rebuilds the connection <select>'s options from state.connections.
@@ -381,9 +381,9 @@ App.pages.googleSheetsImportHistory = (function () {
     const current = state.connectionId;
     const stillExists = !!current && (state.connections || []).some(c => c.id === current);
     const options = (state.connections || []).map(c =>
-      `<option value="${U().esc(c.id)}">${U().esc(c.name || "Google Sheets")}</option>`
+      App.i18n.html`<option value="${App.i18n.value(() => (U().esc(c.id)))}">${App.i18n.value(() => (U().esc(c.name || App.i18n.t("Google Sheets"))))}</option>`
     ).join("");
-    select.innerHTML = `<option value="">All connections</option>${options}`;
+    select.innerHTML = App.i18n.html`<option value="">All connections</option>${App.i18n.value(() => (options))}`;
     if (stillExists) {
       select.value = current;
       return false;
@@ -397,7 +397,7 @@ App.pages.googleSheetsImportHistory = (function () {
   function setLiveStatus(pane, text, kind) {
     const el = pane.querySelector("#gsihLiveStatus");
     if (!el) return;
-    el.textContent = text || "";
+    App.i18n.setText(el, App.i18n.value(() => (text || "")));
     el.className = "profile-edit-message" + (kind ? " " + kind : "");
   }
 
@@ -427,18 +427,18 @@ App.pages.googleSheetsImportHistory = (function () {
     const b = state.summaryBatch;
     if (!b) { card.hidden = true; body.innerHTML = ""; return; }
     card.hidden = false;
-    body.innerHTML = `
+    body.innerHTML = App.i18n.html`
       <div class="settings-status-grid">
-        <div class="settings-status-card"><div class="k">Source</div><div class="v">${U().esc(batchSourceLabel(state, b))}</div></div>
-        <div class="settings-status-card"><div class="k">Status</div><div class="v">${batchStatusBadge(b.status)}</div></div>
-        <div class="settings-status-card"><div class="k">Started</div><div class="v">${U().esc(formatTimestamp(b.started_at))}</div></div>
-        <div class="settings-status-card"><div class="k">Completed</div><div class="v">${U().esc(formatTimestamp(b.completed_at))}</div></div>
-        <div class="settings-status-card"><div class="k">Source rows</div><div class="v">${U().esc(b.source_row_count)}</div></div>
-        <div class="settings-status-card"><div class="k">Imported</div><div class="v">${U().esc(b.imported_count)}</div></div>
-        <div class="settings-status-card"><div class="k">Duplicate / matched</div><div class="v">${U().esc(b.duplicate_count)}</div></div>
-        <div class="settings-status-card"><div class="k">Rejected</div><div class="v">${U().esc(b.rejected_count)}</div></div>
+        <div class="settings-status-card"><div class="k">Source</div><div class="v">${App.i18n.value(() => (U().esc(batchSourceLabel(state, b))))}</div></div>
+        <div class="settings-status-card"><div class="k">Status</div><div class="v">${App.i18n.value(() => (batchStatusBadge(b.status)))}</div></div>
+        <div class="settings-status-card"><div class="k">Started</div><div class="v">${App.i18n.value(() => (U().esc(formatTimestamp(b.started_at))))}</div></div>
+        <div class="settings-status-card"><div class="k">Completed</div><div class="v">${App.i18n.value(() => (U().esc(formatTimestamp(b.completed_at))))}</div></div>
+        <div class="settings-status-card"><div class="k">Source rows</div><div class="v">${App.i18n.value(() => (U().esc(b.source_row_count)))}</div></div>
+        <div class="settings-status-card"><div class="k">Imported</div><div class="v">${App.i18n.value(() => (U().esc(b.imported_count)))}</div></div>
+        <div class="settings-status-card"><div class="k">Duplicate / matched</div><div class="v">${App.i18n.value(() => (U().esc(b.duplicate_count)))}</div></div>
+        <div class="settings-status-card"><div class="k">Rejected</div><div class="v">${App.i18n.value(() => (U().esc(b.rejected_count)))}</div></div>
       </div>
-      ${b.error_summary ? `<div class="release-callout release-callout-danger" style="margin-top:12px">${U().esc(b.error_summary)}</div>` : ""}
+      ${App.i18n.value(() => (b.error_summary ? App.i18n.html`<div class="release-callout release-callout-danger" style="margin-top:12px">${App.i18n.value(() => (U().esc(b.error_summary)))}</div>` : ""))}
     `;
   }
 
@@ -505,10 +505,10 @@ App.pages.googleSheetsImportHistory = (function () {
   function renderBatchError(pane, state, err) {
     const body = pane.querySelector("#gsihBatchBody");
     if (!body) return;
-    body.innerHTML = `
+    body.innerHTML = App.i18n.html`
       <div class="empty-state">
         <div class="empty-title">Could not load import history</div>
-        <div class="empty-desc">${U().esc(err && err.message ? err.message : "Unknown error")}</div>
+        <div class="empty-desc">${App.i18n.value(() => (U().esc(err && err.message ? err.message : App.i18n.t("Unknown error"))))}</div>
         <button type="button" class="btn btn-primary" id="gsihBatchRetry">Retry Loading</button>
       </div>`;
     const retryBtn = body.querySelector("#gsihBatchRetry");
@@ -529,12 +529,12 @@ App.pages.googleSheetsImportHistory = (function () {
     // batches (looked up with "Unknown connection" as needed) still render
     // normally below if the batch query itself succeeded.
     if (!state.connectionsError && (!state.connections || state.connections.length === 0)) {
-      body.innerHTML = `
+      body.innerHTML = App.i18n.markup(`
         <div class="empty-state">
           <div class="empty-title">No Google Sheets connections yet</div>
           <div class="empty-desc">Connect a Google Sheet first to start seeing import history here.</div>
           <button type="button" class="btn btn-primary" id="gsihGoConnectBtn">Manage Google Sheets</button>
-        </div>`;
+        </div>`);
       const btn = body.querySelector("#gsihGoConnectBtn");
       if (btn) btn.addEventListener("click", () => App.app.navigate("/settings/google-sheets"));
       return;
@@ -542,12 +542,12 @@ App.pages.googleSheetsImportHistory = (function () {
 
     if (!state.batches || state.batches.length === 0) {
       const filtered = !!(state.connectionId || state.sourceType || state.status);
-      body.innerHTML = `
+      body.innerHTML = App.i18n.html`
         <div class="empty-state">
-          <div class="empty-title">${filtered ? "No imports match these filters" : "No imports yet"}</div>
-          <div class="empty-desc">${filtered
-            ? "Try All connections / All statuses, or check back after the next sync."
-            : "Once a Google Sheet syncs leads, its imports will appear here."}</div>
+          <div class="empty-title">${App.i18n.value(() => (filtered ? App.i18n.t("No imports match these filters") : App.i18n.t("No imports yet")))}</div>
+          <div class="empty-desc">${App.i18n.value(() => (filtered
+            ? App.i18n.t("Try All connections / All statuses, or check back after the next sync.")
+            : App.i18n.t("Once a Google Sheet syncs leads, its imports will appear here.")))}</div>
         </div>`;
       return;
     }
@@ -564,28 +564,28 @@ App.pages.googleSheetsImportHistory = (function () {
 
   function renderBatchCard(state, b) {
     const isExpanded = state.expandedBatchId === b.id;
-    return `
+    return App.i18n.html`
       <div class="gsih-batch-card">
         <div class="gsih-batch-head">
           <div>
-            <div class="gsih-batch-conn">${U().esc(batchSourceLabel(state, b))}</div>
-            <div class="form-help">Created ${U().esc(formatTimestamp(b.created_at))}</div>
+            <div class="gsih-batch-conn">${App.i18n.value(() => (U().esc(batchSourceLabel(state, b))))}</div>
+            <div class="form-help">Created ${App.i18n.value(() => (U().esc(formatTimestamp(b.created_at))))}</div>
           </div>
-          ${batchStatusBadge(b.status)}
+          ${App.i18n.value(() => (batchStatusBadge(b.status)))}
         </div>
         <div class="settings-status-grid">
-          <div class="settings-status-card"><div class="k">Started</div><div class="v">${U().esc(formatTimestamp(b.started_at))}</div></div>
-          <div class="settings-status-card"><div class="k">Completed</div><div class="v">${U().esc(formatTimestamp(b.completed_at))}</div></div>
-          <div class="settings-status-card"><div class="k">Source rows</div><div class="v">${U().esc(b.source_row_count)}</div></div>
-          <div class="settings-status-card"><div class="k">Imported</div><div class="v">${U().esc(b.imported_count)}</div></div>
-          <div class="settings-status-card"><div class="k">Duplicate</div><div class="v">${U().esc(b.duplicate_count)}</div></div>
-          <div class="settings-status-card"><div class="k">Rejected</div><div class="v">${U().esc(b.rejected_count)}</div></div>
+          <div class="settings-status-card"><div class="k">Started</div><div class="v">${App.i18n.value(() => (U().esc(formatTimestamp(b.started_at))))}</div></div>
+          <div class="settings-status-card"><div class="k">Completed</div><div class="v">${App.i18n.value(() => (U().esc(formatTimestamp(b.completed_at))))}</div></div>
+          <div class="settings-status-card"><div class="k">Source rows</div><div class="v">${App.i18n.value(() => (U().esc(b.source_row_count)))}</div></div>
+          <div class="settings-status-card"><div class="k">Imported</div><div class="v">${App.i18n.value(() => (U().esc(b.imported_count)))}</div></div>
+          <div class="settings-status-card"><div class="k">Duplicate</div><div class="v">${App.i18n.value(() => (U().esc(b.duplicate_count)))}</div></div>
+          <div class="settings-status-card"><div class="k">Rejected</div><div class="v">${App.i18n.value(() => (U().esc(b.rejected_count)))}</div></div>
         </div>
-        ${b.error_summary ? `<div class="release-callout release-callout-danger" style="margin-top:10px">${U().esc(b.error_summary)}</div>` : ""}
+        ${App.i18n.value(() => (b.error_summary ? App.i18n.html`<div class="release-callout release-callout-danger" style="margin-top:10px">${App.i18n.value(() => (U().esc(b.error_summary)))}</div>` : ""))}
         <div class="gsih-batch-actions">
-          <button type="button" class="btn btn-sm" data-view-rows="${U().esc(b.id)}">${isExpanded ? "Hide Row Results" : "View Row Results"}</button>
+          <button type="button" class="btn btn-sm" data-view-rows="${App.i18n.value(() => (U().esc(b.id)))}">${App.i18n.value(() => (isExpanded ? App.i18n.t("Hide Row Results") : App.i18n.t("View Row Results")))}</button>
         </div>
-        <div class="gsih-row-panel" data-row-panel-for="${U().esc(b.id)}" ${isExpanded ? "" : "hidden"}></div>
+        <div class="gsih-row-panel" data-row-panel-for="${App.i18n.value(() => (U().esc(b.id)))}" ${App.i18n.value(() => (isExpanded ? "" : "hidden"))}></div>
       </div>`;
   }
 
@@ -600,10 +600,10 @@ App.pages.googleSheetsImportHistory = (function () {
     const hasPrev = state.batchOffset > 0;
     const hasNext = state.batchOffset + BATCH_PAGE_SIZE < state.batchTotal;
 
-    el.innerHTML = `
-      <button type="button" class="btn btn-sm" id="gsihBatchPrev" ${hasPrev ? "" : "disabled"}>Previous</button>
-      <span class="form-help" aria-live="polite">${from}-${to} of ${state.batchTotal}</span>
-      <button type="button" class="btn btn-sm" id="gsihBatchNext" ${hasNext ? "" : "disabled"}>Next</button>
+    el.innerHTML = App.i18n.html`
+      <button type="button" class="btn btn-sm" id="gsihBatchPrev" ${App.i18n.value(() => (hasPrev ? "" : "disabled"))}>Previous</button>
+      <span class="form-help" aria-live="polite">${App.i18n.value(() => (from))}-${App.i18n.value(() => (to))} of ${App.i18n.value(() => (state.batchTotal))}</span>
+      <button type="button" class="btn btn-sm" id="gsihBatchNext" ${App.i18n.value(() => (hasNext ? "" : "disabled"))}>Next</button>
     `;
     if (hasPrev) el.querySelector("#gsihBatchPrev").addEventListener("click", () => {
       state.batchOffset = Math.max(0, state.batchOffset - BATCH_PAGE_SIZE);
@@ -654,15 +654,15 @@ App.pages.googleSheetsImportHistory = (function () {
     const panel = findRowPanel(pane, batch.id);
     if (!panel) return;
     const statusOptions = ROW_STATUSES.map(s =>
-      `<option value="${U().esc(s)}">${U().esc(ROW_STATUS_META[s].label)}</option>`
+      App.i18n.html`<option value="${App.i18n.value(() => (U().esc(s)))}">${App.i18n.value(() => (U().esc(ROW_STATUS_META[s].label)))}</option>`
     ).join("");
-    panel.innerHTML = `
+    panel.innerHTML = App.i18n.html`
       <div class="gsih-row-toolbar">
         <label class="field">
           <span>Row status</span>
           <select data-row-status-select>
             <option value="">All rows</option>
-            ${statusOptions}
+            ${App.i18n.value(() => (statusOptions))}
           </select>
         </label>
         <p class="form-help" style="margin:0;flex:1 1 260px">Rows show each source row's <strong>latest</strong> synced outcome, not a frozen snapshot of this import.</p>
@@ -728,7 +728,7 @@ App.pages.googleSheetsImportHistory = (function () {
     setRowPanelBusy(panel, true);
     setRowLive(pane, batch, "Loading row results…");
     const listEl = panel ? panel.querySelector("[data-row-list]") : null;
-    if (listEl) listEl.innerHTML = App.app.loadingHtml ? App.app.loadingHtml("row results") : "";
+    if (listEl) listEl.innerHTML = App.app.loadingHtml ? App.app.loadingHtml(App.i18n.t("row results")) : "";
 
     try {
       const result = await S().sheetImportHistory.listRows(batch.id, {
@@ -769,7 +769,7 @@ App.pages.googleSheetsImportHistory = (function () {
     const panel = findRowPanel(pane, batch.id);
     const el = panel ? panel.querySelector("[data-row-live]") : null;
     if (!el) return;
-    el.textContent = text || "";
+    App.i18n.setText(el, App.i18n.value(() => (text || "")));
     el.className = "profile-edit-message" + (kind ? " " + kind : "");
   }
 
@@ -777,10 +777,10 @@ App.pages.googleSheetsImportHistory = (function () {
     const panel = findRowPanel(pane, batch.id);
     const listEl = panel ? panel.querySelector("[data-row-list]") : null;
     if (!listEl) return;
-    listEl.innerHTML = `
+    listEl.innerHTML = App.i18n.html`
       <div class="empty-state">
         <div class="empty-title">Could not load row results</div>
-        <div class="empty-desc">${U().esc(err && err.message ? err.message : "Unknown error")}</div>
+        <div class="empty-desc">${App.i18n.value(() => (U().esc(err && err.message ? err.message : App.i18n.t("Unknown error"))))}</div>
         <button type="button" class="btn btn-primary" data-row-retry>Retry Loading</button>
       </div>`;
     const retryBtn = listEl.querySelector("[data-row-retry]");
@@ -795,12 +795,12 @@ App.pages.googleSheetsImportHistory = (function () {
     if (!listEl) return;
 
     if (!rs.rows || rs.rows.length === 0) {
-      listEl.innerHTML = `
+      listEl.innerHTML = App.i18n.html`
         <div class="empty-state">
           <div class="empty-title">No row details currently available</div>
-          <div class="empty-desc">${rs.status
-            ? "No rows currently match this status for this import."
-            : "This import's rows may have since moved to a newer import after a later sync — see the note above."}</div>
+          <div class="empty-desc">${App.i18n.value(() => (rs.status
+            ? App.i18n.t("No rows currently match this status for this import.")
+            : App.i18n.t("This import's rows may have since moved to a newer import after a later sync — see the note above.")))}</div>
         </div>`;
       const pagEl = panel.querySelector("[data-row-pagination]");
       if (pagEl) pagEl.innerHTML = "";
@@ -819,31 +819,31 @@ App.pages.googleSheetsImportHistory = (function () {
     if (row.error_code || row.error_message) {
       const lines = [];
       if (guidance) {
-        lines.push(`<p class="gsih-row-guidance">${U().esc(guidance)}</p>`);
+        lines.push(App.i18n.html`<p class="gsih-row-guidance">${App.i18n.value(() => (U().esc(guidance)))}</p>`);
       } else {
-        if (row.error_message) lines.push(`<p class="gsih-row-guidance">${U().esc(row.error_message)}</p>`);
+        if (row.error_message) lines.push(App.i18n.html`<p class="gsih-row-guidance">${App.i18n.value(() => (U().esc(row.error_message)))}</p>`);
         // A row held back by the daily limit is fine as it is; its stored
         // reason already says when to upload the file again.
         if (row.error_code !== "daily_limit_reached") {
           lines.push(row.source_type === "file_upload"
-            ? `<p class="gsih-row-guidance">Fix this row in your file and import it again.</p>`
-            : `<p class="gsih-row-guidance">Correct this row in Raw Leads and synchronize again.</p>`);
+            ? App.i18n.markup(`<p class="gsih-row-guidance">Fix this row in your file and import it again.</p>`)
+            : App.i18n.markup(`<p class="gsih-row-guidance">Correct this row in Raw Leads and synchronize again.</p>`));
         }
       }
-      errorBlock = `<div class="release-callout release-callout-danger gsih-row-error">${lines.join("")}</div>`;
+      errorBlock = App.i18n.html`<div class="release-callout release-callout-danger gsih-row-error">${App.i18n.value(() => (lines.join("")))}</div>`;
     }
     const contactLink = contactLinkHtml(row.contact_id);
 
-    return `
+    return App.i18n.html`
       <div class="gsih-row-item">
         <div class="gsih-row-item-head">
-          <span class="gsih-row-num">Row ${row.source_row_number != null ? "#" + U().esc(row.source_row_number) : "(unnumbered)"}</span>
-          ${row.source_type === "file_upload" ? "" : `<span class="gsih-row-key">${U().esc(row.source_row_key || "—")}</span>`}
-          ${rowStatusBadge(row.status)}
+          <span class="gsih-row-num">Row ${App.i18n.value(() => (row.source_row_number != null ? "#" + U().esc(row.source_row_number) : App.i18n.t("(unnumbered)")))}</span>
+          ${App.i18n.value(() => (row.source_type === "file_upload" ? "" : App.i18n.html`<span class="gsih-row-key">${App.i18n.value(() => (U().esc(row.source_row_key || "—")))}</span>`))}
+          ${App.i18n.value(() => (rowStatusBadge(row.status)))}
         </div>
-        ${errorBlock}
-        <div class="form-help">Last seen: ${U().esc(formatTimestamp(row.last_seen_at))}</div>
-        ${contactLink ? `<div style="margin-top:4px">${contactLink}</div>` : ""}
+        ${App.i18n.value(() => (errorBlock))}
+        <div class="form-help">Last seen: ${App.i18n.value(() => (U().esc(formatTimestamp(row.last_seen_at))))}</div>
+        ${App.i18n.value(() => (contactLink ? App.i18n.html`<div style="margin-top:4px">${App.i18n.value(() => (contactLink))}</div>` : ""))}
       </div>`;
   }
 
@@ -859,10 +859,10 @@ App.pages.googleSheetsImportHistory = (function () {
     const hasPrev = rs.offset > 0;
     const hasNext = rs.offset + ROW_PAGE_SIZE < rs.total;
 
-    el.innerHTML = `
-      <button type="button" class="btn btn-sm" data-row-prev ${hasPrev ? "" : "disabled"}>Previous</button>
-      <span class="form-help" aria-live="polite">${from}-${to} of ${rs.total}</span>
-      <button type="button" class="btn btn-sm" data-row-next ${hasNext ? "" : "disabled"}>Next</button>
+    el.innerHTML = App.i18n.html`
+      <button type="button" class="btn btn-sm" data-row-prev ${App.i18n.value(() => (hasPrev ? "" : "disabled"))}>Previous</button>
+      <span class="form-help" aria-live="polite">${App.i18n.value(() => (from))}-${App.i18n.value(() => (to))} of ${App.i18n.value(() => (rs.total))}</span>
+      <button type="button" class="btn btn-sm" data-row-next ${App.i18n.value(() => (hasNext ? "" : "disabled"))}>Next</button>
     `;
     if (hasPrev) el.querySelector("[data-row-prev]").addEventListener("click", () => {
       rs.offset = Math.max(0, rs.offset - ROW_PAGE_SIZE);

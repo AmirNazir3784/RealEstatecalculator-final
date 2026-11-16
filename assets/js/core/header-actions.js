@@ -3,10 +3,10 @@ window.App = window.App || {};
 App.headerActions = (function () {
   "use strict";
   const ENTITIES = [
-    { key: "contacts", label: "Contacts", area: "contacts", route: "/contacts", title: "name", context: ["email", "phone"], detail: true },
-    { key: "deals", label: "Deals", area: "deals", route: "/pipeline", title: "name", context: ["stage"], detail: true },
-    { key: "properties", label: "Properties", area: "properties", route: "/properties", title: "address", context: ["status", "mls"], detail: true },
-    { key: "tasks", label: "Tasks", area: "work", route: "/tasks", title: "title", context: ["status", "dueDate"], detail: false }
+    { key: "contacts", get label() { return App.i18n.t("Contacts"); }, area: "contacts", route: "/contacts", title: "name", context: ["email", "phone"], detail: true },
+    { key: "deals", get label() { return App.i18n.t("Deals"); }, area: "deals", route: "/pipeline", title: "name", context: ["stage"], detail: true },
+    { key: "properties", get label() { return App.i18n.t("Properties"); }, area: "properties", route: "/properties", title: "address", context: ["status", "mls"], detail: true },
+    { key: "tasks", get label() { return App.i18n.t("Tasks"); }, area: "work", route: "/tasks", title: "title", context: ["status", "dueDate"], detail: false }
   ];
   let showMenu = null,
     dispose = null, closeSearch = null, closeMenu = null, refresh = null, workspaceUserId = null;
@@ -21,12 +21,12 @@ App.headerActions = (function () {
     if (!ready()) return [];
     const w = App.workspace;
     return [
-      { id: "contact", label: "Add Contact", route: "/contacts", area: "contacts", run: () => App.quickAdd.open(), supported: !!App.quickAdd },
-      { id: "deal", label: "Add Deal", route: "/pipeline", area: "deals", run: () => App.pages.deals.openDealModal(null), supported: !!App.pages.deals },
-      { id: "task", label: "Add Task", route: "/tasks", area: "work", run: () => App.pages.tasks.openTaskModal(null), supported: !!App.pages.tasks },
-      { id: "showing", label: "Schedule Showing", route: "/calendar", area: "work", run: () => App.pages.contacts.openShowingModal({}),
+      { id: "contact", get label() { return App.i18n.t("Add Contact"); }, route: "/contacts", area: "contacts", run: () => App.quickAdd.open(), supported: !!App.quickAdd },
+      { id: "deal", get label() { return App.i18n.t("Add Deal"); }, route: "/pipeline", area: "deals", run: () => App.pages.deals.openDealModal(null), supported: !!App.pages.deals },
+      { id: "task", get label() { return App.i18n.t("Add Task"); }, route: "/tasks", area: "work", run: () => App.pages.tasks.openTaskModal(null), supported: !!App.pages.tasks },
+      { id: "showing", get label() { return App.i18n.t("Schedule Showing"); }, route: "/calendar", area: "work", run: () => App.pages.contacts.openShowingModal({}),
         supported: !!App.pages.contacts && w.canView("contacts") && w.canView("properties") && enabled("/contacts") && enabled("/properties") },
-      { id: "call", label: "Log a Call", route: "/activities", area: "work", run: () => App.pages.activities.openActivityModal(null, { type: "Call" }), supported: !!App.pages.activities }
+      { id: "call", get label() { return App.i18n.t("Log a Call"); }, route: "/activities", area: "work", run: () => App.pages.activities.openActivityModal(null, { type: "Call" }), supported: !!App.pages.activities }
     ].filter(a => a.supported && enabled(a.route) && w.canCreate(a.area));
   }
 
@@ -43,12 +43,12 @@ App.headerActions = (function () {
     };
     const valid = () => !closed && context() === initialContext;
     const handle = App.app.openModal({
-      title: "Search", extraClass: "global-search-modal",
-      body: '<label for="globalSearchInput">Search contacts, deals, properties and tasks</label>' +
-        '<input id="globalSearchInput" type="search" autocomplete="off" maxlength="200" role="combobox" aria-autocomplete="list" aria-expanded="true" aria-controls="globalSearchResults">' +
-        '<p id="globalSearchStatus" role="status">Type at least two characters to search.</p>' +
-        '<div id="globalSearchResults" role="listbox" aria-label="Search results"></div>' +
-        '<p class="form-help">Search may be incomplete for large workspaces.</p>',
+      get title() { return App.i18n.t("Search"); }, extraClass: "global-search-modal",
+      body: App.i18n.markup('<label for="globalSearchInput">Search contacts, deals, properties and tasks</label>') +
+        App.i18n.markup('<div class="global-search-field">') + App.app.icon("search") + App.i18n.markup('<input id="globalSearchInput" type="search" placeholder="Search your workspace…" autocomplete="off" maxlength="200" role="combobox" aria-autocomplete="list" aria-expanded="true" aria-controls="globalSearchResults"></div>') +
+        App.i18n.markup('<p id="globalSearchStatus" role="status">Type at least two characters to search.</p>') +
+        App.i18n.markup('<div id="globalSearchResults" role="listbox" aria-label="Search results"></div>') +
+        App.i18n.markup('<p class="form-help">Search may be incomplete for large workspaces.</p>'),
       onClose: () => { stop(); if (closeSearch === close) closeSearch = null; },
       onOpen: modal => {
         input = modal.querySelector("input"); results = modal.querySelector("#globalSearchResults");
@@ -72,33 +72,35 @@ App.headerActions = (function () {
         input.addEventListener("input", () => {
           const version = ++generation; clearTimeout(timer); items = []; results.replaceChildren(); highlight(-1);
           const query = input.value.trim().toLocaleLowerCase();
-          if (query.length < 2) { status.textContent = "Type at least two characters to search."; return; }
-          status.textContent = "Searching...";
+          if (query.length < 2) { App.i18n.setText(status, App.i18n.message("Type at least two characters to search.")); return; }
+          App.i18n.setText(status, App.i18n.message("Searching..."));
           timer = setTimeout(async () => {
             if (!valid()) { close(); return; }
             try {
               // Fresh RLS reads once per search opening; never reuse an old workspace cache.
               // No service-role calls, storage, or client-side authorization filtering.
-              if (!request) request = Promise.all(sources.map(async entity => ({ entity, rows: await App.store[entity.key].list({ force: true, cache: false }) })));
-              const groups = await request;
+              const serverSearch = typeof App.store.search === "function";
+              if (!serverSearch && !request) request = Promise.all(sources.map(async entity => ({ entity, rows: await App.store[entity.key].list({ force: true, cache: false }) })));
+              const groups = serverSearch ? await Promise.all(sources.map(async entity => ({entity,...await App.store.search(entity.key,query)}))) : await request;
               if (!valid()) { close(); return; }
               if (version !== generation) return;
               const html = groups.map(({ entity, rows }) => {
-                const matches = rows.filter(row => [entity.title, ...entity.context].some(key => String(row[key] || "").toLocaleLowerCase().includes(query))).slice(0, 8);
+                const matches = serverSearch ? rows : rows.filter(row => [entity.title, ...entity.context].some(key => String(row[key] || "").toLocaleLowerCase().includes(query))).slice(0, 8);
                 if (!matches.length) return "";
                 const options = matches.map(row => {
                   const index = items.length;
                   items.push({ entity, path: entity.route + (entity.detail ? "/" + encodeURIComponent(row.id) : "") });
-                  return '<div role="option" aria-selected="false" id="global-result-' + index + '" data-result="' + index + '"><strong>' + esc(row[entity.title] || "Untitled") + '</strong><span>' + esc(entity.context.map(k => row[k]).filter(Boolean).join(" - ")) + '</span></div>';
+                  return '<div role="option" aria-selected="false" id="global-result-' + index + '" data-result="' + index + App.i18n.markup('"><strong>') + esc(row[entity.title] || "Untitled") + App.i18n.markup('</strong><span>') + esc(entity.context.map(k => row[k]).filter(Boolean).join(" - ")) + '</span></div>';
                 }).join("");
-                return '<div role="group" aria-label="' + entity.label + '"><h3>' + entity.label + '</h3>' + options + '</div>';
+                return '<div role="group" aria-label="' + entity.label + App.i18n.markup('"><h3 role="presentation" aria-hidden="true">') + entity.label + '</h3>' + options + '</div>';
               }).join("");
               results.innerHTML = html;
-              status.textContent = items.length ? "Up to 8 matches per type. Tasks open the Tasks page." : "No matching records.";
+              App.i18n.setText(status, App.i18n.value(() => (items.length ? App.i18n.t(serverSearch ? "Showing up to 20 matches per category. Refine your search for more results." : "Up to 8 matches per type. Tasks open the Tasks page.") : App.i18n.t("No matching records."))));
+              const limitation=modal.querySelector(".form-help");if(limitation)limitation.hidden=serverSearch;
               highlight(items.length ? 0 : -1);
             } catch (err) {
               if (!valid() || version !== generation) return;
-              request = null; status.textContent = "Search could not load. Type again to retry.";
+              request = null; App.i18n.setText(status, App.i18n.message("Search could not load. Type again to retry."));
             }
           }, 200);
         });
@@ -126,9 +128,9 @@ App.headerActions = (function () {
     const old = document.getElementById("quickAddBtn");
     if (old) old.remove();
     const controls = document.createElement("div"); controls.className = "header-actions";
-    controls.innerHTML = '<button type="button" class="btn header-search" id="globalSearchBtn" aria-label="Search (Ctrl or Command K)" aria-keyshortcuts="Control+k Meta+k">Search <kbd>Ctrl K</kbd></button>' +
-      '<button type="button" class="btn btn-primary header-new" id="globalNewBtn" aria-haspopup="menu" aria-expanded="false" aria-controls="globalNewMenu">+ New</button>' +
-      '<div id="globalNewMenu" role="menu" aria-label="Create new" hidden></div>';
+    controls.innerHTML = App.i18n.markup('<button type="button" class="btn header-search" id="globalSearchBtn" aria-label="Search (Ctrl or Command K)" aria-keyshortcuts="Control+k Meta+k">') + App.app.icon("search") + App.i18n.markup('<span class="header-search-label">Search</span><kbd>Ctrl K</kbd></button>') +
+      App.i18n.markup('<button type="button" class="btn btn-primary header-new" id="globalNewBtn" aria-haspopup="menu" aria-expanded="false" aria-controls="globalNewMenu">+ New</button>') +
+      App.i18n.markup('<div id="globalNewMenu" role="menu" aria-label="Create new" hidden></div>');
     header.insertBefore(controls, document.getElementById("topActions"));
     const search = controls.querySelector("#globalSearchBtn"), button = controls.querySelector("#globalNewBtn"), menu = controls.querySelector("#globalNewMenu");
     let opener = button;
@@ -159,7 +161,7 @@ App.headerActions = (function () {
       const el = event.target.closest("[data-action]"); if (!el) return;
       const action = actions().find(a => a.id === el.dataset.action); hide();
       if (!action) return;
-      try { await action.run(); } catch (err) { App.app.toast("Could not open this action. Please try again.", "danger"); }
+      try { await action.run(); } catch (err) { App.app.toast(App.i18n.t("Could not open this action. Please try again."), "danger"); }
     };
     menu.onkeydown = event => {
       const list = Array.from(menu.querySelectorAll("button")), index = list.indexOf(document.activeElement);

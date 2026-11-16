@@ -50,10 +50,10 @@ App.pages.contacts = (function () {
     return m ? m.name : null;
   }
   function ownerCell(c) {
-    if (!c.assignedToId) return `<span class="badge badge-neutral">Nobody yet</span>`;
+    if (!c.assignedToId) return App.i18n.markup(`<span class="badge badge-neutral">Nobody yet</span>`);
     const name = memberNameById(c.assignedToId);
     const mine = App.workspace && App.workspace.teamMemberId() === c.assignedToId;
-    return `${U().esc(name || "Someone who has left")}${mine ? ' <span class="badge badge-neutral">You</span>' : ""}`;
+    return `${U().esc(name || "Someone who has left")}${mine ? App.i18n.markup(' <span class="badge badge-neutral">You</span>') : ""}`;
   }
 
   /** Opens Contacts showing only the leads nobody owns. Used by the Team page. */
@@ -68,18 +68,18 @@ App.pages.contacts = (function () {
 
   function tempBadge(temp) {
     const cls = temp === "Hot" ? "badge-hot" : temp === "Warm" ? "badge-warm" : "badge-cold";
-    return `<span class="badge ${cls}"><span class="dot"></span>${U().esc(temp)}</span>`;
+    return App.i18n.html`<span class="badge ${App.i18n.value(() => (cls))}"><span class="dot"></span>${App.i18n.value(() => (U().esc(temp)))}</span>`;
   }
   function stagePill(stage) {
-    return `<span class="stage-pill">${U().esc(stage || "—")}</span>`;
+    return App.i18n.html`<span class="stage-pill">${App.i18n.value(() => (U().esc(stage || "—")))}</span>`;
   }
   function followUpCell(contact) {
     const status = D().contactFollowUpStatus(contact);
-    if (status.status === "none") return '<span style="color:var(--text-soft)">—</span>';
+    if (status.status === "none") return App.i18n.markup('<span style="color:var(--text-soft)">—</span>');
     const label = U().formatDate(contact.nextFollowUp);
-    if (status.status === "overdue") return `<span class="badge badge-overdue">${status.daysOverdue} day${status.daysOverdue === 1 ? '' : 's'} overdue</span>`;
-    if (status.status === "due-today") return `<span class="badge badge-today">Today</span>`;
-    return `<span>${label}</span>`;
+    if (status.status === "overdue") return App.i18n.html`<span class="badge badge-overdue">${App.i18n.value(() => (status.daysOverdue))} day${App.i18n.value(() => (status.daysOverdue === 1 ? '' : 's'))} overdue</span>`;
+    if (status.status === "due-today") return App.i18n.markup(`<span class="badge badge-today">Today</span>`);
+    return App.i18n.html`<span>${App.i18n.value(() => (label))}</span>`;
   }
   function avatarInitials(name) {
     return (name || "?").split(" ").map(w => w[0]).slice(0, 2).join("").toUpperCase();
@@ -97,7 +97,7 @@ App.pages.contacts = (function () {
     pastClientsOnly = pastOnly;
     listFilters = pastOnly ? pastFilters : allFilters;
     lastListContainer = container;
-    App.app.setBreadcrumbs(pastOnly ? [{ label: "Contacts", route: "/contacts" }, { label: "Past Clients" }] : [{ label: "Contacts" }]);
+    App.app.setBreadcrumbs(pastOnly ? [{ get label() { return App.i18n.t("Contacts"); }, route: "/contacts" }, { get label() { return App.i18n.t("Past Clients"); } }] : [{ get label() { return App.i18n.t("Contacts"); } }]);
     App.app.setTopActions("");
     container.innerHTML = App.app.loadingHtml();
     await S().ensureLoaded(["contacts"]);
@@ -105,34 +105,34 @@ App.pages.contacts = (function () {
     const s = S().getState();
     const settings = s.settings;
 
-    container.innerHTML = `
+    container.innerHTML = App.i18n.html`
       <div class="page-header">
         <div>
-          <div class="page-title">${pastOnly ? "Past Clients" : "Contacts"}</div>
+          <div class="page-title">${App.i18n.value(() => (pastOnly ? App.i18n.t("Past Clients") : App.i18n.t("Contacts")))}</div>
           <div class="page-desc">Your relationships — buyers, sellers, investors, and referral partners. Click any contact to see everything connected to them.</div>
         </div>
         <div class="page-actions">
           <button class="btn" id="importFileBtn" title="One-time upload from a file">Import from file</button>
-          <button class="btn btn-primary" id="addContactBtn">${App.app.icon("plus")} Add Contact</button>
+          <button class="btn btn-primary" id="addContactBtn">${App.i18n.value(() => (App.app.icon("plus")))} Add Contact</button>
         </div>
       </div>
 
       <div class="filter-bar">
         <div class="search-wrap">
-          ${App.app.icon("search")}
-          <input type="search" id="cSearch" placeholder="Search name, email, or phone…" value="${U().esc(listFilters.search)}">
+          ${App.i18n.value(() => (App.app.icon("search")))}
+          <input type="search" id="cSearch" placeholder="Search name, email, or phone…" value="${App.i18n.value(() => (U().esc(listFilters.search)))}">
         </div>
         <select id="cRole" aria-label="Filter by role">
           <option value="">All roles</option>
-          ${["Buyer","Seller","Investor","Referral Partner"].map(r =>
-            `<option value="${r}" ${listFilters.role===r?"selected":""}>${r}</option>`).join("")}
+          ${App.i18n.value(() => (["Buyer","Seller","Investor","Referral Partner"].map(r =>
+            App.i18n.html`<option value="${App.i18n.value(() => (r))}" ${App.i18n.value(() => (listFilters.role===r?"selected":""))}>${App.i18n.value(() => (App.i18n.t(r)))}</option>`).join("")))}
         </select>
-        <select id="cStage" aria-label="Filter by stage" ${pastOnly ? "disabled" : ""}>
-          ${pastOnly ? '<option value="Past Client">Past Client</option>' : `
+        <select id="cStage" aria-label="Filter by stage" ${App.i18n.value(() => (pastOnly ? "disabled" : ""))}>
+          ${App.i18n.value(() => (pastOnly ? App.i18n.markup('<option value="Past Client">Past Client</option>') : App.i18n.html`
           <option value="">All stages</option>
-          ${settings.contactStages.map(st =>
-            `<option value="${st}" ${listFilters.stage===st?"selected":""}>${st}</option>`).join("")}
-          `}
+          ${App.i18n.value(() => (settings.contactStages.map(st =>
+            App.i18n.html`<option value="${App.i18n.value(() => (st))}" ${App.i18n.value(() => (listFilters.stage===st?"selected":""))}>${App.i18n.value(() => (st))}</option>`).join("")))}
+          `))}
         </select>
         <!-- Source and Temperature are the two lowest-priority filters here, so
              they live behind "More filters" rather than on the main row: six
@@ -149,33 +149,33 @@ App.pages.contacts = (function () {
               <span>Source</span>
               <select id="cSource" aria-label="Filter by source">
                 <option value="">All sources</option>
-                ${settings.leadSources.map(src =>
-                  `<option value="${src}" ${listFilters.source===src?"selected":""}>${src}</option>`).join("")}
+                ${App.i18n.value(() => (settings.leadSources.map(src =>
+                  App.i18n.html`<option value="${App.i18n.value(() => (src))}" ${App.i18n.value(() => (listFilters.source===src?"selected":""))}>${App.i18n.value(() => (src))}</option>`).join("")))}
               </select>
             </label>
             <label class="filter-more-field">
               <span>Temperature</span>
               <select id="cTemp" aria-label="Filter by temperature">
                 <option value="">All temperatures</option>
-                ${["Hot","Warm","Cold"].map(t =>
-                  `<option value="${t}" ${listFilters.temp===t?"selected":""}>${t}</option>`).join("")}
+                ${App.i18n.value(() => (["Hot","Warm","Cold"].map(t =>
+                  App.i18n.html`<option value="${App.i18n.value(() => (t))}" ${App.i18n.value(() => (listFilters.temp===t?"selected":""))}>${App.i18n.value(() => (App.i18n.t(t)))}</option>`).join("")))}
               </select>
             </label>
             <button type="button" class="btn btn-sm" id="cMoreClear">Clear these filters</button>
           </div>
         </span>
-        ${showsOwners() ? `
+        ${App.i18n.value(() => (showsOwners() ? App.i18n.html`
         <select id="cOwner" aria-label="Filter by who owns the lead">
-          <option value="" ${listFilters.owner === "" ? "selected" : ""}>All leads</option>
-          <option value="mine" ${listFilters.owner === "mine" ? "selected" : ""}>My leads</option>
-          <option value="unassigned" ${listFilters.owner === "unassigned" ? "selected" : ""}>Nobody owns yet</option>
-        </select>` : ""}
+          <option value="" ${App.i18n.value(() => (listFilters.owner === "" ? "selected" : ""))}>All leads</option>
+          <option value="mine" ${App.i18n.value(() => (listFilters.owner === "mine" ? "selected" : ""))}>My leads</option>
+          <option value="unassigned" ${App.i18n.value(() => (listFilters.owner === "unassigned" ? "selected" : ""))}>Nobody owns yet</option>
+        </select>` : ""))}
         <select id="cSort" aria-label="Sort by">
-          <option value="name-asc" ${listFilters.sort==="name-asc"?"selected":""}>Name (A–Z)</option>
-          <option value="name-desc" ${listFilters.sort==="name-desc"?"selected":""}>Name (Z–A)</option>
-          <option value="followup-asc" ${listFilters.sort==="followup-asc"?"selected":""}>Next Follow-up (soonest)</option>
-          <option value="lastcontact-desc" ${listFilters.sort==="lastcontact-desc"?"selected":""}>Last Contact (newest)</option>
-          <option value="created-desc" ${listFilters.sort==="created-desc"?"selected":""}>Created (newest)</option>
+          <option value="name-asc" ${App.i18n.value(() => (listFilters.sort==="name-asc"?"selected":""))}>Name (A–Z)</option>
+          <option value="name-desc" ${App.i18n.value(() => (listFilters.sort==="name-desc"?"selected":""))}>Name (Z–A)</option>
+          <option value="followup-asc" ${App.i18n.value(() => (listFilters.sort==="followup-asc"?"selected":""))}>Next Follow-up (soonest)</option>
+          <option value="lastcontact-desc" ${App.i18n.value(() => (listFilters.sort==="lastcontact-desc"?"selected":""))}>Last Contact (newest)</option>
+          <option value="created-desc" ${App.i18n.value(() => (listFilters.sort==="created-desc"?"selected":""))}>Created (newest)</option>
         </select>
       </div>
 
@@ -215,7 +215,7 @@ App.pages.contacts = (function () {
     const badge = document.getElementById("cMoreCount");
     if (!badge) return;
     const n = (listFilters.source ? 1 : 0) + (listFilters.temp ? 1 : 0);
-    badge.textContent = n ? String(n) : "";
+    App.i18n.setText(badge, App.i18n.value(() => (n ? String(n) : "")));
     badge.hidden = n === 0;
     const btn = document.getElementById("cMoreBtn");
     if (btn) btn.classList.toggle("has-active", n > 0);
@@ -270,13 +270,13 @@ App.pages.contacts = (function () {
 
   function bulkBarHtml(count) {
     const members = assignableMembers();
-    return `
-      <div class="filter-bar" data-bulk-bar style="${count ? "" : "display:none"}">
-        <strong data-bulk-count>${count} selected</strong>
+    return App.i18n.html`
+      <div class="filter-bar" data-bulk-bar style="${App.i18n.value(() => (count ? "" : "display:none"))}">
+        <strong data-bulk-count>${App.i18n.value(() => (count))} selected</strong>
         <select id="cBulkMember" aria-label="Give the selected leads to">
           <option value="">Choose a person…</option>
           <option value="__none__">Nobody — put them back in the pool</option>
-          ${members.map(m => `<option value="${U().esc(m.id)}">${U().esc(m.name)}</option>`).join("")}
+          ${App.i18n.value(() => (members.map(m => App.i18n.html`<option value="${App.i18n.value(() => (U().esc(m.id)))}">${App.i18n.value(() => (U().esc(m.name)))}</option>`).join("")))}
         </select>
         <button class="btn btn-sm btn-primary" id="cBulkAssign">Hand over</button>
         <button class="btn btn-sm" id="cBulkClear">Clear selection</button>
@@ -290,7 +290,7 @@ App.pages.contacts = (function () {
     const selectAll = wrap.querySelector("#cSelectAll");
 
     const sync = () => {
-      if (countEl) countEl.textContent = selectedIds.length + " selected";
+      if (countEl) App.i18n.setText(countEl, App.i18n.value(() => (selectedIds.length + App.i18n.t(" selected"))));
       if (bar) bar.style.display = selectedIds.length ? "" : "none";
       if (selectAll) selectAll.checked = filtered.length > 0 && selectedIds.length === filtered.length;
     };
@@ -322,7 +322,7 @@ App.pages.contacts = (function () {
     const pick = wrap.querySelector("#cBulkMember");
     if (go && pick) go.addEventListener("click", async () => {
       if (!selectedIds.length) return;
-      if (!pick.value) { App.app.toast("Choose who the leads should go to.", "danger"); pick.focus(); return; }
+      if (!pick.value) { App.app.toast(App.i18n.t("Choose who the leads should go to."), "danger"); pick.focus(); return; }
       const memberId = pick.value === "__none__" ? null : pick.value;
       const name = memberId ? (memberNameById(memberId) || "that person") : "nobody";
       const ids = selectedIds.slice();
@@ -336,11 +336,11 @@ App.pages.contacts = (function () {
         const failures = await assignMany(ids, memberId);
         go.disabled = false;
         if (!failures) {
-          App.app.toast(ids.length + " lead" + (ids.length === 1 ? "" : "s") + " handed over.", "success");
+          App.app.toast(ids.length + App.i18n.t(" lead") + (ids.length === 1 ? "" : "s") + App.i18n.t(" handed over."), "success");
         } else if (failures < ids.length) {
-          App.app.toast((ids.length - failures) + " handed over, " + failures + " refused.", "danger");
+          App.app.toast((ids.length - failures) + App.i18n.t(" handed over, ") + failures + App.i18n.t(" refused."), "danger");
         } else {
-          App.app.toast("Could not hand these leads over.", "danger");
+          App.app.toast(App.i18n.t("Could not hand these leads over."), "danger");
         }
         selectedIds = [];
         renderTable();
@@ -371,15 +371,15 @@ App.pages.contacts = (function () {
         e.stopPropagation();
         const id = btn.getAttribute("data-claim");
         const me = App.workspace ? App.workspace.teamMemberId() : null;
-        if (!me) { App.app.toast("Your own team record is missing, so this cannot be claimed.", "danger"); return; }
+        if (!me) { App.app.toast(App.i18n.t("Your own team record is missing, so this cannot be claimed."), "danger"); return; }
         btn.disabled = true;
         try {
           await S().contacts.update(id, { assignedToId: me });
-          App.app.toast("This lead is yours.", "success");
+          App.app.toast(App.i18n.t("This lead is yours."), "success");
           renderTable();
         } catch (err) {
           btn.disabled = false;
-          App.app.toast("Somebody else may have taken it. Refresh to see.", "danger");
+          App.app.toast(App.i18n.t("Somebody else may have taken it. Refresh to see."), "danger");
         }
       });
     });
@@ -431,16 +431,15 @@ App.pages.contacts = (function () {
     const visible = {};
     filtered.forEach(c => { visible[c.id] = true; });
     selectedIds = selectedIds.filter(id => visible[id]);
-    document.getElementById("cCountLabel").textContent =
-      `${filtered.length} of ${all.length} contact${all.length === 1 ? "" : "s"}`;
+    App.i18n.setText(document.getElementById("cCountLabel"), App.i18n.text`${App.i18n.value(() => (filtered.length))} of ${App.i18n.value(() => (all.length))} contact${App.i18n.value(() => (all.length === 1 ? "" : "s"))}`);
 
     if (!filtered.length) {
       if (pastClientsOnly && all.length === 0) {
-        wrap.innerHTML = `<div class="empty"><h3>No past clients yet</h3><p>Contacts with the Past Client stage appear here. Update a contact using the existing contact form.</p></div>`;
+        wrap.innerHTML = App.i18n.markup(`<div class="empty"><h3>No past clients yet</h3><p>Contacts with the Past Client stage appear here. Update a contact using the existing contact form.</p></div>`);
       } else if (all.length === 0) {
-        wrap.innerHTML = `
+        wrap.innerHTML = App.i18n.html`
           <div class="empty">
-            <div class="empty-icon">${App.app.icon("plus")}</div>
+            <div class="empty-icon">${App.i18n.value(() => (App.app.icon("plus")))}</div>
             <h3>No contacts yet</h3>
             <p>Import leads from a file or Google Sheets, or add your first contact manually. Leads, past clients, and referral partners all belong here.</p>
             <div style="display:flex;gap:8px;flex-wrap:wrap;justify-content:center">
@@ -450,23 +449,23 @@ App.pages.contacts = (function () {
             </div>
           </div>`;
       } else {
-        wrap.innerHTML = `
+        wrap.innerHTML = App.i18n.markup(`
           <div class="empty">
             <h3>No matches</h3>
             <p>Try clearing filters or adjusting your search.</p>
-          </div>`;
+          </div>`);
       }
       return;
     }
 
-    wrap.innerHTML = `
+    wrap.innerHTML = App.i18n.html`
       <div class="table-wrap">
         <table class="tbl tbl-responsive">
           <thead>
             <tr>
-              ${assignAllowed ? `<th class="actions"><input type="checkbox" id="cSelectAll" aria-label="Select every lead shown"></th>` : ""}
+              ${App.i18n.value(() => (assignAllowed ? App.i18n.markup(`<th class="actions"><input type="checkbox" id="cSelectAll" aria-label="Select every lead shown"></th>`) : ""))}
               <th>Name</th>
-              ${ownersShown ? `<th>Belongs to</th>` : ""}
+              ${App.i18n.value(() => (ownersShown ? App.i18n.markup(`<th>Belongs to</th>`) : ""))}
               <th>Role</th>
               <th>Stage</th>
               <th>Temp</th>
@@ -477,29 +476,29 @@ App.pages.contacts = (function () {
             </tr>
           </thead>
           <tbody>
-            ${filtered.map(c => `
-              <tr class="clickable" data-id="${c.id}">
-                ${assignAllowed ? `<td class="actions" data-label="">
-                  <input type="checkbox" class="c-pick" data-pick="${c.id}"
-                         ${selectedIds.indexOf(c.id) !== -1 ? "checked" : ""}
-                         aria-label="Select ${U().esc(c.name || "this lead")}">
-                </td>` : ""}
+            ${App.i18n.value(() => (filtered.map(c => App.i18n.html`
+              <tr class="clickable" data-id="${App.i18n.value(() => (c.id))}">
+                ${App.i18n.value(() => (assignAllowed ? App.i18n.html`<td class="actions" data-label="">
+                  <input type="checkbox" class="c-pick" data-pick="${App.i18n.value(() => (c.id))}"
+                         ${App.i18n.value(() => (selectedIds.indexOf(c.id) !== -1 ? "checked" : ""))}
+                         aria-label="Select ${App.i18n.value(() => (U().esc(c.name || "this lead")))}">
+                </td>` : ""))}
                 <td data-label="Name" class="primary-cell">
-                  <a href="#/contacts/${c.id}" class="link" data-nav-block>${U().esc(c.name || "(unnamed)")}</a>
+                  <a href="#/contacts/${App.i18n.value(() => (c.id))}" class="link" data-nav-block>${App.i18n.value(() => (U().esc(c.name || App.i18n.t("(unnamed)"))))}</a>
                 </td>
-                ${ownersShown ? `<td data-label="Belongs to">${ownerCell(c)}</td>` : ""}
-                <td data-label="Role">${U().esc(c.role || "—")}</td>
-                <td data-label="Stage">${stagePill(c.stage)}</td>
-                <td data-label="Temp">${tempBadge(c.temperature)}</td>
-                <td data-label="Next Follow-up">${followUpCell(c)}</td>
-                <td data-label="Source">${U().esc(c.source || "—")}</td>
-                <td data-label="Phone">${U().esc(c.phone || "—")}</td>
+                ${App.i18n.value(() => (ownersShown ? App.i18n.html`<td data-label="Belongs to">${App.i18n.value(() => (ownerCell(c)))}</td>` : ""))}
+                <td data-label="Role">${App.i18n.value(() => (U().esc(c.role || "—")))}</td>
+                <td data-label="Stage">${App.i18n.value(() => (stagePill(c.stage)))}</td>
+                <td data-label="Temp">${App.i18n.value(() => (tempBadge(c.temperature)))}</td>
+                <td data-label="Next Follow-up">${App.i18n.value(() => (followUpCell(c)))}</td>
+                <td data-label="Source">${App.i18n.value(() => (U().esc(c.source || "—")))}</td>
+                <td data-label="Phone">${App.i18n.value(() => (U().esc(c.phone || "—")))}</td>
                 <td class="actions" data-label="">
-                  ${(!c.assignedToId && claimAllowed) ? `<button class="btn btn-sm" data-claim="${c.id}">Claim</button>` : ""}
-                  <button class="btn btn-sm btn-ghost" data-edit="${c.id}" aria-label="Edit ${U().esc(c.name)}">${App.app.icon("edit")}</button>
+                  ${App.i18n.value(() => ((!c.assignedToId && claimAllowed) ? App.i18n.html`<button class="btn btn-sm" data-claim="${App.i18n.value(() => (c.id))}">Claim</button>` : ""))}
+                  <button class="btn btn-sm btn-ghost" data-edit="${App.i18n.value(() => (c.id))}" aria-label="Edit ${App.i18n.value(() => (U().esc(c.name)))}">${App.i18n.value(() => (App.app.icon("edit")))}</button>
                 </td>
               </tr>
-            `).join("")}
+            `).join("")))}
           </tbody>
         </table>
       </div>
@@ -531,23 +530,23 @@ App.pages.contacts = (function () {
     const state = S().getState();
     const contact = state.contacts.find(c => c.id === id);
     if (!contact) {
-      App.app.setBreadcrumbs([{ label: "Contacts", route: "/contacts" }, { label: "Not Found" }]);
-      container.innerHTML = `
+      App.app.setBreadcrumbs([{ get label() { return App.i18n.t("Contacts"); }, route: "/contacts" }, { get label() { return App.i18n.t("Not Found"); } }]);
+      container.innerHTML = App.i18n.markup(`
         <div class="empty">
           <h3>Contact not found</h3>
           <p>This contact may have been deleted or the link is out of date.</p>
           <a href="#/contacts" class="btn btn-primary">Back to Contacts</a>
-        </div>`;
+        </div>`);
       return;
     }
 
     App.app.setBreadcrumbs([
-      { label: "Contacts", route: "/contacts" },
+      { get label() { return App.i18n.t("Contacts"); }, route: "/contacts" },
       { label: contact.name || "(unnamed)" }
     ]);
-    App.app.setTopActions(`
-      <button class="btn" id="editContactBtn">${App.app.icon("edit")} Edit</button>
-      <button class="btn btn-danger" id="deleteContactBtn">${App.app.icon("trash")} Delete</button>
+    App.app.setTopActions(App.i18n.html`
+      <button class="btn" id="editContactBtn">${App.i18n.value(() => (App.app.icon("edit")))} Edit</button>
+      <button class="btn btn-danger" id="deleteContactBtn">${App.i18n.value(() => (App.app.icon("trash")))} Delete</button>
     `);
 
     const status = D().contactFollowUpStatus(contact);
@@ -563,75 +562,75 @@ App.pages.contacts = (function () {
 
     let followupNote = "";
     if (status.status === "overdue") {
-      followupNote = ` <span class="badge badge-overdue" style="margin-left:6px">${status.daysOverdue} day${status.daysOverdue === 1 ? '' : 's'} overdue</span>`;
+      followupNote = App.i18n.html` <span class="badge badge-overdue" style="margin-left:6px">${App.i18n.value(() => (status.daysOverdue))} day${App.i18n.value(() => (status.daysOverdue === 1 ? '' : 's'))} overdue</span>`;
     } else if (status.status === "due-today") {
-      followupNote = `<span class="badge badge-today" style="margin-left:8px">Due today</span>`;
+      followupNote = App.i18n.markup(`<span class="badge badge-today" style="margin-left:8px">Due today</span>`);
     } else if (status.status === "upcoming") {
-      followupNote = `<span class="badge badge-upcoming" style="margin-left:8px">Upcoming</span>`;
+      followupNote = App.i18n.markup(`<span class="badge badge-upcoming" style="margin-left:8px">Upcoming</span>`);
     }
 
-    container.innerHTML = `
-      ${App.app.backLink("/contacts", "Contacts")}
+    container.innerHTML = App.i18n.html`
+      ${App.i18n.value(() => (App.app.backLink("/contacts", "Contacts")))}
       <div class="detail-grid">
         <div class="col">
           <div class="card">
             <div class="profile-hero">
-              <div class="avatar">${U().esc(avatarInitials(contact.name))}</div>
-              <div class="name">${U().esc(contact.name || "(unnamed)")}</div>
+              <div class="avatar">${App.i18n.value(() => (U().esc(avatarInitials(contact.name))))}</div>
+              <div class="name">${App.i18n.value(() => (U().esc(contact.name || App.i18n.t("(unnamed)"))))}</div>
               <div class="subline">
-                <span>${U().esc(contact.role || "—")}</span>
+                <span>${App.i18n.value(() => (U().esc(contact.role || "—")))}</span>
                 <span>·</span>
-                ${stagePill(contact.stage)}
+                ${App.i18n.value(() => (stagePill(contact.stage)))}
                 <span>·</span>
-                ${tempBadge(contact.temperature)}
+                ${App.i18n.value(() => (tempBadge(contact.temperature)))}
               </div>
             </div>
 
             <div class="card-body">
               <div class="meta">
-                <div><div class="k">Email</div><div class="v">${U().esc(contact.email) || '<span style="color:var(--text-soft)">—</span>'}</div></div>
-                <div><div class="k">Phone</div><div class="v">${U().esc(contact.phone) || '<span style="color:var(--text-soft)">—</span>'}</div></div>
-                <div><div class="k">Last Contact</div><div class="v">${contact.lastContact ? U().formatDate(contact.lastContact) : '<span style="color:var(--text-soft)">—</span>'}</div></div>
-                <div><div class="k">Next Follow-up</div><div class="v">${contact.nextFollowUp ? U().formatDate(contact.nextFollowUp) + followupNote : '<span style="color:var(--text-soft)">—</span>'}</div></div>
-                <div><div class="k">Birthday</div><div class="v">${contact.birthday ? U().esc(U().formatDate(contact.birthday)) : '<span style="color:var(--text-soft)">—</span>'}</div></div>
-                <div><div class="k">Home purchase</div><div class="v">${contact.homePurchaseDate ? U().esc(U().formatDate(contact.homePurchaseDate)) : '<span style="color:var(--text-soft)">—</span>'}</div></div>
-                <div><div class="k">Budget</div><div class="v">${contact.budget ? U().formatCurrency(contact.budget, state.settings.currency) : '<span style="color:var(--text-soft)">—</span>'}</div></div>
-                <div><div class="k">Preferred Area</div><div class="v">${U().esc(contact.preferredArea) || '<span style="color:var(--text-soft)">—</span>'}</div></div>
-                <div><div class="k">Source</div><div class="v">${U().esc(contact.source) || '<span style="color:var(--text-soft)">—</span>'}</div></div>
-                <div><div class="k">Assigned Agent</div><div class="v">${U().esc(contact.assignedAgent) || '<span style="color:var(--text-soft)">—</span>'}</div></div>
-                ${showsOwners() ? `<div><div class="k">Belongs to</div><div class="v" id="cDetailOwner">${ownerControl(contact)}</div></div>` : ""}
+                <div><div class="k">Email</div><div class="v">${App.i18n.value(() => (U().esc(contact.email) || App.i18n.markup('<span style="color:var(--text-soft)">—</span>')))}</div></div>
+                <div><div class="k">Phone</div><div class="v">${App.i18n.value(() => (U().esc(contact.phone) || App.i18n.markup('<span style="color:var(--text-soft)">—</span>')))}</div></div>
+                <div><div class="k">Last Contact</div><div class="v">${App.i18n.value(() => (contact.lastContact ? U().formatDate(contact.lastContact) : App.i18n.markup('<span style="color:var(--text-soft)">—</span>')))}</div></div>
+                <div><div class="k">Next Follow-up</div><div class="v">${App.i18n.value(() => (contact.nextFollowUp ? U().formatDate(contact.nextFollowUp) + followupNote : App.i18n.markup('<span style="color:var(--text-soft)">—</span>')))}</div></div>
+                <div><div class="k">Birthday</div><div class="v">${App.i18n.value(() => (contact.birthday ? U().esc(U().formatDate(contact.birthday)) : App.i18n.markup('<span style="color:var(--text-soft)">—</span>')))}</div></div>
+                <div><div class="k">Home purchase</div><div class="v">${App.i18n.value(() => (contact.homePurchaseDate ? U().esc(U().formatDate(contact.homePurchaseDate)) : App.i18n.markup('<span style="color:var(--text-soft)">—</span>')))}</div></div>
+                <div><div class="k">Budget</div><div class="v">${App.i18n.value(() => (contact.budget ? U().formatCurrency(contact.budget, state.settings.currency) : App.i18n.markup('<span style="color:var(--text-soft)">—</span>')))}</div></div>
+                <div><div class="k">Preferred Area</div><div class="v">${App.i18n.value(() => (U().esc(contact.preferredArea) || App.i18n.markup('<span style="color:var(--text-soft)">—</span>')))}</div></div>
+                <div><div class="k">Source</div><div class="v">${App.i18n.value(() => (U().esc(contact.source) || App.i18n.markup('<span style="color:var(--text-soft)">—</span>')))}</div></div>
+                <div><div class="k">Assigned Agent</div><div class="v">${App.i18n.value(() => (U().esc(contact.assignedAgent) || App.i18n.markup('<span style="color:var(--text-soft)">—</span>')))}</div></div>
+                ${App.i18n.value(() => (showsOwners() ? App.i18n.html`<div><div class="k">Belongs to</div><div class="v" id="cDetailOwner">${App.i18n.value(() => (ownerControl(contact)))}</div></div>` : ""))}
               </div>
-              ${contact.notes ? `
+              ${App.i18n.value(() => (contact.notes ? App.i18n.html`
                 <div style="margin-top: 18px; padding-top: 18px; border-top: 1px solid var(--border);">
                   <div class="k" style="font-size: var(--font-size-xs);color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;font-weight:600;margin-bottom:6px;">Notes</div>
-                  <div style="white-space:pre-wrap;">${U().esc(contact.notes)}</div>
-                </div>` : ""}
+                  <div style="white-space:pre-wrap;">${App.i18n.value(() => (U().esc(contact.notes)))}</div>
+                </div>` : ""))}
             </div>
           </div>
 
-          ${renderRelatedDealsCard(contact, relatedDeals, state)}
-          ${renderRelatedPropertiesCard(contact, relatedProperties, state)}
-          ${renderRelatedActivitiesCard(contact, relatedActivities)}
-          ${renderRelatedShowingsCard(contact, relatedShowings, state)}
-          ${renderReferralsCard(contact, relatedReferralsA, relatedReferralsB, state)}
+          ${App.i18n.value(() => (renderRelatedDealsCard(contact, relatedDeals, state)))}
+          ${App.i18n.value(() => (renderRelatedPropertiesCard(contact, relatedProperties, state)))}
+          ${App.i18n.value(() => (renderRelatedActivitiesCard(contact, relatedActivities)))}
+          ${App.i18n.value(() => (renderRelatedShowingsCard(contact, relatedShowings, state)))}
+          ${App.i18n.value(() => (renderReferralsCard(contact, relatedReferralsA, relatedReferralsB, state)))}
         </div>
 
         <div class="col">
           <div class="card" id="contactOneTapCard">
             <div class="card-header"><div class="card-title">Contact them</div></div>
             <div class="card-body">
-              ${App.followUp ? App.followUp.barHtml(contact) : ""}
+              ${App.i18n.value(() => (App.followUp ? App.followUp.barHtml(contact) : ""))}
               <p class="form-help" style="margin:8px 0 0">Opens your own phone or mail app. RealtorCRM never sends these for you.</p>
             </div>
           </div>
           <div class="card">
             <div class="card-header"><div class="card-title">Quick Actions</div></div>
             <div class="card-body" style="display:flex;flex-direction:column;gap:8px;">
-              <button class="btn btn-primary btn-block" id="quickAddDeal">${App.app.icon("plus")} Create Deal</button>
-              <button class="btn btn-block" id="quickAddActivity">${App.app.icon("plus")} Log Activity</button>
-              <button class="btn btn-block" id="quickAddTask">${App.app.icon("plus")} Add Task</button>
-              <button class="btn btn-block" id="quickAddShowing">${App.app.icon("plus")} Schedule Showing</button>
-              <button class="btn btn-block" id="quickAddProperty">${App.app.icon("plus")} Add Property</button>
+              <button class="btn btn-primary btn-block" id="quickAddDeal">${App.i18n.value(() => (App.app.icon("plus")))} Create Deal</button>
+              <button class="btn btn-block" id="quickAddActivity">${App.i18n.value(() => (App.app.icon("plus")))} Log Activity</button>
+              <button class="btn btn-block" id="quickAddTask">${App.i18n.value(() => (App.app.icon("plus")))} Add Task</button>
+              <button class="btn btn-block" id="quickAddShowing">${App.i18n.value(() => (App.app.icon("plus")))} Schedule Showing</button>
+              <button class="btn btn-block" id="quickAddProperty">${App.i18n.value(() => (App.app.icon("plus")))} Add Property</button>
             </div>
           </div>
           <div class="card" id="contactEmailStatusCard">
@@ -644,17 +643,17 @@ App.pages.contacts = (function () {
             <div class="card-header"><div class="card-title">Summary</div></div>
             <div class="card-body">
               <div style="display:flex;flex-direction:column;gap:14px;">
-                <div><div class="k" style="font-size: var(--font-size-xs);color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;font-weight:600;">Related deals</div><div style="font-size: var(--font-size-xl);font-weight:700;">${relatedDeals.length}</div></div>
-                <div><div class="k" style="font-size: var(--font-size-xs);color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;font-weight:600;">Related properties</div><div style="font-size: var(--font-size-xl);font-weight:700;">${relatedProperties.length}</div></div>
-                <div><div class="k" style="font-size: var(--font-size-xs);color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;font-weight:600;">Total activities</div><div style="font-size: var(--font-size-xl);font-weight:700;">${relatedActivities.length}</div></div>
-                <div><div class="k" style="font-size: var(--font-size-xs);color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;font-weight:600;">Open tasks</div><div style="font-size: var(--font-size-xl);font-weight:700;">${relatedTasks.filter(t => t.status !== "Completed").length}</div></div>
+                <div><div class="k" style="font-size: var(--font-size-xs);color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;font-weight:600;">Related deals</div><div style="font-size: var(--font-size-xl);font-weight:700;">${App.i18n.value(() => (relatedDeals.length))}</div></div>
+                <div><div class="k" style="font-size: var(--font-size-xs);color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;font-weight:600;">Related properties</div><div style="font-size: var(--font-size-xl);font-weight:700;">${App.i18n.value(() => (relatedProperties.length))}</div></div>
+                <div><div class="k" style="font-size: var(--font-size-xs);color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;font-weight:600;">Total activities</div><div style="font-size: var(--font-size-xl);font-weight:700;">${App.i18n.value(() => (relatedActivities.length))}</div></div>
+                <div><div class="k" style="font-size: var(--font-size-xs);color:var(--text-muted);text-transform:uppercase;letter-spacing:0.06em;font-weight:600;">Open tasks</div><div style="font-size: var(--font-size-xl);font-weight:700;">${App.i18n.value(() => (relatedTasks.filter(t => t.status !== "Completed").length))}</div></div>
               </div>
             </div>
           </div>
           <!-- Tasks sits in the aside rather than the main column: it is a short
                checklist that reads fine at this width, and moving it evens out
                a 7-against-2 split that left most of this column empty. -->
-          ${renderRelatedTasksCard(contact, relatedTasks)}
+          ${App.i18n.value(() => (renderRelatedTasksCard(contact, relatedTasks)))}
         </div>
       </div>
     `;
@@ -709,13 +708,13 @@ App.pages.contacts = (function () {
   function ownerControl(contact) {
     if (canAssign()) {
       const members = assignableMembers();
-      return `<select id="cOwnerPick" aria-label="Who this lead belongs to">
+      return App.i18n.html`<select id="cOwnerPick" aria-label="Who this lead belongs to">
         <option value="">Nobody yet</option>
-        ${members.map(m => `<option value="${U().esc(m.id)}" ${contact.assignedToId === m.id ? "selected" : ""}>${U().esc(m.name)}</option>`).join("")}
+        ${App.i18n.value(() => (members.map(m => App.i18n.html`<option value="${App.i18n.value(() => (U().esc(m.id)))}" ${App.i18n.value(() => (contact.assignedToId === m.id ? "selected" : ""))}>${App.i18n.value(() => (U().esc(m.name)))}</option>`).join("")))}
       </select>`;
     }
     if (!contact.assignedToId && canClaim()) {
-      return `${ownerCell(contact)} <button class="btn btn-sm" id="cOwnerClaim">Claim this lead</button>`;
+      return App.i18n.html`${App.i18n.value(() => (ownerCell(contact)))} <button class="btn btn-sm" id="cOwnerClaim">Claim this lead</button>`;
     }
     return ownerCell(contact);
   }
@@ -740,27 +739,27 @@ App.pages.contacts = (function () {
         pick.disabled = true;
         try {
           await S().contacts.update(contact.id, { assignedToId: next });
-          App.app.toast(next ? "Handed over to " + (memberNameById(next) || "them") + "." : "Back in the pool.", "success");
+          App.app.toast(next ? App.i18n.t("Handed over to ") + (memberNameById(next) || "them") + "." : App.i18n.t("Back in the pool."), "success");
           await renderDetail(container, contact.id);
         } catch (err) {
           pick.value = before;
           pick.disabled = false;
-          App.app.toast("Could not change who this belongs to.", "danger");
+          App.app.toast(App.i18n.t("Could not change who this belongs to."), "danger");
         }
       });
     }
     const claim = container.querySelector("#cOwnerClaim");
     if (claim) claim.addEventListener("click", async () => {
       const me = App.workspace ? App.workspace.teamMemberId() : null;
-      if (!me) { App.app.toast("Your own team record is missing, so this cannot be claimed.", "danger"); return; }
+      if (!me) { App.app.toast(App.i18n.t("Your own team record is missing, so this cannot be claimed."), "danger"); return; }
       claim.disabled = true;
       try {
         await S().contacts.update(contact.id, { assignedToId: me });
-        App.app.toast("This lead is yours.", "success");
+        App.app.toast(App.i18n.t("This lead is yours."), "success");
         await renderDetail(container, contact.id);
       } catch (err) {
         claim.disabled = false;
-        App.app.toast("Somebody else may have taken it. Refresh to see.", "danger");
+        App.app.toast(App.i18n.t("Somebody else may have taken it. Refresh to see."), "danger");
       }
     });
   }
@@ -782,7 +781,7 @@ App.pages.contacts = (function () {
       status = await runtime.contactEmailStatus(contactId);
     } catch (e) {
       if (document.getElementById("contactEmailStatusCard") !== card) return;
-      body.innerHTML = '<p class="form-help" style="margin:0">Email status could not be loaded right now.</p>';
+      body.innerHTML = App.i18n.markup('<p class="form-help" style="margin:0">Email status could not be loaded right now.</p>');
       return;
     }
     // The user may have navigated away while this loaded.
@@ -795,27 +794,27 @@ App.pages.contacts = (function () {
   function renderEmailStatus(status) {
     const lines = [];
     if (status.replyDetectedAt) {
-      lines.push(`<span class="badge badge-neutral"><span class="dot"></span>Contact replied</span> <span class="form-help">on ${U().esc(shortDate(status.replyDetectedAt))}</span>`);
+      lines.push(App.i18n.html`<span class="badge badge-neutral"><span class="dot"></span>Contact replied</span> <span class="form-help">on ${App.i18n.value(() => (U().esc(shortDate(status.replyDetectedAt))))}</span>`);
     }
     if (status.unsubscribeDetectedAt) {
       const how = Object.prototype.hasOwnProperty.call(UNSUBSCRIBE_HOW, status.optOutSource) ? UNSUBSCRIBE_HOW[status.optOutSource] + " " : "";
-      lines.push(`<span class="badge badge-neutral"><span class="dot"></span>Contact unsubscribed</span> <span class="form-help">${U().esc(how)}on ${U().esc(shortDate(status.unsubscribeDetectedAt))}</span>`);
+      lines.push(App.i18n.html`<span class="badge badge-neutral"><span class="dot"></span>Contact unsubscribed</span> <span class="form-help">${App.i18n.value(() => (U().esc(how)))}on ${App.i18n.value(() => (U().esc(shortDate(status.unsubscribeDetectedAt))))}</span>`);
     }
     if (status.emailBlocked) {
       const why = Object.prototype.hasOwnProperty.call(BLOCK_REASON_LABELS, status.blockedReason) ? BLOCK_REASON_LABELS[status.blockedReason] : BLOCK_REASON_LABELS.manual;
-      lines.push(`<span class="badge badge-warning"><span class="dot"></span>Email blocked</span> <span class="form-help">because ${U().esc(why)}.</span>`);
+      lines.push(App.i18n.html`<span class="badge badge-warning"><span class="dot"></span>Email blocked</span> <span class="form-help">because ${App.i18n.value(() => (U().esc(why)))}.</span>`);
     } else if (status.emailOptedOut && !status.unsubscribeDetectedAt) {
-      lines.push(`<span class="badge badge-warning"><span class="dot"></span>Email blocked</span> <span class="form-help">because the contact opted out of email.</span>`);
+      lines.push(App.i18n.markup(`<span class="badge badge-warning"><span class="dot"></span>Email blocked</span> <span class="form-help">because the contact opted out of email.</span>`));
     }
     const summary = lines.length
-      ? lines.map((l) => `<div>${l}</div>`).join("")
-      : '<p class="form-help" style="margin:0">Follow-up emails can be sent to this contact.</p>';
+      ? lines.map((l) => App.i18n.html`<div>${App.i18n.value(() => (l))}</div>`).join("")
+      : App.i18n.markup('<p class="form-help" style="margin:0">Follow-up emails can be sent to this contact.</p>');
     const actions = [];
-    if (!status.replyDetectedAt) actions.push('<button type="button" class="btn btn-block" data-role="mark-replied">Mark as replied</button>');
-    if (!status.unsubscribeDetectedAt) actions.push('<button type="button" class="btn btn-block" data-role="mark-unsubscribed">Mark as unsubscribed</button>');
-    return `
-      <div style="display:flex;flex-direction:column;gap:8px;">${summary}</div>
-      ${actions.length ? `<div style="display:flex;flex-direction:column;gap:8px;margin-top:14px;">${actions.join("")}</div>` : ""}`;
+    if (!status.replyDetectedAt) actions.push(App.i18n.markup('<button type="button" class="btn btn-block" data-role="mark-replied">Mark as replied</button>'));
+    if (!status.unsubscribeDetectedAt) actions.push(App.i18n.markup('<button type="button" class="btn btn-block" data-role="mark-unsubscribed">Mark as unsubscribed</button>'));
+    return App.i18n.html`
+      <div style="display:flex;flex-direction:column;gap:8px;">${App.i18n.value(() => (summary))}</div>
+      ${App.i18n.value(() => (actions.length ? App.i18n.html`<div style="display:flex;flex-direction:column;gap:8px;margin-top:14px;">${App.i18n.value(() => (actions.join("")))}</div>` : ""))}`;
   }
 
   function wireEmailStatusActions(body, contactId, status) {
@@ -840,7 +839,7 @@ App.pages.contacts = (function () {
       try {
         if (isReply) await S().automationRuntime.markReplied(contactId);
         else await S().automationRuntime.markUnsubscribed(contactId);
-        App.app.toast(isReply ? "Marked as replied." : "Marked as unsubscribed.", "success");
+        App.app.toast(isReply ? App.i18n.t("Marked as replied.") : App.i18n.t("Marked as unsubscribed."), "success");
         await loadEmailStatusCard(contactId);
       } catch (err) {
         const code = err && err.code;
@@ -849,7 +848,7 @@ App.pages.contacts = (function () {
           contact_not_found: "This contact no longer exists.",
           request_ambiguous: "We couldn't confirm that was saved. Refresh the page to check before trying again."
         };
-        App.app.toast(Object.prototype.hasOwnProperty.call(known, code) ? known[code] : "That couldn't be saved. Please try again.", "danger");
+        App.app.toast(Object.prototype.hasOwnProperty.call(known, code) ? known[code] : App.i18n.t("That couldn't be saved. Please try again."), "danger");
         button.disabled = false;
       }
     });
@@ -858,128 +857,128 @@ App.pages.contacts = (function () {
   // ---------- RELATED-RECORD CARDS ----------
 
   function renderRelatedDealsCard(contact, deals, state) {
-    return `
+    return App.i18n.html`
       <div class="card">
         <div class="card-header">
           <div class="card-title">Related Deals</div>
-          <span class="badge badge-neutral">${deals.length}</span>
+          <span class="badge badge-neutral">${App.i18n.value(() => (deals.length))}</span>
         </div>
         <div class="card-body zero">
-          ${deals.length === 0 ? `
+          ${App.i18n.value(() => (deals.length === 0 ? App.i18n.markup(`
             <div class="empty" style="padding:var(--empty-padding)">
               <p>No deals for this contact yet.</p>
             </div>
-          ` : deals.map(d => {
+          `) : deals.map(d => {
             const p = d.propertyId ? state.properties.find(x => x.id === d.propertyId) : null;
             const net = C().netGCI(d);
             const cur = state.settings.currency;
-            return `
+            return App.i18n.html`
               <div class="item-row">
-                <div class="icon-slot">${App.app.icon("dollar")}</div>
+                <div class="icon-slot">${App.i18n.value(() => (App.app.icon("dollar")))}</div>
                 <div class="body">
-                  <div class="title">${U().esc(d.name)}</div>
+                  <div class="title">${App.i18n.value(() => (U().esc(d.name)))}</div>
                   <div class="sub">
-                    ${U().esc(d.stage)} · ${U().esc(d.side)} side
-                    ${p ? " · " + U().esc(p.address) : ""}
-                    ${d.closeDate ? " · Close " + U().formatDate(d.closeDate) : ""}
+                    ${App.i18n.value(() => (U().esc(d.stage)))} · ${App.i18n.value(() => (U().esc(d.side)))} side
+                    ${App.i18n.value(() => (p ? " · " + U().esc(p.address) : ""))}
+                    ${App.i18n.value(() => (d.closeDate ? " · Close " + U().formatDate(d.closeDate) : ""))}
                   </div>
                 </div>
                 <div class="meta-right">
-                  <div style="font-weight:600;color:var(--text);">${U().formatCurrency(d.salePrice, cur)}</div>
-                  <div style="font-size: var(--font-size-xs);">Net ${U().formatCurrency(net, cur)}</div>
+                  <div style="font-weight:600;color:var(--text);">${App.i18n.value(() => (U().formatCurrency(d.salePrice, cur)))}</div>
+                  <div style="font-size: var(--font-size-xs);">Net ${App.i18n.value(() => (U().formatCurrency(net, cur)))}</div>
                 </div>
               </div>
             `;
-          }).join("")}
+          }).join("")))}
         </div>
       </div>
     `;
   }
 
   function renderRelatedPropertiesCard(contact, properties, state) {
-    return `
+    return App.i18n.html`
       <div class="card">
         <div class="card-header">
           <div class="card-title">Related Properties</div>
-          <span class="badge badge-neutral">${properties.length}</span>
+          <span class="badge badge-neutral">${App.i18n.value(() => (properties.length))}</span>
         </div>
         <div class="card-body zero">
-          ${properties.length === 0 ? `
+          ${App.i18n.value(() => (properties.length === 0 ? App.i18n.markup(`
             <div class="empty" style="padding:var(--empty-padding)">
               <p>No properties linked to this contact.</p>
             </div>
-          ` : properties.map(p => `
-            <div class="item-row clickable" onclick="location.hash='#/properties/${p.id}'">
-              <div class="icon-slot">${App.app.icon("home")}</div>
+          `) : properties.map(p => App.i18n.html`
+            <div class="item-row clickable" onclick="location.hash='#/properties/${App.i18n.value(() => (p.id))}'">
+              <div class="icon-slot">${App.i18n.value(() => (App.app.icon("home")))}</div>
               <div class="body">
-                <div class="title">${U().esc(p.address)} ${p.mls ? `<span style="font-size: var(--font-size-xs);color:var(--text-soft);font-weight:500;">${U().esc(p.mls)}</span>` : ""}</div>
+                <div class="title">${App.i18n.value(() => (U().esc(p.address)))} ${App.i18n.value(() => (p.mls ? App.i18n.html`<span style="font-size: var(--font-size-xs);color:var(--text-soft);font-weight:500;">${App.i18n.value(() => (U().esc(p.mls)))}</span>` : ""))}</div>
                 <div class="sub">
-                  ${U().esc(p.status)}
-                  ${p.beds ? " · " + p.beds + "bd" : ""}${p.baths ? "/" + p.baths + "ba" : ""}
-                  ${p.sqft ? " · " + p.sqft.toLocaleString() + " sqft" : ""}
+                  ${App.i18n.value(() => (U().esc(p.status)))}
+                  ${App.i18n.value(() => (p.beds ? " · " + p.beds + "bd" : ""))}${App.i18n.value(() => (p.baths ? "/" + p.baths + "ba" : ""))}
+                  ${App.i18n.value(() => (p.sqft ? " · " + p.sqft.toLocaleString() + " sqft" : ""))}
                 </div>
               </div>
               <div class="meta-right">
-                <div style="font-weight:600;color:var(--text);">${p.listPrice ? U().formatCurrency(p.listPrice, state.settings.currency) : "—"}</div>
+                <div style="font-weight:600;color:var(--text);">${App.i18n.value(() => (p.listPrice ? U().formatCurrency(p.listPrice, state.settings.currency) : "—"))}</div>
               </div>
             </div>
-          `).join("")}
+          `).join("")))}
         </div>
       </div>
     `;
   }
 
   function renderRelatedActivitiesCard(contact, activities) {
-    return `
+    return App.i18n.html`
       <div class="card">
         <div class="card-header">
           <div class="card-title">Activity Timeline</div>
-          <span class="badge badge-neutral">${activities.length}</span>
+          <span class="badge badge-neutral">${App.i18n.value(() => (activities.length))}</span>
         </div>
         <div class="card-body zero">
-          ${activities.length === 0 ? `
+          ${App.i18n.value(() => (activities.length === 0 ? App.i18n.markup(`
             <div class="empty" style="padding:var(--empty-padding)">
               <p>No activities logged yet. Use "Log Activity" to record calls, emails, meetings, and notes.</p>
             </div>
-          ` : activities.slice(0, 10).map(a => `
+          `) : activities.slice(0, 10).map(a => App.i18n.html`
             <div class="item-row">
-              <div class="icon-slot">${activityIcon(a.type)}</div>
+              <div class="icon-slot">${App.i18n.value(() => (activityIcon(a.type)))}</div>
               <div class="body">
-                <div class="title">${U().esc(a.subject || a.type)} <span style="font-weight:500;color:var(--text-muted);font-size: var(--font-size-xs);">· ${U().esc(a.type)}</span></div>
-                ${a.notes ? `<div class="sub">${U().esc(U().truncate(a.notes, 120))}</div>` : ""}
+                <div class="title">${App.i18n.value(() => (U().esc(a.subject || a.type)))} <span style="font-weight:500;color:var(--text-muted);font-size: var(--font-size-xs);">· ${App.i18n.value(() => (U().esc(a.type)))}</span></div>
+                ${App.i18n.value(() => (a.notes ? App.i18n.html`<div class="sub">${App.i18n.value(() => (U().esc(U().truncate(a.notes, 120))))}</div>` : ""))}
               </div>
-              <div class="meta-right">${a.date ? U().relativeDayLabel(a.date.slice(0,10)) : "—"}</div>
+              <div class="meta-right">${App.i18n.value(() => (a.date ? U().relativeDayLabel(a.date.slice(0,10)) : "—"))}</div>
             </div>
-          `).join("")}
+          `).join("")))}
         </div>
       </div>
     `;
   }
 
   function renderRelatedShowingsCard(contact, showings, state) {
-    return `
+    return App.i18n.html`
       <div class="card">
         <div class="card-header">
           <div class="card-title">Showings</div>
-          <span class="badge badge-neutral">${showings.length}</span>
+          <span class="badge badge-neutral">${App.i18n.value(() => (showings.length))}</span>
         </div>
         <div class="card-body zero">
-          ${showings.length === 0 ? `
+          ${App.i18n.value(() => (showings.length === 0 ? App.i18n.markup(`
             <div class="empty" style="padding:var(--empty-padding)">
               <p>No showings scheduled.</p>
             </div>
-          ` : showings.map(sh => {
+          `) : showings.map(sh => {
             const p = sh.propertyId ? state.properties.find(x => x.id === sh.propertyId) : null;
-            return `
+            return App.i18n.html`
               <div class="item-row">
-                <div class="icon-slot">${App.app.icon("home")}</div>
+                <div class="icon-slot">${App.i18n.value(() => (App.app.icon("home")))}</div>
                 <div class="body">
-                  <div class="title">${p ? U().esc(p.address) : "Property removed"}</div>
-                  <div class="sub">${U().formatDate(sh.date)} · ${U().esc(sh.startTime || "")} · ${U().esc(sh.status)}</div>
+                  <div class="title">${App.i18n.value(() => (p ? U().esc(p.address) : App.i18n.t("Property removed")))}</div>
+                  <div class="sub">${App.i18n.value(() => (U().formatDate(sh.date)))} · ${App.i18n.value(() => (U().esc(sh.startTime || "")))} · ${App.i18n.value(() => (U().esc(sh.status)))}</div>
                 </div>
               </div>
             `;
-          }).join("")}
+          }).join("")))}
         </div>
       </div>
     `;
@@ -988,35 +987,35 @@ App.pages.contacts = (function () {
   function renderRelatedTasksCard(contact, tasks) {
     const open = tasks.filter(t => t.status !== "Completed");
     const done = tasks.filter(t => t.status === "Completed");
-    return `
+    return App.i18n.html`
       <div class="card">
         <div class="card-header">
           <div class="card-title">Tasks</div>
-          <span class="badge badge-neutral">${open.length} open · ${done.length} done</span>
+          <span class="badge badge-neutral">${App.i18n.value(() => (open.length))} open · ${App.i18n.value(() => (done.length))} done</span>
         </div>
         <div class="card-body zero">
-          ${tasks.length === 0 ? `
+          ${App.i18n.value(() => (tasks.length === 0 ? App.i18n.markup(`
             <div class="empty" style="padding:var(--empty-padding)">
               <p>No tasks yet.</p>
             </div>
-          ` : tasks.map(t => {
+          `) : tasks.map(t => {
             const overdue = t.dueDate && t.dueDate < U().todayISO() && t.status !== "Completed";
-            return `
+            return App.i18n.html`
               <div class="item-row">
-                <div class="icon-slot" style="background:${t.status === "Completed" ? "var(--success-soft)" : "var(--accent-soft)"};color:${t.status === "Completed" ? "var(--success)" : "var(--accent)"};">
-                  ${App.app.icon("check")}
+                <div class="icon-slot" style="background:${App.i18n.value(() => (t.status === "Completed" ? "var(--success-soft)" : "var(--accent-soft)"))};color:${App.i18n.value(() => (t.status === "Completed" ? "var(--success)" : "var(--accent)"))};">
+                  ${App.i18n.value(() => (App.app.icon("check")))}
                 </div>
                 <div class="body">
-                  <div class="title" style="${t.status === "Completed" ? "text-decoration:line-through;color:var(--text-muted);" : ""}">${U().esc(t.title)}</div>
+                  <div class="title" style="${App.i18n.value(() => (t.status === "Completed" ? "text-decoration:line-through;color:var(--text-muted);" : ""))}">${App.i18n.value(() => (U().esc(t.title)))}</div>
                   <div class="sub">
-                    ${U().esc(t.priority)} priority · ${U().esc(t.status)}
-                    ${t.dueDate ? " · Due " + U().formatDate(t.dueDate) : ""}
-                    ${overdue ? ' <span class="badge badge-overdue">Overdue</span>' : ""}
+                    ${App.i18n.value(() => (U().esc(t.priority)))} priority · ${App.i18n.value(() => (U().esc(t.status)))}
+                    ${App.i18n.value(() => (t.dueDate ? " · Due " + U().formatDate(t.dueDate) : ""))}
+                    ${App.i18n.value(() => (overdue ? App.i18n.markup(' <span class="badge badge-overdue">Overdue</span>') : ""))}
                   </div>
                 </div>
               </div>
             `;
-          }).join("")}
+          }).join("")))}
         </div>
       </div>
     `;
@@ -1025,37 +1024,37 @@ App.pages.contacts = (function () {
   function renderReferralsCard(contact, referralsFromThem, referralsAboutThem, state) {
     const total = referralsFromThem.length + referralsAboutThem.length;
     if (total === 0) return "";
-    return `
+    return App.i18n.html`
       <div class="card">
         <div class="card-header">
           <div class="card-title">Referrals</div>
-          <span class="badge badge-neutral">${total}</span>
+          <span class="badge badge-neutral">${App.i18n.value(() => (total))}</span>
         </div>
         <div class="card-body zero">
-          ${referralsFromThem.map(r => {
+          ${App.i18n.value(() => (referralsFromThem.map(r => {
             const to = state.contacts.find(x => x.id === r.referredContactId);
-            return `
+            return App.i18n.html`
               <div class="item-row">
-                <div class="icon-slot">${App.app.icon("share")}</div>
+                <div class="icon-slot">${App.i18n.value(() => (App.app.icon("share")))}</div>
                 <div class="body">
-                  <div class="title">Referred ${to ? U().esc(to.name) : "someone"}</div>
-                  <div class="sub">${U().formatDate(r.date)} · ${U().esc(r.status)}</div>
+                  <div class="title">Referred ${App.i18n.value(() => (to ? U().esc(to.name) : App.i18n.t("someone")))}</div>
+                  <div class="sub">${App.i18n.value(() => (U().formatDate(r.date)))} · ${App.i18n.value(() => (U().esc(r.status)))}</div>
                 </div>
               </div>
             `;
-          }).join("")}
-          ${referralsAboutThem.map(r => {
+          }).join("")))}
+          ${App.i18n.value(() => (referralsAboutThem.map(r => {
             const from = state.contacts.find(x => x.id === r.referrerId);
-            return `
+            return App.i18n.html`
               <div class="item-row">
-                <div class="icon-slot">${App.app.icon("share")}</div>
+                <div class="icon-slot">${App.i18n.value(() => (App.app.icon("share")))}</div>
                 <div class="body">
-                  <div class="title">Referred by ${from ? U().esc(from.name) : "someone"}</div>
-                  <div class="sub">${U().formatDate(r.date)} · ${U().esc(r.status)}</div>
+                  <div class="title">Referred by ${App.i18n.value(() => (from ? U().esc(from.name) : App.i18n.t("someone")))}</div>
+                  <div class="sub">${App.i18n.value(() => (U().formatDate(r.date)))} · ${App.i18n.value(() => (U().esc(r.status)))}</div>
                 </div>
               </div>
             `;
-          }).join("")}
+          }).join("")))}
         </div>
       </div>
     `;
@@ -1076,7 +1075,7 @@ App.pages.contacts = (function () {
     const editing = !!id;
     await S().ensureLoaded(["contacts"]);
     const existing = editing ? S().getState().contacts.find(c => c.id === id) : null;
-    if (editing && !existing) { App.app.toast("Contact not found.", "danger"); return; }
+    if (editing && !existing) { App.app.toast(App.i18n.t("Contact not found."), "danger"); return; }
 
     const s = S().getState();
     const c = existing || {
@@ -1086,92 +1085,92 @@ App.pages.contacts = (function () {
       budget: 0, preferredArea: "", assignedAgent: "Self", notes: ""
     };
 
-    const body = `
+    const body = App.i18n.html`
       <form id="contactForm" novalidate>
         <div class="form-grid">
           <div class="form-field full">
             <label for="fName">Name <span class="req">*</span></label>
-            <input type="text" id="fName" value="${U().esc(c.name)}" required autofocus>
+            <input type="text" id="fName" value="${App.i18n.value(() => (U().esc(c.name)))}" required autofocus>
             <div class="err">Name is required.</div>
           </div>
           <div class="form-field">
             <label for="fRole">Role <span class="req">*</span></label>
             <select id="fRole" required>
-              ${["Buyer","Seller","Investor","Referral Partner"].map(r =>
-                `<option value="${r}" ${c.role===r?"selected":""}>${r}</option>`).join("")}
+              ${App.i18n.value(() => (["Buyer","Seller","Investor","Referral Partner"].map(r =>
+                App.i18n.html`<option value="${App.i18n.value(() => (r))}" ${App.i18n.value(() => (c.role===r?"selected":""))}>${App.i18n.value(() => (App.i18n.t(r)))}</option>`).join("")))}
             </select>
           </div>
           <div class="form-field">
             <label for="fStage">Stage</label>
             <select id="fStage">
-              ${s.settings.contactStages.map(st =>
-                `<option value="${st}" ${c.stage===st?"selected":""}>${st}</option>`).join("")}
+              ${App.i18n.value(() => (s.settings.contactStages.map(st =>
+                App.i18n.html`<option value="${App.i18n.value(() => (st))}" ${App.i18n.value(() => (c.stage===st?"selected":""))}>${App.i18n.value(() => (st))}</option>`).join("")))}
             </select>
           </div>
           <div class="form-field">
             <label for="fEmail">Email</label>
-            <input type="email" id="fEmail" value="${U().esc(c.email)}">
+            <input type="email" id="fEmail" value="${App.i18n.value(() => (U().esc(c.email)))}">
             <div class="err">Please enter a valid email address.</div>
           </div>
           <div class="form-field">
             <label for="fPhone">Phone</label>
-            <input type="tel" id="fPhone" value="${U().esc(c.phone)}">
+            <input type="tel" id="fPhone" value="${App.i18n.value(() => (U().esc(c.phone)))}">
           </div>
           <div class="form-field">
             <label for="fSource">Source</label>
             <select id="fSource">
-              ${s.settings.leadSources.map(src =>
-                `<option value="${src}" ${c.source===src?"selected":""}>${src}</option>`).join("")}
+              ${App.i18n.value(() => (s.settings.leadSources.map(src =>
+                App.i18n.html`<option value="${App.i18n.value(() => (src))}" ${App.i18n.value(() => (c.source===src?"selected":""))}>${App.i18n.value(() => (src))}</option>`).join("")))}
             </select>
           </div>
           <div class="form-field">
             <label for="fTemp">Temperature</label>
             <select id="fTemp">
-              ${["Hot","Warm","Cold"].map(t =>
-                `<option value="${t}" ${c.temperature===t?"selected":""}>${t}</option>`).join("")}
+              ${App.i18n.value(() => (["Hot","Warm","Cold"].map(t =>
+                App.i18n.html`<option value="${App.i18n.value(() => (t))}" ${App.i18n.value(() => (c.temperature===t?"selected":""))}>${App.i18n.value(() => (App.i18n.t(t)))}</option>`).join("")))}
             </select>
           </div>
           <div class="form-field">
             <label for="fLast">Last Contact</label>
-            <input type="date" id="fLast" value="${c.lastContact || ""}">
+            <input type="date" id="fLast" value="${App.i18n.value(() => (c.lastContact || ""))}">
           </div>
           <div class="form-field">
             <label for="fNext">Next Follow-up</label>
-            <input type="date" id="fNext" value="${c.nextFollowUp || ""}">
+            <input type="date" id="fNext" value="${App.i18n.value(() => (c.nextFollowUp || ""))}">
           </div>
           <div class="form-field">
             <label for="fBirthday">Birthday</label>
-            <input type="date" id="fBirthday" value="${c.birthday || ""}">
+            <input type="date" id="fBirthday" value="${App.i18n.value(() => (c.birthday || ""))}">
             <p class="form-help">Only the day and month are used, so an unknown year is fine.</p>
           </div>
           <div class="form-field">
             <label for="fHomePurchase">Home purchase date</label>
-            <input type="date" id="fHomePurchase" value="${c.homePurchaseDate || ""}">
+            <input type="date" id="fHomePurchase" value="${App.i18n.value(() => (c.homePurchaseDate || ""))}">
             <p class="form-help">Filled in for you when a deal is marked won, if it is still empty.</p>
           </div>
           <div class="form-field">
-            <label for="fBudget">Budget (${U().currencySymbol(s.settings.currency)})</label>
-            <input type="number" id="fBudget" value="${c.budget || 0}" min="0" step="1000">
+            <label for="fBudget">Budget (${App.i18n.value(() => (U().currencySymbol(s.settings.currency)))})</label>
+            <input type="number" id="fBudget" value="${App.i18n.value(() => (c.budget || 0))}" min="0" step="1000">
           </div>
           <div class="form-field">
             <label for="fArea">Preferred Area</label>
-            <input type="text" id="fArea" value="${U().esc(c.preferredArea)}">
+            <input type="text" id="fArea" value="${App.i18n.value(() => (U().esc(c.preferredArea)))}">
           </div>
           <div class="form-field full">
             <label for="fNotes">Notes</label>
-            <textarea id="fNotes" rows="4">${U().esc(c.notes)}</textarea>
+            <textarea id="fNotes" rows="4">${App.i18n.value(() => (U().esc(c.notes)))}</textarea>
           </div>
         </div>
-        ${App.customFieldsUI.renderSection("contact", editing ? id : null)}
+        ${App.i18n.value(() => (App.customFieldsUI.renderSection("contact", editing ? id : null)))}
       </form>
     `;
 
     const handle = App.app.openModal({
       title: editing ? "Edit Contact" : "Add Contact",
       body,
-      footer: `
+      footer: App.i18n.html`
         <button class="btn" data-role="cancel">Cancel</button>
-        <button class="btn btn-primary" data-role="save">${editing ? "Save Changes" : "Add Contact"}</button>
+        <button class="btn btn-primary" data-role="save">${App.i18n.value(() => (editing ? App.i18n.t("Save Changes") : App.i18n.t("Add Contact")))}</button>
       `,
       onOpen: (modal) => {
         modal.querySelector('[data-role="cancel"]').addEventListener("click", () => handle.close());
@@ -1204,7 +1203,7 @@ App.pages.contacts = (function () {
     }
     const missingCustom = App.customFieldsUI.findMissingRequired(document, "contact");
     if (missingCustom.length) {
-      App.app.toast(`${missingCustom.join(", ")} ${missingCustom.length === 1 ? "is" : "are"} required.`, "danger");
+      App.app.toast(App.i18n.text`${App.i18n.value(() => (missingCustom.join(", ")))} ${App.i18n.value(() => (missingCustom.length === 1 ? "is" : "are"))} required.`, "danger");
       valid = false;
     }
     if (!valid) return;
@@ -1234,17 +1233,17 @@ App.pages.contacts = (function () {
     try {
       if (editing) {
         await S().contacts.update(id, patch);
-        App.app.toast("Contact updated.", "success");
+        App.app.toast(App.i18n.t("Contact updated."), "success");
       } else {
         const c = await S().contacts.create(patch);
         savedId = c.id;
-        App.app.toast(`Added ${c.name}.`, "success");
+        App.app.toast(App.i18n.text`Added ${App.i18n.value(() => (c.name))}.`, "success");
       }
       await S().customFields.setValues("contact", savedId, customValues);
       handle.close();
       App.app.route();
     } catch (err) {
-      App.app.toast("Could not save contact: " + err.message, "danger");
+      App.app.toast(App.i18n.t("Could not save contact: ") + err.message, "danger");
       if (saveBtn) saveBtn.disabled = false;
     }
   }
@@ -1252,17 +1251,17 @@ App.pages.contacts = (function () {
   async function openDeleteContactConfirm(id) {
     await S().ensureLoaded(["contacts"]);
     const contact = S().getState().contacts.find(c => c.id === id);
-    if (!contact) { App.app.toast("Contact not found.", "danger"); return; }
+    if (!contact) { App.app.toast(App.i18n.t("Contact not found."), "danger"); return; }
     let preview;
     try {
       preview = await S().contacts.delete(id); // returns needsConfirmation payload
     } catch (err) {
-      App.app.toast("Could not check related records: " + err.message, "danger");
+      App.app.toast(App.i18n.t("Could not check related records: ") + err.message, "danger");
       return;
     }
     App.app.confirmDialog({
-      title: "Delete Contact?",
-      message: `This will permanently remove <strong>${U().esc(contact.name)}</strong> from your CRM.`,
+      get title() { return App.i18n.t("Delete Contact?"); },
+      message: App.i18n.html`This will permanently remove <strong>${App.i18n.value(() => (U().esc(contact.name)))}</strong> from your CRM.`,
       impact: preview.impact,
       okLabel: "Delete Contact",
       danger: true
@@ -1270,13 +1269,13 @@ App.pages.contacts = (function () {
       try {
         const result = await S().contacts.delete(id, { force: true });
         if (result.deleted) {
-          App.app.toast("Contact deleted.", "success");
+          App.app.toast(App.i18n.t("Contact deleted."), "success");
           App.app.navigate("/contacts");
         } else {
-          App.app.toast("Delete failed.", "danger");
+          App.app.toast(App.i18n.t("Delete failed."), "danger");
         }
       } catch (err) {
-        App.app.toast("Delete failed: " + err.message, "danger");
+        App.app.toast(App.i18n.t("Delete failed: ") + err.message, "danger");
       }
     });
   }
@@ -1313,12 +1312,12 @@ App.pages.contacts = (function () {
     prefill = prefill || {};
     await S().ensureLoaded(["contacts", "properties"]);
     const state = S().getState();
-    const body = `
+    const body = App.i18n.html`
       <form id="showForm" novalidate>
         <div class="form-grid">
           <div class="form-field">
             <label for="sDate">Date <span class="req">*</span></label>
-            <input type="date" id="sDate" value="${prefill.date || U().todayISO()}" required>
+            <input type="date" id="sDate" value="${App.i18n.value(() => (prefill.date || U().todayISO()))}" required>
             <div class="err">Date is required.</div>
           </div>
           <div class="form-field">
@@ -1329,8 +1328,8 @@ App.pages.contacts = (function () {
             <label for="sContact">Contact <span class="req">*</span></label>
             <select id="sContact" required>
               <option value="">— select —</option>
-              ${state.contacts.slice().sort((a,b) => a.name.localeCompare(b.name)).map(c =>
-                `<option value="${c.id}" ${prefill.contactId===c.id?"selected":""}>${U().esc(c.name)}</option>`).join("")}
+              ${App.i18n.value(() => (state.contacts.slice().sort((a,b) => a.name.localeCompare(b.name)).map(c =>
+                App.i18n.html`<option value="${App.i18n.value(() => (c.id))}" ${App.i18n.value(() => (prefill.contactId===c.id?"selected":""))}>${App.i18n.value(() => (U().esc(c.name)))}</option>`).join("")))}
             </select>
             <div class="err">Contact is required.</div>
           </div>
@@ -1338,8 +1337,8 @@ App.pages.contacts = (function () {
             <label for="sProperty">Property <span class="req">*</span></label>
             <select id="sProperty" required>
               <option value="">— select —</option>
-              ${state.properties.map(p =>
-                `<option value="${p.id}" ${prefill.propertyId===p.id?"selected":""}>${U().esc(p.address)}</option>`).join("")}
+              ${App.i18n.value(() => (state.properties.map(p =>
+                App.i18n.html`<option value="${App.i18n.value(() => (p.id))}" ${App.i18n.value(() => (prefill.propertyId===p.id?"selected":""))}>${App.i18n.value(() => (U().esc(p.address)))}</option>`).join("")))}
             </select>
             <div class="err">Property is required.</div>
           </div>
@@ -1351,12 +1350,12 @@ App.pages.contacts = (function () {
       </form>
     `;
     const handle = App.app.openModal({
-      title: "Schedule Showing",
+      get title() { return App.i18n.t("Schedule Showing"); },
       body,
-      footer: `
+      footer: App.i18n.markup(`
         <button class="btn" data-role="cancel">Cancel</button>
         <button class="btn btn-primary" data-role="save">Add Showing</button>
-      `,
+      `),
       onOpen: (modal) => {
         modal.querySelector('[data-role="cancel"]').addEventListener("click", () => handle.close());
         modal.querySelector('[data-role="save"]').addEventListener("click", async () => {
@@ -1387,11 +1386,11 @@ App.pages.contacts = (function () {
               status: "Scheduled",
               notes: document.querySelector("#sNotes").value
             });
-            App.app.toast("Showing scheduled.", "success");
+            App.app.toast(App.i18n.t("Showing scheduled."), "success");
             handle.close();
             App.app.route();
           } catch (err) {
-            App.app.toast("Could not save showing: " + err.message, "danger");
+            App.app.toast(App.i18n.t("Could not save showing: ") + err.message, "danger");
             saveBtn.disabled = false;
           }
         });
@@ -1408,7 +1407,7 @@ App.pages.contacts = (function () {
   async function openFollowUpModal(contactId) {
     await S().ensureLoaded(["contacts"]);
     const contact = S().getState().contacts.find(c => c.id === contactId);
-    if (!contact) { App.app.toast("This contact no longer exists.", "danger"); return; }
+    if (!contact) { App.app.toast(App.i18n.t("This contact no longer exists."), "danger"); return; }
     // One activity id per opening of this modal, reused by every save
     // attempt from it: a retry after a lost response fails on the
     // activity's primary key instead of writing a duplicate.
@@ -1416,40 +1415,40 @@ App.pages.contacts = (function () {
 
     const s = S().getState();
     const status = D().contactFollowUpStatus(contact);
-    const statusBadge = status.status === "overdue" ? `<span class="badge badge-overdue">${status.daysOverdue} day${status.daysOverdue === 1 ? '' : 's'} overdue</span>`
-      : status.status === "due-today" ? `<span class="badge badge-today">Due today</span>`
+    const statusBadge = status.status === "overdue" ? App.i18n.html`<span class="badge badge-overdue">${App.i18n.value(() => (status.daysOverdue))} day${App.i18n.value(() => (status.daysOverdue === 1 ? '' : 's'))} overdue</span>`
+      : status.status === "due-today" ? App.i18n.markup(`<span class="badge badge-today">Due today</span>`)
       : followUpCell(contact);
 
-    const info = `
+    const info = App.i18n.html`
       <div class="meta" style="margin-bottom:18px;">
-        <div><div class="k">Contact</div><div class="v">${U().esc(contact.name || "(unnamed)")}</div></div>
-        <div><div class="k">Follow-up status</div><div class="v">${statusBadge}</div></div>
-        <div><div class="k">Role</div><div class="v">${U().esc(contact.role || "—")}</div></div>
-        <div><div class="k">Stage</div><div class="v">${stagePill(contact.stage)}</div></div>
-        <div><div class="k">Temperature</div><div class="v">${tempBadge(contact.temperature)}</div></div>
-        <div><div class="k">Phone</div><div class="v">${contact.phone ? U().esc(contact.phone) : '<span style="color:var(--text-soft)">—</span>'}</div></div>
-        <div><div class="k">Email</div><div class="v">${contact.email ? U().esc(contact.email) : '<span style="color:var(--text-soft)">—</span>'}</div></div>
-        <div><div class="k">Last contact</div><div class="v">${contact.lastContact ? U().formatDate(contact.lastContact) : '<span style="color:var(--text-soft)">—</span>'}</div></div>
-        <div><div class="k">Current follow-up date</div><div class="v">${contact.nextFollowUp ? U().formatDate(contact.nextFollowUp) : '<span style="color:var(--text-soft)">—</span>'}</div></div>
-        ${contact.preferredArea ? `<div><div class="k">Preferred area</div><div class="v">${U().esc(contact.preferredArea)}</div></div>` : ""}
+        <div><div class="k">Contact</div><div class="v">${App.i18n.value(() => (U().esc(contact.name || App.i18n.t("(unnamed)"))))}</div></div>
+        <div><div class="k">Follow-up status</div><div class="v">${App.i18n.value(() => (statusBadge))}</div></div>
+        <div><div class="k">Role</div><div class="v">${App.i18n.value(() => (U().esc(contact.role || "—")))}</div></div>
+        <div><div class="k">Stage</div><div class="v">${App.i18n.value(() => (stagePill(contact.stage)))}</div></div>
+        <div><div class="k">Temperature</div><div class="v">${App.i18n.value(() => (tempBadge(contact.temperature)))}</div></div>
+        <div><div class="k">Phone</div><div class="v">${App.i18n.value(() => (contact.phone ? U().esc(contact.phone) : App.i18n.markup('<span style="color:var(--text-soft)">—</span>')))}</div></div>
+        <div><div class="k">Email</div><div class="v">${App.i18n.value(() => (contact.email ? U().esc(contact.email) : App.i18n.markup('<span style="color:var(--text-soft)">—</span>')))}</div></div>
+        <div><div class="k">Last contact</div><div class="v">${App.i18n.value(() => (contact.lastContact ? U().formatDate(contact.lastContact) : App.i18n.markup('<span style="color:var(--text-soft)">—</span>')))}</div></div>
+        <div><div class="k">Current follow-up date</div><div class="v">${App.i18n.value(() => (contact.nextFollowUp ? U().formatDate(contact.nextFollowUp) : App.i18n.markup('<span style="color:var(--text-soft)">—</span>')))}</div></div>
+        ${App.i18n.value(() => (contact.preferredArea ? App.i18n.html`<div><div class="k">Preferred area</div><div class="v">${App.i18n.value(() => (U().esc(contact.preferredArea)))}</div></div>` : ""))}
       </div>
-      ${contact.notes ? `<div style="margin-bottom:18px;padding:10px 12px;background:var(--surface-sunk);border-radius:var(--radius-sm);">
+      ${App.i18n.value(() => (contact.notes ? App.i18n.html`<div style="margin-bottom:18px;padding:10px 12px;background:var(--surface-sunk);border-radius:var(--radius-sm);">
         <div style="font-size:var(--font-size-2xs);color:var(--text-muted);text-transform:uppercase;letter-spacing:0.08em;font-weight:600;margin-bottom:3px;">Notes</div>
-        <div style="font-size:var(--font-size-sm);color:var(--text);white-space:pre-wrap;">${U().esc(U().truncate(contact.notes, 220))}</div>
-      </div>` : ""}
+        <div style="font-size:var(--font-size-sm);color:var(--text);white-space:pre-wrap;">${App.i18n.value(() => (U().esc(U().truncate(contact.notes, 220))))}</div>
+      </div>` : ""))}
     `;
 
-    const body = `
-      ${info}
+    const body = App.i18n.html`
+      ${App.i18n.value(() => (info))}
       <form id="fuForm" novalidate>
         <div class="form-grid">
           <div class="form-field">
             <label for="fuType">Activity method <span class="req">*</span></label>
-            <select id="fuType">${s.settings.activityTypes.map(t => `<option value="${t}">${t}</option>`).join("")}</select>
+            <select id="fuType">${App.i18n.value(() => (s.settings.activityTypes.map(t => App.i18n.html`<option value="${App.i18n.value(() => (t))}">${App.i18n.value(() => (t))}</option>`).join("")))}</select>
           </div>
           <div class="form-field">
             <label for="fuDate">Date</label>
-            <input type="date" id="fuDate" value="${U().todayISO()}">
+            <input type="date" id="fuDate" value="${App.i18n.value(() => (U().todayISO()))}">
           </div>
           <div class="form-field full">
             <label for="fuSubject">Subject <span class="req">*</span></label>
@@ -1458,7 +1457,7 @@ App.pages.contacts = (function () {
           </div>
           <div class="form-field">
             <label for="fuOutcome">Outcome</label>
-            <select id="fuOutcome"><option value="">—</option>${["Positive","Neutral","Negative"].map(o => `<option value="${o}">${o}</option>`).join("")}</select>
+            <select id="fuOutcome"><option value="">—</option>${App.i18n.value(() => (["Positive","Neutral","Negative"].map(o => App.i18n.html`<option value="${App.i18n.value(() => (o))}">${App.i18n.value(() => (App.i18n.t(o)))}</option>`).join("")))}</select>
           </div>
           <div class="form-field">
             <label for="fuNext">Next follow-up</label>
@@ -1472,7 +1471,7 @@ App.pages.contacts = (function () {
           </div>
           <div class="form-field" id="fuCustomWrap" style="display:none;">
             <label for="fuCustomDate">Custom follow-up date <span class="req">*</span></label>
-            <input type="date" id="fuCustomDate" value="${U().addDaysISO(U().todayISO(), 7)}">
+            <input type="date" id="fuCustomDate" value="${App.i18n.value(() => (U().addDaysISO(U().todayISO(), 7)))}">
             <div class="err">Pick a custom date.</div>
           </div>
           <div class="form-field full">
@@ -1484,14 +1483,14 @@ App.pages.contacts = (function () {
     `;
 
     const handle = App.app.openModal({
-      title: "Log Follow-up",
+      get title() { return App.i18n.t("Log Follow-up"); },
       wide: true,
       body,
-      footer: `
+      footer: App.i18n.markup(`
         <button class="btn" data-role="viewContact">View full contact</button>
         <button class="btn" data-role="cancel">Cancel</button>
         <button class="btn btn-primary" data-role="save">Save Follow-up</button>
-      `,
+      `),
       onOpen: (modal) => {
         const nextSel = modal.querySelector("#fuNext");
         const customWrap = modal.querySelector("#fuCustomWrap");
@@ -1546,12 +1545,12 @@ App.pages.contacts = (function () {
 
           try {
             await App.store.completeFollowUp(patch, contact.id, dateVal, nextFollowUp);
-            App.app.toast("Follow-up logged.", "success");
+            App.app.toast(App.i18n.t("Follow-up logged."), "success");
             handle.close();
             App.app.route();
           } catch (err) {
             saveBtn.disabled = false;
-            App.app.toast("Could not save follow-up: " + err.message, "danger");
+            App.app.toast(App.i18n.t("Could not save follow-up: ") + err.message, "danger");
           }
         });
       }

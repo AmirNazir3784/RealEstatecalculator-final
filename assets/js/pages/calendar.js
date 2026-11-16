@@ -99,31 +99,31 @@ App.pages.calendar = (function () {
   // ---------- RENDER ----------
 
   async function render(container) {
-    App.app.setBreadcrumbs([{ label: "Calendar" }]);
+    App.app.setBreadcrumbs([{ get label() { return App.i18n.t("Calendar"); } }]);
     App.app.setTopActions("");
     container.innerHTML = App.app.loadingHtml();
     await S().ensureLoaded(["showings", "contacts", "properties", "tasks", "deals", "milestones"]);
 
-    container.innerHTML = `
+    container.innerHTML = App.i18n.html`
       <div class="page-header">
         <div>
           <div class="page-title">Calendar</div>
           <div class="page-desc">Showings, task deadlines, deal closings, and milestones — all in one view.</div>
         </div>
         <div class="page-actions">
-          <button class="btn btn-sm" id="calAddTask">${App.app.icon("plus")} Task</button>
-          <button class="btn btn-sm" id="calAddAct">${App.app.icon("plus")} Activity</button>
-          <button class="btn btn-sm btn-primary" id="calAddShow">${App.app.icon("plus")} Showing</button>
+          <button class="btn btn-sm" id="calAddTask">${App.i18n.value(() => (App.app.icon("plus")))} Task</button>
+          <button class="btn btn-sm" id="calAddAct">${App.i18n.value(() => (App.app.icon("plus")))} Activity</button>
+          <button class="btn btn-sm btn-primary" id="calAddShow">${App.i18n.value(() => (App.app.icon("plus")))} Showing</button>
         </div>
       </div>
       <div class="filter-bar">
         <button class="btn btn-sm" id="calPrev">← Prev</button>
-        <strong id="calLabel" style="min-width:140px;text-align:center;font-size: var(--font-size-md);">${formatMonthLabel(currentDate)}</strong>
+        <strong id="calLabel" style="min-width:140px;text-align:center;font-size: var(--font-size-md);">${App.i18n.value(() => (formatMonthLabel(currentDate)))}</strong>
         <button class="btn btn-sm" id="calNext">Next →</button>
         <button class="btn btn-sm" id="calToday">Today</button>
         <div style="flex:1"></div>
-        <button class="btn btn-sm ${viewMode==='month'?'btn-primary':''}" id="calMonth">Month</button>
-        <button class="btn btn-sm ${viewMode==='agenda'?'btn-primary':''}" id="calAgenda">Agenda</button>
+        <button class="btn btn-sm ${App.i18n.value(() => (viewMode==='month'?'btn-primary':''))}" id="calMonth">Month</button>
+        <button class="btn btn-sm ${App.i18n.value(() => (viewMode==='agenda'?'btn-primary':''))}" id="calAgenda">Agenda</button>
       </div>
       <div class="card">
         <div class="card-body zero" id="calBody" style="min-height:400px;"></div>
@@ -143,7 +143,7 @@ App.pages.calendar = (function () {
   }
 
   function rerender(container) {
-    document.getElementById("calLabel").textContent = formatMonthLabel(currentDate);
+    App.i18n.setText(document.getElementById("calLabel"), App.i18n.value(() => (formatMonthLabel(currentDate))));
     document.getElementById("calMonth").className = "btn btn-sm" + (viewMode==="month"?" btn-primary":"");
     document.getElementById("calAgenda").className = "btn btn-sm" + (viewMode==="agenda"?" btn-primary":"");
     renderBody();
@@ -189,25 +189,25 @@ App.pages.calendar = (function () {
       const isToday = dateISO === todayISO;
       const dayEvents = byDate[dateISO] || [];
 
-      cells += `
-        <div class="cal-cell ${valid ? '' : 'cal-cell-empty'} ${isToday ? 'cal-cell-today' : ''}">
-          ${valid ? `<div class="cal-day">${day}</div>` : ''}
-          ${dayEvents.slice(0, 3).map(e => `
-            <div class="cal-event" style="border-left-color:${e.color}" ${e.link ? `onclick="location.hash='${e.link}'" role="button" tabindex="0"` : ''} title="${U().esc(e.label)}">
-              ${e.time ? `<span class="cal-event-time">${U().esc(e.time)}</span>` : ''}
-              <span class="cal-event-label">${U().esc(U().truncate(e.label, 22))}</span>
+      cells += App.i18n.html`
+        <div class="cal-cell ${App.i18n.value(() => (valid ? '' : 'cal-cell-empty'))} ${App.i18n.value(() => (isToday ? 'cal-cell-today' : ''))}">
+          ${App.i18n.value(() => (valid ? App.i18n.html`<div class="cal-day">${App.i18n.value(() => (day))}</div>` : ''))}
+          ${App.i18n.value(() => (dayEvents.slice(0, 3).map(e => App.i18n.html`
+            <div class="cal-event" style="border-left-color:${App.i18n.value(() => (e.color))}" ${App.i18n.value(() => (e.link ? `onclick="location.hash='${e.link}'" role="button" tabindex="0"` : ''))} title="${App.i18n.value(() => (U().esc(e.label)))}">
+              ${App.i18n.value(() => (e.time ? App.i18n.html`<span class="cal-event-time">${App.i18n.value(() => (U().esc(e.time)))}</span>` : ''))}
+              <span class="cal-event-label">${App.i18n.value(() => (U().esc(U().truncate(e.label, 22))))}</span>
             </div>
-          `).join("")}
-          ${dayEvents.length > 3 ? `<div class="cal-more">+${dayEvents.length - 3} more</div>` : ''}
+          `).join("")))}
+          ${App.i18n.value(() => (dayEvents.length > 3 ? App.i18n.html`<div class="cal-more">+${App.i18n.value(() => (dayEvents.length - 3))} more</div>` : ''))}
         </div>
       `;
     }
 
-    container.innerHTML = `
+    container.innerHTML = App.i18n.html`
       <div class="cal-grid">
         <div class="cal-header">Sun</div><div class="cal-header">Mon</div><div class="cal-header">Tue</div>
         <div class="cal-header">Wed</div><div class="cal-header">Thu</div><div class="cal-header">Fri</div><div class="cal-header">Sat</div>
-        ${cells}
+        ${App.i18n.value(() => (cells))}
       </div>
     `;
   }
@@ -224,7 +224,7 @@ App.pages.calendar = (function () {
     const todayISO = U().todayISO();
 
     if (events.length === 0) {
-      container.innerHTML = `<div class="empty" style="padding:var(--empty-padding)"><h3>Nothing this month</h3><p>No showings, tasks, closings, or milestones scheduled.</p></div>`;
+      container.innerHTML = App.i18n.markup(`<div class="empty" style="padding:var(--empty-padding)"><h3>Nothing this month</h3><p>No showings, tasks, closings, or milestones scheduled.</p></div>`);
       return;
     }
 
@@ -236,18 +236,18 @@ App.pages.calendar = (function () {
     container.innerHTML = dates.map(d => {
       const isToday = d === todayISO;
       const label = isToday ? "Today — " + U().formatDate(d, "long") : U().formatDate(d, "long");
-      return `
-        <div class="agenda-day${isToday ? ' agenda-today' : ''}">
-          <div class="agenda-date">${label}</div>
-          ${groups[d].map(e => `
-            <div class="item-row${e.link ? ' clickable' : ''}" ${e.link ? `onclick="location.hash='${e.link}'"` : ''}>
-              <div class="icon-slot" style="background:color-mix(in srgb, ${e.color} 14%, transparent);color:${e.color};font-size: var(--font-size-xs);font-weight:700;">${eventTypeIcon(e.type)}</div>
+      return App.i18n.html`
+        <div class="agenda-day${App.i18n.value(() => (isToday ? ' agenda-today' : ''))}">
+          <div class="agenda-date">${App.i18n.value(() => (label))}</div>
+          ${App.i18n.value(() => (groups[d].map(e => App.i18n.html`
+            <div class="item-row${App.i18n.value(() => (e.link ? ' clickable' : ''))}" ${App.i18n.value(() => (e.link ? `onclick="location.hash='${e.link}'"` : ''))}>
+              <div class="icon-slot" style="background:color-mix(in srgb, ${App.i18n.value(() => (e.color))} 14%, transparent);color:${App.i18n.value(() => (e.color))};font-size: var(--font-size-xs);font-weight:700;">${App.i18n.value(() => (eventTypeIcon(e.type)))}</div>
               <div class="body">
-                <div class="title">${U().esc(e.label)}</div>
-                <div class="sub">${capitalize(e.type)}${e.time ? " · " + U().esc(e.time) : ""}</div>
+                <div class="title">${App.i18n.value(() => (U().esc(e.label)))}</div>
+                <div class="sub">${App.i18n.value(() => (capitalize(e.type)))}${App.i18n.value(() => (e.time ? " · " + U().esc(e.time) : ""))}</div>
               </div>
             </div>
-          `).join("")}
+          `).join("")))}
         </div>
       `;
     }).join("");

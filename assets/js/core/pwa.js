@@ -178,9 +178,9 @@ App.pwa = (function () {
     if (updateOffered) return;
     updateOffered = true;
     const w = win || window;
-    App.app.toast("Update available.", "success", {
+    App.app.toast(App.i18n.t("Update available."), "success", {
       actions: [{
-        label: "Reload",
+        get label() { return App.i18n.t("Reload"); },
         onClick: () => {
           try { worker.postMessage({ type: "SKIP_WAITING" }); } catch (e) { /* gone already */ }
           // The new worker takes over and the page comes back on it.
@@ -221,19 +221,19 @@ App.pwa = (function () {
 
     const chromium = /Chrome|Edg|Chromium/.test(String((w.navigator || {}).userAgent || ""));
     const body = state.installed
-      ? `<p class="form-help" id="pwaInstalled">RealtorCRM is installed on this device.</p>`
+      ? App.i18n.markup(`<p class="form-help" id="pwaInstalled">RealtorCRM is installed on this device.</p>`)
       : state.canPrompt
-        ? `<p class="form-help">Install RealtorCRM for quick access from your device.</p>
-           <button type="button" class="btn btn-primary" id="pwaInstallBtn">Install</button>`
+        ? App.i18n.markup(`<p class="form-help">Install RealtorCRM for quick access from your device.</p>
+           <button type="button" class="btn btn-primary" id="pwaInstallBtn">Install</button>`)
         : state.ios
-          ? `<p class="form-help">Safari installs an app from the Share menu rather than a button:</p>
-             <ol class="pwa-steps" id="pwaIosSteps">${IOS_STEPS.map((s) => `<li>${U().esc(s)}</li>`).join("")}</ol>`
-          : `<p class="form-help" id="pwaNotYet">You can add RealtorCRM to your device from your browser’s menu. Installation options depend on your browser and device.</p>${chromium ? `<p class="form-help">In Chrome or Edge, look in the browser menu for “Install app”.</p>` : ""}`;
+          ? App.i18n.html`<p class="form-help">Safari installs an app from the Share menu rather than a button:</p>
+             <ol class="pwa-steps" id="pwaIosSteps">${App.i18n.value(() => (IOS_STEPS.map((s) => App.i18n.html`<li>${App.i18n.value(() => (U().esc(s)))}</li>`).join("")))}</ol>`
+          : App.i18n.html`<p class="form-help" id="pwaNotYet">You can add RealtorCRM to your device from your browser’s menu. Installation options depend on your browser and device.</p>${App.i18n.value(() => (chromium ? App.i18n.markup(`<p class="form-help">In Chrome or Edge, look in the browser menu for “Install app”.</p>`) : ""))}`;
 
-    el.innerHTML = `
+    el.innerHTML = App.i18n.html`
       <section class="card" id="pwaInstallCard">
         <div class="card-header"><div class="card-title">Install RealtorCRM</div></div>
-        <div class="card-body">${body}</div>
+        <div class="card-body">${App.i18n.value(() => (body))}</div>
       </section>`;
 
     const btn = el.querySelector("#pwaInstallBtn");
@@ -241,7 +241,7 @@ App.pwa = (function () {
       btn.addEventListener("click", async () => {
         btn.disabled = true;
         const outcome = await promptInstall();
-        if (outcome === "accepted") App.app.toast("Installing RealtorCRM…", "success");
+        if (outcome === "accepted") App.app.toast(App.i18n.t("Installing RealtorCRM…"), "success");
         else if (outcome !== "unavailable") btn.disabled = false;
         renderInstallCard(el, w);
       });
@@ -276,11 +276,11 @@ App.pwa = (function () {
     bar.className = "pwa-banner";
     bar.setAttribute("role", "region");
     bar.setAttribute("aria-label", "Install RealtorCRM");
-    bar.innerHTML = `
-      <span class="pwa-banner-text">${state.ios
-        ? "Add RealtorCRM to your home screen: Share, then Add to Home Screen."
-        : "Install RealtorCRM on this device for a faster start."}</span>
-      ${state.canPrompt ? `<button type="button" class="btn btn-sm" id="pwaBannerInstall">Install</button>` : ""}
+    bar.innerHTML = App.i18n.html`
+      <span class="pwa-banner-text">${App.i18n.value(() => (state.ios
+        ? App.i18n.t("Add RealtorCRM to your home screen: Share, then Add to Home Screen.")
+        : App.i18n.t("Install RealtorCRM on this device for a faster start.")))}</span>
+      ${App.i18n.value(() => (state.canPrompt ? App.i18n.markup(`<button type="button" class="btn btn-sm" id="pwaBannerInstall">Install</button>`) : ""))}
       <button type="button" class="pwa-banner-close" id="pwaBannerDismiss" aria-label="Dismiss">&times;</button>`;
 
     const host = d.getElementById("main") || d.body;
