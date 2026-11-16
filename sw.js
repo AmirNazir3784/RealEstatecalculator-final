@@ -32,7 +32,7 @@
 // Bump this when the shell changes. The cache name carries it, so a new
 // version installs beside the old one and the old one is deleted on
 // activate - never a half-old, half-new shell.
-const VERSION = "u12-followup-atomic-20261109";
+const VERSION = "auth-final-refinement-20261116";
 const CACHE = "realtoros-shell-" + VERSION;
 
 // Everything the app needs to render its first screen without a network.
