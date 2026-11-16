@@ -14,7 +14,7 @@ const frozen = {
     // About baseline refreshed for the editorial refinement; shared header stays frozen.
     "about/index.html": "d7816f270706e7058e425459d0386223358f44991200ae8def036307abd23abd",
     "contact/index.html": "1aff953a79f28c6a89b14b10d562a09d8487d216467dcaceb10e78e6c3c3ce4d",
-    "resources/index.html": "8afc4767b9b890d297d867a102b47edf701eeeef424f1176c6ca514f3de6c0bb",
+    "resources/index.html": "75a403cc956fef2f98e16140da1055877f8dbbffdcf88ca2d4cc01dde870f74f",
     "real-estate-crm/index.html": "2e4e3170636b9fabaae83e14ae08b5761bdb7c70da6d620c464a4dc51b0cfff4",
     "tools/index.html": "c1500325fd6710d57ce5af96dd202fd5c1276f63f12fa70cbdedf542091e783a",
     "tools/bridge-loan-calculator/index.html": "43515c7aa207d4a3a5ee1ebe7fef0b663d06b16b7881e780a71bb2f3feadcd7f",
