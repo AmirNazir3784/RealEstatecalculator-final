@@ -10,23 +10,24 @@ function check(name, value) { assert(value, name); passed++; }
 function equal(name, actual, expected) { assert.deepEqual(actual, expected, name); passed++; }
 const frozen = {
   "pages": {
-    "index.html": "6dac1daef758dbd8d6055a357af33aa3bd73856e3ea68f00d0b28fbbd98e8725",
+    "index.html": "c3ea9d813184a1dec5abe7a8d85d4ba31fa77b6afdacd7430b83edb3d02e82a4",
     // About baseline refreshed for the editorial refinement; shared header stays frozen.
-    "about/index.html": "d7816f270706e7058e425459d0386223358f44991200ae8def036307abd23abd",
-    "contact/index.html": "1aff953a79f28c6a89b14b10d562a09d8487d216467dcaceb10e78e6c3c3ce4d",
-    "resources/index.html": "75a403cc956fef2f98e16140da1055877f8dbbffdcf88ca2d4cc01dde870f74f",
-    "real-estate-crm/index.html": "2e4e3170636b9fabaae83e14ae08b5761bdb7c70da6d620c464a4dc51b0cfff4",
-    "tools/index.html": "c1500325fd6710d57ce5af96dd202fd5c1276f63f12fa70cbdedf542091e783a",
-    "tools/bridge-loan-calculator/index.html": "43515c7aa207d4a3a5ee1ebe7fef0b663d06b16b7881e780a71bb2f3feadcd7f",
-    "tools/cap-rate-calculator/index.html": "550be3d5dd01866cdbe01afa6f8a4b8d9e5a29936148279d8fa0a13aace54c9c",
-    "tools/capital-gains-tax-calculator/index.html": "7c4e0a493d9f784c061446f314d3a5f44490a9b26f555e02db8ce81761386d9d",
-    "tools/commission-calculator/index.html": "5c2cc8b3da4c4cb402271625082d0ebd6344eb89e89f6d30c0d6ceead4693727",
-    "tools/home-affordability-calculator/index.html": "c4dc4fa70fb043ecd64fbf046e5a9e19ee7101ecab952c9e9f762d44687cb665",
-    "tools/mortgage-calculator/index.html": "69be69f5d70c80aadf64932393282fd74da192761023fa3f829784bbabf49501",
-    "tools/noi-calculator/index.html": "e29330105d45c294a2523144374f22496ce2ebd4329d2ee037bd2a380e137d0b",
-    "tools/property-investment-calculator/index.html": "c4d2da18d412e6e96a4dfe66be9d036611de39b5b146418c9ba674b2f962b042",
-    "tools/rent-vs-buy-calculator/index.html": "c941aa7397641cf21d9d7a3c3555e0483861459385c7a2f77df6478e39e4ea72",
-    "tools/roi-calculator/index.html": "f51e2438470cb4854a36c5b09dc58d6fc987a9125a279340e2e43a1ac8b52aaa"
+    // All page baselines refreshed 2026-11-16: footer Platform column gained the Privacy Policy link on every page.
+    "about/index.html": "599298cf6f251b2a31e12d4bb8836f58b29217cbe504bf6dc54784470b8706a7",
+    "contact/index.html": "dc4322f0f786e45dd351f6853c6b25554debf9118f1ac6297dc1d7c5bbee07ac",
+    "resources/index.html": "191b5e192b0dfe973e5c79b75d6567d2b34bad4a4475277d250a379c83d59fbc",
+    "real-estate-crm/index.html": "fbf1277c1504ac62b7acab3b3d01bc61d5c834c71eca9f553407d12dbc2ecd8a",
+    "tools/index.html": "48757b3ea2dbd0615b13df779ec18e0f1478f0293b50fefaef6efb0f4a53a6be",
+    "tools/bridge-loan-calculator/index.html": "f3e90c7d7afb52cbf705aa3d03581f6c09c700cacc8eddd11967950321865290",
+    "tools/cap-rate-calculator/index.html": "58904c2eea5b22ab0defb77f560a83da90d82b78f57c971c6dcdd47853d23eed",
+    "tools/capital-gains-tax-calculator/index.html": "b9d9f879f9b3ca237f653701fe4a49fe9ce682731d2c826ac940e49c14e8011a",
+    "tools/commission-calculator/index.html": "70b11280770a6b9f900e7d5c406573075923bf2b3107f92c29148581d0b442ee",
+    "tools/home-affordability-calculator/index.html": "9b03c3f7416bce18b8809d901a18c479d75c3593d80bcc751cb2e670e0494ead",
+    "tools/mortgage-calculator/index.html": "0b29af503dd7f3251a595d49a79c9ffa1f0a20e3f49a8acc44be0951796a155a",
+    "tools/noi-calculator/index.html": "916e6c351c88518f3e273ba66d8e7278709684cdd99728f6c61b5032041ec229",
+    "tools/property-investment-calculator/index.html": "1251010e480fae34d6de6d3fdde63433381f94835542217d3ec9e3d50dd0091d",
+    "tools/rent-vs-buy-calculator/index.html": "a738aaea941631c09799ceaf5039a2237af57b08a6697b2b54589500f327cb64",
+    "tools/roi-calculator/index.html": "ffc72bcd61be92e60d34c7ae29866c912d1040884f731968cbe0468986d40c55"
   },
   "headers": {
     "index.html": "8ff8b5602307f1645666134a5b006e4ed3850ed7c983a54259088a2e68ea77e4",

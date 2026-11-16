@@ -93,7 +93,8 @@ for (const [id, category, minutes] of [['mortgage-guide', 'Mortgage', '3'], ['co
 
 // Sitemap carries all four articles; 20 URLs in total.
 const sm = read('sitemap.xml');
-equal('sitemap 20 URLs', (sm.match(/<loc>/g) || []).length, 20);
+equal('sitemap 21 URLs', (sm.match(/<loc>/g) || []).length, 21);
+check('sitemap privacy page', sm.includes('<loc>https://everyrealestatecalculator.com/privacy-policy/</loc>'));
 check('sitemap mortgage article', sm.includes('<loc>https://everyrealestatecalculator.com/resources/mortgage-payments/</loc>'));
 check('sitemap commission article', sm.includes('<loc>https://everyrealestatecalculator.com/resources/real-estate-commission/</loc>'));
 check('sitemap affordability article', sm.includes('<loc>https://everyrealestatecalculator.com/resources/how-much-house-can-i-afford/</loc>'));
