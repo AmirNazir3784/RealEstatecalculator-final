@@ -111,6 +111,42 @@ export async function resolveRoute(
   }
 }
 
+// The caller's OWN connected personal mailbox (Gmail before Microsoft),
+// or null. Used by send-test-email: a test send is the member's own
+// diagnostic, so the shared mailbox and the workspace policy do not apply.
+// Never throws — any lookup problem means "no mailbox", and the caller
+// falls back to the Resend path.
+export async function resolvePersonalConnection(
+  admin: AdminClient,
+  userId: string,
+): Promise<MailboxConnectionRow | null> {
+  try {
+    const { data: memberships, error } = await admin
+      .from("workspace_members")
+      .select("workspace_id, role, created_at")
+      .eq("user_id", userId)
+      .eq("status", "active");
+    if (error || !memberships || memberships.length === 0) return null;
+    const sorted = [...memberships].sort((a, b) => {
+      const rank = (r: string) => (r === "owner" ? 0 : r === "admin" ? 1 : 2);
+      return rank(a.role) - rank(b.role) ||
+        String(a.created_at).localeCompare(String(b.created_at));
+    });
+    const workspaceId = sorted[0].workspace_id as string;
+    const { data } = await admin.from("mailbox_connections")
+      .select("id, user_id, kind, provider, email_address, refresh_token_ciphertext, refresh_token_iv, status")
+      .eq("workspace_id", workspaceId)
+      .eq("user_id", userId)
+      .eq("kind", "personal")
+      .eq("status", "connected");
+    const rows = (data ?? []) as MailboxConnectionRow[];
+    return rows.find((c) => c.provider === "gmail") ??
+      rows.find((c) => c.provider === "microsoft") ?? null;
+  } catch {
+    return null;
+  }
+}
+
 export async function markConnectionError(
   admin: AdminClient,
   connectionId: string,
