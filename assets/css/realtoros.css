@@ -3028,41 +3028,38 @@ a:hover { text-decoration: underline; text-underline-offset: 2px; }
 .stage-deal-link:hover { text-decoration: underline; }
 
 /* Authentication is a blocking gate only: the application shell and all
-   existing workflows remain unchanged after sign-in. */
-.cloud-auth { position:fixed; inset:0; z-index:9999; display:flex; align-items:center; justify-content:center; padding:24px; background:var(--bg); overflow-y:auto; }
-/* Faint page-level decoration behind the card: two soft off-screen glows plus
-   an extremely faint grid evoking property lines. Existing tokens only, very
-   low opacity (color-mix keeps each layer around 4-7%), purely CSS, no image. */
-.cloud-auth::before {
-  content:""; position:absolute; inset:0; z-index:0; pointer-events:none;
-  background:
-    radial-gradient(620px circle at 6% 8%, color-mix(in srgb, var(--accent) 7%, transparent), transparent 72%),
-    radial-gradient(560px circle at 96% 92%, color-mix(in srgb, var(--sidebar-accent) 6%, transparent), transparent 72%),
-    radial-gradient(900px circle at 50% 45%, color-mix(in srgb, var(--accent) 4%, transparent), transparent 75%);
-}
-.cloud-auth::after {
-  content:""; position:absolute; inset:0; z-index:0; pointer-events:none;
-  background:
-    repeating-linear-gradient(0deg, color-mix(in srgb, var(--text) 5%, transparent) 0 1px, transparent 1px 72px),
-    repeating-linear-gradient(90deg, color-mix(in srgb, var(--text) 5%, transparent) 0 1px, transparent 1px 72px);
-}
-/* Premium split card: form panel + illustration panel. Desktop/tablet swap
-   sides between Sign in and Create account via the .is-create mode class,
-   toggled only by the existing tab/switch handlers — no duplicated markup.
-   position/z-index keeps the card above the page-level decoration above. */
-.cloud-auth-card { position:relative; z-index:1; width:min(100%,1000px); max-width:100%; display:flex; align-items:stretch; background:var(--card); border:1px solid var(--border); border-radius:var(--radius-lg); box-shadow:var(--shadow-lg); overflow:hidden; font-family:var(--font-auth-ui); }
-.cloud-auth-form-panel { flex:1 1 55%; min-width:0; max-width:560px; padding:32px 36px 28px; display:flex; flex-direction:column; justify-content:center; order:1; }
-.cloud-auth-form-panel h1 { font-family:var(--font-auth-display); font-size:44px; font-weight:700; line-height:1.12; letter-spacing:-0.025em; margin:0 0 8px; }
-.cloud-auth-intro { color:var(--text-muted); margin:0 0 14px; font-size:var(--font-size-md); }
+   existing workflows remain unchanged after sign-in.
+   Layout (auth refinement): a compact header (wordmark + "A product of"
+   line + Back to website) above a two-panel card - product panel left
+   (46%), auth panel right (54%), fixed in that order for both modes.
+   On mobile the product panel is hidden and the card styling falls away:
+   the form sits on the page background under the compact header and the
+   page ends shortly after the account-switch link. */
+.cloud-auth { position:fixed; inset:0; z-index:9999; display:flex; flex-direction:column; align-items:center; justify-content:flex-start; padding:24px; background:var(--bg); overflow-y:auto; }
+/* Compact header above the card. */
+.cloud-auth-header { position:relative; z-index:1; width:min(100%,1040px); display:flex; align-items:center; justify-content:space-between; gap:16px; padding:0 2px 16px; margin-top:auto; }
+.cloud-auth-brand { display:flex; align-items:baseline; gap:12px; min-width:0; }
+.cloud-auth-wordmark { font-family:var(--font-auth-display); font-size:24px; font-weight:700; letter-spacing:-0.02em; color:var(--text); white-space:nowrap; }
+.cloud-auth-product-of { padding-left:12px; border-left:1px solid var(--border-strong); color:var(--text-muted); font-family:var(--font-auth-ui); font-size:var(--font-size-sm); white-space:nowrap; }
+.cloud-auth-back { display:inline-flex; align-items:center; gap:7px; padding:9px 16px; border:1px solid var(--border-strong); border-radius:999px; background:var(--card); color:var(--text); font-family:var(--font-auth-ui); font-size:var(--font-size-sm); font-weight:600; text-decoration:none; white-space:nowrap; transition:border-color .15s, background-color .15s, box-shadow .15s; }
+.cloud-auth-back:hover { border-color:var(--text-soft); background:var(--surface-sunk); }
+.cloud-auth-back:focus-visible { outline:none; border-color:var(--accent); box-shadow:var(--shadow-focus); }
+.cloud-auth-back-short { display:none; }
+/* Two-panel card: one refined white auth surface on the right. */
+.cloud-auth-card { position:relative; z-index:1; width:min(100%,1040px); max-width:100%; display:flex; align-items:stretch; background:var(--card); border:1px solid var(--border); border-radius:var(--radius-lg); box-shadow:0 12px 32px rgba(31,30,24,.08); overflow:hidden; font-family:var(--font-auth-ui); margin-bottom:auto; }
+.cloud-auth-form-panel { flex:1 1 54%; min-width:0; padding:34px 40px 30px; display:flex; flex-direction:column; justify-content:center; order:2; }
+.cloud-auth-heading { font-family:var(--font-auth-display); font-size:34px; font-weight:700; line-height:1.15; letter-spacing:-0.02em; margin:0 0 6px; color:var(--text); }
+.cloud-auth-intro { color:var(--text-muted); margin:0 0 20px; font-size:var(--font-size-md); }
 .cloud-auth-subheading { margin:0 0 4px; font-family:var(--font-auth-ui); font-size:var(--font-size-lg); font-weight:700; color:var(--text); }
-.cloud-auth-tabs { display:flex; gap:3px; padding:3px; margin:0 0 16px; border:1px solid var(--border); border-radius:var(--radius-sm); background:var(--surface-sunk); }
-.cloud-auth-tab { flex:1; border:0; border-radius:calc(var(--radius-sm) - 2px); padding:8px 10px; background:transparent; color:var(--text-muted); font-family:var(--font-auth-ui); font-size:var(--font-size-md); font-weight:600; cursor:pointer; }
-.cloud-auth-tab[aria-selected="true"] { background:var(--card); color:var(--accent); box-shadow:var(--shadow-sm); }
-.cloud-auth-field { margin:0 0 14px; }
-.cloud-auth-form-panel label { display:block; color:var(--text-muted); font-family:var(--font-auth-ui); font-size: var(--font-size-xs); font-weight:700; letter-spacing:.06em; text-transform:uppercase; margin:0 0 6px; }
+.cloud-auth-tabs { display:flex; gap:3px; padding:3px; margin:0 0 22px; border:1px solid var(--border); border-radius:var(--radius-sm); background:var(--surface-sunk); }
+.cloud-auth-tab { flex:1; border:0; border-radius:calc(var(--radius-sm) - 2px); padding:9px 10px; background:transparent; color:var(--text-muted); font-family:var(--font-auth-ui); font-size:var(--font-size-md); font-weight:600; white-space:nowrap; cursor:pointer; }
+.cloud-auth-tab[aria-selected="true"] { background:var(--accent-soft); color:var(--accent-ink); }
+.cloud-auth-tab:focus-visible { outline:none; box-shadow:0 0 0 2px color-mix(in srgb, var(--accent) 35%, transparent); }
+.cloud-auth-field { margin:0 0 16px; }
+.cloud-auth-form-panel label { display:block; color:var(--text); font-family:var(--font-auth-ui); font-size:var(--font-size-sm); font-weight:700; margin:0 0 7px; }
 .cloud-auth-label-row { display:flex; align-items:center; justify-content:space-between; gap:10px; }
-.cloud-auth-label-row label { margin:0 0 6px; }
-.cloud-auth-inline-link { appearance:none; border:0; padding:0; background:transparent; color:var(--accent); font-family:var(--font-auth-ui); font-size:var(--font-size-xs); font-weight:700; letter-spacing:.02em; cursor:pointer; }
+.cloud-auth-label-row label { margin:0 0 7px; }
+.cloud-auth-inline-link { appearance:none; border:0; padding:0; background:transparent; color:var(--accent); font-family:var(--font-auth-ui); font-size:var(--font-size-sm); font-weight:600; cursor:pointer; }
 .cloud-auth-inline-link:hover { text-decoration:underline; }
 .cloud-auth-inline-link:focus-visible { outline:none; box-shadow:0 0 0 2px color-mix(in srgb, var(--accent) 35%, transparent); border-radius:2px; }
 .cloud-auth-input-wrap { position:relative; }
@@ -3074,92 +3071,97 @@ a:hover { text-decoration: underline; text-underline-offset: 2px; }
 .cloud-auth-form-panel input { width:100%; min-height:50px; padding:11px 14px 11px 42px; border:1px solid var(--border); border-radius:var(--radius-lg); background:var(--surface-sunk); color:var(--text); font-family:var(--font-auth-ui); font-size:var(--font-size-md); font-weight:500; line-height:1.4; transition:border-color .15s, box-shadow .15s, background-color .15s; }
 .cloud-auth-form-panel input:focus { outline:none; border-color:var(--accent); background:var(--card); box-shadow:var(--shadow-focus); }
 .cloud-auth-form-panel input::placeholder { color:var(--text-soft); font-family:var(--font-auth-ui); font-size:var(--font-size-md); font-weight:500; opacity:1; }
-.cloud-auth-submit { width:100%; margin-top:16px; display:flex; align-items:center; justify-content:center; text-align:center; font-family:var(--font-auth-ui); font-size:var(--font-size-md); font-weight:700; }
+.cloud-auth-submit { width:100%; min-height:54px; margin-top:18px; display:flex; align-items:center; justify-content:center; text-align:center; font-family:var(--font-auth-ui); font-size:var(--font-size-md); font-weight:700; }
 .cloud-auth-message { min-height:0; margin:6px 0 0!important; font-family:var(--font-auth-ui); font-size: var(--font-size-md); }
 .cloud-auth-message.error { color:var(--danger)!important; }
 .cloud-auth-message.success { color:var(--success)!important; }
-.cloud-auth-switch { margin:8px 0 0; color:var(--text-muted); font-family:var(--font-auth-ui); font-size:var(--font-size-sm); text-align:center; }
+.cloud-auth-switch { margin:10px 0 0; color:var(--text-muted); font-family:var(--font-auth-ui); font-size:var(--font-size-sm); text-align:center; }
 .cloud-auth-switch button { appearance:none; border:0; padding:0; background:transparent; color:var(--accent); font-family:var(--font-auth-ui); font-size:var(--font-size-sm); font-weight:600; cursor:pointer; }
 .cloud-auth-confirm-email { margin:0 0 10px; font-family:var(--font-auth-ui); font-size:var(--font-size-md); font-weight:700; color:var(--text); overflow-wrap:anywhere; }
+/* The one-line password summary now serves only the Update Password form;
+   Create account uses the checklist below instead. */
 .cloud-auth-pw-line[hidden] { display:none; }
 .cloud-auth-pw-line { display:flex; align-items:center; gap:6px; margin:8px 0 0; font-family:var(--font-auth-ui); font-size:var(--font-size-sm); color:var(--text-muted); }
 .cloud-auth-pw-line svg { flex:0 0 auto; }
 .cloud-auth-pw-line.error { color:var(--danger); }
 .cloud-auth-pw-line.success { color:var(--success); }
+/* Create-account password requirements: compact checklist, one item per
+   rule, ticked green live as the requirement is met. Clear separation
+   before the Confirm password field - it never merges with the next label. */
+.cloud-auth-pw-rules[hidden] { display:none; }
+.cloud-auth-pw-rules { display:flex; flex-wrap:wrap; gap:7px 18px; margin:10px 0 16px; padding:0; list-style:none; }
+.cloud-auth-pw-rules li { display:inline-flex; align-items:center; gap:6px; font-family:var(--font-auth-ui); font-size:13px; font-weight:600; color:var(--text-soft); }
+.cloud-auth-pw-rules .cloud-auth-rule-check { display:inline-flex; opacity:.4; }
+.cloud-auth-pw-rules li.met { color:var(--success); }
+.cloud-auth-pw-rules li.met .cloud-auth-rule-check { opacity:1; }
 .cloud-auth-confirm-line { margin:8px 0 0; font-family:var(--font-auth-ui); font-size:var(--font-size-sm); }
 .cloud-auth-confirm-line.error { color:var(--danger); }
 .cloud-auth-confirm-line.success { color:var(--success); }
-/* "or continue with" divider + Google/Facebook secondary buttons. Sign in
-   mode only — applySignMode() hides #cloudOAuthBlock while creating. */
-.cloud-auth-divider { display:flex; align-items:center; gap:10px; margin:16px 0 10px; color:var(--text-soft); font-family:var(--font-auth-ui); font-size:var(--font-size-xs); font-weight:600; text-transform:uppercase; letter-spacing:.04em; }
-.cloud-auth-divider::before, .cloud-auth-divider::after { content:""; flex:1; height:1px; background:var(--border); }
-/* flex-wrap (not a width breakpoint) is what makes the two buttons stack:
-   each button's default flex min-width is its own content size (no
-   min-width:0 override here), so if both can't fit at their full label
-   width the second one wraps to its own full-width row instead of clipping. */
-.cloud-auth-oauth-row { display:flex; flex-wrap:wrap; gap:10px; }
-.cloud-auth-oauth-btn { flex:1 1 200px; display:flex; align-items:center; justify-content:center; gap:8px; text-align:center; white-space:nowrap; min-height:48px; padding:10px 14px; border:1px solid var(--border-strong); border-radius:var(--radius-lg); background:var(--card); color:var(--text); font-family:var(--font-auth-ui); font-size:var(--font-size-sm); font-weight:700; cursor:pointer; transition:background-color .15s, border-color .15s, box-shadow .15s; }
+/* Google comes BEFORE the email form in both modes: one full-width white
+   button with the official G mark, then the "or continue with email"
+   divider, then the fields. Google is the only OAuth provider. */
+.cloud-auth-oauth-btn { width:100%; display:flex; align-items:center; justify-content:center; gap:10px; text-align:center; white-space:nowrap; min-height:52px; padding:10px 14px; border:1px solid var(--border-strong); border-radius:var(--radius-lg); background:var(--card); color:var(--text); font-family:var(--font-auth-ui); font-size:var(--font-size-md); font-weight:600; cursor:pointer; transition:background-color .15s, border-color .15s, box-shadow .15s; }
 .cloud-auth-oauth-btn svg { flex-shrink:0; }
 .cloud-auth-oauth-btn:hover { background:var(--surface-sunk); border-color:var(--text-soft); }
 .cloud-auth-oauth-btn:focus-visible { outline:none; border-color:var(--accent); box-shadow:var(--shadow-focus); }
 .cloud-auth-oauth-btn:disabled { opacity:.6; cursor:default; }
-/* Illustration side — visual only, light teal panel using existing tokens. */
-.cloud-auth-illustration { flex:1 1 45%; min-width:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:8px; text-align:center; padding:32px 28px; background:var(--accent-softer); border-left:1px solid var(--border); order:2; }
-.cloud-auth-illustration-art { position:relative; display:flex; align-items:center; justify-content:center; width:100%; }
-/* Subtle decoration behind the SVG only — a soft teal glow, a faint grid
-   evoking property lines, and a small green accent ring. Existing tokens
-   only, low opacity, no second illustration or photo. */
-.cloud-auth-illustration-art::before {
-  content:""; position:absolute; inset:-14%; z-index:0; border-radius:50%; pointer-events:none;
-  background:
-    radial-gradient(closest-side, color-mix(in srgb, var(--accent) 16%, transparent), transparent 72%),
-    repeating-linear-gradient(0deg, color-mix(in srgb, var(--accent) 7%, transparent) 0 1px, transparent 1px 26px),
-    repeating-linear-gradient(90deg, color-mix(in srgb, var(--accent) 7%, transparent) 0 1px, transparent 1px 26px);
-}
-.cloud-auth-illustration-art::after {
-  content:""; position:absolute; z-index:0; left:6%; bottom:2%; width:56px; height:56px; border-radius:50%;
-  border:3px solid color-mix(in srgb, var(--sidebar-accent) 35%, transparent); pointer-events:none;
-}
-.cloud-auth-illustration-img { position:relative; z-index:1; width:100%; max-width:224px; height:auto; }
+.cloud-auth-divider { display:flex; align-items:center; gap:10px; margin:18px 0 20px; color:var(--text-soft); font-family:var(--font-auth-ui); font-size:var(--font-size-sm); font-weight:500; }
+.cloud-auth-divider::before, .cloud-auth-divider::after { content:""; flex:1; height:1px; background:var(--border); }
+/* Product panel (desktop only) - warm off-white, left-aligned, compact
+   capability list, and the property photograph bleeding into the panel's
+   bottom edge with a soft fade at its top so it blends rather than
+   sitting in a card. */
+.cloud-auth-illustration { flex:0 0 46%; min-width:0; display:flex; flex-direction:column; align-items:flex-start; text-align:left; padding:36px 34px 0; background:var(--accent-softer); border-right:1px solid var(--border); order:1; }
 .cloud-auth-illustration-label { margin:0; font-family:var(--font-auth-ui); font-size:var(--font-size-xs); font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:var(--accent); }
-.cloud-auth-illustration-heading { margin:0; font-family:var(--font-auth-display); font-size:30px; line-height:1.2; color:var(--text); }
-.cloud-auth-illustration-desc { margin:0; max-width:280px; font-family:var(--font-auth-ui); font-size:var(--font-size-md); color:var(--text-muted); }
-.cloud-auth-illustration-features { display:flex; flex-wrap:wrap; justify-content:center; margin-top:6px; }
-.cloud-auth-illustration-feature { display:inline-flex; align-items:center; gap:6px; padding:2px 12px; font-family:var(--font-auth-ui); font-size:13px; font-weight:600; color:var(--text-muted); }
-.cloud-auth-illustration-feature + .cloud-auth-illustration-feature { border-left:1px solid var(--border); }
+.cloud-auth-illustration-heading { margin:10px 0 0; font-family:var(--font-auth-display); font-size:31px; line-height:1.22; letter-spacing:-0.015em; color:var(--text); }
+.cloud-auth-illustration-desc { margin:12px 0 0; max-width:350px; font-family:var(--font-auth-ui); font-size:var(--font-size-md); line-height:1.55; color:var(--text-muted); }
+.cloud-auth-illustration-features { display:grid; grid-template-columns:1fr 1fr; gap:11px 18px; margin-top:24px; }
+.cloud-auth-illustration-feature { display:inline-flex; align-items:center; gap:8px; font-family:var(--font-auth-ui); font-size:var(--font-size-sm); font-weight:600; color:var(--text); }
 .cloud-auth-illustration-feature svg { color:var(--accent); flex-shrink:0; }
-/* Desktop/tablet only: Create account swaps illustration to the left and the
-   form to the right; a brief fade + translate carries the swap. */
+.cloud-auth-illustration-photo { margin-top:auto; width:calc(100% + 68px); margin-left:-34px; margin-right:-34px; padding-top:30px; }
+.cloud-auth-illustration-photo img { display:block; width:100%; height:250px; object-fit:cover; -webkit-mask-image:linear-gradient(to bottom, transparent 0, #000 36px); mask-image:linear-gradient(to bottom, transparent 0, #000 36px); }
+/* Desktop/tablet only: a brief fade + translate carries mode changes. */
 @media (min-width: 780px) {
-  .cloud-auth-form-panel, .cloud-auth-illustration { transition: opacity 190ms ease-in-out, transform 190ms ease-in-out; }
-  .cloud-auth-card.is-create .cloud-auth-form-panel { order:2; border-left:1px solid var(--border); }
-  .cloud-auth-card.is-create .cloud-auth-illustration { order:1; border-left:0; }
-  .cloud-auth-card.cloud-auth-switching .cloud-auth-form-panel,
-  .cloud-auth-card.cloud-auth-switching .cloud-auth-illustration { opacity:0; transform:translateY(8px); }
+  .cloud-auth-form-panel { transition: opacity 190ms ease-in-out, transform 190ms ease-in-out; }
+  .cloud-auth-card.cloud-auth-switching .cloud-auth-form-panel { opacity:0; transform:translateY(8px); }
 }
 @media (prefers-reduced-motion: reduce) {
-  .cloud-auth-form-panel, .cloud-auth-illustration { transition:none !important; }
-  .cloud-auth-card.cloud-auth-switching .cloud-auth-form-panel,
-  .cloud-auth-card.cloud-auth-switching .cloud-auth-illustration { opacity:1 !important; transform:none !important; }
+  .cloud-auth-form-panel { transition:none !important; }
+  .cloud-auth-card.cloud-auth-switching .cloud-auth-form-panel { opacity:1 !important; transform:none !important; }
 }
+/* Mobile: an intentionally designed auth screen, not the stacked desktop
+   page. Compact header (short Back label, no product-of line), no product
+   panel, no card chrome - the form uses the page background at ~20px
+   padding and the page ends shortly after the switch link. */
 @media (max-width: 779px) {
-  .cloud-auth { padding:16px; }
-  .cloud-auth::before, .cloud-auth::after { display:none; }
-  .cloud-auth-card { flex-direction:column; width:100%; }
-  .cloud-auth-form-panel { padding:24px 20px; max-width:none; }
-  .cloud-auth-illustration { border-left:0; border-top:1px solid var(--border); padding:24px 20px; gap:8px; }
-  .cloud-auth-illustration-img { max-width:130px; }
-  .cloud-auth-illustration-heading { font-size:var(--font-size-lg); }
+  .cloud-auth { padding:20px; }
+  .cloud-auth-header { width:100%; padding:0 0 18px; margin-top:0; }
+  .cloud-auth-card { margin-bottom:0; }
+  .cloud-auth-wordmark { font-size:21px; }
+  .cloud-auth-product-of { display:none; }
+  .cloud-auth-back { padding:8px 13px; }
+  .cloud-auth-back-full { display:none; }
+  .cloud-auth-back-short { display:inline; }
+  .cloud-auth-card { flex-direction:column; width:100%; background:transparent; border:0; border-radius:0; box-shadow:none; overflow:visible; }
+  .cloud-auth-form-panel { padding:0; max-width:none; }
+  .cloud-auth-illustration { display:none; }
+  .cloud-auth-heading { font-size:30px; }
+  .cloud-auth-intro { margin-bottom:18px; }
+  .cloud-auth-tabs { margin:0 0 20px; }
+  .cloud-auth-tab { font-size:15px; padding:9px 6px; }
+  .cloud-auth-form-panel input { min-height:52px; }
+  .cloud-auth-submit { min-height:52px; }
+  .cloud-auth-pw-rules { display:grid; grid-template-columns:1fr 1fr; gap:7px 14px; }
 }
-/* Short viewports (small windows / short phones in landscape): no internal
-   scrollbar anywhere in the card — instead the whole overlay scrolls like a
-   normal page (.cloud-auth already has overflow-y:auto), anchored to the
-   top so the full card, including the footer, is reachable by scrolling. */
+/* Shorter viewports: the auto margins above collapse and the overlay
+   scrolls like a normal page (it already has overflow-y:auto) so the
+   whole card - header included - stays reachable; the photo shrinks
+   instead of forcing height. */
 @media (max-height: 700px) {
-  .cloud-auth { padding:16px; align-items:flex-start; }
-  .cloud-auth-form-panel { padding-top:24px; padding-bottom:18px; }
-  .cloud-auth-illustration { padding-top:24px; padding-bottom:24px; gap:8px; }
-  .cloud-auth-illustration-img { max-width:190px; }
+  .cloud-auth { padding:16px; }
+  .cloud-auth-form-panel { padding-top:26px; padding-bottom:20px; }
+  .cloud-auth-illustration { padding-top:26px; }
+  .cloud-auth-illustration-photo img { height:170px; }
 }
 
 
