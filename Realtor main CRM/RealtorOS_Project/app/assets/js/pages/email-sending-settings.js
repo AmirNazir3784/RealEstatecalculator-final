@@ -323,31 +323,45 @@ App.pages.emailSendingSettings = (function () {
     return App.i18n.html`<div class="release-callout release-callout-warning" style="margin-bottom:12px"><p style="margin:0">${App.i18n.value(() => (U().esc(text)))}</p></div>`;
   }
 
-  function connectionBadgeHtml(conn) {
+  function mailboxStatusHtml(conn) {
     if (!conn) {
-      return App.i18n.html`<span class="badge badge-neutral"><span class="dot"></span>${App.i18n.value(() => (U().esc(App.i18n.t("Not connected"))))}</span>`;
+      return App.i18n.html`<span class="mailbox-status"><span class="dot"></span>${App.i18n.value(() => (U().esc(App.i18n.t("Not connected"))))}</span>`;
     }
     if (conn.status === "connected") {
-      return App.i18n.html`<span class="badge badge-success"><span class="dot"></span>${App.i18n.value(() => (U().esc(App.i18n.t("Connected"))))}</span> <span class="form-help">${App.i18n.value(() => (maskEmail(conn.email_address)))}</span>`;
+      return App.i18n.html`<span class="mailbox-status is-connected"><span class="dot"></span>${App.i18n.value(() => (U().esc(App.i18n.t("Connected"))))}</span>`;
     }
-    return App.i18n.html`<span class="badge badge-danger"><span class="dot"></span>${App.i18n.value(() => (U().esc(App.i18n.t("Needs attention"))))}</span> <span class="form-help">${App.i18n.value(() => (maskEmail(conn.email_address)))}</span>`;
+    return App.i18n.html`<span class="mailbox-status is-attention"><span class="dot"></span>${App.i18n.value(() => (U().esc(App.i18n.t("Needs attention"))))}</span>`;
   }
 
-  function providerRowHtml(kind, providerMeta, conn) {
+  // One provider as a small card: name and status on the top line, the
+  // masked address on its own bar, full-width actions at the bottom.
+  // The .mailbox-cards grid places these two-across on a wide pane and
+  // stacked on a narrow one (see realtoros.css).
+  function providerCardHtml(kind, providerMeta, conn) {
     const pid = providerMeta.id;
     const connectLabel = conn
       ? App.i18n.t(pid === "microsoft" ? "Reconnect Outlook" : "Reconnect Gmail")
       : App.i18n.t(pid === "microsoft" ? "Connect Outlook" : "Connect Gmail");
     return App.i18n.html`
-      <div class="form-grid" style="margin-top:8px">
-        <label class="field full"><span>${App.i18n.value(() => (providerMeta.label))}</span>
-          <div>${App.i18n.value(() => (connectionBadgeHtml(conn)))}</div>
-        </label>
-      </div>
-      ${App.i18n.value(() => (conn && conn.status !== "connected" ? App.i18n.html`<p class="form-help">This connection needs attention. Reconnect to keep sending from your mailbox.</p>` : ""))}
-      <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap">
-        ${App.i18n.value(() => (!conn || conn.status !== "connected" ? App.i18n.html`<button type="button" class="btn ${App.i18n.value(() => (kind === "personal" ? "btn-primary" : ""))}" data-mb-connect="${App.i18n.value(() => (kind))}:${App.i18n.value(() => (pid))}">${App.i18n.value(() => (U().esc(connectLabel)))}</button>` : ""))}
-        ${App.i18n.value(() => (conn ? App.i18n.html`<button type="button" class="btn" data-mb-disconnect="${App.i18n.value(() => (kind))}:${App.i18n.value(() => (pid))}">Disconnect</button>` : ""))}
+      <div class="mailbox-card">
+        <div class="mailbox-card-head">
+          <span class="mailbox-card-name">${App.i18n.value(() => (U().esc(providerMeta.label)))}</span>
+          ${App.i18n.value(() => (mailboxStatusHtml(conn)))}
+        </div>
+        <div class="mailbox-email">${App.i18n.value(() => (conn ? maskEmail(conn.email_address) : ""))}</div>
+        ${App.i18n.value(() => (conn && conn.status !== "connected" ? App.i18n.html`<p class="form-help" style="margin:0">This connection needs attention. Reconnect to keep sending from your mailbox.</p>` : ""))}
+        <div class="mailbox-card-actions">
+          ${App.i18n.value(() => (!conn || conn.status !== "connected" ? App.i18n.html`<button type="button" class="btn btn-primary" data-mb-connect="${App.i18n.value(() => (kind))}:${App.i18n.value(() => (pid))}">${App.i18n.value(() => (U().esc(connectLabel)))}</button>` : ""))}
+          ${App.i18n.value(() => (conn ? App.i18n.html`<button type="button" class="btn btn-mailbox-disconnect" data-mb-disconnect="${App.i18n.value(() => (kind))}:${App.i18n.value(() => (pid))}">Disconnect</button>` : ""))}
+        </div>
+      </div>`;
+  }
+
+  function secureStripHtml() {
+    return App.i18n.html`
+      <div class="mailbox-secure">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+        <span>Secure email connection</span>
       </div>`;
   }
 
@@ -368,7 +382,7 @@ App.pages.emailSendingSettings = (function () {
 
     const mb = state.mailbox;
     if (!mb) return;
-    const personalRows = MAILBOX_PROVIDERS.map((pm) => providerRowHtml("personal", pm, mb.personal[pm.id])).join("");
+    const personalCards = MAILBOX_PROVIDERS.map((pm) => providerCardHtml("personal", pm, mb.personal[pm.id])).join("");
 
     el.innerHTML = App.i18n.html`
       ${App.i18n.value(() => (mailboxNoticeHtml(state)))}
@@ -377,7 +391,8 @@ App.pages.emailSendingSettings = (function () {
       <div class="form-grid" style="margin-top:12px">
         <label class="field full"><span>Your mailbox</span></label>
       </div>
-      ${App.i18n.value(() => (personalRows))}
+      <div class="mailbox-cards">${App.i18n.value(() => (personalCards))}</div>
+      ${App.i18n.value(() => (secureStripHtml()))}
 
       <hr style="margin:16px 0;border:none;border-top:1px solid var(--border, #e5e7eb)">
       <p class="form-help">Shared mailbox and sending policy are managed in Team Access.</p>
