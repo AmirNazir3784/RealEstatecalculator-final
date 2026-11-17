@@ -149,17 +149,6 @@ App.pages.emailSendingSettings = (function () {
         <p class="form-help">Configure your RealtorCRM sender identity and safely test email delivery.</p>
       </div>
 
-      <div class="release-callout" style="margin-bottom:16px">
-        <strong>How RealtorCRM sends email</strong>
-        <ul class="gs-explainer-list" style="margin-top:8px">
-          <li>RealtorCRM sends from its own verified email domain — you do not need to set up your own.</li>
-          <li>You get your own sender email address, so your emails never appear to come from a shared address.</li>
-          <li>Replies always go to your saved Reply-To email below, never to your RealtorCRM sender address.</li>
-          <li>Email delivery is still being set up for this workspace. Until it is ready, test sends will tell you so clearly instead of silently failing.</li>
-          <li>Saving these settings alone never starts automation. A sequence only sends once you activate it and the automation system is running for this workspace.</li>
-        </ul>
-      </div>
-
       <section class="card" style="margin-bottom:16px">
         <div class="card-header"><div class="card-title">Sender Profile</div></div>
         <div class="card-body">
@@ -233,25 +222,14 @@ App.pages.emailSendingSettings = (function () {
           <span>Enable test sending</span>
           <span class="toggle-switch"><input type="checkbox" id="epEnabled" ${App.i18n.value(() => (p && p.is_enabled ? "checked" : ""))}><span class="toggle-track"></span></span>
         </label>
-        <label class="field full"><span>Sender preview</span>
-          <div class="form-help" id="epSenderPreview" style="white-space:pre-wrap;word-break:break-word"></div>
-        </label>
       </div>
       <p id="epProfileStatus" class="profile-edit-message" aria-live="polite" role="status" style="margin-top:10px"></p>
-      <div style="margin-top:10px">
+      <div style="margin-top:10px;text-align:center">
         <button type="button" class="btn btn-primary" id="epProfileSave">Save Sender Profile</button>
       </div>
     `;
 
     const nameInput = el.querySelector("#epDisplayName");
-    const previewEl = el.querySelector("#epSenderPreview");
-    const updatePreview = () => {
-      const name = nameInput.value.trim() || "Your Name";
-      App.i18n.setText(previewEl, App.i18n.value(() => (name + App.i18n.markup(" via RealtorCRM <Your unique RealtorCRM sender address will be assigned when the sending domain is connected.>"))));
-    };
-    updatePreview();
-    nameInput.addEventListener("input", updatePreview);
-
     const statusEl = el.querySelector("#epProfileStatus");
     const saveBtn = el.querySelector("#epProfileSave");
     saveBtn.addEventListener("click", async () => {
