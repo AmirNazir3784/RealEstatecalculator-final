@@ -120,6 +120,10 @@ App.pages.emailSendingSettings = (function () {
       const params = new URLSearchParams(window.location.search);
       const outcome = params.get("mailbox");
       if (outcome !== "connected" && outcome !== "error") return null;
+      // A shared-mailbox outcome belongs to Team & Access, which renders
+      // that section now: leave the parameters in the URL for it to
+      // consume instead of swallowing them here.
+      if (params.get("kind") === "shared") return null;
       const notice = {
         outcome,
         kind: params.get("kind") === "shared" ? "shared" : "personal",
@@ -310,9 +314,7 @@ App.pages.emailSendingSettings = (function () {
     if (!notice) return "";
     if (notice.outcome === "connected") {
       const outlook = notice.provider === "microsoft";
-      const text = notice.kind === "shared"
-        ? App.i18n.t(outlook ? "The shared Outlook mailbox is connected." : "The shared Gmail mailbox is connected.")
-        : App.i18n.t(outlook ? "Outlook connected. Your follow-up emails will now be sent from your mailbox." : "Gmail connected. Your follow-up emails will now be sent from your mailbox.");
+      const text = App.i18n.t(outlook ? "Outlook connected. Your follow-up emails will now be sent from your mailbox." : "Gmail connected. Your follow-up emails will now be sent from your mailbox.");
       return App.i18n.html`<div class="release-callout" style="margin-bottom:12px"><p style="margin:0">${App.i18n.value(() => (U().esc(text)))}</p></div>`;
     }
     const text = notice.reason === "expired"
@@ -366,10 +368,7 @@ App.pages.emailSendingSettings = (function () {
 
     const mb = state.mailbox;
     if (!mb) return;
-    const hasShared = !!(mb.shared.gmail || mb.shared.microsoft);
-    const showShared = !!(hasShared || mb.canManageShared);
     const personalRows = MAILBOX_PROVIDERS.map((pm) => providerRowHtml("personal", pm, mb.personal[pm.id])).join("");
-    const sharedRows = MAILBOX_PROVIDERS.map((pm) => providerRowHtml("shared", pm, mb.shared[pm.id])).join("");
 
     el.innerHTML = App.i18n.html`
       ${App.i18n.value(() => (mailboxNoticeHtml(state)))}
@@ -380,30 +379,11 @@ App.pages.emailSendingSettings = (function () {
       </div>
       ${App.i18n.value(() => (personalRows))}
 
-      ${App.i18n.value(() => (showShared ? App.i18n.html`
       <hr style="margin:16px 0;border:none;border-top:1px solid var(--border, #e5e7eb)">
-      <div class="form-grid">
-        <label class="field full"><span>Shared mailbox</span></label>
+      <p class="form-help">Shared mailbox and sending policy are managed in Team Access.</p>
+      <div style="margin-top:8px">
+        <button type="button" class="btn" id="epMailboxTeamLink">Team &amp; Access</button>
       </div>
-      <p class="form-help">Workspace admins can connect a shared Gmail or Outlook mailbox for the whole team.</p>
-      ${App.i18n.value(() => (sharedRows))}
-      ${App.i18n.value(() => (mb.canManageShared ? App.i18n.html`
-      <div class="form-grid" style="margin-top:16px">
-        <label class="field full"><span>Sending policy</span>
-          <label class="field" style="flex-direction:row;align-items:flex-start;gap:8px">
-            <input type="radio" name="epMailboxPolicy" value="members_own" ${App.i18n.value(() => (mb.policy.mode === "members_own" ? "checked" : ""))}>
-            <span><strong>Team members' own mailboxes</strong><br><span class="form-help">Each email is sent from the mailbox of the team member responsible for the contact. If they have not connected one, the shared mailbox is used, then RealtorCRM's sending service.</span></span>
-          </label>
-          <label class="field" style="flex-direction:row;align-items:flex-start;gap:8px">
-            <input type="radio" name="epMailboxPolicy" value="shared" ${App.i18n.value(() => (mb.policy.mode === "shared" ? "checked" : ""))}>
-            <span><strong>Shared mailbox for everyone</strong><br><span class="form-help">All emails are sent from the shared mailbox, whoever is responsible for the contact.</span></span>
-          </label>
-        </label>
-      </div>
-      <div style="margin-top:10px">
-        <button type="button" class="btn btn-primary" id="epMailboxPolicySave">Save Sending Policy</button>
-      </div>` : ""))}
-      ` : ""))}
       <p id="epMailboxStatus" class="profile-edit-message" aria-live="polite" role="status" style="margin-top:10px"></p>
     `;
 
@@ -453,26 +433,9 @@ App.pages.emailSendingSettings = (function () {
       });
     });
 
-    const policySave = el.querySelector("#epMailboxPolicySave");
-    if (policySave) {
-      policySave.addEventListener("click", async () => {
-        if (policySave.disabled) return;
-        const checked = el.querySelector("input[name='epMailboxPolicy']:checked");
-        if (!checked) return;
-        policySave.disabled = true;
-        setStatus(App.i18n.t("Saving\u2026"));
-        try {
-          const { mode } = await S().mailbox.setPolicy(checked.value);
-          if (state.mailbox) state.mailbox.policy.mode = mode;
-          setStatus(App.i18n.t("Sending policy saved."), "success");
-          App.app.toast(App.i18n.t("Sending policy saved."), "success");
-        } catch (err) {
-          setStatus(friendlyMailboxError(err), "error");
-          App.app.toast(friendlyMailboxError(err), "danger");
-        } finally {
-          policySave.disabled = false;
-        }
-      });
+    const teamLink = el.querySelector("#epMailboxTeamLink");
+    if (teamLink) {
+      teamLink.addEventListener("click", () => App.app.navigate("/settings/team-access"));
     }
   }
 
