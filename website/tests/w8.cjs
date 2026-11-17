@@ -17,7 +17,7 @@ const frozen = {
     // All page baselines refreshed 2026-11-17: footer Platform column gained the Terms of Use link on every page.
     "about/index.html": "b1e7503b58662362fb67a62f9fa25c8313c7d11773081550c4d81d4042d722dd",
     "contact/index.html": "76542afd489e4aefce6b780e8a8fe4e9522db794b80f9ac9ea93d6654adecdae",
-    "resources/index.html": "73b24b11475704949f81a275b6221e867b077926a88933969ee50c0f7b2512cd",
+    "resources/index.html": "bb4973df7120c5e83667b1d0728a5d0533532b5629f914a8e089ac5965dea0f5",
     "real-estate-crm/index.html": "ea0275ab95ff6ba3f292be4053effc91b20c8d8e9a7a510ed02f02a2dfd4c8e9",
     "tools/index.html": "9fc0210295d7ef6d827a3f801d8428a6841debcc1af965ca2b17ee2d0a0dbfec",
     "tools/bridge-loan-calculator/index.html": "b5abb26b812f2ba65bd504d527701ce9c86af9ed0613d3c0824403aca41b98d2",
@@ -28,7 +28,7 @@ const frozen = {
     "tools/mortgage-calculator/index.html": "23b7f68fecfe5a0dbbef2376ff118711a7071e072337bf3275ae53c19e82db86",
     "tools/noi-calculator/index.html": "c5dd3a28b15eec2e532ceb32542368b0fa8cac6bf685fda688abd67468bdc68c",
     "tools/property-investment-calculator/index.html": "cf5249c7b78d15283e9fdc407d7a240c36d307d42262c512f11681978aa61549",
-    "tools/rent-vs-buy-calculator/index.html": "9d8c62adc5a83e11f66c8c3f7a4b0b1dd27b8b9bde6b5fbcb3d6309f3194f568",
+    "tools/rent-vs-buy-calculator/index.html": "8acf12111a51c7a583f4216a323e59cbe60155c4c9e8a4708f5abe11b7d5340e",
     "tools/roi-calculator/index.html": "2ba44c63ecb7c3ddb6f4531c6d8b92f86dc147aadde1a107b940dbd5251e626c"
   },
   "headers": {
