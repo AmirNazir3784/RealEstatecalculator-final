@@ -10,7 +10,8 @@ function check(name, value) { assert(value, name); passed++; }
 function equal(name, actual, expected) { assert.deepEqual(actual, expected, name); passed++; }
 const frozen = {
   "pages": {
-    "index.html": "6dac1daef758dbd8d6055a357af33aa3bd73856e3ea68f00d0b28fbbd98e8725",
+    // Homepage baseline includes the approved Google Search Console verification tag.
+    "index.html": "e40cb4b4853ab158e4ca0b6600d012489ccc7040833f877b99842337d1344fdb",
     // About baseline refreshed for the editorial refinement; shared header stays frozen.
     "about/index.html": "d7816f270706e7058e425459d0386223358f44991200ae8def036307abd23abd",
     "contact/index.html": "1aff953a79f28c6a89b14b10d562a09d8487d216467dcaceb10e78e6c3c3ce4d",
