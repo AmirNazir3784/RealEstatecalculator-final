@@ -403,7 +403,7 @@ sqlTest("fallback lookups and the allowance count use their indexes (EXPLAIN, ge
   // The lookups inside ingest_lead_rows, verbatim (only the variables
   // differ). T2c scoped them to the workspace, so the indexes they must use
   // are the workspace-scoped pair it added alongside.
-  const fnSrc = (await one(db, `select pg_get_functiondef('automation_internal.ingest_lead_rows(uuid,uuid,uuid,uuid,jsonb,text,boolean,integer,text)'::regprocedure) src`)).src;
+  const fnSrc = (await one(db, `select pg_get_functiondef('automation_internal.ingest_lead_rows(uuid,uuid,uuid,uuid,jsonb,text,boolean,integer,text)'::regprocedure) src`)).src.replace(/\r\n/g,"\n");
   const EMAIL_WHERE = "where workspace_id = p_workspace_id and email <> '' and lower(btrim(email)) = v_email";
   const PHONE_WHERE = "where workspace_id = p_workspace_id and phone <> ''\n          and regexp_replace(phone, '[^0-9]+', '', 'g') = v_phone_normalized";
   assert.ok(fnSrc.includes(EMAIL_WHERE), "email lookup text");
@@ -446,7 +446,7 @@ sqlTest("fallback lookups and the allowance count use their indexes (EXPLAIN, ge
   await fileImport(db, { p_user_id: other, p_rows: JSON.stringify(Array.from({ length: 500 }, () => ({ phone: "1" }))) });
   await age(db, other, "30 days");
   await db.exec("analyze public.lead_import_rows");
-  const quotaSrc = (await one(db, `select pg_get_functiondef('public.realtoros_file_import_quota(uuid)'::regprocedure) src`)).src;
+  const quotaSrc = (await one(db, `select pg_get_functiondef('public.realtoros_file_import_quota(uuid)'::regprocedure) src`)).src.replace(/\r\n/g,"\n");
   assert.ok(quotaSrc.includes("where workspace_id = v_workspace"), "quota counts per workspace");
   assert.ok(quotaSrc.includes("and source_type = 'file_upload'\n     and status = 'imported'"), "quota count text");
   await db.exec(`
@@ -583,7 +583,8 @@ async function sheetScenario(d) {
     "birthday",
     "first_touched_at",
     "home_purchase_date",
-    "status_changed_at"
+    "status_changed_at",
+    "crm_search_document"
   ];
 
   return {

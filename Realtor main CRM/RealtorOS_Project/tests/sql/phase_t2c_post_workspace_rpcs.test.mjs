@@ -537,8 +537,8 @@ sqlTest("cross-workspace: a stranger cannot cancel this workspace's job", async 
 
 sqlTest("no function joins two tables on matching CREATOR any more", async () => {
   // Detect creator-based cross-table equality anywhere in SQL functions.
-  // One intentional exception exists: unassigned contacts may be targeted
-  // by personal automation rules owned by the contact creator.
+  // Intentional identity checks are narrowly enumerated: personal automation
+  // ownership and creator-as-recipient for workspace-scoped notifications.
 
   const candidates = await db.query(
     `select n.nspname || '.' || p.proname as fn, p.prosrc as src
@@ -550,19 +550,31 @@ sqlTest("no function joins two tables on matching CREATOR any more", async () =>
   );
 
   const unexpected = candidates.rows.filter(({ fn, src }) => {
-    if (fn !== "automation_internal.rule_targets_contact") {
+    const intentional = {
+      "automation_internal.rule_targets_contact": [/^c\.user_id\s*=\s*r\.user_id$/i],
+      "automation_internal.notify_new_crm_lead": [/^wm\.user_id\s*=\s*new\.user_id$/i],
+      "public.realtoros_scan_task_reminders": [/^wm\.user_id\s*=\s*t\.user_id$/i,/^n\.user_id\s*=\s*wm\.user_id$/i],
+    };
+    if (!Object.hasOwn(intentional,fn)) {
       return true;
     }
 
-    // Allow exactly the intentional c.user_id = r.user_id comparison,
-    // not any additional creator-based joins in that helper.
+    // Permit only the specified identity comparisons (including the task
+    // summary's own-recipient dedupe lookup). Notification recipient
+    // checks must additionally join the workspace, require active membership
+    // and call the row-permission helper; none may use creator as join scope.
     const matches = [
       ...src.matchAll(/[a-z]+\.user_id\s*=\s*[a-z]+\.user_id/gi)
     ];
 
     return (
-      matches.length !== 1 ||
-      !/^c\.user_id\s*=\s*r\.user_id$/i.test(matches[0][0])
+      matches.length !== intentional[fn].length ||
+      matches.some((match,index) => !intentional[fn][index]?.test(match[0])) ||
+      (fn !== "automation_internal.rule_targets_contact" && (
+        !/(?:wm\.workspace_id\s*=\s*(?:new|t)\.workspace_id|t\.workspace_id\s*=\s*wm\.workspace_id)/i.test(src) ||
+        !/wm\.status\s*=\s*'active'/i.test(src) ||
+        !/automation_internal\.notification_can_view\(/.test(src)
+      ))
     );
   });
 

@@ -333,7 +333,7 @@ async function stopEventRecipients(t, contactId, eventRef) {
   });
   const r = await db.query(
     `select user_id from public.notifications
-      where workspace_id=$1 and contact_id=$2 order by user_id`, [t.ws, contactId]);
+      where workspace_id=$1 and contact_id=$2 and type='unsubscribed' order by user_id`, [t.ws, contactId]);
   return r.rows.map((x) => x.user_id).sort();
 }
 
@@ -408,7 +408,7 @@ sqlTest("the same event reaching two people is two rows, one dedupe_key", async 
   await stopEventRecipients(t, cid, `ev-${randomUUID()}`);
   const keys = await db.query(
     `select dedupe_key, count(*)::int as n from public.notifications
-      where workspace_id=$1 and contact_id=$2 group by dedupe_key`, [t.ws, cid]);
+      where workspace_id=$1 and contact_id=$2 and type='unsubscribed' group by dedupe_key`, [t.ws, cid]);
   assert.equal(keys.rows.length, 1, "one logical event");
   assert.equal(keys.rows[0].n, 2, "delivered to two people");
 });

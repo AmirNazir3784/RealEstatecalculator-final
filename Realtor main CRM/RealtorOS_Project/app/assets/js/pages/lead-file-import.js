@@ -36,10 +36,10 @@ App.pages.leadFileImport = (function () {
     let templateUrl = null;
 
     const handle = App.app.openModal({
-      title: "Import from file",
+      get title() { return App.i18n.t("Import from file"); },
       wide: true,
-      body: '<div data-role="lfi-step"></div>',
-      footer: '<div data-role="lfi-footer" style="display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap;width:100%"></div>',
+      body: App.i18n.markup('<div data-role="lfi-step"></div>'),
+      footer: App.i18n.markup('<div data-role="lfi-footer" style="display:flex;gap:8px;justify-content:flex-end;flex-wrap:wrap;width:100%"></div>'),
       onClose: () => {
         if (templateUrl) URL.revokeObjectURL(templateUrl);
         const imported = st.result && (st.result.imported || st.result.updated);
@@ -63,11 +63,11 @@ App.pages.leadFileImport = (function () {
     function showError(message) {
       const el = modal.querySelector('[data-role="lfi-error"]');
       if (!el) return;
-      el.textContent = message || "";
+      App.i18n.setText(el, App.i18n.value(() => (message || "")));
       el.hidden = !message;
     }
-    const errorBox = '<p class="release-callout release-callout-warning" data-role="lfi-error" role="alert" hidden style="margin-top:12px"></p>';
-    const quotaBox = '<p class="form-help" data-role="lfi-quota" aria-live="polite" style="margin:10px 0 0"></p>';
+    const errorBox = App.i18n.markup('<p class="release-callout release-callout-warning" data-role="lfi-error" role="alert" hidden style="margin-top:12px"></p>');
+    const quotaBox = App.i18n.markup('<p class="form-help" data-role="lfi-quota" aria-live="polite" style="margin:10px 0 0"></p>');
 
     // ------------------------------------------------ daily allowance
     // "You can add N more contacts from files today." At 0 the import
@@ -86,17 +86,17 @@ App.pages.leadFileImport = (function () {
     function renderQuota() {
       if (!st) return;
       const box = modal.querySelector('[data-role="lfi-quota"]');
-      if (box) box.textContent = quotaMessage();
+      if (box) App.i18n.setText(box, App.i18n.value(() => (quotaMessage())));
       const warn = modal.querySelector('[data-role="lfi-quota-warning"]');
       const q = st.quota;
       const a = st.analysis;
       if (warn) {
         const over = q && a && q.remaining > 0 && a.newCount > q.remaining;
         warn.hidden = !over;
-        warn.textContent = over
-          ? "Only the first " + fmt(q.remaining) + " new contacts will be added today. The rest can be added by uploading the same file again after "
+        App.i18n.setText(warn, App.i18n.value(() => (over
+          ? App.i18n.t("Only the first ") + fmt(q.remaining) + App.i18n.t(" new contacts will be added today. The rest can be added by uploading the same file again after ")
             + L().resetTimeText(q.resetsAt) + "."
-          : "";
+          : "")));
       }
       const btn = modal.querySelector('[data-role="lfi-import"]');
       if (btn && !st.busy) btn.disabled = !(a && a.validCount) || !!(q && q.remaining <= 0);
@@ -111,7 +111,7 @@ App.pages.leadFileImport = (function () {
       if (!templateUrl) {
         templateUrl = URL.createObjectURL(new Blob([L().templateCsv()], { type: "text/csv" }));
       }
-      stepEl().innerHTML = `
+      stepEl().innerHTML = App.i18n.html`
         <h3 data-step-heading tabindex="-1" style="margin:0 0 6px">Choose a file</h3>
         <p class="form-help" style="margin:0 0 14px">A one-time upload of leads from an Excel (.xlsx, .xls) or CSV file, up to 5 MB and 500 rows.
           For leads that keep arriving, use the automatic sync from Google Sheets instead.</p>
@@ -120,12 +120,12 @@ App.pages.leadFileImport = (function () {
           <input type="file" data-role="lfi-file" accept=".xlsx,.xls,.csv,application/vnd.openxmlformats-officedocument.spreadsheetml.sheet,application/vnd.ms-excel,text/csv">
         </label>
         <p class="form-help" style="margin:10px 0 0">Not sure how to lay it out?
-          <a href="${U().esc(templateUrl)}" download="realtoros-leads-template.csv">Download a blank template</a> with the expected headings.</p>
+          <a href="${App.i18n.value(() => (U().esc(templateUrl)))}" download="realtoros-leads-template.csv">Download a blank template</a> with the expected headings.</p>
         <div data-role="lfi-sheet-pick"></div>
-        ${quotaBox}
+        ${App.i18n.value(() => (quotaBox))}
         <p class="form-help" data-role="lfi-status" aria-live="polite" style="margin:10px 0 0"></p>
-        ${errorBox}`;
-      footEl().innerHTML = '<button type="button" class="btn" data-role="lfi-cancel">Cancel</button>';
+        ${App.i18n.value(() => (errorBox))}`;
+      footEl().innerHTML = App.i18n.markup('<button type="button" class="btn" data-role="lfi-cancel">Cancel</button>');
       footEl().querySelector('[data-role="lfi-cancel"]').addEventListener("click", () => handle.close());
       stepEl().querySelector('[data-role="lfi-file"]').addEventListener("change", onFileChosen);
       renderQuota();
@@ -138,20 +138,20 @@ App.pages.leadFileImport = (function () {
       const check = L().checkFile(file);
       if (!check.ok) { showError(check.reason); return; }
       const status = stepEl().querySelector('[data-role="lfi-status"]');
-      status.textContent = "Reading your file…";
+      App.i18n.setText(status, App.i18n.message("Reading your file…"));
       e.target.disabled = true;
       try {
         const sheets = await L().readFile(file);
         if (!st) return;
         st.fileName = file.name;
         st.sheets = sheets.filter((s) => s.rows.some((r) => r.some((c) => c !== "")));
-        if (!st.sheets.length) { status.textContent = ""; showError("That file has no rows to import."); e.target.disabled = false; return; }
-        status.textContent = "";
+        if (!st.sheets.length) { App.i18n.setText(status, App.i18n.value(() => (""))); showError("That file has no rows to import."); e.target.disabled = false; return; }
+        App.i18n.setText(status, App.i18n.value(() => ("")));
         if (st.sheets.length > 1) renderSheetPick();
         else chooseSheet(0);
       } catch (err) {
         if (!st) return;
-        status.textContent = "";
+        App.i18n.setText(status, App.i18n.value(() => ("")));
         showError(err && err.userMessage ? err.userMessage
           : err && err.message === "load_failed" ? "The file reader couldn't be loaded. Check your connection and try again."
           : "That file couldn't be read. Make sure it's a valid Excel or CSV file.");
@@ -161,19 +161,19 @@ App.pages.leadFileImport = (function () {
 
     function renderSheetPick() {
       const box = stepEl().querySelector('[data-role="lfi-sheet-pick"]');
-      box.innerHTML = `
+      box.innerHTML = App.i18n.html`
         <label class="field" style="margin-top:14px">
           <span>This workbook has several sheets. Which one has your leads?</span>
           <select data-role="lfi-sheet">
-            ${st.sheets.map((s, i) => {
+            ${App.i18n.value(() => (st.sheets.map((s, i) => {
               const n = Math.max(0, s.rows.length - 1);
-              return `<option value="${i}">${U().esc(s.name)} (${U().esc(n)} row${n === 1 ? "" : "s"})</option>`;
-            }).join("")}
+              return App.i18n.html`<option value="${App.i18n.value(() => (i))}">${App.i18n.value(() => (U().esc(s.name)))} (${App.i18n.value(() => (U().esc(n)))} row${App.i18n.value(() => (n === 1 ? "" : "s"))})</option>`;
+            }).join("")))}
           </select>
         </label>`;
-      footEl().innerHTML = `
+      footEl().innerHTML = App.i18n.markup(`
         <button type="button" class="btn" data-role="lfi-cancel">Cancel</button>
-        <button type="button" class="btn btn-primary" data-role="lfi-next">Continue</button>`;
+        <button type="button" class="btn btn-primary" data-role="lfi-next">Continue</button>`);
       footEl().querySelector('[data-role="lfi-cancel"]').addEventListener("click", () => handle.close());
       footEl().querySelector('[data-role="lfi-next"]').addEventListener("click", () => {
         chooseSheet(Number(box.querySelector('[data-role="lfi-sheet"]').value) || 0);
@@ -204,8 +204,8 @@ App.pages.leadFileImport = (function () {
         const v = (st.dataRows.find((r) => r[i]) || [])[i] || "";
         return v.length > 40 ? v.slice(0, 40) + "…" : v;
       };
-      const options = (selected) => ['<option value="">Don\'t import</option>']
-        .concat(L().FIELDS.map((f) => `<option value="${f.key}" ${f.key === selected ? "selected" : ""}>${U().esc(f.label)}</option>`))
+      const options = (selected) => [App.i18n.markup('<option value="">Don\'t import</option>')]
+        .concat(L().FIELDS.map((f) => App.i18n.html`<option value="${App.i18n.value(() => (f.key))}" ${App.i18n.value(() => (f.key === selected ? "selected" : ""))}>${App.i18n.value(() => (U().esc(f.label)))}</option>`))
         .join("");
       // Phase 2E. Which export this looks like, and anything we recognised
       // but cannot import. Both are shown BEFORE the table: the agent should
@@ -214,33 +214,33 @@ App.pages.leadFileImport = (function () {
       const unsupported = L().unsupportedColumns(st.headers, st.mapping);
       const mappedCount = st.mapping.filter(Boolean).length;
 
-      stepEl().innerHTML = `
+      stepEl().innerHTML = App.i18n.html`
         <h3 data-step-heading tabindex="-1" style="margin:0 0 6px">Match your columns</h3>
         <p class="form-help" style="margin:0 0 12px">
-          ${fmt.id === "generic"
+          ${App.i18n.value(() => (fmt.id === "generic"
             ? `We matched ${mappedCount} of your ${st.headers.length} columns from their headings.`
-            : `This looks like a ${U().esc(fmt.label)} export, so we matched ${mappedCount} of your ${st.headers.length} columns for you.`}
+            : `This looks like a ${U().esc(fmt.label)} export, so we matched ${mappedCount} of your ${st.headers.length} columns for you.`))}
           Change any column, or choose "Don't import" to leave it out. Every row needs an email address or a phone number.</p>
-        ${unsupported.length ? `
+        ${App.i18n.value(() => (unsupported.length ? App.i18n.html`
         <div class="release-callout release-callout-warning" style="margin:0 0 12px">
-          <strong>${unsupported.length === 1 ? "One column cannot be imported yet" : unsupported.length + " columns cannot be imported yet"}:
-            ${unsupported.map((c) => U().esc(c.header) + " (" + U().esc(c.label) + ")").join(", ")}.</strong>
-          <p style="margin:6px 0 0">Everything else below imports normally. You can add ${unsupported.length === 1 ? "this" : "these"} to a contact by hand afterwards.</p>
-        </div>` : ""}
+          <strong>${App.i18n.value(() => (unsupported.length === 1 ? App.i18n.t("One column cannot be imported yet") : unsupported.length + " columns cannot be imported yet"))}:
+            ${App.i18n.value(() => (unsupported.map((c) => U().esc(c.header) + " (" + U().esc(c.label) + ")").join(", ")))}.</strong>
+          <p style="margin:6px 0 0">Everything else below imports normally. You can add ${App.i18n.value(() => (unsupported.length === 1 ? App.i18n.t("this") : App.i18n.t("these")))} to a contact by hand afterwards.</p>
+        </div>` : ""))}
         <div class="table-wrap">
           <table class="tbl">
             <thead><tr><th scope="col">Column in your file</th><th scope="col">Example</th><th scope="col">Import as</th></tr></thead>
             <tbody>
-              ${st.headers.map((h, i) => `
+              ${App.i18n.value(() => (st.headers.map((h, i) => App.i18n.html`
                 <tr>
-                  <td class="primary-cell" id="lfi-col-${i}">${U().esc(h)}</td>
-                  <td>${U().esc(sample(i)) || '<span class="form-help">—</span>'}</td>
-                  <td><select data-col="${i}" aria-labelledby="lfi-col-${i}">${options(st.mapping[i])}</select></td>
-                </tr>`).join("")}
+                  <td class="primary-cell" id="lfi-col-${App.i18n.value(() => (i))}">${App.i18n.value(() => (U().esc(h)))}</td>
+                  <td>${App.i18n.value(() => (U().esc(sample(i)) || App.i18n.markup('<span class="form-help">—</span>')))}</td>
+                  <td><select data-col="${App.i18n.value(() => (i))}" aria-labelledby="lfi-col-${App.i18n.value(() => (i))}">${App.i18n.value(() => (options(st.mapping[i])))}</select></td>
+                </tr>`).join("")))}
             </tbody>
           </table>
         </div>
-        ${errorBox}`;
+        ${App.i18n.value(() => (errorBox))}`;
       stepEl().querySelectorAll("select[data-col]").forEach((sel) => {
         sel.addEventListener("change", () => {
           const i = Number(sel.getAttribute("data-col"));
@@ -251,9 +251,9 @@ App.pages.leadFileImport = (function () {
           showError("");
         });
       });
-      footEl().innerHTML = `
+      footEl().innerHTML = App.i18n.markup(`
         <button type="button" class="btn" data-role="lfi-back">Back</button>
-        <button type="button" class="btn btn-primary" data-role="lfi-next">Review</button>`;
+        <button type="button" class="btn btn-primary" data-role="lfi-next">Review</button>`);
       footEl().querySelector('[data-role="lfi-back"]').addEventListener("click", renderChoose);
       footEl().querySelector('[data-role="lfi-next"]').addEventListener("click", () => {
         if (!L().hasContactColumn(st.mapping)) {
@@ -280,55 +280,55 @@ App.pages.leadFileImport = (function () {
       const cell = (row, key) => U().esc(key === "tags" ? row.data.tags.join(", ") : row.data[key]);
       const invalid = a.rows.filter((r) => !r.valid);
       const shownInvalid = invalid.slice(0, 50);
-      stepEl().innerHTML = `
+      stepEl().innerHTML = App.i18n.html`
         <h3 data-step-heading tabindex="-1" style="margin:0 0 10px">Review before importing</h3>
         <div class="settings-status-grid" style="margin-bottom:12px">
-          <div class="settings-status-card"><div class="k">Ready to import</div><div class="v">${U().esc(a.validCount)}</div></div>
-          <div class="settings-status-card"><div class="k">Need attention</div><div class="v">${U().esc(a.invalidCount)}</div></div>
-          <div class="settings-status-card"><div class="k">Likely already in your contacts</div><div class="v">${U().esc(a.duplicateCount)}</div></div>
+          <div class="settings-status-card"><div class="k">Ready to import</div><div class="v">${App.i18n.value(() => (U().esc(a.validCount)))}</div></div>
+          <div class="settings-status-card"><div class="k">Need attention</div><div class="v">${App.i18n.value(() => (U().esc(a.invalidCount)))}</div></div>
+          <div class="settings-status-card"><div class="k">Likely already in your contacts</div><div class="v">${App.i18n.value(() => (U().esc(a.duplicateCount)))}</div></div>
         </div>
         <p class="form-help" style="margin:0 0 10px">People already in your contacts are matched by email or phone: only their empty
           details are filled in, nothing is overwritten. Row 1 is the first row under your headings.</p>
         <div class="table-wrap">
           <table class="tbl tbl-compact">
-            <caption class="sr-only">First ${U().esc(a.preview.length)} rows of your file</caption>
-            <thead><tr><th scope="col">Row</th>${cols.map((c) => `<th scope="col">${U().esc(c.label)}</th>`).join("")}<th scope="col">Status</th></tr></thead>
+            <caption class="sr-only">First ${App.i18n.value(() => (U().esc(a.preview.length)))} rows of your file</caption>
+            <thead><tr><th scope="col">Row</th>${App.i18n.value(() => (cols.map((c) => App.i18n.html`<th scope="col">${App.i18n.value(() => (U().esc(c.label)))}</th>`).join("")))}<th scope="col">Status</th></tr></thead>
             <tbody>
-              ${a.preview.map((r) => `
+              ${App.i18n.value(() => (a.preview.map((r) => App.i18n.html`
                 <tr>
-                  <td>${U().esc(r.rowNumber)}</td>
-                  ${cols.map((c) => `<td>${cell(r, c.key)}</td>`).join("")}
-                  <td>${!r.valid ? `<span class="badge badge-warning">${U().esc(r.reason)}</span>`
-                    : r.duplicate === "file" ? `<span class="badge badge-neutral">Same as row ${U().esc(r.duplicateOf)}</span>`
-                    : r.duplicate === "existing" ? '<span class="badge badge-neutral">Already a contact</span>'
-                    : '<span class="badge badge-success">Ready</span>'}</td>
-                </tr>`).join("")}
+                  <td>${App.i18n.value(() => (U().esc(r.rowNumber)))}</td>
+                  ${App.i18n.value(() => (cols.map((c) => App.i18n.html`<td>${App.i18n.value(() => (cell(r, c.key)))}</td>`).join("")))}
+                  <td>${App.i18n.value(() => (!r.valid ? App.i18n.html`<span class="badge badge-warning">${App.i18n.value(() => (U().esc(r.reason)))}</span>`
+                    : r.duplicate === "file" ? App.i18n.html`<span class="badge badge-neutral">Same as row ${App.i18n.value(() => (U().esc(r.duplicateOf)))}</span>`
+                    : r.duplicate === "existing" ? App.i18n.markup('<span class="badge badge-neutral">Already a contact</span>')
+                    : App.i18n.markup('<span class="badge badge-success">Ready</span>')))}</td>
+                </tr>`).join("")))}
             </tbody>
           </table>
         </div>
-        ${a.total > a.preview.length ? `<p class="form-help" style="margin:6px 0 0">Showing the first ${U().esc(a.preview.length)} of ${U().esc(a.total)} rows.</p>` : ""}
-        ${invalid.length ? `
+        ${App.i18n.value(() => (a.total > a.preview.length ? App.i18n.html`<p class="form-help" style="margin:6px 0 0">Showing the first ${App.i18n.value(() => (U().esc(a.preview.length)))} of ${App.i18n.value(() => (U().esc(a.total)))} rows.</p>` : ""))}
+        ${App.i18n.value(() => (invalid.length ? App.i18n.html`
           <div class="release-callout release-callout-warning" style="margin-top:12px">
-            <strong>${U().esc(invalid.length)} row${invalid.length === 1 ? "" : "s"} won't be imported:</strong>
+            <strong>${App.i18n.value(() => (U().esc(invalid.length)))} row${App.i18n.value(() => (invalid.length === 1 ? "" : "s"))} won't be imported:</strong>
             <ul style="margin:6px 0 0;padding-left:18px">
-              ${shownInvalid.map((r) => `<li>Row ${U().esc(r.rowNumber)}: ${U().esc(r.reason)}</li>`).join("")}
+              ${App.i18n.value(() => (shownInvalid.map((r) => App.i18n.html`<li>Row ${App.i18n.value(() => (U().esc(r.rowNumber)))}: ${App.i18n.value(() => (U().esc(r.reason)))}</li>`).join("")))}
             </ul>
-            ${invalid.length > shownInvalid.length ? `<p class="form-help" style="margin:6px 0 0">…and ${U().esc(invalid.length - shownInvalid.length)} more.</p>` : ""}
-          </div>` : ""}
+            ${App.i18n.value(() => (invalid.length > shownInvalid.length ? App.i18n.html`<p class="form-help" style="margin:6px 0 0">…and ${App.i18n.value(() => (U().esc(invalid.length - shownInvalid.length)))} more.</p>` : ""))}
+          </div>` : ""))}
         <label style="display:flex;gap:8px;align-items:flex-start;margin-top:14px">
-          <input type="checkbox" data-role="lfi-automation" ${st.startAutomation ? "checked" : ""}>
+          <input type="checkbox" data-role="lfi-automation" ${App.i18n.value(() => (st.startAutomation ? "checked" : ""))}>
           <span><strong>Start automated follow-up for these contacts</strong><br>
             <span class="form-help">Only include people who agreed to receive emails from you.</span></span>
         </label>
-        ${quotaBox}
+        ${App.i18n.value(() => (quotaBox))}
         <p class="release-callout release-callout-warning" data-role="lfi-quota-warning" hidden style="margin-top:10px"></p>
         <p class="form-help" data-role="lfi-status" aria-live="polite" style="margin:10px 0 0"></p>
-        ${errorBox}`;
+        ${App.i18n.value(() => (errorBox))}`;
       stepEl().querySelector('[data-role="lfi-automation"]').addEventListener("change", (e) => { st.startAutomation = e.target.checked; });
-      footEl().innerHTML = `
+      footEl().innerHTML = App.i18n.html`
         <button type="button" class="btn" data-role="lfi-back">Back</button>
-        <button type="button" class="btn btn-primary" data-role="lfi-import" ${a.validCount ? "" : "disabled"}>
-          Import ${U().esc(a.validCount)} contact${a.validCount === 1 ? "" : "s"}</button>`;
+        <button type="button" class="btn btn-primary" data-role="lfi-import" ${App.i18n.value(() => (a.validCount ? "" : "disabled"))}>
+          Import ${App.i18n.value(() => (U().esc(a.validCount)))} contact${App.i18n.value(() => (a.validCount === 1 ? "" : "s"))}</button>`;
       footEl().querySelector('[data-role="lfi-back"]').addEventListener("click", renderMap);
       footEl().querySelector('[data-role="lfi-import"]').addEventListener("click", submit);
       renderQuota();
@@ -340,11 +340,11 @@ App.pages.leadFileImport = (function () {
       st.busy = true;
       const btn = footEl().querySelector('[data-role="lfi-import"]');
       const back = footEl().querySelector('[data-role="lfi-back"]');
-      if (btn) { btn.disabled = true; btn.textContent = "Importing…"; }
+      if (btn) { btn.disabled = true; App.i18n.setText(btn, App.i18n.message("Importing…")); }
       if (back) back.disabled = true;
       showError("");
       const status = stepEl().querySelector('[data-role="lfi-status"]');
-      if (status) status.textContent = "Importing…";
+      if (status) App.i18n.setText(status, App.i18n.message("Importing…"));
       try {
         const result = await S().leadFileImport.submit({
           importId: st.importId,
@@ -361,7 +361,7 @@ App.pages.leadFileImport = (function () {
       } catch (err) {
         if (!st) return;
         st.busy = false;
-        if (status) status.textContent = "";
+        if (status) App.i18n.setText(status, App.i18n.value(() => ("")));
         const code = err && err.code;
         const minutes = err && err.retryAfterSeconds ? Math.max(1, Math.ceil(err.retryAfterSeconds / 60)) : null;
         showError(
@@ -370,7 +370,7 @@ App.pages.leadFileImport = (function () {
           : code === "request_too_large" ? "This file has too much data for one import. Split it into smaller files."
           : "Something went wrong. Please try again — nothing will be imported twice."
         );
-        if (btn) { btn.textContent = "Try again"; }
+        if (btn) { App.i18n.setText(btn, App.i18n.message("Try again")); }
         renderQuota();
         if (back) back.disabled = false;
       }
@@ -379,30 +379,30 @@ App.pages.leadFileImport = (function () {
     // ------------------------------------------------ step 4: result
     function renderResult() {
       const r = st.result;
-      const list = (items) => items.slice(0, 100).map((x) => `<li>Row ${U().esc(x.rowNumber)}: ${U().esc(x.reason)}</li>`).join("");
-      stepEl().innerHTML = `
-        <h3 data-step-heading tabindex="-1" style="margin:0 0 10px">${r.replayed ? "This import was already done" : "Import complete"}</h3>
-        ${r.replayed ? '<p class="form-help" style="margin:0 0 10px">Nothing was imported twice. These are the results of the first attempt.</p>' : ""}
+      const list = (items) => items.slice(0, 100).map((x) => App.i18n.html`<li>Row ${App.i18n.value(() => (U().esc(x.rowNumber)))}: ${App.i18n.value(() => (U().esc(x.reason)))}</li>`).join("");
+      stepEl().innerHTML = App.i18n.html`
+        <h3 data-step-heading tabindex="-1" style="margin:0 0 10px">${App.i18n.value(() => (r.replayed ? App.i18n.t("This import was already done") : App.i18n.t("Import complete")))}</h3>
+        ${App.i18n.value(() => (r.replayed ? App.i18n.markup('<p class="form-help" style="margin:0 0 10px">Nothing was imported twice. These are the results of the first attempt.</p>') : ""))}
         <div class="settings-status-grid" style="margin-bottom:12px">
-          <div class="settings-status-card"><div class="k">New contacts</div><div class="v">${U().esc(r.imported)}</div></div>
-          <div class="settings-status-card"><div class="k">Existing contacts updated</div><div class="v">${U().esc(r.updated)}</div></div>
-          <div class="settings-status-card"><div class="k">Skipped (no changes)</div><div class="v">${U().esc(r.skipped)}</div></div>
-          <div class="settings-status-card"><div class="k">Couldn't import</div><div class="v">${U().esc(r.rejected)}</div></div>
-          ${r.dailyLimitSkipped ? `<div class="settings-status-card"><div class="k">Not added — daily limit</div><div class="v">${U().esc(r.dailyLimitSkipped)}</div></div>` : ""}
+          <div class="settings-status-card"><div class="k">New contacts</div><div class="v">${App.i18n.value(() => (U().esc(r.imported)))}</div></div>
+          <div class="settings-status-card"><div class="k">Existing contacts updated</div><div class="v">${App.i18n.value(() => (U().esc(r.updated)))}</div></div>
+          <div class="settings-status-card"><div class="k">Skipped (no changes)</div><div class="v">${App.i18n.value(() => (U().esc(r.skipped)))}</div></div>
+          <div class="settings-status-card"><div class="k">Couldn't import</div><div class="v">${App.i18n.value(() => (U().esc(r.rejected)))}</div></div>
+          ${App.i18n.value(() => (r.dailyLimitSkipped ? App.i18n.html`<div class="settings-status-card"><div class="k">Not added — daily limit</div><div class="v">${App.i18n.value(() => (U().esc(r.dailyLimitSkipped)))}</div></div>` : ""))}
         </div>
-        ${r.dailyLimitSkipped ? `<div class="release-callout release-callout-warning" style="margin-bottom:10px">
-          ${U().esc(fmt(r.dailyLimitSkipped))} new contact${r.dailyLimitSkipped === 1 ? " wasn't" : "s weren't"} added because of the daily limit of
-          ${U().esc(fmt((r.quota && r.quota.limit) || 200))} new contacts from files. Upload the same file again after
-          ${U().esc(L().resetTimeText(r.quota && r.quota.resetsAt))} to add the rest — people already added won't be duplicated.</div>` : ""}
-        ${r.rejectedRows.length ? `<div class="release-callout release-callout-warning"><strong>Rows that couldn't be imported</strong>
-          <ul style="margin:6px 0 0;padding-left:18px">${list(r.rejectedRows)}</ul></div>` : ""}
-        ${r.skippedRows.length ? `<div class="release-callout" style="margin-top:10px"><strong>Repeated in this file</strong>
-          <ul style="margin:6px 0 0;padding-left:18px">${list(r.skippedRows)}</ul></div>` : ""}
-        <p class="form-help" style="margin:12px 0 0">${st.startAutomation ? "Automated follow-up will start for the new contacts that match an active automation."
-          : "No automated follow-up was started for these contacts."}</p>`;
-      footEl().innerHTML = `
+        ${App.i18n.value(() => (r.dailyLimitSkipped ? App.i18n.html`<div class="release-callout release-callout-warning" style="margin-bottom:10px">
+          ${App.i18n.value(() => (U().esc(fmt(r.dailyLimitSkipped))))} new contact${App.i18n.value(() => (r.dailyLimitSkipped === 1 ? App.i18n.t(" wasn't") : App.i18n.t("s weren't")))} added because of the daily limit of
+          ${App.i18n.value(() => (U().esc(fmt((r.quota && r.quota.limit) || 200))))} new contacts from files. Upload the same file again after
+          ${App.i18n.value(() => (U().esc(L().resetTimeText(r.quota && r.quota.resetsAt))))} to add the rest — people already added won't be duplicated.</div>` : ""))}
+        ${App.i18n.value(() => (r.rejectedRows.length ? App.i18n.html`<div class="release-callout release-callout-warning"><strong>Rows that couldn't be imported</strong>
+          <ul style="margin:6px 0 0;padding-left:18px">${App.i18n.value(() => (list(r.rejectedRows)))}</ul></div>` : ""))}
+        ${App.i18n.value(() => (r.skippedRows.length ? App.i18n.html`<div class="release-callout" style="margin-top:10px"><strong>Repeated in this file</strong>
+          <ul style="margin:6px 0 0;padding-left:18px">${App.i18n.value(() => (list(r.skippedRows)))}</ul></div>` : ""))}
+        <p class="form-help" style="margin:12px 0 0">${App.i18n.value(() => (st.startAutomation ? App.i18n.t("Automated follow-up will start for the new contacts that match an active automation.")
+          : App.i18n.t("No automated follow-up was started for these contacts.")))}</p>`;
+      footEl().innerHTML = App.i18n.markup(`
         <button type="button" class="btn" data-role="lfi-history">View import history</button>
-        <button type="button" class="btn btn-primary" data-role="lfi-done">Done</button>`;
+        <button type="button" class="btn btn-primary" data-role="lfi-done">Done</button>`);
       footEl().querySelector('[data-role="lfi-done"]').addEventListener("click", () => handle.close());
       footEl().querySelector('[data-role="lfi-history"]').addEventListener("click", () => {
         handle.close();

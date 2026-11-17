@@ -502,6 +502,23 @@ App.data = (function () {
   }
 
   // ---------- GENERIC CRUD ----------
+  const SEARCH_COLUMNS = { contacts:"id,full_name,email,phone", deals:"id,title,stage", properties:"id,address,status,mls", tasks:"id,title,status,due_date" };
+  async function search(entityKey, query) {
+    const columns = Object.hasOwn(SEARCH_COLUMNS,entityKey) ? SEARCH_COLUMNS[entityKey] : null;
+    if (!columns) throw new Error("Unsupported search entity.");
+    const user = requireUser(), userId = user.id, workspaceId = await requireWorkspaceId_();
+    const area = entityKey === "tasks" ? "work" : entityKey;
+    if (!App.workspace.ready() || !App.workspace.canView(area)) return { rows:[], hasMore:false };
+    const terms = String(query || "").trim().slice(0,200).match(/[\p{L}\p{N}]+/gu) || [];
+    if (!terms.length) return { rows:[], hasMore:false };
+    const expression = terms.slice(0,12).map(term => term + ":*").join(" & ");
+    const {data,error} = await client().from(REGISTRY[entityKey].table).select(columns)
+      .eq("workspace_id",workspaceId).textSearch("crm_search_document",expression,{config:"simple"}).order("id").limit(21);
+    if (error) throw error;
+    const active = App.cloud.getUser();
+    if (!active || active.id !== userId || App.workspace.id() !== workspaceId) throw new Error("Search context changed.");
+    return { rows:(data || []).slice(0,20).map(REGISTRY[entityKey].fromRow), hasMore:(data || []).length>20 };
+  }
   async function list(entityKey, opts) {
     opts = opts || {};
     const def = REGISTRY[entityKey];
@@ -1052,6 +1069,13 @@ App.data = (function () {
   // owner and the workspace on a device row are not the browser's to
   // choose - the function takes them from the session. There is no
   // INSERT or UPDATE grant on either table for this reason.
+  async function requestPushTest(endpoint) {
+    requireUser();
+    const {data,error} = await client().rpc("realtoros_request_push_test",{p_endpoint:String(endpoint || "")});
+    if (error) throw error;
+    if (!data || !["queued","rate_limited","notifications_off","no_device","not_signed_in","no_workspace"].includes(data.outcome)) throw new Error("Test notification could not be queued. Check this device and your notification preferences.");
+    return data;
+  }
   async function listPushDevices() {
     requireUser();
     const { data, error } = await client()
@@ -2460,6 +2484,128 @@ App.data = (function () {
     }
   }
 
+  // ---------- CONNECTED MAILBOX (mailbox-connect Edge Function) ----------
+  // The browser's only path to mailbox connections: authenticated calls to
+  // the mailbox-connect Edge Function, which owns every write. The browser
+  // never sees a token — status returns addresses and metadata only, and
+  // "start" returns the provider consent URL to navigate to. Responses are
+  // strictly validated, exactly like the test-send path above: a partial or
+  // malformed payload is never trusted as a real state.
+  const MAILBOX_KNOWN_ERROR_CODES_ = [
+    "unauthorized", "no_workspace", "admin_required", "provider_not_available_yet",
+    "invalid_mode", "policy_save_failed", "not_configured", "unknown_action",
+    "method_not_allowed", "internal"
+  ];
+  const MAILBOX_CONNECTION_STATUSES_ = ["connected", "revoked", "error"];
+  const MAILBOX_PROVIDERS_ = ["gmail", "microsoft"];
+  const MAILBOX_ROLES_ = ["owner", "admin", "agent"];
+  const MAILBOX_POLICY_MODES_ = ["members_own", "shared"];
+  const MAILBOX_KINDS_ = ["personal", "shared"];
+
+  function mailboxUnexpected_() {
+    return new Error("Unexpected response from the mailbox service.");
+  }
+  function validateMailboxConnection_(value) {
+    if (value === null || value === undefined) return null;
+    if (typeof value !== "object" || Array.isArray(value)) throw mailboxUnexpected_();
+    if (MAILBOX_PROVIDERS_.indexOf(value.provider) === -1) throw mailboxUnexpected_();
+    if (typeof value.email_address !== "string" || !TEST_SEND_EMAIL_SHAPE_.test(value.email_address)) throw mailboxUnexpected_();
+    if (MAILBOX_CONNECTION_STATUSES_.indexOf(value.status) === -1) throw mailboxUnexpected_();
+    if (!isValidIsoTimestampOrNull_(value.connected_at)) throw mailboxUnexpected_();
+    return {
+      provider: value.provider,
+      email_address: value.email_address,
+      status: value.status,
+      connected_at: value.connected_at || null
+    };
+  }
+  function validateMailboxConnectionMap_(value) {
+    if (!value || typeof value !== "object" || Array.isArray(value)) throw mailboxUnexpected_();
+    const gmail = validateMailboxConnection_(value.gmail);
+    const microsoft = validateMailboxConnection_(value.microsoft);
+    // A connection view must sit under its own provider key.
+    if (gmail && gmail.provider !== "gmail") throw mailboxUnexpected_();
+    if (microsoft && microsoft.provider !== "microsoft") throw mailboxUnexpected_();
+    return { gmail, microsoft };
+  }
+  function validateMailboxStatus_(data) {
+    if (!data || typeof data !== "object" || Array.isArray(data)) throw mailboxUnexpected_();
+    if (typeof data.workspaceId !== "string" || !UUID_PATTERN_.test(data.workspaceId)) throw mailboxUnexpected_();
+    if (MAILBOX_ROLES_.indexOf(data.role) === -1) throw mailboxUnexpected_();
+    if (typeof data.canManageShared !== "boolean") throw mailboxUnexpected_();
+    if (!data.policy || MAILBOX_POLICY_MODES_.indexOf(data.policy.mode) === -1) throw mailboxUnexpected_();
+    return {
+      workspaceId: data.workspaceId,
+      role: data.role,
+      canManageShared: data.canManageShared,
+      personal: validateMailboxConnectionMap_(data.personal),
+      shared: validateMailboxConnectionMap_(data.shared),
+      policy: { mode: data.policy.mode }
+    };
+  }
+  async function invokeMailbox_(body) {
+    let data, error;
+    try {
+      ({ data, error } = await client().functions.invoke("mailbox-connect", { body }));
+    } catch (invokeErr) {
+      const failed = new Error("mailbox_request_failed");
+      failed.code = "mailbox_request_failed";
+      throw failed;
+    }
+    if (error) {
+      const { code } = await readAllowlistedFunctionErrorBody_(error);
+      if (code && MAILBOX_KNOWN_ERROR_CODES_.indexOf(code) !== -1) {
+        const normalized = new Error(code);
+        normalized.code = code;
+        throw normalized;
+      }
+      throw mailboxUnexpected_();
+    }
+    if (!data || typeof data !== "object") throw mailboxUnexpected_();
+    if (data.error) {
+      if (typeof data.error === "string" && MAILBOX_KNOWN_ERROR_CODES_.indexOf(data.error) !== -1) {
+        const normalized = new Error(data.error);
+        normalized.code = data.error;
+        throw normalized;
+      }
+      throw mailboxUnexpected_();
+    }
+    return data;
+  }
+  async function getMailboxStatus() {
+    requireUser();
+    return validateMailboxStatus_(await invokeMailbox_({ action: "status" }));
+  }
+  async function startMailboxConnect(kind, provider) {
+    requireUser();
+    if (MAILBOX_KINDS_.indexOf(kind) === -1) throw new Error("A valid mailbox kind is required.");
+    if (MAILBOX_PROVIDERS_.indexOf(provider) === -1) throw new Error("A valid mailbox provider is required.");
+    const data = await invokeMailbox_({ action: "start", kind, provider });
+    // The consent URL is validated before the page navigates anywhere:
+    // only the provider's own authorization host over HTTPS.
+    const hostPattern = provider === "microsoft"
+      ? /^https:\/\/login\.microsoftonline\.com\//
+      : /^https:\/\/accounts\.google\.com\//;
+    if (typeof data.authUrl !== "string" || !hostPattern.test(data.authUrl)) {
+      throw mailboxUnexpected_();
+    }
+    return { authUrl: data.authUrl };
+  }
+  async function disconnectMailbox(kind, provider) {
+    requireUser();
+    if (MAILBOX_KINDS_.indexOf(kind) === -1) throw new Error("A valid mailbox kind is required.");
+    if (MAILBOX_PROVIDERS_.indexOf(provider) === -1) throw new Error("A valid mailbox provider is required.");
+    const data = await invokeMailbox_({ action: "disconnect", kind, provider });
+    return { disconnected: data.disconnected === true };
+  }
+  async function setMailboxPolicy(mode) {
+    requireUser();
+    if (MAILBOX_POLICY_MODES_.indexOf(mode) === -1) throw new Error("A valid sending policy is required.");
+    const data = await invokeMailbox_({ action: "set_policy", mode });
+    if (!data.policy || MAILBOX_POLICY_MODES_.indexOf(data.policy.mode) === -1) throw mailboxUnexpected_();
+    return { mode: data.policy.mode };
+  }
+
   // ---------- TRANSACTIONAL RPCs ----------
   async function createDealWithMilestones(dealModel, milestoneModels) {
     requireUser();
@@ -2896,13 +3042,13 @@ App.data = (function () {
     listTimezones,
 
     REGISTRY,
-    list, get, create, update, remove, getCached,
+    list, search, get, create, update, remove, getCached,
     loadSettings, updateSettings, updateMetadata, getSettingsSync, getMetadataSync,
     createDealWithMilestones, completeFollowUp, resetWorkspace,
     listSheetConnections, createOrRotateSheetConnection,
     listImportBatches, listImportRows, importLeadFile, getLeadFileImportQuota,
     listNotifications, countUnreadNotifications, markNotificationRead, markAllNotificationsRead,
-    listPushDevices, registerPushDevice, removePushDevice,
+    listPushDevices, requestPushTest, registerPushDevice, removePushDevice,
     getNotificationPreferences, saveNotificationPreferences,
     listMessageTemplates, createMessageTemplate, updateMessageTemplate, deleteMessageTemplate,
     activateMessageTemplate,
@@ -2915,6 +3061,7 @@ App.data = (function () {
     listAutomationEnrollments, listAutomationJobs, listAutomationRuns, listAutomationFailuresForRule,
     getAutomationStopSummary, getContactLifecycleStatus,
     getEmailSenderProfile, saveEmailSenderProfile, listRecentTestOutboundMessages, sendTestEmail,
+    getMailboxStatus, startMailboxConnect, disconnectMailbox, setMailboxPolicy,
     listMembers, listInvitations, inviteMember, revokeInvitation,
     acceptTeamInvitation, removeMember, changeMemberRole, transferTeamOwnership,
     leaveTeam, deleteTeam,

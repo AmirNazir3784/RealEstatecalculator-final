@@ -763,6 +763,7 @@ App.store = (function () {
     register: (subscription, label) => D().registerPushDevice(subscription, label),
     remove: (endpoint) => D().removePushDevice(endpoint),
     preferences: () => D().getNotificationPreferences(),
+    test: (endpoint) => D().requestPushTest(endpoint),
     savePreferences: (prefs) => D().saveNotificationPreferences(prefs)
   };
 
@@ -855,6 +856,17 @@ App.store = (function () {
     listRecent: (opts) => D().listRecentTestOutboundMessages(opts)
   };
 
+  // ---------- CONNECTED MAILBOX ----------
+  // Thin pass-through to the mailbox-connect Edge Function (via
+  // data-service). Status shows addresses/metadata only — no token ever
+  // reaches the browser.
+  const mailbox = {
+    status: () => D().getMailboxStatus(),
+    start: (kind, provider) => D().startMailboxConnect(kind, provider),
+    disconnect: (kind, provider) => D().disconnectMailbox(kind, provider),
+    setPolicy: (mode) => D().setMailboxPolicy(mode)
+  };
+
   // ---------- TEAM ----------
   // Membership, invitations and permissions. Pages never reach past this to
   // Supabase, exactly as with every entity above. Each method answers with
@@ -878,6 +890,7 @@ App.store = (function () {
 
   return {
     SCHEMA_VERSION,
+    search: (entity, query) => D().search(entity, query),
     getState, ensureLoaded,
     getSyncState, onSyncStateChange,
     migrateData: (raw) => normalize(runMigrations(raw)),
@@ -888,7 +901,7 @@ App.store = (function () {
     resetWorkspace, completeFollowUp,
     sheetConnections, sheetImportHistory, leadFileImport, notifications, push,
     messageTemplates, legacyScriptImport, automationRules, automationSteps, automationRuntime,
-    emailSenderProfile, testEmail, team,
+    emailSenderProfile, testEmail, mailbox, team,
     resetAllCaches: () => D().resetAllCaches(),
     _emptyState: emptyState,
     _normalize: normalize,

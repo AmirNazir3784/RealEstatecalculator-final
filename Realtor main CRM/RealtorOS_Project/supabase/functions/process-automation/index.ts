@@ -53,6 +53,15 @@ import {
 } from "../_shared/unsubscribe-token.ts";
 import { normalizeInboundDomain, replyAddress, replyTokenFor } from "../_shared/reply-detection.ts";
 import { buildPayload, sendPush, vapidFromEnv } from "../_shared/push.ts";
+import { notificationCopy, recipientLanguage } from "../_shared/notification-copy.ts";
+import {
+  markConnectionError,
+  resolveRoute,
+  type RouteStep,
+  sendViaGmail,
+  sendViaMicrosoft,
+} from "../_shared/mailbox-send.ts";
+import { encryptRefreshToken } from "../_shared/mailbox-oauth.ts";
 
 // Plain-text footer on every automated email. Fixed wording, appended
 // after rendering — not a template field.
@@ -71,6 +80,17 @@ export function withUnsubscribeFooter(body: string, unsubscribeUrl: string): str
  * title or body (they are about a contact), not the keys. The counters
  * returned are numbers only.
  */
+export async function localizedPushPayload(
+  item: Record<string,unknown>,
+  admin: ReturnType<typeof createAdminClient>,
+  languages: Map<string,string>,
+) {
+  const language = await recipientLanguage(item.user_id,
+    (userId) => admin.auth.admin.getUserById(userId), languages);
+  const copy = notificationCopy(item.type, language);
+  return copy ? buildPayload({ ...copy, url:item.url }) : null;
+}
+
 export async function runPushBatch(
   admin: ReturnType<typeof createAdminClient>,
   counters: { pushSent: number; pushFailed: number; pushSkipped: number; pushStepFailed: number },
@@ -90,13 +110,22 @@ export async function runPushBatch(
   counters.pushSkipped += typeof data.skipped === "number" ? data.skipped : 0;
 
   const claimed = Array.isArray(data.claimed) ? data.claimed : [];
+  const languages = new Map<string,string>();
   for (const item of claimed) {
     if (!isPlainObject(item)) continue;
     const id = typeof item.id === "string" ? item.id : null;
     const subscriptions = Array.isArray(item.subscriptions) ? item.subscriptions : [];
     if (!id) continue;
 
-    const payload = buildPayload(item as Record<string, unknown>);
+    const payload = await localizedPushPayload(item, admin, languages);
+    // A known system type always uses fixed copy, never customer text. Unknown
+    // types fail closed instead of accidentally publishing database free text.
+    if (!payload) {
+      try { await admin.rpc("realtoros_complete_push", { p_notification_id:id,p_outcome:"skipped",p_dead_endpoints:null }); }
+      catch { /* lease expiry retains retry semantics */ }
+      counters.pushSkipped++;
+      continue;
+    }
     const dead: string[] = [];
     let anyAccepted = false;
 
@@ -805,7 +834,7 @@ async function processSendEmail(admin: AdminClient, job: JobRow): Promise<JobOut
   //    a sent message is never treated as unsent.
   const { data: existingMessage, error: existingMessageError } = await admin
     .from("outbound_messages")
-    .select("id,status,provider_message_id,first_provider_attempt_at")
+    .select("id,status,provider,metadata,provider_message_id,first_provider_attempt_at")
     .eq("user_id", job.user_id).eq("idempotency_key", idempotencyKey).maybeSingle();
   requireNoError(existingMessageError, "select_existing_message");
 
@@ -897,10 +926,38 @@ async function processSendEmail(admin: AdminClient, job: JobRow): Promise<JobOut
 
   const resendApiKey = Deno.env.get("RESEND_API_KEY");
   const resendSendingDomain = Deno.env.get("RESEND_SENDING_DOMAIN");
-  if (!resendApiKey || !resendApiKey.trim() || !resendSendingDomain || !isValidDomain(resendSendingDomain.trim())) {
+  const resendReady = Boolean(
+    resendApiKey && resendApiKey.trim() &&
+    resendSendingDomain && isValidDomain(resendSendingDomain.trim()),
+  );
+  const resendSenderAddress = resendReady
+    ? `${senderAliasFor(job.user_id)}@${resendSendingDomain!.trim().toLowerCase()}`
+    : "";
+
+  // Mailbox routing: on a FRESH message the workspace sending policy picks
+  // the transport — the acting member's connected mailbox, then the shared
+  // mailbox, then Resend. A queued message never re-resolves: its row pins
+  // the transport (Resend rows retry behind their Idempotency-Key; mailbox
+  // rows are closed as unconfirmed in the queued branch below, because a
+  // mailbox send cannot be retried safely). A provider's steps only run
+  // when that provider's secrets are configured; otherwise the route
+  // degrades to plain Resend — the pre-mailbox behavior.
+  const encryptionKeyReady = Boolean(Deno.env.get("MAILBOX_TOKEN_ENCRYPTION_KEY"));
+  const providerSecretsReady = (via: string): boolean =>
+    encryptionKeyReady && (via === "gmail"
+      ? Boolean(Deno.env.get("GOOGLE_CLIENT_ID") && Deno.env.get("GOOGLE_CLIENT_SECRET"))
+      : Boolean(Deno.env.get("MICROSOFT_CLIENT_ID") && Deno.env.get("MICROSOFT_CLIENT_SECRET")));
+  const route = queuedMessageId ? null : await resolveRoute(admin, job.user_id);
+  const routeSteps: RouteStep[] = route
+    ? route.steps.filter((s) => s.via === "resend" || providerSecretsReady(s.via))
+    : [{ via: "resend" }];
+  const firstStep = routeSteps[0];
+  if (firstStep.via === "resend" && !resendReady) {
     return await rescheduleJob(admin, job, { retriable: true, category: "provider", errorCode: "provider_not_configured", errorMessage: "Email provider is not configured.", delaySeconds: 300 });
   }
-  const senderAddress = `${senderAliasFor(job.user_id)}@${resendSendingDomain.trim().toLowerCase()}`;
+  const senderAddress = firstStep.via !== "resend"
+    ? firstStep.connection.email_address
+    : resendSenderAddress;
   // Every automated email carries a working unsubscribe link. Without the
   // signing secret no link can be made, so nothing is sent (retryable,
   // like a missing provider key).
@@ -945,6 +1002,21 @@ async function processSendEmail(admin: AdminClient, job: JobRow): Promise<JobOut
     // The only path on which a message may legitimately reach the
     // provider again — behind the same idempotency key.
     messageId = queuedMessageId;
+    if (existingMessage && (existingMessage.provider === "gmail" || existingMessage.provider === "microsoft")) {
+      // A mailbox send cannot be retried safely: neither Gmail nor Graph
+      // offers an idempotency key for sends, and the send-only scope cannot
+      // read the mailbox back to check whether the earlier attempt landed.
+      // Fail closed, exactly like the expired idempotency window below —
+      // never risk a duplicate.
+      const { error: unconfirmedError } = await admin.from("outbound_messages")
+        .update({ status: "unconfirmed" })
+        .eq("id", messageId).eq("user_id", job.user_id).eq("status", "queued");
+      requireNoError(unconfirmedError, "update_message_unconfirmed");
+      return await rescheduleJob(admin, job, {
+        retriable: false, category: "provider", errorCode: "mailbox_retry_not_safe",
+        errorMessage: "A previous mailbox send attempt for this message could not be confirmed, and mailbox sends cannot be retried safely; no further automatic attempts will be made.",
+      });
+    }
     const stamped = await ensureFirstProviderAttemptAt(admin, job, queuedMessageId, queuedFirstAttemptAt);
     if (!stamped.ok) {
       return await rescheduleJob(admin, job, {
@@ -960,12 +1032,16 @@ async function processSendEmail(admin: AdminClient, job: JobRow): Promise<JobOut
       .insert({
         user_id: job.user_id, job_id: job.id, contact_id: contact.id, template_id: step.template_id,
         message_kind: "automation", idempotency_key: idempotencyKey,
-        channel: "email", provider: "resend", recipient: email, subject: renderedSubject, body_snapshot: renderedBody,
+        channel: "email", provider: firstStep.via !== "resend" ? firstStep.via : "resend", recipient: email, subject: renderedSubject, body_snapshot: renderedBody,
         sender_display_name: senderProfile.display_name, sender_address: senderAddress, reply_to_email: senderProfile.reply_to_email,
         status: "queued", queued_at: nowIso, first_provider_attempt_at: nowIso,
         // Opaque, deterministic reply token (never an id, address or name):
         // resend-webhook maps an inbound reply back to this row through it.
-        metadata: { reply_token: replyToken },
+        // A mailbox first step also records WHICH connection will send, so a
+        // later attempt can see the pinned transport at a glance.
+        metadata: firstStep.via !== "resend"
+          ? { reply_token: replyToken, mailbox_connection_id: firstStep.connection.id, mailbox_kind: firstStep.connection.kind }
+          : { reply_token: replyToken },
       })
       .select("id,first_provider_attempt_at")
       .single();
@@ -1033,20 +1109,6 @@ async function processSendEmail(admin: AdminClient, job: JobRow): Promise<JobOut
   });
   const links = unsubscribeLinks({ supabaseUrl, pageUrl: Deno.env.get("UNSUBSCRIBE_PAGE_URL") ?? null }, unsubscribeToken);
 
-  const providerBody: Record<string, unknown> = {
-    from: `${senderProfile.display_name} via RealtorCRM <${senderAddress}>`,
-    to: [email],
-    subject: renderedSubject,
-    // The footer is appended AFTER template rendering, so no template can
-    // remove or alter it.
-    text: withUnsubscribeFooter(renderedBody, links.pageUrl),
-    headers: {
-      // RFC 2369 + RFC 8058 one-click: mail clients POST
-      // "List-Unsubscribe=One-Click" to this URL.
-      "List-Unsubscribe": `<${links.oneClickUrl}>`,
-      "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
-    },
-  };
   // Reply-To: the agent's own address first (they always get the reply
   // directly), plus — when inbound replies are configured — this message's
   // opaque reply address, so a reply can be detected automatically.
@@ -1054,19 +1116,143 @@ async function processSendEmail(admin: AdminClient, job: JobRow): Promise<JobOut
     ...(replyTo ? [replyTo] : []),
     ...(inboundDomain ? [replyAddress(replyToken, inboundDomain)] : []),
   ];
-  if (replyToList.length > 0) providerBody.reply_to = replyToList;
+  // The footer is appended AFTER template rendering, so no template can
+  // remove or alter it. Both transports send this identical text.
+  const finalText = withUnsubscribeFooter(renderedBody, links.pageUrl);
+  const unsubscribeHeaders = {
+    // RFC 2369 + RFC 8058 one-click: mail clients POST
+    // "List-Unsubscribe=One-Click" to this URL.
+    "List-Unsubscribe": `<${links.oneClickUrl}>`,
+    "List-Unsubscribe-Post": "List-Unsubscribe=One-Click",
+  };
 
-  const controller = new AbortController();
-  const timeout = setTimeout(() => controller.abort(), RESEND_TIMEOUT_MS);
   // "retryable" is the default: any outcome not positively recognized as
   // a confirmed send, or as a definitive non-retryable rejection, leaves
   // the message in its retryable 'queued' state for another attempt
-  // behind the same Idempotency-Key.
+  // behind the same Idempotency-Key. Mailbox attempts below never produce
+  // "retryable": they resolve to sent, terminal, or unconfirmed inside
+  // this single attempt (see _shared/mailbox-send.ts).
   let outcome: "sent" | "terminal" | "retryable" = "retryable";
   let failureCode = "provider_error";
   let failureMessage = "The email provider returned an error.";
   let failureCategory = "provider";
   let retryDelaySeconds = AMBIGUOUS_RETRY_BACKOFF_SECONDS;
+
+  // Mailbox route steps (fresh messages only — a queued mailbox message
+  // was already closed as unconfirmed above). A definitive rejection means
+  // the provider accepted nothing, so the next route step may be tried
+  // inside this same attempt; the message row is first updated to the
+  // transport that will actually be attempted next, so its record tells
+  // the truth. An ambiguous outcome never falls back.
+  let resendPending = !route;
+  if (route) {
+    for (let stepIndex = 0; stepIndex < routeSteps.length; stepIndex++) {
+      const step = routeSteps[stepIndex];
+      if (step.via === "resend") { resendPending = true; break; }
+      const providerLabel = step.via === "microsoft" ? "Microsoft" : "Gmail";
+      const mailboxMessage = {
+        fromName: senderProfile.display_name,
+        fromEmail: step.connection.email_address,
+        to: email,
+        replyTo: replyToList,
+        subject: renderedSubject,
+        text: finalText,
+        headers: unsubscribeHeaders,
+      };
+      const sendResult = step.via === "microsoft"
+        ? await sendViaMicrosoft({
+          connection: step.connection,
+          encryptionKey: Deno.env.get("MAILBOX_TOKEN_ENCRYPTION_KEY") ?? "",
+          clientId: Deno.env.get("MICROSOFT_CLIENT_ID") ?? "",
+          clientSecret: Deno.env.get("MICROSOFT_CLIENT_SECRET") ?? "",
+          message: mailboxMessage,
+        })
+        : await sendViaGmail({
+          connection: step.connection,
+          encryptionKey: Deno.env.get("MAILBOX_TOKEN_ENCRYPTION_KEY") ?? "",
+          clientId: Deno.env.get("GOOGLE_CLIENT_ID") ?? "",
+          clientSecret: Deno.env.get("GOOGLE_CLIENT_SECRET") ?? "",
+          message: mailboxMessage,
+        });
+      // Microsoft rotates refresh tokens: persist the new one
+      // (re-encrypted) or the NEXT send would use a dead token.
+      // Best-effort — a failure surfaces later as token_revoked, which the
+      // member fixes with a reconnect.
+      if (sendResult.outcome === "sent" && "rotatedRefreshToken" in sendResult && sendResult.rotatedRefreshToken) {
+        try {
+          const encrypted = await encryptRefreshToken(
+            Deno.env.get("MAILBOX_TOKEN_ENCRYPTION_KEY") ?? "",
+            sendResult.rotatedRefreshToken,
+          );
+          await admin.from("mailbox_connections").update({
+            refresh_token_ciphertext: encrypted.ciphertext,
+            refresh_token_iv: encrypted.iv,
+          }).eq("id", step.connection.id);
+        } catch { /* best effort, see comment above */ }
+      }
+      if (sendResult.outcome === "sent") {
+        outcome = "sent";
+        providerMessageId = sendResult.providerMessageId;
+        resendPending = false;
+        break;
+      }
+      if (sendResult.outcome === "ambiguous") {
+        const { error: unconfirmedError } = await admin.from("outbound_messages")
+          .update({ status: "unconfirmed" })
+          .eq("id", messageId).eq("user_id", job.user_id).eq("status", "queued");
+        requireNoError(unconfirmedError, "update_message_unconfirmed");
+        return await rescheduleJob(admin, job, {
+          retriable: false, category: "provider", errorCode: "mailbox_outcome_unconfirmed",
+          errorMessage: "The mailbox send could not be confirmed and mailbox sends cannot be retried safely; no further automatic attempts will be made.",
+        });
+      }
+      // Definitive rejection — the provider accepted nothing.
+      if (sendResult.tokenInvalid) {
+        await markConnectionError(admin, step.connection.id, sendResult.code);
+      }
+      const nextStep = routeSteps[stepIndex + 1];
+      if (!nextStep) {
+        outcome = "terminal";
+        failureCode = sendResult.code.slice(0, 100);
+        failureMessage = `${providerLabel} responded with status ${sendResult.httpStatus} (${sendResult.code}).`;
+        resendPending = false;
+        break;
+      }
+      const transportUpdate = nextStep.via !== "resend"
+        ? { provider: nextStep.via, sender_address: nextStep.connection.email_address, metadata: { reply_token: replyToken, mailbox_connection_id: nextStep.connection.id, mailbox_kind: nextStep.connection.kind } }
+        : { provider: "resend", sender_address: resendSenderAddress, metadata: { reply_token: replyToken } };
+      const { error: transportError } = await admin.from("outbound_messages")
+        .update(transportUpdate)
+        .eq("id", messageId).eq("user_id", job.user_id).eq("status", "queued");
+      if (transportError) {
+        return await rescheduleJob(admin, job, {
+          retriable: true, category: "database", errorCode: "transport_update_failed",
+          errorMessage: "Could not record the fallback transport; will retry.", delaySeconds: 30,
+        });
+      }
+      if (nextStep.via === "resend") { resendPending = true; break; }
+    }
+  }
+
+  if (resendPending && !resendReady) {
+    // Reachable only by a mailbox → Resend fallback with Resend not
+    // configured: the row already records provider 'resend', so a later
+    // retry takes the ordinary idempotency-safe Resend path.
+    return await rescheduleJob(admin, job, { retriable: true, category: "provider", errorCode: "provider_not_configured", errorMessage: "Email provider is not configured.", delaySeconds: 300 });
+  }
+
+  if (resendPending) {
+  const providerBody: Record<string, unknown> = {
+    from: `${senderProfile.display_name} via RealtorCRM <${resendSenderAddress}>`,
+    to: [email],
+    subject: renderedSubject,
+    text: finalText,
+    headers: unsubscribeHeaders,
+  };
+  if (replyToList.length > 0) providerBody.reply_to = replyToList;
+
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), RESEND_TIMEOUT_MS);
   try {
     const resendResponse = await fetch("https://api.resend.com/emails", {
       method: "POST",
@@ -1108,6 +1294,7 @@ async function processSendEmail(admin: AdminClient, job: JobRow): Promise<JobOut
     failureMessage = "The provider request did not complete; safe to retry with the same idempotency key.";
   } finally {
     clearTimeout(timeout);
+  }
   }
 
   if (outcome === "retryable") {
@@ -1265,6 +1452,7 @@ Deno.serve(async (request: Request) => {
       timeEventsCreated: 0, scanSkipped: 0, scanFailed: 0,
       // Phase 2C.
       remindersCreated: 0, reminderScanFailed: 0,
+      taskRemindersCreated: 0, taskReminderScanFailed: 0,
       // Phase 3B.
       pushSent: 0, pushFailed: 0, pushSkipped: 0, pushStepFailed: 0,
     };
@@ -1318,7 +1506,17 @@ Deno.serve(async (request: Request) => {
       counters.reminderScanFailed = 1;
     }
 
-    // ---------- Phase 3B: push what the two scans just created ----------
+    // Due-task reminders use the same queue and push delivery below. An optional
+    // scan failure must never interrupt the existing automation/email workload.
+    try {
+      const { data: tasks, error: taskError } = await admin.rpc("realtoros_scan_task_reminders", { p_limit: 100 });
+      if (taskError) counters.taskReminderScanFailed = 1;
+      else if (isPlainObject(tasks)) {
+        counters.taskRemindersCreated = typeof tasks.summaries === "number" ? tasks.summaries : 0;
+      }
+    } catch { counters.taskReminderScanFailed = 1; }
+
+    // ---------- Phase 3B: push what the scans just created ----------
     //
     // After the reminder scan, so a notification created a moment ago
     // goes out in this same run rather than waiting for the next one -

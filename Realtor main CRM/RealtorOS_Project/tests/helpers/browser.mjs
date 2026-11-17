@@ -50,6 +50,7 @@ export async function browser(scripts, { store, derived, now } = {}) {
   }
   const toasts = [];
   window.eval("window.App = window.App || {}; App.pages = App.pages || {};");
+  window.eval(fs.readFileSync(path.join(APP_DIR, "assets/js/core/i18n.js"), "utf8"));
   for (const rel of scripts) {
     window.eval(fs.readFileSync(path.join(APP_DIR, rel), "utf8"));
   }

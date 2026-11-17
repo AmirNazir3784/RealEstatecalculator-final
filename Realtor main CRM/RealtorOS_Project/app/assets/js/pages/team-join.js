@@ -56,30 +56,30 @@ App.pages.teamJoin = (function () {
   }
 
   function shell(title, bodyHtml) {
-    return `
+    return App.i18n.html`
       <div class="page-header">
         <div>
-          <div class="page-title">${U().esc(title)}</div>
+          <div class="page-title">${App.i18n.value(() => (U().esc(title)))}</div>
           <div class="page-desc">An invitation to work in somebody else's workspace.</div>
         </div>
       </div>
       <section class="card" data-card="join">
-        <div class="card-body">${bodyHtml}</div>
+        <div class="card-body">${App.i18n.value(() => (bodyHtml))}</div>
       </section>`;
   }
 
   function state(title, desc, actionsHtml) {
-    return `
+    return App.i18n.html`
       <div class="empty-state">
-        <div class="empty-title">${U().esc(title)}</div>
-        <div class="empty-desc">${desc}</div>
-        ${actionsHtml || ""}
+        <div class="empty-title">${App.i18n.value(() => (U().esc(title)))}</div>
+        <div class="empty-desc">${App.i18n.value(() => (desc))}</div>
+        ${App.i18n.value(() => (actionsHtml || ""))}
       </div>`;
   }
 
   async function render(container, token) {
     if (!container) return;
-    App.app.setBreadcrumbs([{ label: "Join a team" }]);
+    App.app.setBreadcrumbs([{ get label() { return App.i18n.t("Join a team"); } }]);
     App.app.setTopActions("");
 
     const t = token || tokenFromLocation();
@@ -88,7 +88,7 @@ App.pages.teamJoin = (function () {
       container.innerHTML = shell("Join a team", state(
         "This link is missing its invitation code",
         "Ask whoever invited you to send the link again — the whole link has to be copied, right to the end.",
-        `<button type="button" class="btn" data-role="join-home">Go to my workspace</button>`));
+        App.i18n.markup(`<button type="button" class="btn" data-role="join-home">Go to my workspace</button>`)));
       wireHome(container);
       return;
     }
@@ -102,9 +102,9 @@ App.pages.teamJoin = (function () {
       return;
     }
 
-    container.innerHTML = shell("Join a team", `
+    container.innerHTML = shell("Join a team", App.i18n.html`
       <p>You have been invited to join a workspace. Accepting moves you into it, and you work on the team's records from then on.</p>
-      <p class="form-help" id="joinSignedInAs">You are signed in as ${U().esc(user.email || "this account")}.</p>
+      <p class="form-help" id="joinSignedInAs">You are signed in as ${App.i18n.value(() => (U().esc(user.email || App.i18n.t("this account"))))}.</p>
       <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">
         <button class="btn btn-primary" id="joinAcceptBtn">Accept invitation</button>
         <button class="btn" data-role="join-home">Not now</button>
@@ -147,7 +147,7 @@ App.pages.teamJoin = (function () {
 
     if (joinedNow) {
       const role = Object.prototype.hasOwnProperty.call(ROLE_WORD, res.role) ? ROLE_WORD[res.role] : "a member";
-      App.app.toast("You have joined the team as " + role.replace(/^an? /, "") + ".", "success");
+      App.app.toast(App.i18n.t("You have joined the team as ") + role.replace(/^an? /, "") + ".", "success");
       App.app.navigate("/dashboard");
       return;
     }
@@ -157,9 +157,9 @@ App.pages.teamJoin = (function () {
     if (outcome === "email_mismatch") {
       if (out) out.innerHTML = message(
         "This invitation is for a different address",
-        "It was sent to <strong>" + U().esc(res.invited_email || "another address") + "</strong>, but you are signed in as <strong>" +
+        App.i18n.markup("It was sent to <strong>") + U().esc(res.invited_email || "another address") + App.i18n.markup("</strong>, but you are signed in as <strong>") +
         U().esc((user && user.email) || "this account") + "</strong>. Sign in with the invited address, then open the link again.",
-        `<button type="button" class="btn" id="joinSignOut">Sign out</button>`);
+        App.i18n.markup(`<button type="button" class="btn" id="joinSignOut">Sign out</button>`));
       const so = container.querySelector("#joinSignOut");
       if (so) so.addEventListener("click", async () => {
         try { await App.cloud.signOutUser(); } catch (e) { /* the reload below is the fallback */ }
@@ -190,7 +190,7 @@ App.pages.teamJoin = (function () {
 
     if (copy) {
       const extra = (key === "already_a_member")
-        ? `<button type="button" class="btn btn-primary" data-role="join-home">Go to my workspace</button>` : "";
+        ? App.i18n.markup(`<button type="button" class="btn btn-primary" data-role="join-home">Go to my workspace</button>`) : "";
       if (out) out.innerHTML = message(copy[0], copy[1], extra);
       wireHome(container);
       return;
@@ -201,10 +201,10 @@ App.pages.teamJoin = (function () {
   }
 
   function message(title, descHtml, actionsHtml) {
-    return `<div class="empty-state" role="status">
-      <div class="empty-title">${U().esc(title)}</div>
-      <div class="empty-desc">${descHtml}</div>
-      ${actionsHtml || ""}
+    return App.i18n.html`<div class="empty-state" role="status">
+      <div class="empty-title">${App.i18n.value(() => (U().esc(title)))}</div>
+      <div class="empty-desc">${App.i18n.value(() => (descHtml))}</div>
+      ${App.i18n.value(() => (actionsHtml || ""))}
     </div>`;
   }
 

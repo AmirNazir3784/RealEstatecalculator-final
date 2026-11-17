@@ -12,7 +12,7 @@ App.cloud = (function () {
   let showAuthMode = function () {};
   function initClient() {
     if (client) return client;
-    if (!window.supabase || !window.supabase.createClient) throw new Error("Supabase client failed to load.");
+    if (!window.supabase || !window.supabase.createClient) throw new Error(App.i18n.t("Supabase client failed to load."));
     client = window.supabase.createClient(App.config.url, App.config.publishableKey, { auth: { persistSession:true, autoRefreshToken:true, detectSessionInUrl:true } });
     // Registered once, immediately (not only after a successful checkSession
     // call), so it also catches PASSWORD_RECOVERY — the event Supabase fires
@@ -31,7 +31,14 @@ App.cloud = (function () {
     });
     return client;
   }
-  function setMessage(text, kind, targetId) { const el = document.getElementById(targetId || "cloudAuthMessage"); if (el) { el.textContent = text || ""; el.className = "cloud-auth-message" + (kind ? " " + kind : ""); } }
+  const AUTH_ERROR_COPY = { invalid_credentials:"Email or password is incorrect.", email_not_confirmed:"Please confirm your email before signing in.", over_request_rate_limit:"Too many attempts. Please wait and try again.", over_email_send_rate_limit:"Too many attempts. Please wait and try again.", weak_password:"Choose a password that meets all requirements.", user_already_exists:"An account already exists for this email." };
+  function setMessage(text, kind, targetId) {
+    const el = document.getElementById(targetId || "cloudAuthMessage");
+    if (el) {
+      App.i18n.setText(el, App.i18n.value(() => text && typeof text === "object" ? Object.hasOwn(AUTH_ERROR_COPY,text.code) ? App.i18n.t(AUTH_ERROR_COPY[text.code]) : text.message || "" : text || ""));
+      el.className = "cloud-auth-message" + (kind ? " " + kind : "");
+    }
+  }
   function gate() {
     // The signed-out/recovery gate owns interaction while it is visible.
     // Preserve the shell's prior state so a verified session restores it.
@@ -49,23 +56,23 @@ App.cloud = (function () {
     // Small inline icons only — no icon library/CDN. currentColor follows the
     // muted text token set in CSS; the Google mark uses its official colors,
     // scoped to just this small icon.
-    const ICON_USER = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.2"></circle><path d="M5 19c0-3.5 3-6 7-6s7 2.5 7 6"></path></svg>';
-    const ICON_EMAIL = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="M3 7l9 6 9-6"></path></svg>';
-    const ICON_LOCK = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>';
-    const ICON_EYE = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 12S6 5.6 12 5.6 21.5 12 21.5 12 18 18.4 12 18.4 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="3"/></svg>';
-    const ICON_EYE_OFF = '<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 4.5l15 15"/><path d="M9.9 6.2A9.8 9.8 0 0 1 12 5.6c6 0 9.5 6.4 9.5 6.4a17.6 17.6 0 0 1-3.2 3.5M6.1 8A16.9 16.9 0 0 0 2.5 12S6 18.4 12 18.4c1.5 0 2.9-.4 4.1-1"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/></svg>';
-    const ICON_GOOGLE = '<svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path fill="#4285F4" d="M19.6 10.23c0-.68-.06-1.36-.18-2H10v3.79h5.38a4.6 4.6 0 0 1-2 3.02v2.5h3.23c1.89-1.74 2.99-4.3 2.99-7.31z"/><path fill="#34A853" d="M10 20c2.7 0 4.96-.89 6.62-2.42l-3.23-2.5c-.9.6-2.06.95-3.39.95-2.6 0-4.8-1.76-5.59-4.12H1.06v2.59A10 10 0 0 0 10 20z"/><path fill="#FBBC05" d="M4.41 11.9a5.99 5.99 0 0 1 0-3.8V5.5H1.06a10 10 0 0 0 0 9l3.35-2.6z"/><path fill="#EA4335" d="M10 3.98c1.47 0 2.79.5 3.82 1.5l2.87-2.87C14.95.99 12.7 0 10 0 6.09 0 2.72 2.24 1.06 5.5l3.35 2.6C5.2 5.75 7.4 3.98 10 3.98z"/></svg>';
-    const ICON_RULE_CHECK = '<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 12.5l5 5L19.5 7"/></svg>';
+    const ICON_USER = App.i18n.markup('<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="3.2"></circle><path d="M5 19c0-3.5 3-6 7-6s7 2.5 7 6"></path></svg>');
+    const ICON_EMAIL = App.i18n.markup('<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2"></rect><path d="M3 7l9 6 9-6"></path></svg>');
+    const ICON_LOCK = App.i18n.markup('<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"></rect><path d="M8 11V7a4 4 0 0 1 8 0v4"></path></svg>');
+    const ICON_EYE = App.i18n.markup('<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2.5 12S6 5.6 12 5.6 21.5 12 21.5 12 18 18.4 12 18.4 2.5 12 2.5 12z"/><circle cx="12" cy="12" r="3"/></svg>');
+    const ICON_EYE_OFF = App.i18n.markup('<svg viewBox="0 0 24 24" width="20" height="20" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 4.5l15 15"/><path d="M9.9 6.2A9.8 9.8 0 0 1 12 5.6c6 0 9.5 6.4 9.5 6.4a17.6 17.6 0 0 1-3.2 3.5M6.1 8A16.9 16.9 0 0 0 2.5 12S6 18.4 12 18.4c1.5 0 2.9-.4 4.1-1"/><path d="M9.9 9.9a3 3 0 0 0 4.2 4.2"/></svg>');
+    const ICON_GOOGLE = App.i18n.markup('<svg viewBox="0 0 20 20" width="18" height="18" aria-hidden="true"><path fill="#4285F4" d="M19.6 10.23c0-.68-.06-1.36-.18-2H10v3.79h5.38a4.6 4.6 0 0 1-2 3.02v2.5h3.23c1.89-1.74 2.99-4.3 2.99-7.31z"/><path fill="#34A853" d="M10 20c2.7 0 4.96-.89 6.62-2.42l-3.23-2.5c-.9.6-2.06.95-3.39.95-2.6 0-4.8-1.76-5.59-4.12H1.06v2.59A10 10 0 0 0 10 20z"/><path fill="#FBBC05" d="M4.41 11.9a5.99 5.99 0 0 1 0-3.8V5.5H1.06a10 10 0 0 0 0 9l3.35-2.6z"/><path fill="#EA4335" d="M10 3.98c1.47 0 2.79.5 3.82 1.5l2.87-2.87C14.95.99 12.7 0 10 0 6.09 0 2.72 2.24 1.06 5.5l3.35 2.6C5.2 5.75 7.4 3.98 10 3.98z"/></svg>');
+    const ICON_RULE_CHECK = App.i18n.markup('<svg viewBox="0 0 24 24" width="13" height="13" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4.5 12.5l5 5L19.5 7"/></svg>');
     // The card is built once. Switching modes (including into/out of Reset
     // and Update Password) toggles [hidden] on these sibling forms and
     // mutates their fields instead of re-rendering, so the fade transition
     // can actually animate rather than jump.
-    root.innerHTML = `<header class="cloud-auth-header">
+    root.innerHTML = App.i18n.html`<header class="cloud-auth-header">
         <div class="cloud-auth-brand">
           <span class="cloud-auth-wordmark">RealtorCRM</span>
           <span class="cloud-auth-product-of">A product of Every Real Estate Calculator</span>
         </div>
-        <a id="cloudBackToWebsite" class="cloud-auth-back" href="#"><span aria-hidden="true">←</span> <span class="cloud-auth-back-full">Back to website</span><span class="cloud-auth-back-short">Back</span></a>
+        <div class="cloud-auth-header-actions">${App.i18n.value(() => (App.i18n ? App.i18n.languageControl("authLanguage") : ""))}<a id="cloudBackToWebsite" class="cloud-auth-back" href="#"><span aria-hidden="true">←</span> <span class="cloud-auth-back-full">Back to website</span><span class="cloud-auth-back-short">Back</span></a></div>
       </header>
       <div class="cloud-auth-card" id="cloudAuthCard">
         <div class="cloud-auth-form-panel" id="cloudAuthPanel">
@@ -78,38 +85,39 @@ App.cloud = (function () {
             <h1 class="cloud-auth-heading" id="cloudAuthHeading">Welcome back</h1>
             <p class="cloud-auth-intro" id="cloudAuthIntro"></p>
             <div id="cloudOAuthBlock">
-              <button type="button" class="cloud-auth-oauth-btn" id="cloudOAuthGoogle" aria-label="Continue with Google">${ICON_GOOGLE}<span>Continue with Google</span></button>
+              <button type="button" class="cloud-auth-oauth-btn" id="cloudOAuthGoogle" aria-label="Continue with Google">${App.i18n.value(() => (ICON_GOOGLE))}<span>Continue with Google</span></button>
               <div class="cloud-auth-divider"><span>or continue with email</span></div>
             </div>
+            <div class="cloud-auth-identity">
             <div class="cloud-auth-field" id="cloudFullNameField" hidden>
               <label for="cloudFullName">Full name</label>
-              <div class="cloud-auth-input-wrap"><span class="cloud-auth-input-icon">${ICON_USER}</span>
+              <div class="cloud-auth-input-wrap"><span class="cloud-auth-input-icon">${App.i18n.value(() => (ICON_USER))}</span>
                 <input id="cloudFullName" type="text" autocomplete="name" minlength="2" maxlength="80" placeholder="Your full name"></div>
             </div>
             <div class="cloud-auth-field">
               <label for="cloudEmail">Email</label>
-              <div class="cloud-auth-input-wrap"><span class="cloud-auth-input-icon">${ICON_EMAIL}</span>
+              <div class="cloud-auth-input-wrap"><span class="cloud-auth-input-icon">${App.i18n.value(() => (ICON_EMAIL))}</span>
                 <input id="cloudEmail" type="email" autocomplete="email" placeholder="you@example.com" required maxlength="254"></div>
-            </div>
+            </div></div>
             <div class="cloud-auth-field">
               <div class="cloud-auth-label-row">
                 <label for="cloudPassword">Password</label>
                 <button type="button" class="cloud-auth-inline-link" id="cloudForgotLink">Forgot password?</button>
               </div>
-              <div class="cloud-auth-input-wrap"><span class="cloud-auth-input-icon">${ICON_LOCK}</span>
-                <input class="cloud-password-input" id="cloudPassword" type="password" autocomplete="current-password" placeholder="Enter your password" required minlength="6"><button type="button" class="cloud-password-toggle" data-password-toggle data-password-label="password" aria-label="Show password" aria-pressed="false">${ICON_EYE}</button></div>
+              <div class="cloud-auth-input-wrap"><span class="cloud-auth-input-icon">${App.i18n.value(() => (ICON_LOCK))}</span>
+                <input class="cloud-password-input" id="cloudPassword" type="password" autocomplete="current-password" placeholder="Enter your password" required minlength="6"><button type="button" class="cloud-password-toggle" data-password-toggle data-password-label="password" aria-label="Show password" aria-pressed="false">${App.i18n.value(() => (ICON_EYE))}</button></div>
             </div>
             <ul class="cloud-auth-pw-rules" id="cloudPwRules" hidden aria-label="Password requirements">
-              <li data-rule="length"><span class="cloud-auth-rule-check">${ICON_RULE_CHECK}</span>10+ characters</li>
-              <li data-rule="upper"><span class="cloud-auth-rule-check">${ICON_RULE_CHECK}</span>Uppercase</li>
-              <li data-rule="lower"><span class="cloud-auth-rule-check">${ICON_RULE_CHECK}</span>Lowercase</li>
-              <li data-rule="number"><span class="cloud-auth-rule-check">${ICON_RULE_CHECK}</span>Number</li>
-              <li data-rule="symbol"><span class="cloud-auth-rule-check">${ICON_RULE_CHECK}</span>Symbol</li>
+              <li data-rule="length"><span class="cloud-auth-rule-check">${App.i18n.value(() => (ICON_RULE_CHECK))}</span>10+ characters</li>
+              <li data-rule="upper"><span class="cloud-auth-rule-check">${App.i18n.value(() => (ICON_RULE_CHECK))}</span>Uppercase</li>
+              <li data-rule="lower"><span class="cloud-auth-rule-check">${App.i18n.value(() => (ICON_RULE_CHECK))}</span>Lowercase</li>
+              <li data-rule="number"><span class="cloud-auth-rule-check">${App.i18n.value(() => (ICON_RULE_CHECK))}</span>Number</li>
+              <li data-rule="symbol"><span class="cloud-auth-rule-check">${App.i18n.value(() => (ICON_RULE_CHECK))}</span>Symbol</li>
             </ul>
             <div class="cloud-auth-field" id="cloudConfirmField" hidden>
               <label for="cloudPasswordConfirm">Confirm password</label>
-              <div class="cloud-auth-input-wrap"><span class="cloud-auth-input-icon">${ICON_LOCK}</span>
-                <input class="cloud-password-input" id="cloudPasswordConfirm" type="password" autocomplete="new-password" placeholder="Re-enter your password" minlength="10"><button type="button" class="cloud-password-toggle" data-password-toggle data-password-label="confirm password" aria-label="Show confirm password" aria-pressed="false">${ICON_EYE}</button></div>
+              <div class="cloud-auth-input-wrap"><span class="cloud-auth-input-icon">${App.i18n.value(() => (ICON_LOCK))}</span>
+                <input class="cloud-password-input" id="cloudPasswordConfirm" type="password" autocomplete="new-password" placeholder="Re-enter your password" minlength="10"><button type="button" class="cloud-password-toggle" data-password-toggle data-password-label="confirm password" aria-label="Show confirm password" aria-pressed="false">${App.i18n.value(() => (ICON_EYE))}</button></div>
               <p class="cloud-auth-confirm-line" id="cloudConfirmLine" hidden></p>
             </div>
             <button class="btn btn-primary cloud-auth-submit" id="cloudAuthSubmit" type="submit">Sign in</button>
@@ -122,7 +130,7 @@ App.cloud = (function () {
             <p class="cloud-auth-intro">Enter your account email and we’ll send you a link to reset your password.</p>
             <div class="cloud-auth-field">
               <label for="cloudResetEmail">Email</label>
-              <div class="cloud-auth-input-wrap"><span class="cloud-auth-input-icon">${ICON_EMAIL}</span>
+              <div class="cloud-auth-input-wrap"><span class="cloud-auth-input-icon">${App.i18n.value(() => (ICON_EMAIL))}</span>
                 <input id="cloudResetEmail" type="email" autocomplete="email" placeholder="you@example.com" required maxlength="254"></div>
             </div>
             <button class="btn btn-primary cloud-auth-submit" id="cloudResetSubmit" type="submit">Send reset link</button>
@@ -134,13 +142,13 @@ App.cloud = (function () {
             <p class="cloud-auth-intro">Choose a new password for your account.</p>
             <div class="cloud-auth-field">
               <label for="cloudNewPassword">New password</label>
-              <div class="cloud-auth-input-wrap"><span class="cloud-auth-input-icon">${ICON_LOCK}</span>
-                <input class="cloud-password-input" id="cloudNewPassword" type="password" autocomplete="new-password" placeholder="Enter your password" required minlength="10"><button type="button" class="cloud-password-toggle" data-password-toggle data-password-label="new password" aria-label="Show new password" aria-pressed="false">${ICON_EYE}</button></div>
+              <div class="cloud-auth-input-wrap"><span class="cloud-auth-input-icon">${App.i18n.value(() => (ICON_LOCK))}</span>
+                <input class="cloud-password-input" id="cloudNewPassword" type="password" autocomplete="new-password" placeholder="Enter your password" required minlength="10"><button type="button" class="cloud-password-toggle" data-password-toggle data-password-label="new password" aria-label="Show new password" aria-pressed="false">${App.i18n.value(() => (ICON_EYE))}</button></div>
             </div>
             <div class="cloud-auth-field">
               <label for="cloudNewPasswordConfirm">Confirm new password</label>
-              <div class="cloud-auth-input-wrap"><span class="cloud-auth-input-icon">${ICON_LOCK}</span>
-                <input class="cloud-password-input" id="cloudNewPasswordConfirm" type="password" autocomplete="new-password" placeholder="Re-enter your password" required minlength="10"><button type="button" class="cloud-password-toggle" data-password-toggle data-password-label="confirm new password" aria-label="Show confirm new password" aria-pressed="false">${ICON_EYE}</button></div>
+              <div class="cloud-auth-input-wrap"><span class="cloud-auth-input-icon">${App.i18n.value(() => (ICON_LOCK))}</span>
+                <input class="cloud-password-input" id="cloudNewPasswordConfirm" type="password" autocomplete="new-password" placeholder="Re-enter your password" required minlength="10"><button type="button" class="cloud-password-toggle" data-password-toggle data-password-label="confirm new password" aria-label="Show confirm new password" aria-pressed="false">${App.i18n.value(() => (ICON_EYE))}</button></div>
               <p class="cloud-auth-confirm-line" id="cloudUpdateConfirmLine" hidden></p>
             </div>
             <p class="cloud-auth-pw-line" id="cloudUpdatePwLine" hidden>10+ characters, including uppercase, lowercase, a number, and a symbol.</p>
@@ -234,10 +242,10 @@ App.cloud = (function () {
       ["number", (v) => /[0-9]/.test(v), "number"],
       ["symbol", (v) => /[^A-Za-z0-9\s]/.test(v), "symbol"]
     ];
-    function pwMissing(v) { return PW_RULES.filter(([, t]) => !t(v)).map(([, , label]) => label); }
-    function pwError(v) { const m = pwMissing(v); return m.length ? "Your password still needs: " + m.join(", ") + "." : ""; }
-    const ICON_PW_CHECK = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8.5 12.5l2.4 2.4 4.6-5.4"/></svg>';
-    const ICON_PW_WARN = '<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4L2.8 20h18.4L12 4z"/><path d="M12 10v4.4"/><circle cx="12" cy="17.2" r="0.7" fill="currentColor" stroke="none"/></svg>';
+    function pwMissing(v) { return PW_RULES.filter(([, t]) => !t(v)).map(([, , label]) => App.i18n.t(label)); }
+    function pwError(v) { const m = pwMissing(v); return m.length ? App.i18n.t("Your password still needs: {0}.", m.join(", ")) : ""; }
+    const ICON_PW_CHECK = App.i18n.markup('<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M8.5 12.5l2.4 2.4 4.6-5.4"/></svg>');
+    const ICON_PW_WARN = App.i18n.markup('<svg viewBox="0 0 24 24" width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4L2.8 20h18.4L12 4z"/><path d="M12 10v4.4"/><circle cx="12" cy="17.2" r="0.7" fill="currentColor" stroke="none"/></svg>');
     // ONE line under the password field, three states: neutral guidance
     // before typing, the missing requirements only while incomplete, and
     // a green confirmation once the rule is met. The labels interpolated
@@ -246,16 +254,16 @@ App.cloud = (function () {
       if (!lineEl) return;
       if (!v) {
         lineEl.className = "cloud-auth-pw-line";
-        lineEl.textContent = "10+ characters, including uppercase, lowercase, a number, and a symbol.";
+        App.i18n.setText(lineEl, App.i18n.message("10+ characters, including uppercase, lowercase, a number, and a symbol."));
         return;
       }
       const missing = pwMissing(v);
       if (!missing.length) {
         lineEl.className = "cloud-auth-pw-line success";
-        lineEl.innerHTML = ICON_PW_CHECK + "<span>Password meets all requirements.</span>";
+        lineEl.innerHTML = ICON_PW_CHECK + App.i18n.markup("<span>Password meets all requirements.</span>");
       } else {
         lineEl.className = "cloud-auth-pw-line error";
-        lineEl.innerHTML = ICON_PW_WARN + "<span>Still needed: " + missing.join(", ") + ".</span>";
+        lineEl.innerHTML = ICON_PW_WARN + App.i18n.markup("<span>Still needed: ") + missing.join(", ") + ".</span>";
       }
     }
     // Create-account requirements checklist: one item per PW_RULES entry,
@@ -277,23 +285,23 @@ App.cloud = (function () {
     // the confirmation field - never a warning before the user starts.
     function paintConfirmLine(lineEl, pw, confirm) {
       if (!lineEl) return;
-      if (!confirm) { lineEl.hidden = true; lineEl.textContent = ""; return; }
+      if (!confirm) { lineEl.hidden = true; App.i18n.setText(lineEl, App.i18n.value(() => (""))); return; }
       const match = pw.length > 0 && confirm === pw;
       lineEl.hidden = false;
       lineEl.className = "cloud-auth-confirm-line " + (match ? "success" : "error");
-      lineEl.textContent = match ? "Passwords match." : "Passwords do not match.";
+      App.i18n.setText(lineEl, App.i18n.value(() => (match ? App.i18n.t("Passwords match.") : App.i18n.t("Passwords do not match."))));
     }
     function emailError(input) {
       const v = input.value.trim();
-      if (!v) return "Enter your email address.";
-      if (input.validity && !input.validity.valid) return "Enter a valid email address.";
+      if (!v) return App.i18n.t("Enter your email address.");
+      if (input.validity && !input.validity.valid) return App.i18n.t("Enter a valid email address.");
       return "";
     }
 
     function applySignMode(nextCreating) {
       creating = nextCreating;
-      heading.textContent = creating ? "Create your RealtorCRM account" : "Welcome back";
-      intro.textContent = creating ? "Start your workspace securely with email or Google." : "Sign in to continue to your RealtorCRM workspace.";
+      App.i18n.setText(heading, App.i18n.value(() => (creating ? App.i18n.t("Create your RealtorCRM account") : App.i18n.t("Welcome back"))));
+      App.i18n.setText(intro, App.i18n.value(() => (creating ? App.i18n.t("Start your workspace securely with email or Google.") : App.i18n.t("Sign in to continue to your RealtorCRM workspace."))));
       signInTab.setAttribute("aria-selected", String(!creating));
       createTab.setAttribute("aria-selected", String(creating));
       signInTab.tabIndex = creating ? -1 : 0;
@@ -317,9 +325,9 @@ App.cloud = (function () {
       } else {
         confirmLine.hidden = true;
       }
-      submitBtn.textContent = creating ? "Create account" : "Sign in";
-      switchCopy.textContent = creating ? "Already have an account?" : "Don’t have an account?";
-      switchBtn.textContent = creating ? "Sign in" : "Create one";
+      App.i18n.setText(submitBtn, App.i18n.value(() => (creating ? App.i18n.t("Create account") : App.i18n.t("Sign in"))));
+      App.i18n.setText(switchCopy, App.i18n.value(() => (creating ? App.i18n.t("Already have an account?") : App.i18n.t("Don’t have an account?"))));
+      App.i18n.setText(switchBtn, App.i18n.value(() => (creating ? App.i18n.t("Sign in") : App.i18n.t("Create one"))));
       forgotLink.hidden = creating;
       setMessage("");
     }
@@ -421,28 +429,28 @@ App.cloud = (function () {
       if (emailErr) return setMessage(emailErr, "error");
       if (creating) {
         const fullName = fullNameInput.value.trim();
-        if (fullName.length < 2) return setMessage("Please enter your full name.", "error");
+        if (fullName.length < 2) return setMessage(App.i18n.t("Please enter your full name."), "error");
         const ruleErr = pwError(password);
         if (ruleErr) return setMessage(ruleErr, "error");
         const confirmPassword = confirmInput.value;
-        if (password !== confirmPassword) return setMessage("Passwords do not match.", "error");
+        if (password !== confirmPassword) return setMessage(App.i18n.t("Passwords do not match."), "error");
         setAuthPending(true);
-        setMessage("Creating account…");
+        setMessage(App.i18n.t("Creating account…"));
         let r;
         try {
-          r = await initClient().auth.signUp({ email, password, options: { data: { full_name: fullName } } });
+          r = await initClient().auth.signUp({ email, password, options: { data: { full_name: fullName, ...(App.preferences ? {crm_preferences:App.preferences.get()} : {}) } } });
         } catch (err) {
           setAuthPending(false);
-          return setMessage("Unable to create your account right now. Check your connection and try again.", "error");
+          return setMessage(App.i18n.t("Unable to create your account right now. Check your connection and try again."), "error");
         }
         setAuthPending(false);
-        if (r.error) return setMessage(r.error.message, "error");
+        if (r.error) return setMessage(r.error, "error");
         if (!r.data.session) {
           // Email confirmation is on: no session exists yet, and nobody is
           // signed in. Show the dedicated confirmation state instead of a
           // one-line message - it carries the resend and correction paths.
           pendingConfirmEmail = email;
-          confirmEmailEl.textContent = email;
+          App.i18n.setText(confirmEmailEl, App.i18n.value(() => (email)));
           setMessage("", null, "cloudConfirmMessage");
           showMode("confirm");
           return;
@@ -450,18 +458,18 @@ App.cloud = (function () {
         window.location.reload();
         return;
       }
-      setMessage("Signing in…");
+      setMessage(App.i18n.t("Signing in…"));
       setAuthPending(true);
       try {
         const r = await initClient().auth.signInWithPassword({ email, password });
         if (r.error) {
           setAuthPending(false);
-          return setMessage(r.error.message, "error");
+          return setMessage(r.error, "error");
         }
         window.location.reload();
       } catch (err) {
         setAuthPending(false);
-        setMessage("Unable to sign in right now. Check your connection and try again.", "error");
+        setMessage(App.i18n.t("Unable to sign in right now. Check your connection and try again."), "error");
       }
     });
 
@@ -470,10 +478,10 @@ App.cloud = (function () {
       const remaining = Math.ceil((resendCooldownUntil - Date.now()) / 1000);
       if (remaining > 0) {
         resendBtn.disabled = true;
-        resendBtn.textContent = "Resend confirmation email (" + remaining + "s)";
+        App.i18n.setText(resendBtn, App.i18n.value(() => (App.i18n.t("Resend confirmation email (") + remaining + App.i18n.t("s)"))));
       } else {
         resendBtn.disabled = false;
-        resendBtn.textContent = "Resend confirmation email";
+        App.i18n.setText(resendBtn, App.i18n.message("Resend confirmation email"));
         if (resendTimer) { clearInterval(resendTimer); resendTimer = null; }
       }
     }
@@ -486,7 +494,7 @@ App.cloud = (function () {
     resendBtn.addEventListener("click", async () => {
       if (!pendingConfirmEmail || Date.now() < resendCooldownUntil) return;
       resendBtn.disabled = true;
-      setMessage("Sending…", null, "cloudConfirmMessage");
+      setMessage(App.i18n.t("Sending…"), null, "cloudConfirmMessage");
       let error = null;
       try {
         const r = await initClient().auth.resend({ type: "signup", email: pendingConfirmEmail });
@@ -499,12 +507,12 @@ App.cloud = (function () {
         const msg = String((error && error.message) || "");
         const rateLimited = (error && error.status === 429) || /rate|once every|too many/i.test(msg);
         setMessage(rateLimited
-          ? "Please wait a minute before requesting another confirmation email."
-          : "We couldn’t send the confirmation email just now. Please try again shortly.", "error", "cloudConfirmMessage");
+          ? App.i18n.t("Please wait a minute before requesting another confirmation email.")
+          : App.i18n.t("We couldn’t send the confirmation email just now. Please try again shortly."), "error", "cloudConfirmMessage");
       } else {
         // Supabase only confirms the request was accepted - never claim
         // delivery, and reveal nothing about the address itself.
-        setMessage("Confirmation email requested. If it doesn’t arrive in a few minutes, check your spam folder.", "success", "cloudConfirmMessage");
+        setMessage(App.i18n.t("Confirmation email requested. If it doesn’t arrive in a few minutes, check your spam folder."), "success", "cloudConfirmMessage");
       }
     });
     changeEmailBtn.addEventListener("click", () => {
@@ -527,13 +535,13 @@ App.cloud = (function () {
       const emailErr = emailError(resetEmailInput);
       if (emailErr) return setMessage(emailErr, "error", "cloudResetMessage");
       resetSubmitBtn.disabled = true;
-      setMessage("Sending reset link…", null, "cloudResetMessage");
+      setMessage(App.i18n.t("Sending reset link…"), null, "cloudResetMessage");
       try {
         await initClient().auth.resetPasswordForEmail(email, {
           redirectTo: window.location.origin + window.location.pathname
         });
       } catch (err) { /* intentionally ignored — see comment above */ }
-      setMessage("If an account exists for this email, a password reset link has been sent.", "success", "cloudResetMessage");
+      setMessage(App.i18n.t("If an account exists for this email, a password reset link has been sent."), "success", "cloudResetMessage");
       resetSubmitBtn.disabled = false;
     });
 
@@ -543,13 +551,13 @@ App.cloud = (function () {
       const p1 = newPasswordInput.value, p2 = newPasswordConfirmInput.value;
       const ruleErr = pwError(p1);
       if (ruleErr) return setMessage(ruleErr, "error", "cloudUpdateMessage");
-      if (p1 !== p2) return setMessage("Passwords do not match.", "error", "cloudUpdateMessage");
+      if (p1 !== p2) return setMessage(App.i18n.t("Passwords do not match."), "error", "cloudUpdateMessage");
       updateSubmitBtn.disabled = true;
-      setMessage("Updating password…", null, "cloudUpdateMessage");
+      setMessage(App.i18n.t("Updating password…"), null, "cloudUpdateMessage");
       const r = await initClient().auth.updateUser({ password: p1 });
       updateSubmitBtn.disabled = false;
-      if (r.error) return setMessage(r.error.message, "error", "cloudUpdateMessage");
-      setMessage("Password updated. Redirecting you to sign in…", "success", "cloudUpdateMessage");
+      if (r.error) return setMessage(r.error, "error", "cloudUpdateMessage");
+      setMessage(App.i18n.t("Password updated. Redirecting you to sign in…"), "success", "cloudUpdateMessage");
       recoveryActive = false;
       // Sign the temporary recovery session out — the user is returned to a
       // clean Sign in with their new password, never straight into the app.
@@ -580,17 +588,17 @@ App.cloud = (function () {
     async function handleGoogleOAuth() {
       if (authPending) return;
       setAuthPending(true);
-      setMessage("Redirecting to Google…");
+      setMessage(App.i18n.t("Redirecting to Google…"));
       try {
         const { error } = await initClient().auth.signInWithOAuth({
           provider: "google",
           options: { redirectTo: window.location.origin + window.location.pathname }
         });
-        if (error) { setMessage(error.message, "error"); setAuthPending(false); }
+        if (error) { setMessage(error, "error"); setAuthPending(false); }
         // On success the browser navigates away to Google now, so there
         // is nothing further to do here.
       } catch (err) {
-        setMessage((err && err.message) || "Unable to start sign-in.", "error");
+        setMessage((err && err.message) || App.i18n.t("Unable to start sign-in."), "error");
         setAuthPending(false);
       }
     }
@@ -641,7 +649,7 @@ App.cloud = (function () {
       hideGate();
       return user;
     } catch (err) {
-      if (!recoveryActive) { gate(); setMessage("Unable to reach your account: " + err.message, "error"); }
+      if (!recoveryActive) { gate(); setMessage(App.i18n.t("Unable to reach your account: ") + err.message, "error"); }
       return null;
     }
   }
@@ -671,7 +679,7 @@ App.cloud = (function () {
   // Best-effort deletes the previous file so a user's folder doesn't
   // accumulate old photos across edits.
   async function uploadAvatar(file) {
-    if (!user) throw new Error("Not signed in.");
+    if (!user) throw new Error(App.i18n.t("Not signed in."));
     const api = initClient();
     const ext = (file.name.split(".").pop() || "jpg").toLowerCase();
     const path = user.id + "/avatar-" + Date.now() + "." + ext;

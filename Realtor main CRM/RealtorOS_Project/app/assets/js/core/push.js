@@ -84,7 +84,19 @@ App.push = (function () {
     const permission = (w.Notification && w.Notification.permission) || "default";
     if (permission === "denied") return "blocked";
     if (permission !== "granted") return "off";
-    return (await currentSubscription(w)) ? "on" : "off";
+    const sub = await currentSubscription(w);
+    if (!sub) return "off";
+    if (sub.expirationTime && sub.expirationTime <= Date.now()) return "renew";
+    if (keyChanged(sub)) return "renew";
+    try {
+      const devices = await S().push.devices();
+      const device = devices.find((d) => d.endpoint === sub.endpoint);
+      if (!device || (device.failure_count || 0) >= 3) return "renew";
+    } catch (e) {
+      // Local permission is not proof that the server still knows this device.
+      return "unknown";
+    }
+    return "on";
   }
 
   async function currentSubscription(win) {
@@ -95,6 +107,16 @@ App.push = (function () {
     } catch (e) {
       return null;
     }
+  }
+
+  function keyChanged(subscription) {
+    const key = subscription.options && subscription.options.applicationServerKey;
+    if (!key || !publicKey()) return false;
+    try {
+      const current = new Uint8Array(key);
+      const expected = keyToBytes(publicKey());
+      return current.length !== expected.length || current.some((b, i) => b !== expected[i]);
+    } catch (e) { return true; }
   }
 
   /* ---------- turning it on ---------- */
@@ -135,7 +157,8 @@ App.push = (function () {
 
     let permission;
     try {
-      permission = await w.Notification.requestPermission();
+      permission = w.Notification.permission === "granted"
+        ? "granted" : await w.Notification.requestPermission();
     } catch (e) {
       return "failed";
     }
@@ -145,6 +168,7 @@ App.push = (function () {
     if (permission !== "granted") return "dismissed";
 
     let subscription;
+    let created = false;
     try {
       const reg = await w.navigator.serviceWorker.ready;
       subscription = await reg.pushManager.getSubscription();
@@ -155,6 +179,7 @@ App.push = (function () {
           userVisibleOnly: true,
           applicationServerKey: keyToBytes(publicKey()),
         });
+        created = true;
       }
     } catch (e) {
       return "failed";
@@ -162,14 +187,45 @@ App.push = (function () {
 
     try {
       const out = await S().push.register(describe(subscription), deviceLabel(w));
-      if (!out || out.outcome !== "registered") return "failed";
+      if (!out || out.outcome !== "registered") throw new Error("registration_failed");
     } catch (e) {
       // Registered with the browser but not with us: unsubscribe again
       // rather than leave a device that will be pushed to by nobody.
-      try { await subscription.unsubscribe(); } catch (err) { /* nothing to undo */ }
+      if (created) {
+        try { await subscription.unsubscribe(); } catch (err) { /* nothing to undo */ }
+      }
       return "failed";
     }
     return "on";
+  }
+
+  // Explicit user action only. Never re-enables a device removed by the user on
+  // another browser merely because they reopened Settings.
+  async function renew(win) {
+    const w = win || window;
+    if (!publicKey()) return "not_configured";
+    if (!supported(w)) return "unsupported";
+    const old = await currentSubscription(w);
+    if (old) {
+      try { if (!await old.unsubscribe()) return "failed"; } catch (e) { return "failed"; }
+    }
+    const outcome = await enable(w);
+    if (outcome === "on" && old) {
+      const current = await currentSubscription(w);
+      if (current && current.endpoint !== old.endpoint) {
+        try { await S().push.remove(old.endpoint); } catch (e) { /* worker prunes dead endpoint */ }
+      }
+    }
+    return outcome;
+  }
+
+  async function test(win) {
+    const w = win || window;
+    if (await state(w) !== "on") return { outcome: "no_device" };
+    const sub = await currentSubscription(w);
+    if (!sub) return { outcome: "no_device" };
+    try { return await S().push.test(sub.endpoint); }
+    catch (e) { return { outcome: "failed" }; }
   }
 
   /** The three fields the server needs, out of a PushSubscription. */
@@ -197,7 +253,7 @@ App.push = (function () {
   }
 
   return {
-    publicKey, supported, state, enable, disable, describe,
+    publicKey, supported, state, enable, disable, renew, test, describe, keyChanged,
     deviceLabel, currentSubscription, keyToBytes, bufferToB64url,
   };
 })();

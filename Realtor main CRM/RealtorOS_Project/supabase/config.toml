@@ -11,6 +11,14 @@ verify_jwt = false
 [functions.send-test-email]
 verify_jwt = true
 
+# Mailbox OAuth (Gmail send). Google's callback is a plain browser
+# redirect and carries no Supabase JWT, so this endpoint is public at the
+# platform level and authenticates every route itself: POST actions via a
+# real user JWT + workspace membership, the GET callback via the
+# HMAC-signed, 10-minute state token (see _shared/mailbox-oauth.ts).
+[functions.mailbox-connect]
+verify_jwt = false
+
 # Phase 4C: Resend cannot supply a RealtorOS user JWT, so this endpoint is
 # public at the platform level and instead authenticates every request
 # itself via the Svix-compatible RESEND_WEBHOOK_SECRET signature.

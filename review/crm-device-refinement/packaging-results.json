@@ -1,0 +1,12 @@
+[
+  {
+    "command": "node deployment/package-crm.mjs",
+    "exitCode": 0,
+    "output": "Packaged 79 files (3343139 bytes) into deployment/dist-crm\nVerified: entry page, service worker, manifest present; production websiteUrl applied to output only; no development URLs; no service-role material.\n"
+  },
+  {
+    "command": "node deployment/assert-isolation.mjs crm deployment/dist-crm",
+    "exitCode": 0,
+    "output": "Isolation verified: crm, 90 entries\n"
+  }
+]

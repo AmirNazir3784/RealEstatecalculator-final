@@ -29,18 +29,18 @@ App.pages.emailSendingSettings = (function () {
     /^[A-Za-z0-9.!#$%&'*+/=?^_`{|}~-]+@[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?(?:\.[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?)+$/;
 
   const STATUS_META = {
-    queued: { label: "Queued", cls: "badge-neutral" },
-    sent: { label: "Sent", cls: "badge-info" },
-    delivered: { label: "Delivered", cls: "badge-success" },
-    delivery_delayed: { label: "Delayed", cls: "badge-warning" },
-    opened: { label: "Opened", cls: "badge-success" },
-    clicked: { label: "Clicked", cls: "badge-success" },
-    replied: { label: "Replied", cls: "badge-success" },
-    bounced: { label: "Bounced", cls: "badge-danger" },
-    complained: { label: "Complaint", cls: "badge-danger" },
-    suppressed: { label: "Suppressed", cls: "badge-danger" },
-    failed: { label: "Failed", cls: "badge-danger" },
-    unsubscribed: { label: "Unsubscribed", cls: "badge-neutral" }
+    queued: { get label() { return App.i18n.t("Queued"); }, cls: "badge-neutral" },
+    sent: { get label() { return App.i18n.t("Sent"); }, cls: "badge-info" },
+    delivered: { get label() { return App.i18n.t("Delivered"); }, cls: "badge-success" },
+    delivery_delayed: { get label() { return App.i18n.t("Delayed"); }, cls: "badge-warning" },
+    opened: { get label() { return App.i18n.t("Opened"); }, cls: "badge-success" },
+    clicked: { get label() { return App.i18n.t("Clicked"); }, cls: "badge-success" },
+    replied: { get label() { return App.i18n.t("Replied"); }, cls: "badge-success" },
+    bounced: { get label() { return App.i18n.t("Bounced"); }, cls: "badge-danger" },
+    complained: { get label() { return App.i18n.t("Complaint"); }, cls: "badge-danger" },
+    suppressed: { get label() { return App.i18n.t("Suppressed"); }, cls: "badge-danger" },
+    failed: { get label() { return App.i18n.t("Failed"); }, cls: "badge-danger" },
+    unsubscribed: { get label() { return App.i18n.t("Unsubscribed"); }, cls: "badge-neutral" }
   };
 
   function safeLookup(map, key) {
@@ -52,7 +52,7 @@ App.pages.emailSendingSettings = (function () {
     const label = meta ? meta.label : "Unknown";
     const cls = meta ? meta.cls : "badge-neutral";
     // Text label carries the meaning — never color alone.
-    return `<span class="badge ${cls}"><span class="dot"></span>${U().esc(label)}</span>`;
+    return App.i18n.html`<span class="badge ${App.i18n.value(() => (cls))}"><span class="dot"></span>${App.i18n.value(() => (U().esc(label)))}</span>`;
   }
   function maskEmail(email) {
     if (typeof email !== "string" || !email) return "";
@@ -89,6 +89,12 @@ App.pages.emailSendingSettings = (function () {
     const state = {
       profile: null,
       profileError: null,
+      mailbox: null,
+      mailboxError: null,
+      // Set once from the mailbox-connect callback redirect
+      // (?mailbox=connected|error&kind=&reason=), then stripped from the
+      // URL — never persisted anywhere.
+      mailboxNotice: readMailboxCallbackNotice(),
       templates: [],
       templatesError: null,
       history: [],
@@ -101,13 +107,39 @@ App.pages.emailSendingSettings = (function () {
       activeAttempt: null
     };
 
-    pane.innerHTML = App.app.loadingHtml ? App.app.loadingHtml("email sending settings") : "";
+    pane.innerHTML = App.app.loadingHtml ? App.app.loadingHtml(App.i18n.t("email sending settings")) : "";
     renderShell(pane, state);
-    await Promise.all([loadProfile(pane, state), loadTemplates(pane, state), loadHistory(pane, state)]);
+    await Promise.all([loadProfile(pane, state), loadMailbox(pane, state), loadTemplates(pane, state), loadHistory(pane, state)]);
+  }
+
+  // The mailbox-connect Edge Function redirects the browser back here
+  // after Google's consent screen with a coarse outcome only — no email
+  // address, no token, nothing sensitive in the URL.
+  function readMailboxCallbackNotice() {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const outcome = params.get("mailbox");
+      if (outcome !== "connected" && outcome !== "error") return null;
+      const notice = {
+        outcome,
+        kind: params.get("kind") === "shared" ? "shared" : "personal",
+        provider: params.get("provider") === "microsoft" ? "microsoft" : "gmail",
+        reason: params.get("reason") || ""
+      };
+      params.delete("mailbox");
+      params.delete("kind");
+      params.delete("provider");
+      params.delete("reason");
+      const qs = params.toString();
+      window.history.replaceState(null, "", window.location.pathname + (qs ? "?" + qs : "") + window.location.hash);
+      return notice;
+    } catch (err) {
+      return null;
+    }
   }
 
   function renderShell(pane, state) {
-    pane.innerHTML = `
+    pane.innerHTML = App.i18n.html`
       <div class="settings-category-head">
         <div class="settings-category-title">Email Sending</div>
         <p class="form-help">Configure your RealtorCRM sender identity and safely test email delivery.</p>
@@ -127,21 +159,28 @@ App.pages.emailSendingSettings = (function () {
       <section class="card" style="margin-bottom:16px">
         <div class="card-header"><div class="card-title">Sender Profile</div></div>
         <div class="card-body">
-          <div id="epProfileBody">${App.app.loadingHtml ? App.app.loadingHtml("your sender profile") : ""}</div>
+          <div id="epProfileBody">${App.i18n.value(() => (App.app.loadingHtml ? App.app.loadingHtml(App.i18n.t("your sender profile")) : ""))}</div>
+        </div>
+      </section>
+
+      <section class="card" style="margin-bottom:16px">
+        <div class="card-header"><div class="card-title">Connected Mailbox</div></div>
+        <div class="card-body">
+          <div id="epMailboxBody">${App.i18n.value(() => (App.app.loadingHtml ? App.app.loadingHtml(App.i18n.t("your mailbox connection")) : ""))}</div>
         </div>
       </section>
 
       <section class="card" style="margin-bottom:16px">
         <div class="card-header"><div class="card-title">Send a Test Email</div></div>
         <div class="card-body">
-          <div id="epTestBody">${App.app.loadingHtml ? App.app.loadingHtml("templates") : ""}</div>
+          <div id="epTestBody">${App.i18n.value(() => (App.app.loadingHtml ? App.app.loadingHtml("templates") : ""))}</div>
         </div>
       </section>
 
       <section class="card">
         <div class="card-header"><div class="card-title">Recent Test Sends</div></div>
         <div class="card-body">
-          <div id="epHistoryBody">${App.app.loadingHtml ? App.app.loadingHtml("test history") : ""}</div>
+          <div id="epHistoryBody">${App.i18n.value(() => (App.app.loadingHtml ? App.app.loadingHtml(App.i18n.t("test history")) : ""))}</div>
         </div>
       </section>
     `;
@@ -167,10 +206,10 @@ App.pages.emailSendingSettings = (function () {
     if (!el) return;
 
     if (state.profileError) {
-      el.innerHTML = `
+      el.innerHTML = App.i18n.html`
         <div class="empty-state" role="alert">
           <div class="empty-title">Could not load your sender profile</div>
-          <div class="empty-desc">${U().esc(state.profileError)}</div>
+          <div class="empty-desc">${App.i18n.value(() => (U().esc(state.profileError)))}</div>
           <button type="button" class="btn btn-primary" id="epProfileRetry">Retry</button>
         </div>`;
       el.querySelector("#epProfileRetry").addEventListener("click", () => loadProfile(pane, state));
@@ -178,17 +217,17 @@ App.pages.emailSendingSettings = (function () {
     }
 
     const p = state.profile;
-    el.innerHTML = `
+    el.innerHTML = App.i18n.html`
       <div class="form-grid">
         <label class="field full"><span>Sender display name</span>
-          <input id="epDisplayName" maxlength="${DISPLAY_NAME_MAX}" value="${U().esc(p ? p.display_name : "")}" placeholder="e.g. Jane Smith">
+          <input id="epDisplayName" maxlength="${App.i18n.value(() => (DISPLAY_NAME_MAX))}" value="${App.i18n.value(() => (U().esc(p ? p.display_name : "")))}" placeholder="e.g. Jane Smith">
         </label>
         <label class="field full"><span>Reply-To email</span>
-          <input id="epReplyTo" type="email" maxlength="${REPLY_TO_MAX}" value="${U().esc(p ? p.reply_to_email : "")}" placeholder="you@yourbrokerage.com">
+          <input id="epReplyTo" type="email" maxlength="${App.i18n.value(() => (REPLY_TO_MAX))}" value="${App.i18n.value(() => (U().esc(p ? p.reply_to_email : "")))}" placeholder="you@yourbrokerage.com">
         </label>
         <label class="field" style="flex-direction:row;align-items:center;gap:10px">
           <span>Enable test sending</span>
-          <span class="toggle-switch"><input type="checkbox" id="epEnabled" ${p && p.is_enabled ? "checked" : ""}><span class="toggle-track"></span></span>
+          <span class="toggle-switch"><input type="checkbox" id="epEnabled" ${App.i18n.value(() => (p && p.is_enabled ? "checked" : ""))}><span class="toggle-track"></span></span>
         </label>
         <label class="field full"><span>Sender preview</span>
           <div class="form-help" id="epSenderPreview" style="white-space:pre-wrap;word-break:break-word"></div>
@@ -204,7 +243,7 @@ App.pages.emailSendingSettings = (function () {
     const previewEl = el.querySelector("#epSenderPreview");
     const updatePreview = () => {
       const name = nameInput.value.trim() || "Your Name";
-      previewEl.textContent = name + " via RealtorCRM <Your unique RealtorCRM sender address will be assigned when the sending domain is connected.>";
+      App.i18n.setText(previewEl, App.i18n.value(() => (name + App.i18n.markup(" via RealtorCRM <Your unique RealtorCRM sender address will be assigned when the sending domain is connected.>"))));
     };
     updatePreview();
     nameInput.addEventListener("input", updatePreview);
@@ -218,33 +257,237 @@ App.pages.emailSendingSettings = (function () {
       const isEnabled = el.querySelector("#epEnabled").checked;
 
       if (!isValidDisplayName(displayName)) {
-        statusEl.textContent = "Sender display name must be 1-100 characters, with no <, >, \", \\, comma, or control characters.";
+        App.i18n.setText(statusEl, App.i18n.value(() => ("Sender display name must be 1-100 characters, with no <, >, \", \\, comma, or control characters.")));
         statusEl.className = "profile-edit-message error";
         return;
       }
       if (!isValidReplyTo(replyToEmail)) {
-        statusEl.textContent = "Reply-To must be exactly one valid email address (no comma-separated lists).";
+        App.i18n.setText(statusEl, App.i18n.message("Reply-To must be exactly one valid email address (no comma-separated lists)."));
         statusEl.className = "profile-edit-message error";
         return;
       }
 
       saveBtn.disabled = true;
-      statusEl.textContent = "Saving…";
+      App.i18n.setText(statusEl, App.i18n.message("Saving…"));
       statusEl.className = "profile-edit-message";
       try {
         state.profile = await S().emailSenderProfile.save({ displayName, replyToEmail, isEnabled });
-        statusEl.textContent = "Sender profile saved.";
+        App.i18n.setText(statusEl, App.i18n.message("Sender profile saved."));
         statusEl.className = "profile-edit-message success";
-        App.app.toast("Sender profile saved.", "success");
+        App.app.toast(App.i18n.t("Sender profile saved."), "success");
         renderTestCard(pane, state);
       } catch (err) {
-        statusEl.textContent = "Could not save: " + ((err && err.message) || "Unknown error");
+        App.i18n.setText(statusEl, App.i18n.value(() => (App.i18n.t("Could not save: ") + ((err && err.message) || "Unknown error"))));
         statusEl.className = "profile-edit-message error";
-        App.app.toast("Could not save sender profile.", "danger");
+        App.app.toast(App.i18n.t("Could not save sender profile."), "danger");
       } finally {
         saveBtn.disabled = false;
       }
     });
+  }
+
+  /* ============================================================
+   * CONNECTED MAILBOX
+   * ========================================================== */
+
+  async function loadMailbox(pane, state) {
+    try {
+      state.mailbox = await S().mailbox.status();
+      state.mailboxError = null;
+    } catch (err) {
+      state.mailboxError = (err && err.message) ? err.message : "Unknown error";
+    }
+    renderMailbox(pane, state);
+  }
+
+  const MAILBOX_PROVIDERS = [
+    { id: "gmail", label: "Gmail", opening: "Opening Google sign-in\u2026" },
+    { id: "microsoft", label: "Outlook", opening: "Opening Microsoft sign-in\u2026" }
+  ];
+
+  function mailboxNoticeHtml(state) {
+    const notice = state.mailboxNotice;
+    if (!notice) return "";
+    if (notice.outcome === "connected") {
+      const outlook = notice.provider === "microsoft";
+      const text = notice.kind === "shared"
+        ? App.i18n.t(outlook ? "The shared Outlook mailbox is connected." : "The shared Gmail mailbox is connected.")
+        : App.i18n.t(outlook ? "Outlook connected. Your follow-up emails will now be sent from your mailbox." : "Gmail connected. Your follow-up emails will now be sent from your mailbox.");
+      return App.i18n.html`<div class="release-callout" style="margin-bottom:12px"><p style="margin:0">${App.i18n.value(() => (U().esc(text)))}</p></div>`;
+    }
+    const text = notice.reason === "expired"
+      ? App.i18n.t("The connection link expired. Please try connecting again.")
+      : App.i18n.t("The mailbox connection did not complete. Please try connecting again.");
+    return App.i18n.html`<div class="release-callout release-callout-warning" style="margin-bottom:12px"><p style="margin:0">${App.i18n.value(() => (U().esc(text)))}</p></div>`;
+  }
+
+  function connectionBadgeHtml(conn) {
+    if (!conn) {
+      return App.i18n.html`<span class="badge badge-neutral"><span class="dot"></span>${App.i18n.value(() => (U().esc(App.i18n.t("Not connected"))))}</span>`;
+    }
+    if (conn.status === "connected") {
+      return App.i18n.html`<span class="badge badge-success"><span class="dot"></span>${App.i18n.value(() => (U().esc(App.i18n.t("Connected"))))}</span> <span class="form-help">${App.i18n.value(() => (maskEmail(conn.email_address)))}</span>`;
+    }
+    return App.i18n.html`<span class="badge badge-danger"><span class="dot"></span>${App.i18n.value(() => (U().esc(App.i18n.t("Needs attention"))))}</span> <span class="form-help">${App.i18n.value(() => (maskEmail(conn.email_address)))}</span>`;
+  }
+
+  function providerRowHtml(kind, providerMeta, conn) {
+    const pid = providerMeta.id;
+    const connectLabel = conn
+      ? App.i18n.t(pid === "microsoft" ? "Reconnect Outlook" : "Reconnect Gmail")
+      : App.i18n.t(pid === "microsoft" ? "Connect Outlook" : "Connect Gmail");
+    return App.i18n.html`
+      <div class="form-grid" style="margin-top:8px">
+        <label class="field full"><span>${App.i18n.value(() => (providerMeta.label))}</span>
+          <div>${App.i18n.value(() => (connectionBadgeHtml(conn)))}</div>
+        </label>
+      </div>
+      ${App.i18n.value(() => (conn && conn.status !== "connected" ? App.i18n.html`<p class="form-help">This connection needs attention. Reconnect to keep sending from your mailbox.</p>` : ""))}
+      <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap">
+        ${App.i18n.value(() => (!conn || conn.status !== "connected" ? App.i18n.html`<button type="button" class="btn ${App.i18n.value(() => (kind === "personal" ? "btn-primary" : ""))}" data-mb-connect="${App.i18n.value(() => (kind))}:${App.i18n.value(() => (pid))}">${App.i18n.value(() => (U().esc(connectLabel)))}</button>` : ""))}
+        ${App.i18n.value(() => (conn ? App.i18n.html`<button type="button" class="btn" data-mb-disconnect="${App.i18n.value(() => (kind))}:${App.i18n.value(() => (pid))}">Disconnect</button>` : ""))}
+      </div>`;
+  }
+
+  function renderMailbox(pane, state) {
+    const el = pane.querySelector("#epMailboxBody");
+    if (!el) return;
+
+    if (state.mailboxError) {
+      el.innerHTML = App.i18n.html`
+        <div class="empty-state" role="alert">
+          <div class="empty-title">Could not load your mailbox connection</div>
+          <div class="empty-desc">${App.i18n.value(() => (U().esc(state.mailboxError)))}</div>
+          <button type="button" class="btn btn-primary" id="epMailboxRetry">Retry</button>
+        </div>`;
+      el.querySelector("#epMailboxRetry").addEventListener("click", () => loadMailbox(pane, state));
+      return;
+    }
+
+    const mb = state.mailbox;
+    if (!mb) return;
+    const hasShared = !!(mb.shared.gmail || mb.shared.microsoft);
+    const showShared = !!(hasShared || mb.canManageShared);
+    const personalRows = MAILBOX_PROVIDERS.map((pm) => providerRowHtml("personal", pm, mb.personal[pm.id])).join("");
+    const sharedRows = MAILBOX_PROVIDERS.map((pm) => providerRowHtml("shared", pm, mb.shared[pm.id])).join("");
+
+    el.innerHTML = App.i18n.html`
+      ${App.i18n.value(() => (mailboxNoticeHtml(state)))}
+      <p class="form-help" style="margin-top:0">Connect your own Gmail or Outlook so follow-up emails are sent from your address. Replies come back to your own inbox. If no mailbox is connected, RealtorCRM's sending service is used instead.</p>
+
+      <div class="form-grid" style="margin-top:12px">
+        <label class="field full"><span>Your mailbox</span></label>
+      </div>
+      ${App.i18n.value(() => (personalRows))}
+
+      ${App.i18n.value(() => (showShared ? App.i18n.html`
+      <hr style="margin:16px 0;border:none;border-top:1px solid var(--border, #e5e7eb)">
+      <div class="form-grid">
+        <label class="field full"><span>Shared mailbox</span></label>
+      </div>
+      <p class="form-help">Workspace admins can connect a shared Gmail or Outlook mailbox for the whole team.</p>
+      ${App.i18n.value(() => (sharedRows))}
+      ${App.i18n.value(() => (mb.canManageShared ? App.i18n.html`
+      <div class="form-grid" style="margin-top:16px">
+        <label class="field full"><span>Sending policy</span>
+          <label class="field" style="flex-direction:row;align-items:flex-start;gap:8px">
+            <input type="radio" name="epMailboxPolicy" value="members_own" ${App.i18n.value(() => (mb.policy.mode === "members_own" ? "checked" : ""))}>
+            <span><strong>Team members' own mailboxes</strong><br><span class="form-help">Each email is sent from the mailbox of the team member responsible for the contact. If they have not connected one, the shared mailbox is used, then RealtorCRM's sending service.</span></span>
+          </label>
+          <label class="field" style="flex-direction:row;align-items:flex-start;gap:8px">
+            <input type="radio" name="epMailboxPolicy" value="shared" ${App.i18n.value(() => (mb.policy.mode === "shared" ? "checked" : ""))}>
+            <span><strong>Shared mailbox for everyone</strong><br><span class="form-help">All emails are sent from the shared mailbox, whoever is responsible for the contact.</span></span>
+          </label>
+        </label>
+      </div>
+      <div style="margin-top:10px">
+        <button type="button" class="btn btn-primary" id="epMailboxPolicySave">Save Sending Policy</button>
+      </div>` : ""))}
+      ` : ""))}
+      <p id="epMailboxStatus" class="profile-edit-message" aria-live="polite" role="status" style="margin-top:10px"></p>
+    `;
+
+    const statusEl = el.querySelector("#epMailboxStatus");
+    const setStatus = (text, cls) => {
+      if (!statusEl) return;
+      App.i18n.setText(statusEl, App.i18n.value(() => (text)));
+      statusEl.className = "profile-edit-message" + (cls ? " " + cls : "");
+    };
+
+    el.querySelectorAll("[data-mb-connect]").forEach((btn) => {
+      btn.addEventListener("click", async () => {
+        if (btn.disabled) return;
+        const [kind, provider] = String(btn.getAttribute("data-mb-connect") || "").split(":");
+        const meta = MAILBOX_PROVIDERS.find((pm) => pm.id === provider) || MAILBOX_PROVIDERS[0];
+        btn.disabled = true;
+        setStatus(App.i18n.t(meta.opening));
+        try {
+          const { authUrl } = await S().mailbox.start(kind, provider);
+          window.location.assign(authUrl);
+        } catch (err) {
+          setStatus(friendlyMailboxError(err), "error");
+          App.app.toast(friendlyMailboxError(err), "danger");
+          btn.disabled = false;
+        }
+      });
+    });
+    el.querySelectorAll("[data-mb-disconnect]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const [kind, provider] = String(btn.getAttribute("data-mb-disconnect") || "").split(":");
+        App.app.confirmDialog({
+          title: App.i18n.t("Disconnect this mailbox?"),
+          message: App.i18n.t("Follow-up emails will no longer be sent from this mailbox. You can reconnect at any time."),
+          okLabel: App.i18n.t("Disconnect")
+        }, async () => {
+          btn.disabled = true;
+          try {
+            await S().mailbox.disconnect(kind, provider);
+            App.app.toast(App.i18n.t("Mailbox disconnected."), "success");
+            await loadMailbox(pane, state);
+          } catch (err) {
+            setStatus(friendlyMailboxError(err), "error");
+            App.app.toast(friendlyMailboxError(err), "danger");
+            btn.disabled = false;
+          }
+        });
+      });
+    });
+
+    const policySave = el.querySelector("#epMailboxPolicySave");
+    if (policySave) {
+      policySave.addEventListener("click", async () => {
+        if (policySave.disabled) return;
+        const checked = el.querySelector("input[name='epMailboxPolicy']:checked");
+        if (!checked) return;
+        policySave.disabled = true;
+        setStatus(App.i18n.t("Saving\u2026"));
+        try {
+          const { mode } = await S().mailbox.setPolicy(checked.value);
+          if (state.mailbox) state.mailbox.policy.mode = mode;
+          setStatus(App.i18n.t("Sending policy saved."), "success");
+          App.app.toast(App.i18n.t("Sending policy saved."), "success");
+        } catch (err) {
+          setStatus(friendlyMailboxError(err), "error");
+          App.app.toast(friendlyMailboxError(err), "danger");
+        } finally {
+          policySave.disabled = false;
+        }
+      });
+    }
+  }
+
+  function friendlyMailboxError(err) {
+    const code = err && err.code;
+    const map = {
+      unauthorized: "Please sign in again to manage your mailbox connection.",
+      no_workspace: "You are not part of a workspace yet, so there is nowhere to connect a mailbox.",
+      admin_required: "Only a workspace owner or admin can manage the shared mailbox and sending policy.",
+      not_configured: "Mailbox connections are not fully set up for this workspace yet. This card will work once the provider connection is configured.",
+      provider_not_available_yet: "That mailbox provider is not available yet.",
+      mailbox_request_failed: "Could not reach the mailbox service. Please try again."
+    };
+    if (code && Object.prototype.hasOwnProperty.call(map, code)) return map[code];
+    return "Something went wrong with the mailbox connection: " + ((err && err.message) || "Unknown error");
   }
 
   /* ============================================================
@@ -266,10 +509,10 @@ App.pages.emailSendingSettings = (function () {
     if (!el) return;
 
     if (state.templatesError) {
-      el.innerHTML = `
+      el.innerHTML = App.i18n.html`
         <div class="empty-state" role="alert">
           <div class="empty-title">Could not load Email Templates</div>
-          <div class="empty-desc">${U().esc(state.templatesError)}</div>
+          <div class="empty-desc">${App.i18n.value(() => (U().esc(state.templatesError)))}</div>
           <button type="button" class="btn btn-primary" id="epTemplatesRetry">Retry</button>
         </div>`;
       el.querySelector("#epTemplatesRetry").addEventListener("click", () => loadTemplates(pane, state));
@@ -280,11 +523,11 @@ App.pages.emailSendingSettings = (function () {
     const canSend = !!(profile && profile.is_enabled && isValidReplyTo(profile.reply_to_email) && state.templates.length);
 
     if (!state.templates.length) {
-      el.innerHTML = `<div class="empty-state"><div class="empty-title">No active Email Templates yet</div><div class="empty-desc">Create and activate a template on the Email Templates page first.</div></div>`;
+      el.innerHTML = App.i18n.markup(`<div class="empty-state"><div class="empty-title">No active Email Templates yet</div><div class="empty-desc">Create and activate a template on the Email Templates page first.</div></div>`);
       return;
     }
     if (!profile || !profile.is_enabled) {
-      el.innerHTML = `<p class="form-help">Save and enable your sender profile above to send a test email.</p>`;
+      el.innerHTML = App.i18n.markup(`<p class="form-help">Save and enable your sender profile above to send a test email.</p>`);
       return;
     }
 
@@ -293,18 +536,18 @@ App.pages.emailSendingSettings = (function () {
     // and the button switches into "retry the same request" mode, never
     // generating a new key for it.
     const pending = state.activeAttempt;
-    el.innerHTML = `
+    el.innerHTML = App.i18n.html`
       <div class="form-grid">
         <label class="field full"><span>Email Template</span><select id="epTestTemplate">
-          ${state.templates.map(t => `<option value="${U().esc(t.id)}" ${pending && pending.templateId === t.id ? "selected" : ""}>${U().esc(t.name)}</option>`).join("")}
+          ${App.i18n.value(() => (state.templates.map(t => App.i18n.html`<option value="${App.i18n.value(() => (U().esc(t.id)))}" ${App.i18n.value(() => (pending && pending.templateId === t.id ? "selected" : ""))}>${App.i18n.value(() => (U().esc(t.name)))}</option>`).join("")))}
         </select></label>
         <label class="field full"><span>Destination</span>
-          <div class="form-help">${maskEmail(profile.reply_to_email)} (your saved Reply-To address — not editable here)</div>
+          <div class="form-help">${App.i18n.value(() => (maskEmail(profile.reply_to_email)))} (your saved Reply-To address — not editable here)</div>
         </label>
       </div>
-      <p id="epTestStatus" class="profile-edit-message${pending ? " error" : ""}" aria-live="polite" role="status" style="margin-top:10px">${pending ? "The delivery result could not be confirmed. Retry safely with the same request key." : ""}</p>
+      <p id="epTestStatus" class="profile-edit-message${App.i18n.value(() => (pending ? " error" : ""))}" aria-live="polite" role="status" style="margin-top:10px">${App.i18n.value(() => (pending ? App.i18n.t("The delivery result could not be confirmed. Retry safely with the same request key.") : ""))}</p>
       <div style="margin-top:10px">
-        <button type="button" class="btn btn-primary" id="epTestSend" ${canSend ? "" : "disabled"}>${pending ? "Retry Test Email (same request)" : "Send Test Email"}</button>
+        <button type="button" class="btn btn-primary" id="epTestSend" ${App.i18n.value(() => (canSend ? "" : "disabled"))}>${App.i18n.value(() => (pending ? App.i18n.t("Retry Test Email (same request)") : App.i18n.t("Send Test Email")))}</button>
       </div>
     `;
 
@@ -339,7 +582,7 @@ App.pages.emailSendingSettings = (function () {
     const recipient = state.profile.reply_to_email;
 
     App.app.confirmDialog({
-      title: "Send test email?",
+      get title() { return App.i18n.t("Send test email?"); },
       message: `A real email may be delivered once email delivery is configured. It will be sent only to your saved Reply-To address (${U().esc(maskEmail(recipient))}). This does not enroll any contacts and does not activate an automation sequence.`,
       okLabel: "Send Test Email"
     }, () => {
@@ -360,7 +603,7 @@ App.pages.emailSendingSettings = (function () {
     state.sending = true;
     sendBtn.disabled = true;
     const statusEl = el.querySelector("#epTestStatus");
-    if (statusEl) { statusEl.textContent = "Sending test email…"; statusEl.className = "profile-edit-message"; }
+    if (statusEl) { App.i18n.setText(statusEl, App.i18n.message("Sending test email…")); statusEl.className = "profile-edit-message"; }
 
     try {
       const message = await S().testEmail.send({ templateId, idempotencyKey });
@@ -370,17 +613,17 @@ App.pages.emailSendingSettings = (function () {
       state.activeAttempt = null;
       if (NON_SUCCESS_STATUSES_.indexOf(message.status) !== -1) {
         if (statusEl) {
-          statusEl.textContent = "Test email did not succeed — status: " + message.status +
-            (message.error_message ? " (" + message.error_message + ")" : "") + ".";
+          App.i18n.setText(statusEl, App.i18n.value(() => (App.i18n.t("Test email did not succeed — status: ") + message.status +
+            (message.error_message ? " (" + message.error_message + ")" : "") + ".")));
           statusEl.className = "profile-edit-message error";
         }
-        App.app.toast("Test email did not succeed.", "danger");
+        App.app.toast(App.i18n.t("Test email did not succeed."), "danger");
       } else {
         if (statusEl) {
-          statusEl.textContent = "Test email request accepted — status: " + message.status + ".";
+          App.i18n.setText(statusEl, App.i18n.value(() => (App.i18n.t("Test email request accepted — status: ") + message.status + ".")));
           statusEl.className = "profile-edit-message success";
         }
-        App.app.toast("Test email request sent.", "success");
+        App.app.toast(App.i18n.t("Test email request sent."), "success");
       }
       await loadHistory(pane, state);
     } catch (err) {
@@ -399,7 +642,7 @@ App.pages.emailSendingSettings = (function () {
       // send_in_progress/rate_limited: leave state.activeAttempt exactly
       // as it was — still safely retryable once the wait is over.
       const friendly = friendlyTestSendError(code, err);
-      if (statusEl) { statusEl.textContent = friendly; statusEl.className = "profile-edit-message error"; }
+      if (statusEl) { App.i18n.setText(statusEl, App.i18n.value(() => (friendly))); statusEl.className = "profile-edit-message error"; }
       App.app.toast(friendly, "danger");
     } finally {
       state.sending = false;
@@ -410,7 +653,7 @@ App.pages.emailSendingSettings = (function () {
       const currentSelect = el.querySelector("#epTestTemplate");
       const stillPending = !!(state.activeAttempt && currentSelect && state.activeAttempt.templateId === currentSelect.value);
       sendBtn.disabled = false;
-      sendBtn.textContent = stillPending ? "Retry Test Email (same request)" : "Send Test Email";
+      App.i18n.setText(sendBtn, App.i18n.value(() => (stillPending ? App.i18n.t("Retry Test Email (same request)") : App.i18n.t("Send Test Email"))));
     }
   }
 
@@ -458,21 +701,21 @@ App.pages.emailSendingSettings = (function () {
     if (!el) return;
 
     if (state.historyError) {
-      el.innerHTML = `
+      el.innerHTML = App.i18n.html`
         <div class="empty-state" role="alert">
           <div class="empty-title">Could not load test history</div>
-          <div class="empty-desc">${U().esc(state.historyError)}</div>
+          <div class="empty-desc">${App.i18n.value(() => (U().esc(state.historyError)))}</div>
           <button type="button" class="btn btn-primary" id="epHistoryRetry">Retry</button>
         </div>`;
       el.querySelector("#epHistoryRetry").addEventListener("click", () => loadHistory(pane, state));
       return;
     }
     if (!state.history.length) {
-      el.innerHTML = `<div class="empty-state"><div class="empty-title">No test sends yet</div><div class="empty-desc">Send a test email above to see its delivery status here.</div></div>`;
+      el.innerHTML = App.i18n.markup(`<div class="empty-state"><div class="empty-title">No test sends yet</div><div class="empty-desc">Send a test email above to see its delivery status here.</div></div>`);
       return;
     }
 
-    el.innerHTML = `<div style="overflow-x:auto"><div class="release-library-grid">${state.history.map(renderHistoryCard).join("")}</div></div>`;
+    el.innerHTML = App.i18n.html`<div style="overflow-x:auto"><div class="release-library-grid">${App.i18n.value(() => (state.history.map(renderHistoryCard).join("")))}</div></div>`;
   }
 
   function renderHistoryCard(m) {
@@ -483,18 +726,18 @@ App.pages.emailSendingSettings = (function () {
     if (m.error_code || m.error_message) {
       detailParts.push("Error: " + U().esc(m.error_code || "") + (m.error_message ? " — " + U().esc(m.error_message) : ""));
     }
-    return `
+    return App.i18n.html`
       <article class="card release-library-card">
         <div class="card-body">
           <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:space-between">
-            <h3 style="margin:0;word-break:break-word">${U().esc(m.subject || "(no subject)")}</h3>
-            ${statusBadge(m.status)}
+            <h3 style="margin:0;word-break:break-word">${App.i18n.value(() => (U().esc(m.subject || App.i18n.t("(no subject)"))))}</h3>
+            ${App.i18n.value(() => (statusBadge(m.status)))}
           </div>
-          <div class="form-help" style="margin:6px 0 2px">To: ${maskEmail(m.recipient)}</div>
-          <div class="form-help">From: ${U().esc(m.sender_display_name || "")} &lt;${U().esc(m.sender_address || "pending")}&gt;</div>
-          <div class="form-help" style="margin-top:6px">Queued ${U().esc(formatTimestamp(m.queued_at))}${m.sent_at ? " · Sent " + U().esc(formatTimestamp(m.sent_at)) : ""}${m.delivered_at ? " · Delivered " + U().esc(formatTimestamp(m.delivered_at)) : ""}</div>
-          ${detailParts.length ? `<div class="release-callout release-callout-warning" style="margin-top:8px"><p style="margin:0">${detailParts.join(" · ")}</p></div>` : ""}
-          ${m.provider_message_id ? `<div class="form-help" style="margin-top:6px;word-break:break-all">Provider reference: ${U().esc(m.provider_message_id)}</div>` : ""}
+          <div class="form-help" style="margin:6px 0 2px">To: ${App.i18n.value(() => (maskEmail(m.recipient)))}</div>
+          <div class="form-help">From: ${App.i18n.value(() => (U().esc(m.sender_display_name || "")))} &lt;${App.i18n.value(() => (U().esc(m.sender_address || App.i18n.t("pending"))))}&gt;</div>
+          <div class="form-help" style="margin-top:6px">Queued ${App.i18n.value(() => (U().esc(formatTimestamp(m.queued_at))))}${App.i18n.value(() => (m.sent_at ? " · Sent " + U().esc(formatTimestamp(m.sent_at)) : ""))}${App.i18n.value(() => (m.delivered_at ? " · Delivered " + U().esc(formatTimestamp(m.delivered_at)) : ""))}</div>
+          ${App.i18n.value(() => (detailParts.length ? App.i18n.html`<div class="release-callout release-callout-warning" style="margin-top:8px"><p style="margin:0">${App.i18n.value(() => (detailParts.join(" · ")))}</p></div>` : ""))}
+          ${App.i18n.value(() => (m.provider_message_id ? App.i18n.html`<div class="form-help" style="margin-top:6px;word-break:break-all">Provider reference: ${App.i18n.value(() => (U().esc(m.provider_message_id)))}</div>` : ""))}
         </div>
       </article>`;
   }

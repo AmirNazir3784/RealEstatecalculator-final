@@ -10,7 +10,8 @@ function check(name, value) { assert(value, name); passed++; }
 function equal(name, actual, expected) { assert.deepEqual(actual, expected, name); passed++; }
 const frozen = {
   "pages": {
-    "index.html": "0d80cda5d6733069d48deb439167dbc35117749be0035ec9fc77d094769d1a1f",
+    // Homepage baseline includes the approved Google Search Console verification tag.
+    "index.html": "4d19e31ed1e2511bc9b48328382a1d505892cc9ab4dc19cc6bfb28816a70d1f8",
     // About baseline refreshed for the editorial refinement; shared header stays frozen.
     // All page baselines refreshed 2026-11-16: footer Platform column gained the Privacy Policy link on every page.
     // All page baselines refreshed 2026-11-17: footer Platform column gained the Terms of Use link on every page.
