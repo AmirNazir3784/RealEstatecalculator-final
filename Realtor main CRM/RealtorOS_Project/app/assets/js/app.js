@@ -407,7 +407,7 @@ App.app = (function () {
             <span class="profile-avatar profile-avatar-lg" id="profileMenuAvatar" aria-hidden="true"></span>
             <div class="profile-menu-id">
               <!-- This is the Supabase Auth account, NOT the workspace's agent
-                   identity (Settings > Business Profile > Agent Name). The two
+                   identity (Settings → Business Profile → Agent Name). The two
                    are separate stores and are allowed to differ — one is who
                    signed in, the other is the name that goes on the business.
                    Labelling them is what stops that difference reading as a
