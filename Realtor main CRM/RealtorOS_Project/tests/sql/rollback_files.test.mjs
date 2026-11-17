@@ -117,6 +117,7 @@ const REVERT_FOR = {
   "20261109120000_followup_complete_rpc_workspace.sql": "phase_followup_complete_rpc_revert.sql",
   "20261116070656_crm_scoped_search.sql": "20261116070656_crm_scoped_search.sql",
   "20261116070954_crm_notification_events.sql": "crm_notification_events_revert.sql",
+  "20261116120000_mailbox_connections.sql": "mailbox_connections_revert.sql",
 };
 
 // Runs without a database: it reads two directories.
