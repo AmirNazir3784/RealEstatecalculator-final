@@ -1,8 +1,0 @@
-{
-  "file": "supabase/rollback/t2c_revert.sql",
-  "function": "automation_internal.ingest_lead_rows",
-  "workingCopy": "033003d98ecc970317971ca5f538a3eb",
-  "canonicalLF": "1bfcaf5fa10f7013a8c0193a9ab988cb",
-  "embeddedExpected": "1bfcaf5fa10f7013a8c0193a9ab988cb",
-  "sourceModified": false
-}

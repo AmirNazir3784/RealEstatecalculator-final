@@ -1,8 +1,0 @@
-{
-  "base": "7d6292670bf3547fcdf61679567cda2cb57aa08b",
-  "crmFiles": 69,
-  "crmBytes": 1984789,
-  "crmManifestSha256": "fb71cd4096e9cdf62f945b5bc83171b6b6ae34da1cc8ecd1d935623dbd77aa48",
-  "crmMatchesBaseline": true,
-  "marketingMatchesBaselineExceptRoute": true
-}
