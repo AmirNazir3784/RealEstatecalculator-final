@@ -11,23 +11,25 @@ function equal(name, actual, expected) { assert.deepEqual(actual, expected, name
 const frozen = {
   "pages": {
     // Homepage baseline includes the approved Google Search Console verification tag.
-    "index.html": "e40cb4b4853ab158e4ca0b6600d012489ccc7040833f877b99842337d1344fdb",
+    "index.html": "4d19e31ed1e2511bc9b48328382a1d505892cc9ab4dc19cc6bfb28816a70d1f8",
     // About baseline refreshed for the editorial refinement; shared header stays frozen.
-    "about/index.html": "d7816f270706e7058e425459d0386223358f44991200ae8def036307abd23abd",
-    "contact/index.html": "1aff953a79f28c6a89b14b10d562a09d8487d216467dcaceb10e78e6c3c3ce4d",
-    "resources/index.html": "a0d6829127dab0d4dbb9e3b30ccd7620a0ad326f8e31e924a3d099dff9aee531",  // re-baselined 2026-11-17: rent-vs-buy hub card added
-    "real-estate-crm/index.html": "2e4e3170636b9fabaae83e14ae08b5761bdb7c70da6d620c464a4dc51b0cfff4",
-    "tools/index.html": "c1500325fd6710d57ce5af96dd202fd5c1276f63f12fa70cbdedf542091e783a",
-    "tools/bridge-loan-calculator/index.html": "43515c7aa207d4a3a5ee1ebe7fef0b663d06b16b7881e780a71bb2f3feadcd7f",
-    "tools/cap-rate-calculator/index.html": "550be3d5dd01866cdbe01afa6f8a4b8d9e5a29936148279d8fa0a13aace54c9c",
-    "tools/capital-gains-tax-calculator/index.html": "7c4e0a493d9f784c061446f314d3a5f44490a9b26f555e02db8ce81761386d9d",
-    "tools/commission-calculator/index.html": "5c2cc8b3da4c4cb402271625082d0ebd6344eb89e89f6d30c0d6ceead4693727",
-    "tools/home-affordability-calculator/index.html": "c4dc4fa70fb043ecd64fbf046e5a9e19ee7101ecab952c9e9f762d44687cb665",
-    "tools/mortgage-calculator/index.html": "69be69f5d70c80aadf64932393282fd74da192761023fa3f829784bbabf49501",
-    "tools/noi-calculator/index.html": "e29330105d45c294a2523144374f22496ce2ebd4329d2ee037bd2a380e137d0b",
-    "tools/property-investment-calculator/index.html": "c4d2da18d412e6e96a4dfe66be9d036611de39b5b146418c9ba674b2f962b042",
-    "tools/rent-vs-buy-calculator/index.html": "c941aa7397641cf21d9d7a3c3555e0483861459385c7a2f77df6478e39e4ea72",
-    "tools/roi-calculator/index.html": "f51e2438470cb4854a36c5b09dc58d6fc987a9125a279340e2e43a1ac8b52aaa"
+    // All page baselines refreshed 2026-11-16: footer Platform column gained the Privacy Policy link on every page.
+    // All page baselines refreshed 2026-11-17: footer Platform column gained the Terms of Use link on every page.
+    "about/index.html": "b1e7503b58662362fb67a62f9fa25c8313c7d11773081550c4d81d4042d722dd",
+    "contact/index.html": "76542afd489e4aefce6b780e8a8fe4e9522db794b80f9ac9ea93d6654adecdae",
+    "resources/index.html": "bb4973df7120c5e83667b1d0728a5d0533532b5629f914a8e089ac5965dea0f5",
+    "real-estate-crm/index.html": "ea0275ab95ff6ba3f292be4053effc91b20c8d8e9a7a510ed02f02a2dfd4c8e9",
+    "tools/index.html": "9fc0210295d7ef6d827a3f801d8428a6841debcc1af965ca2b17ee2d0a0dbfec",
+    "tools/bridge-loan-calculator/index.html": "b5abb26b812f2ba65bd504d527701ce9c86af9ed0613d3c0824403aca41b98d2",
+    "tools/cap-rate-calculator/index.html": "71048ee2c56ec55c83e4412c9ad18afd894ffcf6a36c57c548bfedc09407da75",
+    "tools/capital-gains-tax-calculator/index.html": "2ba2fefc289c7a65e4fd38ca8eeeb69ab5096bd67c3bf8ee6bae2b740b58f00d",
+    "tools/commission-calculator/index.html": "5769f33e4312bcc8632a877f7b223b20147e719c4c64cd64b908ba7858c20467",
+    "tools/home-affordability-calculator/index.html": "80979887f58f3c177648fa5b3666698cdd23f8cf81963eff8389be06017794cd",
+    "tools/mortgage-calculator/index.html": "23b7f68fecfe5a0dbbef2376ff118711a7071e072337bf3275ae53c19e82db86",
+    "tools/noi-calculator/index.html": "c5dd3a28b15eec2e532ceb32542368b0fa8cac6bf685fda688abd67468bdc68c",
+    "tools/property-investment-calculator/index.html": "cf5249c7b78d15283e9fdc407d7a240c36d307d42262c512f11681978aa61549",
+    "tools/rent-vs-buy-calculator/index.html": "8acf12111a51c7a583f4216a323e59cbe60155c4c9e8a4708f5abe11b7d5340e",
+    "tools/roi-calculator/index.html": "2ba44c63ecb7c3ddb6f4531c6d8b92f86dc147aadde1a107b940dbd5251e626c"
   },
   "headers": {
     "index.html": "8ff8b5602307f1645666134a5b006e4ed3850ed7c983a54259088a2e68ea77e4",

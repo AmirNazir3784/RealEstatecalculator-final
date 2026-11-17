@@ -74,12 +74,12 @@ check('mobile placeholder untouched', rc.includes('RealtorCRM Mobile Preview') &
 const about = read('about/index.html');
 check('about verified CRM scope', about.includes('organize contacts, deals, appointments and follow-ups') && !about.includes('Follow-up Plans'));
 check('about methodology', ['formulas, inputs and assumptions', 'Worked examples', 'understand and check their results', 'Every estimate has limitations', 'not as a replacement for professional financial, legal or tax advice'].every(text => about.includes(text)));
-// 10. No legal pages published; sitemap exactly 21 URLs (16 site pages + the
-// five standalone Resources guides).
-check('no privacy page in website tree', !fs.existsSync(path.join(ROOT, 'privacy-policy')));
-check('no terms page in website tree', !fs.existsSync(path.join(ROOT, 'terms')));
+// 10. Privacy and terms pages are published; sitemap exactly 23 URLs (18 site
+// pages + the five standalone Resources guides).
+check('privacy page published in website tree', fs.existsSync(path.join(ROOT, 'privacy-policy', 'index.html')));
+check('terms page published in website tree', fs.existsSync(path.join(ROOT, 'terms', 'index.html')));
 const sm = read('sitemap.xml');
-check('sitemap still 21 URLs', (sm.match(/<loc>/g) || []).length === 21);
+check('sitemap still 23 URLs', (sm.match(/<loc>/g) || []).length === 23);
 console.log(`W7: ${passed} passed, ${failures.length} failed`);
 for (const f of failures) console.log('  FAIL:', f);
 process.exit(failures.length ? 1 : 0);
