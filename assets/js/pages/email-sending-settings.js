@@ -120,6 +120,10 @@ App.pages.emailSendingSettings = (function () {
       const params = new URLSearchParams(window.location.search);
       const outcome = params.get("mailbox");
       if (outcome !== "connected" && outcome !== "error") return null;
+      // A shared-mailbox outcome belongs to Team & Access, which renders
+      // that section now: leave the parameters in the URL for it to
+      // consume instead of swallowing them here.
+      if (params.get("kind") === "shared") return null;
       const notice = {
         outcome,
         kind: params.get("kind") === "shared" ? "shared" : "personal",
@@ -143,17 +147,6 @@ App.pages.emailSendingSettings = (function () {
       <div class="settings-category-head">
         <div class="settings-category-title">Email Sending</div>
         <p class="form-help">Configure your RealtorCRM sender identity and safely test email delivery.</p>
-      </div>
-
-      <div class="release-callout" style="margin-bottom:16px">
-        <strong>How RealtorCRM sends email</strong>
-        <ul class="gs-explainer-list" style="margin-top:8px">
-          <li>RealtorCRM sends from its own verified email domain — you do not need to set up your own.</li>
-          <li>You get your own sender email address, so your emails never appear to come from a shared address.</li>
-          <li>Replies always go to your saved Reply-To email below, never to your RealtorCRM sender address.</li>
-          <li>Email delivery is still being set up for this workspace. Until it is ready, test sends will tell you so clearly instead of silently failing.</li>
-          <li>Saving these settings alone never starts automation. A sequence only sends once you activate it and the automation system is running for this workspace.</li>
-        </ul>
       </div>
 
       <section class="card" style="margin-bottom:16px">
@@ -229,25 +222,14 @@ App.pages.emailSendingSettings = (function () {
           <span>Enable test sending</span>
           <span class="toggle-switch"><input type="checkbox" id="epEnabled" ${App.i18n.value(() => (p && p.is_enabled ? "checked" : ""))}><span class="toggle-track"></span></span>
         </label>
-        <label class="field full"><span>Sender preview</span>
-          <div class="form-help" id="epSenderPreview" style="white-space:pre-wrap;word-break:break-word"></div>
-        </label>
       </div>
       <p id="epProfileStatus" class="profile-edit-message" aria-live="polite" role="status" style="margin-top:10px"></p>
-      <div style="margin-top:10px">
+      <div style="margin-top:10px;text-align:center">
         <button type="button" class="btn btn-primary" id="epProfileSave">Save Sender Profile</button>
       </div>
     `;
 
     const nameInput = el.querySelector("#epDisplayName");
-    const previewEl = el.querySelector("#epSenderPreview");
-    const updatePreview = () => {
-      const name = nameInput.value.trim() || "Your Name";
-      App.i18n.setText(previewEl, App.i18n.value(() => (name + App.i18n.markup(" via RealtorCRM <Your unique RealtorCRM sender address will be assigned when the sending domain is connected.>"))));
-    };
-    updatePreview();
-    nameInput.addEventListener("input", updatePreview);
-
     const statusEl = el.querySelector("#epProfileStatus");
     const saveBtn = el.querySelector("#epProfileSave");
     saveBtn.addEventListener("click", async () => {
@@ -310,9 +292,7 @@ App.pages.emailSendingSettings = (function () {
     if (!notice) return "";
     if (notice.outcome === "connected") {
       const outlook = notice.provider === "microsoft";
-      const text = notice.kind === "shared"
-        ? App.i18n.t(outlook ? "The shared Outlook mailbox is connected." : "The shared Gmail mailbox is connected.")
-        : App.i18n.t(outlook ? "Outlook connected. Your follow-up emails will now be sent from your mailbox." : "Gmail connected. Your follow-up emails will now be sent from your mailbox.");
+      const text = App.i18n.t(outlook ? "Outlook connected. Your follow-up emails will now be sent from your mailbox." : "Gmail connected. Your follow-up emails will now be sent from your mailbox.");
       return App.i18n.html`<div class="release-callout" style="margin-bottom:12px"><p style="margin:0">${App.i18n.value(() => (U().esc(text)))}</p></div>`;
     }
     const text = notice.reason === "expired"
@@ -321,31 +301,45 @@ App.pages.emailSendingSettings = (function () {
     return App.i18n.html`<div class="release-callout release-callout-warning" style="margin-bottom:12px"><p style="margin:0">${App.i18n.value(() => (U().esc(text)))}</p></div>`;
   }
 
-  function connectionBadgeHtml(conn) {
+  function mailboxStatusHtml(conn) {
     if (!conn) {
-      return App.i18n.html`<span class="badge badge-neutral"><span class="dot"></span>${App.i18n.value(() => (U().esc(App.i18n.t("Not connected"))))}</span>`;
+      return App.i18n.html`<span class="mailbox-status"><span class="dot"></span>${App.i18n.value(() => (U().esc(App.i18n.t("Not connected"))))}</span>`;
     }
     if (conn.status === "connected") {
-      return App.i18n.html`<span class="badge badge-success"><span class="dot"></span>${App.i18n.value(() => (U().esc(App.i18n.t("Connected"))))}</span> <span class="form-help">${App.i18n.value(() => (maskEmail(conn.email_address)))}</span>`;
+      return App.i18n.html`<span class="mailbox-status is-connected"><span class="dot"></span>${App.i18n.value(() => (U().esc(App.i18n.t("Connected"))))}</span>`;
     }
-    return App.i18n.html`<span class="badge badge-danger"><span class="dot"></span>${App.i18n.value(() => (U().esc(App.i18n.t("Needs attention"))))}</span> <span class="form-help">${App.i18n.value(() => (maskEmail(conn.email_address)))}</span>`;
+    return App.i18n.html`<span class="mailbox-status is-attention"><span class="dot"></span>${App.i18n.value(() => (U().esc(App.i18n.t("Needs attention"))))}</span>`;
   }
 
-  function providerRowHtml(kind, providerMeta, conn) {
+  // One provider as a small card: name and status on the top line, the
+  // masked address on its own bar, full-width actions at the bottom.
+  // The .mailbox-cards grid places these two-across on a wide pane and
+  // stacked on a narrow one (see realtoros.css).
+  function providerCardHtml(kind, providerMeta, conn) {
     const pid = providerMeta.id;
     const connectLabel = conn
       ? App.i18n.t(pid === "microsoft" ? "Reconnect Outlook" : "Reconnect Gmail")
       : App.i18n.t(pid === "microsoft" ? "Connect Outlook" : "Connect Gmail");
     return App.i18n.html`
-      <div class="form-grid" style="margin-top:8px">
-        <label class="field full"><span>${App.i18n.value(() => (providerMeta.label))}</span>
-          <div>${App.i18n.value(() => (connectionBadgeHtml(conn)))}</div>
-        </label>
-      </div>
-      ${App.i18n.value(() => (conn && conn.status !== "connected" ? App.i18n.html`<p class="form-help">This connection needs attention. Reconnect to keep sending from your mailbox.</p>` : ""))}
-      <div style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap">
-        ${App.i18n.value(() => (!conn || conn.status !== "connected" ? App.i18n.html`<button type="button" class="btn ${App.i18n.value(() => (kind === "personal" ? "btn-primary" : ""))}" data-mb-connect="${App.i18n.value(() => (kind))}:${App.i18n.value(() => (pid))}">${App.i18n.value(() => (U().esc(connectLabel)))}</button>` : ""))}
-        ${App.i18n.value(() => (conn ? App.i18n.html`<button type="button" class="btn" data-mb-disconnect="${App.i18n.value(() => (kind))}:${App.i18n.value(() => (pid))}">Disconnect</button>` : ""))}
+      <div class="mailbox-card">
+        <div class="mailbox-card-head">
+          <span class="mailbox-card-name">${App.i18n.value(() => (U().esc(providerMeta.label)))}</span>
+          ${App.i18n.value(() => (mailboxStatusHtml(conn)))}
+        </div>
+        <div class="mailbox-email">${App.i18n.value(() => (conn ? maskEmail(conn.email_address) : ""))}</div>
+        ${App.i18n.value(() => (conn && conn.status !== "connected" ? App.i18n.html`<p class="form-help" style="margin:0">This connection needs attention. Reconnect to keep sending from your mailbox.</p>` : ""))}
+        <div class="mailbox-card-actions">
+          ${App.i18n.value(() => (!conn || conn.status !== "connected" ? App.i18n.html`<button type="button" class="btn btn-primary" data-mb-connect="${App.i18n.value(() => (kind))}:${App.i18n.value(() => (pid))}">${App.i18n.value(() => (U().esc(connectLabel)))}</button>` : ""))}
+          ${App.i18n.value(() => (conn ? App.i18n.html`<button type="button" class="btn btn-mailbox-disconnect" data-mb-disconnect="${App.i18n.value(() => (kind))}:${App.i18n.value(() => (pid))}">Disconnect</button>` : ""))}
+        </div>
+      </div>`;
+  }
+
+  function secureStripHtml() {
+    return App.i18n.html`
+      <div class="mailbox-secure">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+        <span>Secure email connection</span>
       </div>`;
   }
 
@@ -366,10 +360,7 @@ App.pages.emailSendingSettings = (function () {
 
     const mb = state.mailbox;
     if (!mb) return;
-    const hasShared = !!(mb.shared.gmail || mb.shared.microsoft);
-    const showShared = !!(hasShared || mb.canManageShared);
-    const personalRows = MAILBOX_PROVIDERS.map((pm) => providerRowHtml("personal", pm, mb.personal[pm.id])).join("");
-    const sharedRows = MAILBOX_PROVIDERS.map((pm) => providerRowHtml("shared", pm, mb.shared[pm.id])).join("");
+    const personalCards = MAILBOX_PROVIDERS.map((pm) => providerCardHtml("personal", pm, mb.personal[pm.id])).join("");
 
     el.innerHTML = App.i18n.html`
       ${App.i18n.value(() => (mailboxNoticeHtml(state)))}
@@ -378,32 +369,14 @@ App.pages.emailSendingSettings = (function () {
       <div class="form-grid" style="margin-top:12px">
         <label class="field full"><span>Your mailbox</span></label>
       </div>
-      ${App.i18n.value(() => (personalRows))}
+      <div class="mailbox-cards">${App.i18n.value(() => (personalCards))}</div>
+      ${App.i18n.value(() => (secureStripHtml()))}
 
-      ${App.i18n.value(() => (showShared ? App.i18n.html`
       <hr style="margin:16px 0;border:none;border-top:1px solid var(--border, #e5e7eb)">
-      <div class="form-grid">
-        <label class="field full"><span>Shared mailbox</span></label>
+      <p class="form-help">Shared mailbox and sending policy are managed in Team Access.</p>
+      <div style="margin-top:8px">
+        <button type="button" class="btn" id="epMailboxTeamLink">Team &amp; Access</button>
       </div>
-      <p class="form-help">Workspace admins can connect a shared Gmail or Outlook mailbox for the whole team.</p>
-      ${App.i18n.value(() => (sharedRows))}
-      ${App.i18n.value(() => (mb.canManageShared ? App.i18n.html`
-      <div class="form-grid" style="margin-top:16px">
-        <label class="field full"><span>Sending policy</span>
-          <label class="field" style="flex-direction:row;align-items:flex-start;gap:8px">
-            <input type="radio" name="epMailboxPolicy" value="members_own" ${App.i18n.value(() => (mb.policy.mode === "members_own" ? "checked" : ""))}>
-            <span><strong>Team members' own mailboxes</strong><br><span class="form-help">Each email is sent from the mailbox of the team member responsible for the contact. If they have not connected one, the shared mailbox is used, then RealtorCRM's sending service.</span></span>
-          </label>
-          <label class="field" style="flex-direction:row;align-items:flex-start;gap:8px">
-            <input type="radio" name="epMailboxPolicy" value="shared" ${App.i18n.value(() => (mb.policy.mode === "shared" ? "checked" : ""))}>
-            <span><strong>Shared mailbox for everyone</strong><br><span class="form-help">All emails are sent from the shared mailbox, whoever is responsible for the contact.</span></span>
-          </label>
-        </label>
-      </div>
-      <div style="margin-top:10px">
-        <button type="button" class="btn btn-primary" id="epMailboxPolicySave">Save Sending Policy</button>
-      </div>` : ""))}
-      ` : ""))}
       <p id="epMailboxStatus" class="profile-edit-message" aria-live="polite" role="status" style="margin-top:10px"></p>
     `;
 
@@ -453,26 +426,9 @@ App.pages.emailSendingSettings = (function () {
       });
     });
 
-    const policySave = el.querySelector("#epMailboxPolicySave");
-    if (policySave) {
-      policySave.addEventListener("click", async () => {
-        if (policySave.disabled) return;
-        const checked = el.querySelector("input[name='epMailboxPolicy']:checked");
-        if (!checked) return;
-        policySave.disabled = true;
-        setStatus(App.i18n.t("Saving\u2026"));
-        try {
-          const { mode } = await S().mailbox.setPolicy(checked.value);
-          if (state.mailbox) state.mailbox.policy.mode = mode;
-          setStatus(App.i18n.t("Sending policy saved."), "success");
-          App.app.toast(App.i18n.t("Sending policy saved."), "success");
-        } catch (err) {
-          setStatus(friendlyMailboxError(err), "error");
-          App.app.toast(friendlyMailboxError(err), "danger");
-        } finally {
-          policySave.disabled = false;
-        }
-      });
+    const teamLink = el.querySelector("#epMailboxTeamLink");
+    if (teamLink) {
+      teamLink.addEventListener("click", () => App.app.navigate("/settings/team-access"));
     }
   }
 

@@ -1061,6 +1061,98 @@ a:hover { text-decoration: underline; text-underline-offset: 2px; }
 .badge-today   { background: var(--warning-soft); color: var(--warning); }
 .badge-upcoming{ background: var(--info-soft); color: var(--info); }
 
+/* ---------- CONNECTED MAILBOX CARDS ---------- */
+/* Provider connections (the personal mailboxes on Email Sending, the
+   shared mailbox on Team & Access) render as a grid of small cards:
+   two across where the pane is wide, stacked where it is narrow — the
+   mobile PWA gets the stacked form from the same rule, not a separate
+   layout. */
+.mailbox-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(230px, 1fr));
+  gap: 12px;
+  margin-top: 12px;
+}
+.mailbox-card {
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--card);
+  padding: 14px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  min-width: 0;
+}
+.mailbox-card-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+}
+.mailbox-card-name {
+  font-weight: 600;
+  color: var(--text-strong);
+  font-size: var(--font-size-md, 16px);
+}
+.mailbox-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--font-size-sm);
+  font-weight: 500;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+.mailbox-status .dot {
+  width: 8px; height: 8px;
+  border-radius: 50%;
+  background: currentColor;
+  flex: none;
+}
+.mailbox-status.is-connected { color: var(--success); }
+.mailbox-status.is-attention { color: var(--danger); }
+.mailbox-email {
+  background: var(--bg-subtle);
+  border-radius: var(--radius);
+  padding: 8px 10px;
+  min-height: 34px;
+  font-size: var(--font-size-sm);
+  color: var(--text-muted);
+  display: flex;
+  align-items: center;
+  overflow-wrap: anywhere;
+}
+.mailbox-card-actions {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: auto;
+}
+.mailbox-card-actions .btn { width: 100%; justify-content: center; }
+.btn-mailbox-disconnect {
+  background: var(--accent-soft);
+  border-color: transparent;
+  color: var(--accent-ink);
+}
+.btn-mailbox-disconnect:hover {
+  background: var(--accent-soft);
+  border-color: var(--accent);
+  color: var(--accent-ink);
+}
+.mailbox-secure {
+  margin-top: 12px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  background: var(--card);
+  padding: 10px 12px;
+  color: var(--text-muted);
+  font-size: var(--font-size-sm);
+}
+.mailbox-secure svg { width: 18px; height: 18px; color: var(--accent); flex: none; }
+
 .stage-pill {
   display: inline-flex; align-items: center; gap: 6px;
   padding: 3px 10px;
@@ -2807,6 +2899,40 @@ a:hover { text-decoration: underline; text-underline-offset: 2px; }
   letter-spacing: -0.015em;
 }
 :root[data-theme="dark"] .commission-preview-card { background: var(--accent-soft); }
+
+/* --- Business Profile section cards --- */
+.bp-page { max-width: 1200px; }
+.bp-card { margin-bottom: 20px; }
+.bp-card .bp-card-head { justify-content: flex-start; }
+.bp-card-icon { width: 42px; height: 42px; flex: none; display: inline-flex; align-items: center; justify-content: center; border-radius: 10px; background: var(--accent-soft); color: var(--accent); }
+.bp-card-icon svg { width: 22px; height: 22px; }
+.bp-card-desc { margin: 2px 0 0; color: var(--text-muted); font-size: var(--font-size-sm); line-height: 1.45; }
+.bp-page .field > span.form-help,
+.bp-page .field > span.field-error { text-transform: none; letter-spacing: normal; font-weight: 400; margin: 2px 0 0; }
+.bp-page .field > span.bp-hours-row { text-transform: none; letter-spacing: normal; font-weight: 400; font-size: var(--font-size-sm); color: var(--text); }
+.bp-pct { position: relative; display: block; }
+.bp-page .bp-pct input { padding-right: 46px; }
+.bp-pct::after { content: "%"; position: absolute; right: 30px; top: 50%; transform: translateY(-50%); color: var(--text-muted); font-size: var(--font-size-sm); pointer-events: none; }
+.bp-logo-row { display: flex; gap: 18px; align-items: flex-start; }
+.bp-logo-box { width: 112px; height: 112px; flex: none; display: flex; align-items: center; justify-content: center; overflow: hidden; border: 1px dashed var(--border-strong); border-radius: 12px; background: var(--card); color: var(--text-muted); }
+.bp-logo-box.has-logo { border-style: solid; border-color: var(--border); }
+.bp-logo-box img { width: 100%; height: 100%; object-fit: contain; }
+.bp-logo-box > span { align-items: center; justify-content: center; }
+.bp-logo-box svg { width: 30px; height: 30px; }
+.bp-logo-main { min-width: 0; }
+.bp-logo-title { font-weight: 600; }
+.bp-logo-actions { display: flex; gap: 8px; flex-wrap: wrap; margin: 10px 0 8px; }
+.bp-preview-head { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; margin-bottom: 12px; }
+.bp-preview-title { font-weight: 700; }
+.bp-preview-sub { color: var(--text-muted); font-size: var(--font-size-xs); }
+.bp-preview-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+.bp-preview-col { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+.bp-preview-label { color: var(--text-muted); font-size: var(--font-size-xs); font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; }
+.bp-preview-value { font-family: var(--font-display); font-size: var(--font-size-2xl); font-weight: 500; letter-spacing: -0.015em; }
+@media (max-width: 640px) {
+  .bp-logo-row { flex-direction: column; }
+  .bp-preview-cols { grid-template-columns: 1fr; }
+}
 
 /* --- Unsaved changes banner --- */
 .unsaved-banner {
