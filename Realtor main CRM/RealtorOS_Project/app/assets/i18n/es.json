@@ -2157,6 +2157,8 @@
   "Connect Gmail": "Conectar Gmail",
   "Disconnect": "Desconectar",
   "Shared mailbox": "Buzón compartido",
+  "Shared mailbox and sending policy are managed in Team Access.": "El buzón compartido y la política de envío se gestionan en Equipo y acceso.",
+  "Secure email connection": "Conexión de correo segura",
   "Workspace admins can connect one shared mailbox for the whole team.": "Los administradores del espacio de trabajo pueden conectar un buzón compartido para todo el equipo.",
   "Sending policy": "Política de envío",
   "Team members' own mailboxes": "Buzones propios de los miembros del equipo",

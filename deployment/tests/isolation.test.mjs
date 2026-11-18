@@ -106,7 +106,19 @@ test('CRM artifact is the unchanged app plus existing production transform and h
   delete expected['.gitignore']; delete expected['.env.example'];
   expected['assets/js/config.js'] = crypto.createHash('sha256').update(fs.readFileSync(path.join(app, 'assets/js/config.js'), 'utf8').replace('websiteUrl: "http://localhost:5501"', 'websiteUrl: "https://everyrealestatecalculator.com"')).digest('hex');
   expected['.htaccess'] = crypto.createHash('sha256').update(fs.readFileSync(path.join(root, 'deployment/crm.htaccess'))).digest('hex');
-  assert.deepEqual(manifest(crm), expected);
+  // sw.js carries the packager's second declared transform: a unique per-build
+  // VERSION stamp (crm-<date>-<sha>) so every deploy invalidates the previous
+  // shell cache. Compare it separately with the VERSION value normalized;
+  // every other byte must match the source worker.
+  const actual = manifest(crm);
+  const distSw = fs.readFileSync(path.join(crm, 'sw.js'), 'utf8');
+  const srcSw = fs.readFileSync(path.join(app, 'sw.js'), 'utf8');
+  const stamp = /const VERSION = "(crm-\d{8}-[^"]+)";/.exec(distSw);
+  assert(stamp, 'packaged sw.js carries a per-build VERSION stamp');
+  const normalizeSw = text => text.replace(/const VERSION = "[^"]+";/, 'const VERSION = "<stamp>";');
+  assert.equal(normalizeSw(distSw), normalizeSw(srcSw), 'packaged sw.js differs from the source worker only in its VERSION stamp');
+  delete actual['sw.js']; delete expected['sw.js'];
+  assert.deepEqual(actual, expected);
   const auth = fs.readFileSync(path.join(app, 'assets/js/data/supabase-client.js'), 'utf8');
   assert(auth.includes('redirectTo: window.location.origin + window.location.pathname'));
   const pwa = JSON.parse(fs.readFileSync(path.join(crm, 'manifest.webmanifest')));

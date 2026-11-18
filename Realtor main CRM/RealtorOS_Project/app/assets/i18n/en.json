@@ -2157,6 +2157,8 @@
   "Connect Gmail": "Connect Gmail",
   "Disconnect": "Disconnect",
   "Shared mailbox": "Shared mailbox",
+  "Shared mailbox and sending policy are managed in Team Access.": "Shared mailbox and sending policy are managed in Team Access.",
+  "Secure email connection": "Secure email connection",
   "Workspace admins can connect one shared mailbox for the whole team.": "Workspace admins can connect one shared mailbox for the whole team.",
   "Sending policy": "Sending policy",
   "Team members' own mailboxes": "Team members' own mailboxes",

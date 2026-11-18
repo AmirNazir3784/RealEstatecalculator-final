@@ -13,7 +13,8 @@
    Invitations are COPY-LINK only in this version. No email is sent, and
    no copy on this page may suggest one was.
 
-   Depends on: app.js, store.js (App.store.team / App.store.settings),
+   Depends on: app.js, store.js (App.store.team / App.store.settings /
+   App.store.mailbox),
    workspace.js (App.workspace), customization.js, util.js
    ============================================================ */
 
@@ -129,9 +130,11 @@ App.pages.teamManagement = (function () {
       pane.innerHTML = `
         ${head("Team & Access", "Who is in this workspace, and what each person can do.")}
         ${teamModeCard(false)}
-        ${viewingAsCard()}`;
+        ${viewingAsCard()}
+        ${sharedMailboxSection()}`;
       wireTeamMode(pane);
       wireViewingAs(pane);
+      loadSharedMailbox(pane);
       return;
     }
 
@@ -166,6 +169,7 @@ App.pages.teamManagement = (function () {
       ${App.i18n.value(() => (head("Team & Access", "Who is in this workspace, and what each person can do.")))}
       ${App.i18n.value(() => (teamModeCard(true)))}
       ${App.i18n.value(() => (viewingAsCard()))}
+      ${App.i18n.value(() => (sharedMailboxSection()))}
       <section aria-label="Members">
         <h2 class="settings-category-title">Members</h2>
         ${App.i18n.value(() => (membersCard(active, isOwner)))}
@@ -197,6 +201,7 @@ App.pages.teamManagement = (function () {
     wireTeamMode(pane);
     wireViewingAs(pane);
     wireMembers(pane);
+    loadSharedMailbox(pane);
     pane.querySelector("[data-go-workload]").addEventListener("click", () => App.app.navigate("/team"));
     const assignments = pane.querySelector("[data-go-assignments]");
     if (assignments) assignments.addEventListener("click", () => App.app.navigate("/contacts"));
@@ -881,6 +886,264 @@ App.pages.teamManagement = (function () {
         }
       });
     });
+  }
+
+  // ---------- SHARED MAILBOX ----------
+  // The workspace's shared Gmail/Outlook and the sending policy live
+  // here, with the rest of team administration, rather than on Email
+  // Sending (which is personal: your sender profile, your mailbox, your
+  // test sends). Same mailbox-connect service the Email Sending page
+  // uses for personal connections; the server enforces who may manage
+  // the shared side, and this section only renders what the status
+  // answer allows.
+
+  const MAILBOX_PROVIDERS = [
+    { id: "gmail", label: "Gmail", opening: "Opening Google sign-in\u2026" },
+    { id: "microsoft", label: "Outlook", opening: "Opening Microsoft sign-in\u2026" }
+  ];
+
+  function sharedMailboxSection() {
+    return App.i18n.html`
+      <section class="card">
+        <div class="card-header"><div class="card-title">Shared mailbox</div></div>
+        <div class="card-body">
+          <div id="tmMailboxBody">${App.i18n.value(() => (App.app.loadingHtml ? App.app.loadingHtml(App.i18n.t("your mailbox connection")) : ""))}</div>
+        </div>
+      </section>`;
+  }
+
+  function maskEmail(email) {
+    if (typeof email !== "string" || !email) return "";
+    const at = email.indexOf("@");
+    if (at <= 1) return U().esc(email);
+    return U().esc(email.slice(0, 1) + "***" + email.slice(at));
+  }
+
+  function mailboxStatusHtml(conn) {
+    if (!conn) {
+      return App.i18n.html`<span class="mailbox-status"><span class="dot"></span>${App.i18n.value(() => (U().esc(App.i18n.t("Not connected"))))}</span>`;
+    }
+    if (conn.status === "connected") {
+      return App.i18n.html`<span class="mailbox-status is-connected"><span class="dot"></span>${App.i18n.value(() => (U().esc(App.i18n.t("Connected"))))}</span>`;
+    }
+    return App.i18n.html`<span class="mailbox-status is-attention"><span class="dot"></span>${App.i18n.value(() => (U().esc(App.i18n.t("Needs attention"))))}</span>`;
+  }
+
+  // One provider as a small card: name and status on the top line, the
+  // masked address on its own bar, full-width actions at the bottom.
+  // The .mailbox-cards grid places these two-across on a wide pane and
+  // stacked on a narrow one (see realtoros.css). Same builder as the
+  // personal mailboxes on Email Sending.
+  function providerCardHtml(kind, providerMeta, conn) {
+    const pid = providerMeta.id;
+    const connectLabel = conn
+      ? App.i18n.t(pid === "microsoft" ? "Reconnect Outlook" : "Reconnect Gmail")
+      : App.i18n.t(pid === "microsoft" ? "Connect Outlook" : "Connect Gmail");
+    return App.i18n.html`
+      <div class="mailbox-card">
+        <div class="mailbox-card-head">
+          <span class="mailbox-card-name">${App.i18n.value(() => (U().esc(providerMeta.label)))}</span>
+          ${App.i18n.value(() => (mailboxStatusHtml(conn)))}
+        </div>
+        <div class="mailbox-email">${App.i18n.value(() => (conn ? maskEmail(conn.email_address) : ""))}</div>
+        ${App.i18n.value(() => (conn && conn.status !== "connected" ? App.i18n.html`<p class="form-help" style="margin:0">This connection needs attention. Reconnect to keep sending from your mailbox.</p>` : ""))}
+        <div class="mailbox-card-actions">
+          ${App.i18n.value(() => (!conn || conn.status !== "connected" ? App.i18n.html`<button type="button" class="btn btn-primary" data-mb-connect="${App.i18n.value(() => (kind))}:${App.i18n.value(() => (pid))}">${App.i18n.value(() => (U().esc(connectLabel)))}</button>` : ""))}
+          ${App.i18n.value(() => (conn ? App.i18n.html`<button type="button" class="btn btn-mailbox-disconnect" data-mb-disconnect="${App.i18n.value(() => (kind))}:${App.i18n.value(() => (pid))}">Disconnect</button>` : ""))}
+        </div>
+      </div>`;
+  }
+
+  function secureStripHtml() {
+    return App.i18n.html`
+      <div class="mailbox-secure">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="m9 12 2 2 4-4"/></svg>
+        <span>Secure email connection</span>
+      </div>`;
+  }
+
+  function friendlyMailboxError(err) {
+    const code = err && err.code;
+    const map = {
+      unauthorized: "Please sign in again to manage your mailbox connection.",
+      no_workspace: "You are not part of a workspace yet, so there is nowhere to connect a mailbox.",
+      admin_required: "Only a workspace owner or admin can manage the shared mailbox and sending policy.",
+      not_configured: "Mailbox connections are not fully set up for this workspace yet. This card will work once the provider connection is configured.",
+      provider_not_available_yet: "That mailbox provider is not available yet.",
+      mailbox_request_failed: "Could not reach the mailbox service. Please try again."
+    };
+    if (code && Object.prototype.hasOwnProperty.call(map, code)) return map[code];
+    return "Something went wrong with the mailbox connection: " + ((err && err.message) || "Unknown error");
+  }
+
+  // The mailbox-connect Edge Function redirects the browser back to the
+  // app after the provider's consent screen with a coarse outcome only.
+  // The Email Sending page consumes personal outcomes; the shared ones
+  // are consumed here, and only here, so the confirmation lands on the
+  // page that manages the shared mailbox.
+  function readSharedMailboxNotice() {
+    try {
+      const params = new URLSearchParams(window.location.search);
+      const outcome = params.get("mailbox");
+      if (outcome !== "connected" && outcome !== "error") return null;
+      if (params.get("kind") !== "shared") return null;
+      const notice = {
+        outcome,
+        provider: params.get("provider") === "microsoft" ? "microsoft" : "gmail",
+        reason: params.get("reason") || ""
+      };
+      params.delete("mailbox");
+      params.delete("kind");
+      params.delete("provider");
+      params.delete("reason");
+      const qs = params.toString();
+      window.history.replaceState(null, "", window.location.pathname + (qs ? "?" + qs : "") + window.location.hash);
+      return notice;
+    } catch (err) {
+      return null;
+    }
+  }
+
+  function sharedMailboxNoticeHtml(state) {
+    const notice = state.notice;
+    if (!notice) return "";
+    if (notice.outcome === "connected") {
+      const text = notice.provider === "microsoft"
+        ? App.i18n.t("The shared Outlook mailbox is connected.")
+        : App.i18n.t("The shared Gmail mailbox is connected.");
+      return App.i18n.html`<div class="release-callout" style="margin-bottom:12px"><p style="margin:0">${App.i18n.value(() => (U().esc(text)))}</p></div>`;
+    }
+    const text = notice.reason === "expired"
+      ? App.i18n.t("The connection link expired. Please try connecting again.")
+      : App.i18n.t("The mailbox connection did not complete. Please try connecting again.");
+    return App.i18n.html`<div class="release-callout release-callout-warning" style="margin-bottom:12px"><p style="margin:0">${App.i18n.value(() => (U().esc(text)))}</p></div>`;
+  }
+
+  async function loadSharedMailbox(pane) {
+    const state = { data: null, error: null, notice: readSharedMailboxNotice() };
+    try {
+      state.data = await S().mailbox.status();
+      state.error = null;
+    } catch (err) {
+      state.error = (err && err.message) ? err.message : "Unknown error";
+    }
+    renderSharedMailbox(pane, state);
+  }
+
+  function renderSharedMailbox(pane, state) {
+    const el = pane.querySelector("#tmMailboxBody");
+    if (!el) return;
+
+    if (state.error) {
+      el.innerHTML = App.i18n.html`
+        <div class="empty-state" role="alert">
+          <div class="empty-title">Could not load your mailbox connection</div>
+          <div class="empty-desc">${App.i18n.value(() => (U().esc(state.error)))}</div>
+          <button type="button" class="btn btn-primary" id="tmMailboxRetry">Retry</button>
+        </div>`;
+      el.querySelector("#tmMailboxRetry").addEventListener("click", () => loadSharedMailbox(pane));
+      return;
+    }
+
+    const mb = state.data;
+    if (!mb) return;
+    const hasShared = !!(mb.shared.gmail || mb.shared.microsoft);
+    const showShared = !!(hasShared || mb.canManageShared);
+    const sharedCards = MAILBOX_PROVIDERS.map((pm) => providerCardHtml("shared", pm, mb.shared[pm.id])).join("");
+
+    el.innerHTML = App.i18n.html`
+      ${App.i18n.value(() => (sharedMailboxNoticeHtml(state)))}
+      <p class="form-help" style="margin-top:0">Workspace admins can connect a shared Gmail or Outlook mailbox for the whole team.</p>
+      ${App.i18n.value(() => (showShared ? App.i18n.html`
+      <div class="mailbox-cards">${App.i18n.value(() => (sharedCards))}</div>
+      ${App.i18n.value(() => (secureStripHtml()))}
+      ${App.i18n.value(() => (mb.canManageShared ? App.i18n.html`
+      <div class="form-grid" style="margin-top:16px">
+        <label class="field full"><span>Sending policy</span>
+          <label class="field" style="flex-direction:row;align-items:flex-start;gap:8px">
+            <input type="radio" name="tmMailboxPolicy" value="members_own" ${App.i18n.value(() => (mb.policy.mode === "members_own" ? "checked" : ""))}>
+            <span><strong>Team members' own mailboxes</strong><br><span class="form-help">Each email is sent from the mailbox of the team member responsible for the contact. If they have not connected one, the shared mailbox is used, then RealtorCRM's sending service.</span></span>
+          </label>
+          <label class="field" style="flex-direction:row;align-items:flex-start;gap:8px">
+            <input type="radio" name="tmMailboxPolicy" value="shared" ${App.i18n.value(() => (mb.policy.mode === "shared" ? "checked" : ""))}>
+            <span><strong>Shared mailbox for everyone</strong><br><span class="form-help">All emails are sent from the shared mailbox, whoever is responsible for the contact.</span></span>
+          </label>
+        </label>
+      </div>
+      <div style="margin-top:10px">
+        <button type="button" class="btn btn-primary" id="tmMailboxPolicySave">Save Sending Policy</button>
+      </div>` : ""))}
+      ` : ""))}
+      <p id="tmMailboxStatus" class="profile-edit-message" aria-live="polite" role="status" style="margin-top:10px"></p>
+    `;
+
+    const statusEl = el.querySelector("#tmMailboxStatus");
+    const setStatus = (text, cls) => {
+      if (!statusEl) return;
+      App.i18n.setText(statusEl, App.i18n.value(() => (text)));
+      statusEl.className = "profile-edit-message" + (cls ? " " + cls : "");
+    };
+
+    el.querySelectorAll("[data-mb-connect]").forEach((btn) => {
+      btn.addEventListener("click", async () => {
+        if (btn.disabled) return;
+        const [kind, provider] = String(btn.getAttribute("data-mb-connect") || "").split(":");
+        const meta = MAILBOX_PROVIDERS.find((pm) => pm.id === provider) || MAILBOX_PROVIDERS[0];
+        btn.disabled = true;
+        setStatus(App.i18n.t(meta.opening));
+        try {
+          const { authUrl } = await S().mailbox.start(kind, provider);
+          window.location.assign(authUrl);
+        } catch (err) {
+          setStatus(friendlyMailboxError(err), "error");
+          App.app.toast(friendlyMailboxError(err), "danger");
+          btn.disabled = false;
+        }
+      });
+    });
+    el.querySelectorAll("[data-mb-disconnect]").forEach((btn) => {
+      btn.addEventListener("click", () => {
+        const [kind, provider] = String(btn.getAttribute("data-mb-disconnect") || "").split(":");
+        App.app.confirmDialog({
+          title: App.i18n.t("Disconnect this mailbox?"),
+          message: App.i18n.t("Follow-up emails will no longer be sent from this mailbox. You can reconnect at any time."),
+          okLabel: App.i18n.t("Disconnect")
+        }, async () => {
+          btn.disabled = true;
+          try {
+            await S().mailbox.disconnect(kind, provider);
+            App.app.toast(App.i18n.t("Mailbox disconnected."), "success");
+            await loadSharedMailbox(pane);
+          } catch (err) {
+            setStatus(friendlyMailboxError(err), "error");
+            App.app.toast(friendlyMailboxError(err), "danger");
+            btn.disabled = false;
+          }
+        });
+      });
+    });
+
+    const policySave = el.querySelector("#tmMailboxPolicySave");
+    if (policySave) {
+      policySave.addEventListener("click", async () => {
+        if (policySave.disabled) return;
+        const checked = el.querySelector("input[name='tmMailboxPolicy']:checked");
+        if (!checked) return;
+        policySave.disabled = true;
+        setStatus(App.i18n.t("Saving\u2026"));
+        try {
+          const { mode } = await S().mailbox.setPolicy(checked.value);
+          if (state.data) state.data.policy.mode = mode;
+          setStatus(App.i18n.t("Sending policy saved."), "success");
+          App.app.toast(App.i18n.t("Sending policy saved."), "success");
+        } catch (err) {
+          setStatus(friendlyMailboxError(err), "error");
+          App.app.toast(friendlyMailboxError(err), "danger");
+        } finally {
+          policySave.disabled = false;
+        }
+      });
+    }
   }
 
   return { render, joinUrl, expiryText, teamModeError, hasOverrides };

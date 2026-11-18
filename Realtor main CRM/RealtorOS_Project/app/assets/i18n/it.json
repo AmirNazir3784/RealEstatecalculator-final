@@ -2157,6 +2157,8 @@
   "Connect Gmail": "Collega Gmail",
   "Disconnect": "Scollega",
   "Shared mailbox": "Casella email condivisa",
+  "Shared mailbox and sending policy are managed in Team Access.": "La casella email condivisa e il criterio di invio sono gestiti in Team e accesso.",
+  "Secure email connection": "Connessione email sicura",
   "Workspace admins can connect one shared mailbox for the whole team.": "Gli amministratori dell'area di lavoro possono collegare una casella email condivisa per tutto il team.",
   "Sending policy": "Criterio di invio",
   "Team members' own mailboxes": "Caselle email personali dei membri del team",

@@ -2157,6 +2157,8 @@
   "Connect Gmail": "Gmail verbinden",
   "Disconnect": "Trennen",
   "Shared mailbox": "Gemeinsames Postfach",
+  "Shared mailbox and sending policy are managed in Team Access.": "Gemeinsames Postfach und Versandrichtlinie werden unter Team und Zugriff verwaltet.",
+  "Secure email connection": "Sichere E-Mail-Verbindung",
   "Workspace admins can connect one shared mailbox for the whole team.": "Workspace-Administratoren können ein gemeinsames Postfach für das gesamte Team verbinden.",
   "Sending policy": "Versandrichtlinie",
   "Team members' own mailboxes": "Eigene Postfächer der Teammitglieder",

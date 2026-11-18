@@ -31,8 +31,11 @@
 
 // Bump this when the shell changes. The cache name carries it, so a new
 // version installs beside the old one and the old one is deleted on
-// activate - never a half-old, half-new shell.
-const VERSION = "crm-device-refinement-20261116";
+// activate - never a half-old, half-new shell. The production packager
+// (deployment/package-crm.mjs) stamps a unique version into the deployed
+// copy on every build, so a shipped shell can never reuse this cache
+// name; this in-repo value is the fallback for unpackaged copies.
+const VERSION = "crm-mailbox-20261117";
 const CACHE = "realtoros-shell-" + VERSION;
 
 // Everything the app needs to render its first screen without a network.
