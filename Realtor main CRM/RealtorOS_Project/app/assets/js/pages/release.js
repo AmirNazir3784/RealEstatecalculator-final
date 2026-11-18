@@ -1043,27 +1043,37 @@ App.pages.release = (function () {
     function commPreview(rate, team, broker, referral, tax) {
       return App.commission.netGCI({ salePrice: 500000, commissionRate: rate, teamSplit: team, brokerageFee: broker, referralFee: referral, taxReserve: tax });
     }
+    function commGross(rate) {
+      return App.commission.grossGCI({ salePrice: 500000, commissionRate: rate });
+    }
     const initPreview = commPreview(cd.commissionRate||0, cd.teamSplit||0, cd.brokerageFee||0, cd.referralFee||0, cd.taxReserve||0);
+    const initGross = commGross(cd.commissionRate||0);
     function commField(id, label, value) {
-      return App.i18n.html`<label class="field" data-comm-field="${App.i18n.value(() => (id))}"><span>${App.i18n.value(() => (U().esc(label)))}</span><input type="number" min="0" max="100" step="0.1" id="${App.i18n.value(() => (id))}" value="${App.i18n.value(() => (U().esc(value)))}"><div class="field-error-hint" id="${App.i18n.value(() => (id))}Err">Must be between 0 and 100</div></label>`;
+      return App.i18n.html`<label class="field" data-comm-field="${App.i18n.value(() => (id))}"><span>${App.i18n.value(() => (U().esc(label)))}</span><span class="bp-pct"><input type="number" min="0" max="100" step="0.1" id="${App.i18n.value(() => (id))}" value="${App.i18n.value(() => (U().esc(value)))}"></span><div class="field-error-hint" id="${App.i18n.value(() => (id))}Err">Must be between 0 and 100</div></label>`;
     }
 
     pane.innerHTML=App.i18n.html`
+      <div class="bp-page">
       <div class="settings-category-head">
         <div class="settings-category-title">Business Profile</div>
         <p class="form-help">Set the identity, workspace preferences, branding, and commission defaults used for new deals.</p>
       </div>
       <div id="bpTotalWarning" class="settings-warning-banner" style="display:none">Total splits exceed 100% — please review your defaults.</div>
-      <section class="card"><div class="card-body">
-        <div class="settings-form-section"><div class="settings-section-title">Identity</div>
-        <p class="form-help" style="margin:-4px 0 12px">This is your business identity — the name and details that appear on your deals, reports and branding. It is separate from the account you sign in with, which you change from the profile menu in the top-right.</p>
+      <section class="card bp-card">
+        <div class="card-header bp-card-head"><span class="bp-card-icon" aria-hidden="true">${App.i18n.value(() => (App.app.icon("home")))}</span><div><div class="card-title">Business Identity</div><p class="bp-card-desc">Your professional information and contact details.</p></div></div>
+        <div class="card-body">
+        <p class="form-help" style="margin:0 0 12px">This is your business identity — the name and details that appear on your deals, reports and branding. It is separate from the account you sign in with, which you change from the profile menu in the top-right.</p>
         <div class="form-grid">
-          <label class="field"><span>Agent Name</span><input id="setAgent" value="${App.i18n.value(() => (U().esc(st.agentName||'')))}"></label>
-          <label class="field"><span>Agency / Brokerage</span><input id="setAgency" value="${App.i18n.value(() => (U().esc(st.agencyName||'')))}"></label>
-          <label class="field"><span>Email</span><input type="email" id="setEmail" value="${App.i18n.value(() => (U().esc(st.agentEmail||'')))}"></label>
+          <label class="field"><span>Agent Name</span><input id="setAgent" placeholder="Enter your full name" value="${App.i18n.value(() => (U().esc(st.agentName||'')))}"></label>
+          <label class="field"><span>Agency / Brokerage</span><input id="setAgency" placeholder="Enter agency or brokerage name" value="${App.i18n.value(() => (U().esc(st.agencyName||'')))}"></label>
+          <label class="field"><span>Email</span><input type="email" id="setEmail" placeholder="you@example.com" value="${App.i18n.value(() => (U().esc(st.agentEmail||'')))}"></label>
           <label class="field"><span>Phone</span><input id="setPhone" value="${App.i18n.value(() => (U().esc(st.agentPhone||'')))}"></label>
-        </div></div>
-        <div class="settings-form-section"><div class="settings-section-title">Workspace Preferences</div><div class="form-grid">
+        </div>
+        </div>
+      </section>
+      <section class="card bp-card">
+        <div class="card-header bp-card-head"><span class="bp-card-icon" aria-hidden="true">${App.i18n.value(() => (App.app.icon("cog")))}</span><div><div class="card-title">Workspace Preferences</div><p class="bp-card-desc">Customize how your workspace operates.</p></div></div>
+        <div class="card-body"><div class="form-grid">
           <label class="field"><span>Currency</span><select id="setCurrency">${App.i18n.value(() => (['USD','CAD','GBP','EUR','AUD'].map(x=>App.i18n.html`<option ${App.i18n.value(() => (st.currency===x?'selected':''))}>${App.i18n.value(() => (App.i18n.t(x)))}</option>`).join('')))}</select></label>
           <label class="field"><span>Default country code</span><input id="setCountryCode" maxlength="5" inputmode="tel" placeholder="e.g. +971" value="${App.i18n.value(() => (U().esc(st.defaultCountryCode || '')))}" aria-describedby="setCountryCodeHelp">
             <span class="form-help" id="setCountryCodeHelp">Used when a contact's phone number has no country code, so Call, Text and WhatsApp still reach them. Leave blank to dial numbers exactly as they are stored.</span>
@@ -1076,7 +1086,7 @@ App.pages.release = (function () {
             <span class="field-error" id="setTimezoneError" role="alert" style="display:none;color:var(--danger)"></span>
           </label>
           <label class="field"><span>Remind me if a new contact isn't contacted within</span>
-            <span style="display:flex;align-items:center;gap:8px">
+            <span class="bp-hours-row" style="display:flex;align-items:center;gap:8px">
               <input id="setReminderHours" type="number" min="1" max="72" step="1" style="max-width:6rem" value="${App.i18n.value(() => (U().esc(st.followUpReminderHours == null ? 4 : st.followUpReminderHours)))}" aria-describedby="setReminderHoursHelp">
               <span>hours</span>
             </span>
@@ -1086,20 +1096,45 @@ App.pages.release = (function () {
           <label class="field"><span>Business Type</span><select id="setBizType"><option value="">Not set</option>${App.i18n.value(() => (BUSINESS_TYPES.map(([v,l])=>App.i18n.html`<option value="${App.i18n.value(() => (v))}" ${App.i18n.value(() => (bp.businessType===v?'selected':''))}>${App.i18n.value(() => (l))}</option>`).join('')))}</select></label>
           <label class="field"><span>Date Format</span><select id="setDateFormat">${App.i18n.value(() => (DATE_FORMATS.map(f=>App.i18n.html`<option ${App.i18n.value(() => (bp.dateFormat===f?'selected':''))}>${App.i18n.value(() => (App.i18n.t(f)))}</option>`).join('')))}</select></label>
         </div></div>
-        <div class="settings-form-section"><div class="settings-section-title">Branding</div>
-          <div class="field"><span>Logo Upload</span><div style="display:flex;align-items:center;gap:10px;margin-top:6px">
-            <img id="setLogoPreview" src="${App.i18n.value(() => (U().esc(bp.logoDataUri||'')))}" alt="" style="height:44px;width:44px;object-fit:contain;border:1px solid var(--border);border-radius: var(--radius);background:var(--card);display:${App.i18n.value(() => (bp.logoDataUri?'block':'none'))}">
-            <input type="file" id="setLogoFile" accept="image/*" class="sr-only">
-            <button class="btn btn-sm" id="setLogoChoose" type="button">${App.i18n.value(() => (bp.logoDataUri?App.i18n.t('Replace Logo'):App.i18n.t('Upload Logo')))}</button>
-            <button class="btn btn-sm" id="setLogoClear" type="button" style="display:${App.i18n.value(() => (bp.logoDataUri?'inline-flex':'none'))}">Remove</button>
-          </div><div class="form-help">PNG/JPG recommended · Smaller files load faster</div></div>
+      </section>
+      <section class="card bp-card">
+        <div class="card-header bp-card-head"><span class="bp-card-icon" aria-hidden="true">${App.i18n.value(() => (App.app.icon("spark")))}</span><div><div class="card-title">Business Branding</div><p class="bp-card-desc">Personalize your professional identity.</p></div></div>
+        <div class="card-body">
+          <div class="bp-logo-row">
+            <div class="bp-logo-box${App.i18n.value(() => (bp.logoDataUri ? ' has-logo' : ''))}" id="setLogoBox">
+              <img id="setLogoPreview" src="${App.i18n.value(() => (U().esc(bp.logoDataUri||'')))}" alt="" style="display:${App.i18n.value(() => (bp.logoDataUri?'block':'none'))}">
+              <span id="setLogoEmpty" style="display:${App.i18n.value(() => (bp.logoDataUri?'none':'flex'))}">${App.i18n.value(() => (App.app.icon("plus")))}</span>
+            </div>
+            <div class="bp-logo-main">
+              <div class="bp-logo-title">Business logo</div>
+              <p class="form-help" style="margin:0">Upload your agency or personal brand logo.</p>
+              <div class="bp-logo-actions">
+                <input type="file" id="setLogoFile" accept="image/*" class="sr-only">
+                <button class="btn btn-sm" id="setLogoChoose" type="button">${App.i18n.value(() => (bp.logoDataUri?App.i18n.t('Replace Logo'):App.i18n.t('Upload Logo')))}</button>
+                <button class="btn btn-sm" id="setLogoClear" type="button" style="display:${App.i18n.value(() => (bp.logoDataUri?'inline-flex':'none'))}">Remove</button>
+              </div>
+              <div class="form-help" style="margin:0">PNG/JPG recommended · Smaller files load faster</div>
+            </div>
+          </div>
         </div>
-        <div class="settings-form-section"><div class="settings-section-title">Commission Defaults</div><div class="form-grid">
-          ${App.i18n.value(() => (commField('setRate','Commission Rate %',cd.commissionRate)))}${App.i18n.value(() => (commField('setTeam','Team Split %',cd.teamSplit)))}${App.i18n.value(() => (commField('setBroker','Brokerage Fee %',cd.brokerageFee)))}${App.i18n.value(() => (commField('setReferral','Referral Fee %',cd.referralFee)))}${App.i18n.value(() => (commField('setTax','Tax Reserve %',cd.taxReserve)))}
+      </section>
+      <section class="card bp-card">
+        <div class="card-header bp-card-head"><span class="bp-card-icon" aria-hidden="true">${App.i18n.value(() => (App.app.icon("dollar")))}</span><div><div class="card-title">Commission Defaults</div><p class="bp-card-desc">Default financial settings for new deals.</p></div></div>
+        <div class="card-body">
+        <div class="form-grid">
+          ${App.i18n.value(() => (commField('setRate','Commission Rate',cd.commissionRate)))}${App.i18n.value(() => (commField('setTeam','Team Split',cd.teamSplit)))}${App.i18n.value(() => (commField('setBroker','Brokerage Fee',cd.brokerageFee)))}${App.i18n.value(() => (commField('setReferral','Referral Fee',cd.referralFee)))}${App.i18n.value(() => (commField('setTax','Tax Reserve',cd.taxReserve)))}
         </div><p class="form-help">Defaults apply to new deals only</p>
-        <div class="commission-preview-card" id="commPreview">On a $500,000 deal — estimated take-home: <span class="preview-amount" id="commPreviewAmt">${App.i18n.value(() => (U().formatCurrency(initPreview, st.currency)))}</span></div></div>
-        <div class="settings-save-bar" id="bpStickySave"><strong>Unsaved changes</strong><span style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" id="cancelBP" type="button">Cancel</button><button class="btn btn-primary" id="saveAllBP" type="button">Save Changes</button></span></div>
-      </div></section>`;
+        <div class="commission-preview-card" id="commPreview">
+          <div class="bp-preview-head"><span class="bp-preview-title">Commission preview</span><span class="bp-preview-sub">Based on an example $500,000 deal.</span></div>
+          <div class="bp-preview-cols">
+            <div class="bp-preview-col"><span class="bp-preview-label">Gross commission</span><span class="bp-preview-value" id="commPreviewGross">${App.i18n.value(() => (U().formatCurrency(initGross, st.currency)))}</span></div>
+            <div class="bp-preview-col"><span class="bp-preview-label">Estimated take-home</span><span class="preview-amount" id="commPreviewAmt">${App.i18n.value(() => (U().formatCurrency(initPreview, st.currency)))}</span></div>
+          </div>
+        </div>
+        </div>
+      </section>
+      <div class="settings-save-bar" id="bpStickySave"><strong>Unsaved changes</strong><span style="display:flex;gap:8px;flex-wrap:wrap"><button class="btn" id="cancelBP" type="button">Cancel</button><button class="btn btn-primary" id="saveAllBP" type="button">Save Changes</button></span></div>
+      </div>`;
 
     pane.querySelectorAll('input, select').forEach(el => el.addEventListener('input', () => _bpSetDirty(pane, true)));
     pane.querySelectorAll('select').forEach(el => el.addEventListener('change', () => _bpSetDirty(pane, true)));
@@ -1112,6 +1147,7 @@ App.pages.release = (function () {
       const tax = parseFloat(pane.querySelector('#setTax').value)||0;
       const amt = commPreview(r, t, b, ref, tax);
       const el = pane.querySelector('#commPreviewAmt'); if (el) App.i18n.setText(el, App.i18n.value(() => (U().formatCurrency(amt, pane.querySelector('#setCurrency').value || st.currency))));
+      const grossEl = pane.querySelector('#commPreviewGross'); if (grossEl) App.i18n.setText(grossEl, App.i18n.value(() => (U().formatCurrency(commGross(r), pane.querySelector('#setCurrency').value || st.currency))));
       [['setRate',r],['setTeam',t],['setBroker',b],['setReferral',ref],['setTax',tax]].forEach(([id,v]) => {
         const err = pane.querySelector('#'+id+'Err'); const field = pane.querySelector('[data-comm-field="'+id+'"]');
         if (v > 100 || v < 0) { if(err) err.classList.add('visible'); if(field) field.classList.add('has-field-error'); }
@@ -1149,7 +1185,11 @@ App.pages.release = (function () {
       const img = pane.querySelector('#setLogoPreview');
       const choose = pane.querySelector('#setLogoChoose');
       const clear = pane.querySelector('#setLogoClear');
+      const empty = pane.querySelector('#setLogoEmpty');
+      const box = pane.querySelector('#setLogoBox');
       if (img) { img.src = value || ''; img.style.display = value ? 'block' : 'none'; }
+      if (empty) empty.style.display = value ? 'none' : 'flex';
+      if (box) box.classList.toggle('has-logo', !!value);
       if (choose) App.i18n.setText(choose, App.i18n.value(() => (value ? App.i18n.t('Replace Logo') : App.i18n.t('Upload Logo'))));
       if (clear) clear.style.display = value ? 'inline-flex' : 'none';
     }

@@ -2180,5 +2180,19 @@
   "The shared Outlook mailbox is connected.": "صندوق بريد Outlook المشترك متصل.",
   "Outlook connected. Your follow-up emails will now be sent from your mailbox.": "تم ربط Outlook. ستُرسل رسائل المتابعة الخاصة بك الآن من صندوق البريد الخاص بك.",
   "Connect your own Gmail or Outlook so follow-up emails are sent from your address. Replies come back to your own inbox. If no mailbox is connected, RealtorCRM's sending service is used instead.": "اربط حساب Gmail أو Outlook الخاص بك لكي تُرسل رسائل المتابعة من عنوانك. تصل الردود إلى صندوق الوارد الخاص بك. إذا لم يكن هناك صندوق بريد متصل، تُستخدم خدمة الإرسال الخاصة بـ RealtorCRM بدلاً من ذلك.",
-  "Workspace admins can connect a shared Gmail or Outlook mailbox for the whole team.": "يمكن لمسؤولي مساحة العمل ربط صندوق بريد Gmail أو Outlook مشترك للفريق بأكمله."
+  "Workspace admins can connect a shared Gmail or Outlook mailbox for the whole team.": "يمكن لمسؤولي مساحة العمل ربط صندوق بريد Gmail أو Outlook مشترك للفريق بأكمله.",
+  "Business Identity": "هوية النشاط التجاري",
+  "Business Branding": "العلامة التجارية للنشاط التجاري",
+  "Your professional information and contact details.": "معلوماتك المهنية وبيانات الاتصال الخاصة بك.",
+  "Customize how your workspace operates.": "خصّص طريقة عمل مساحة العمل الخاصة بك.",
+  "Personalize your professional identity.": "خصّص هويتك المهنية.",
+  "Default financial settings for new deals.": "الإعدادات المالية الافتراضية للصفقات الجديدة.",
+  "Business logo": "شعار النشاط التجاري",
+  "Upload your agency or personal brand logo.": "حمّل شعار وكالتك أو علامتك التجارية الشخصية.",
+  "Commission preview": "معاينة العمولة",
+  "Based on an example $500,000 deal.": "استنادًا إلى صفقة مثال بقيمة $500,000.",
+  "Gross commission": "العمولة الإجمالية",
+  "Estimated take-home": "المبلغ الصافي التقديري",
+  "Enter your full name": "أدخل اسمك الكامل",
+  "Enter agency or brokerage name": "أدخل اسم الوكالة أو شركة الوساطة"
 }

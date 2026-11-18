@@ -2180,5 +2180,19 @@
   "The shared Outlook mailbox is connected.": "Das gemeinsame Outlook-Postfach ist verbunden.",
   "Outlook connected. Your follow-up emails will now be sent from your mailbox.": "Outlook verbunden. Ihre Follow-up-E-Mails werden jetzt von Ihrem Postfach gesendet.",
   "Connect your own Gmail or Outlook so follow-up emails are sent from your address. Replies come back to your own inbox. If no mailbox is connected, RealtorCRM's sending service is used instead.": "Verbinden Sie Ihr eigenes Gmail oder Outlook, damit Follow-up-E-Mails von Ihrer Adresse gesendet werden. Antworten kommen in Ihrem eigenen Posteingang an. Wenn kein Postfach verbunden ist, wird stattdessen der Versanddienst von RealtorCRM verwendet.",
-  "Workspace admins can connect a shared Gmail or Outlook mailbox for the whole team.": "Workspace-Administratoren können ein gemeinsames Gmail- oder Outlook-Postfach für das gesamte Team verbinden."
+  "Workspace admins can connect a shared Gmail or Outlook mailbox for the whole team.": "Workspace-Administratoren können ein gemeinsames Gmail- oder Outlook-Postfach für das gesamte Team verbinden.",
+  "Business Identity": "Geschäftliche Identität",
+  "Business Branding": "Geschäftliches Branding",
+  "Your professional information and contact details.": "Ihre beruflichen Informationen und Kontaktdaten.",
+  "Customize how your workspace operates.": "Passen Sie an, wie Ihr Arbeitsbereich funktioniert.",
+  "Personalize your professional identity.": "Personalisieren Sie Ihre berufliche Identität.",
+  "Default financial settings for new deals.": "Finanzielle Standardeinstellungen für neue Geschäfte.",
+  "Business logo": "Geschäftslogo",
+  "Upload your agency or personal brand logo.": "Laden Sie Ihr Agentur- oder persönliches Markenlogo hoch.",
+  "Commission preview": "Provisionsvorschau",
+  "Based on an example $500,000 deal.": "Basierend auf einem Beispiel-Geschäft von $500,000.",
+  "Gross commission": "Bruttoprovision",
+  "Estimated take-home": "Geschätzter Nettobetrag",
+  "Enter your full name": "Geben Sie Ihren vollständigen Namen ein",
+  "Enter agency or brokerage name": "Geben Sie den Namen der Agentur oder Maklerfirma ein"
 }
