@@ -462,6 +462,14 @@ App.app = (function () {
     // Wire up mobile menu
     document.getElementById("mobileMenuToggle").addEventListener("click", toggleSidebar);
     document.getElementById("sidebarScrim").addEventListener("click", closeSidebar);
+    if (window.matchMedia) {
+      const drawerBreakpoint = window.matchMedia("(max-width: 860px)");
+      const closeDrawerAtDesktop = () => {
+        if (!drawerBreakpoint.matches) closeSidebar();
+      };
+      if (drawerBreakpoint.addEventListener) drawerBreakpoint.addEventListener("change", closeDrawerAtDesktop);
+      else if (drawerBreakpoint.addListener) drawerBreakpoint.addListener(closeDrawerAtDesktop);
+    }
 
     // Wire the theme toggle. The toggle sits in the persistent topbar so it is
     // reachable from every page (including the Dashboard) without duplicating
@@ -681,6 +689,7 @@ App.app = (function () {
     sidebarOpener = document.activeElement;
     sb.classList.add("open");
     sc.classList.add("open");
+    document.body.classList.add("sidebar-drawer-open");
     sidebarExpanded(true);
     const first = sb.querySelector("#sidebarNav a, #sidebarSettingsBtn");
     if (first) first.focus();
@@ -691,6 +700,7 @@ App.app = (function () {
     if (wasOpen && sidebarOpener && sidebarOpener.isConnected) sidebarOpener.focus();
     document.getElementById("sidebar").classList.remove("open");
     document.getElementById("sidebarScrim").classList.remove("open");
+    document.body.classList.remove("sidebar-drawer-open");
   }
 
   // ---------- THEME (LIGHT / DARK) ----------

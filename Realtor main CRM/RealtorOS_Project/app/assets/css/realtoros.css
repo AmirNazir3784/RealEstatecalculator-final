@@ -1808,6 +1808,7 @@ a:hover { text-decoration: underline; text-underline-offset: 2px; }
    sidebar spec, kept separate from the app's general 900px content
    breakpoint below so this change stays scoped to the sidebar/nav only. */
 @media (max-width: 860px) {
+  body.sidebar-drawer-open { overflow: hidden; }
   #app-shell { grid-template-columns: 1fr; }
   #sidebar {
     position: fixed;
