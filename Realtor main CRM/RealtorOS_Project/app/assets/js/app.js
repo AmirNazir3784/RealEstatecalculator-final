@@ -357,6 +357,9 @@ App.app = (function () {
   // an App.i18n.html template is not safe — the template splitter rewrites
   // the comment's end, the browser then treats the rest of the header as
   // one long comment, and the menu's buttons end up outside the menu.
+  // The Settings control is also deliberately kept outside permission-gated
+  // navigation. Every member has personal settings, and the Settings screen
+  // gates workspace sections itself.
   function renderShell() {
     const shell = App.i18n.html`
 <div id="app-shell">
@@ -366,23 +369,6 @@ App.app = (function () {
       ${App.i18n.value(() => (renderNav()))}
     </nav>
     <div class="sidebar-footer">
-      <!-- Settings, always. The System group's NAV item used to carry a
-           needsSettings gate that hid it whenever the permissions bag
-           came back without a settings level - which is how commit
-           24e9417 (T2d: the frontend becomes workspace-aware) left a
-           workspace with no way to reach its own settings at all. That
-           gate is gone; this button is the belt to its braces.
-
-           This gear is not permission-gated, for the same reason the
-           sign-out button is not: every member has settings of their
-           own (the theme, for one), the Settings screen gates each
-           section by itself, and RLS is what actually protects the
-           workspace-wide ones. A door somebody is allowed to open and
-           cannot find is a worse failure than a door that opens onto a
-           mostly-empty room.
-
-           In the sidebar footer so it is in the drawer the mobile
-           "More" tab opens, as well as on the desktop rail. -->
       <button type="button" class="sidebar-settings" id="sidebarSettingsBtn"
               data-nav="/settings" aria-label="Settings">
         ${App.i18n.value(() => (icon("cog")))}<span>Settings</span>
