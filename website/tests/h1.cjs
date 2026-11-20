@@ -80,7 +80,7 @@ for (const width of [1000,760,540]) assert(css.includes(`max-width:${width}px`))
 assert(css.includes('grid-template-columns:minmax(0,1fr)'));
 assert(css.includes('min-height:48px'));
 const sections = [...html.matchAll(/<section class="([^"]+)"/g)].map(m => m[1]);
-assert.deepEqual(sections, ['home-hero', 'section home-use-cases', 'section home-how', 'home-product', 'section home-benefits-section', 'section home-faq', 'home-closing']);
+assert.deepEqual(sections, ['home-hero', 'section home-use-cases', 'section home-all-calculators', 'section home-how', 'home-product', 'section home-benefits-section', 'section home-faq', 'home-closing']);
 const cases = html.match(/<section class="section home-use-cases"[\s\S]*?<\/section>/)[0];
 const caseLinks = [...cases.matchAll(/href="([^"]+)"/g)].map(m => m[1]);
 // Use-case section is curated, not a mirror of the directory: new tools live on

@@ -312,3 +312,7 @@
   .home .home-quick-card strong,.home .home-quick-card small {margin-top:0;}
   .home .home-feature-mini {padding:24px 22px;}
 }
+
+/* All calculators section: calculator-name heading links inherit the card heading style */
+.home .home-use-card h3 a {color:inherit;text-decoration:none;font-size:inherit;display:inline;min-height:0;margin:0;}
+.home .home-use-card h3 a:hover {text-decoration:underline;}
