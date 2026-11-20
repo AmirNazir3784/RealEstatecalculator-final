@@ -348,6 +348,15 @@ App.app = (function () {
 
   // ---------- SHELL RENDER ----------
 
+  // The profile menu's header shows the Supabase Auth account, NOT the
+  // workspace's agent identity (Settings > Business Profile > Agent Name).
+  // The two are separate stores and are allowed to differ — one is who
+  // signed in, the other is the name that goes on the business. Labelling
+  // them ("Signed in as") is what stops that difference reading as a bug.
+  // This note lives OUTSIDE the template on purpose: an HTML comment inside
+  // an App.i18n.html template is not safe — the template splitter rewrites
+  // the comment's end, the browser then treats the rest of the header as
+  // one long comment, and the menu's buttons end up outside the menu.
   function renderShell() {
     const shell = App.i18n.html`
 <div id="app-shell">
@@ -406,12 +415,6 @@ App.app = (function () {
           <div class="profile-menu-header">
             <span class="profile-avatar profile-avatar-lg" id="profileMenuAvatar" aria-hidden="true"></span>
             <div class="profile-menu-id">
-              <!-- This is the Supabase Auth account, NOT the workspace's agent
-                   identity (Settings → Business Profile → Agent Name). The two
-                   are separate stores and are allowed to differ — one is who
-                   signed in, the other is the name that goes on the business.
-                   Labelling them is what stops that difference reading as a
-                   bug. -->
               <div class="profile-menu-eyebrow">Signed in as</div>
               <div class="profile-menu-name" id="profileMenuName"></div>
               <div class="profile-menu-email" id="profileMenuEmail"></div>
