@@ -35,10 +35,7 @@
 .home .home-hero h1 {margin:0 0 22px;color:#102334;font-weight:700;}
 .home .home-intro {margin:0;max-width:570px;font-size:17px;line-height:1.6;font-weight:400;}
 .home .home-hero .hero-actions {justify-content:flex-start;}
-.home .home-hero-benefits {display:grid;grid-template-columns:repeat(3,max-content);gap:28px;list-style:none;padding:0;margin:30px 0 0;}
-.home .home-hero-benefits li {border-left:2px solid var(--gold);padding-left:12px;}
-.home .home-hero-benefits strong,.home .home-hero-benefits span {display:block;font-size:.8rem;}
-.home .home-hero-benefits span {color:var(--muted);margin-top:3px;}
+
 .home .home-search-panel {padding:20px;border-radius:18px;background:var(--white);box-shadow:0 22px 65px rgba(16,33,49,.18);min-width:0;}
 .home .home-search-panel h2 {font-family:inherit;font-weight:750;font-size:1.45rem;line-height:1.2;letter-spacing:-.03em;margin:0 0 8px;}
 .home .home-search-panel>p {font-size:.88rem;color:var(--muted);}
@@ -53,7 +50,6 @@
 .home .home-quick-card small {font-size:.76rem;line-height:1.5;}
 .home .home-quick-card .card-ico {width:40px;height:40px;background:var(--teal);color:white;border:0;}
 .home .home-search-empty {grid-column:1/-1;padding:20px 0;color:var(--muted);}
-.home .home-feature-mini a:focus-visible {outline-color:var(--gold);}
 @media(max-width:1000px){
   .home .home-hero-layout {gap:28px;}
   .home .nav {gap:16px;}
@@ -85,28 +81,9 @@
 @media(max-width:1000px){.home .home-product-grid {gap:28px;}}
 @media(max-width:900px){.home .home-hero-layout {grid-template-columns:minmax(0,1fr);gap:24px;}.home .home-hero-copy {max-width:680px;}.home .home-search-panel {width:100%;}.home .home-hero {background:linear-gradient(180deg,var(--paper),rgba(246,245,240,.85)),url(home-architecture.jpg) center/cover;}.home .home-hero {background:linear-gradient(180deg,var(--paper),rgba(246,245,240,.85)),image-set(url('home-architecture-768.avif') type('image/avif'),url('home-architecture-768.webp') type('image/webp'),url('home-architecture.jpg') type('image/jpeg')) center/cover;}}
 @media(max-width:760px){.home .home-product-grid {grid-template-columns:minmax(0,1fr);gap:24px;}}
-@media(max-width:540px){.home .home-quick-card {display:grid;grid-template-columns:32px minmax(0,1fr);column-gap:12px;row-gap:4px;}.home .home-quick-card .card-ico {grid-row:1/3;width:32px;height:32px;}.home .home-quick-card small {grid-column:2;}.home .home-hero-benefits {gap:12px;}.home .home-hero-benefits li {padding-left:8px;}.home .home-hero-benefits strong,.home .home-hero-benefits span {font-size:.72rem;}}
-
-/* Compact, ordered section-two workflow using the shared palette. */
-.home .home-how {padding:48px 0;}
-.home .home-how-heading {margin-bottom:22px;}
-.home .home-how-heading .eyebrow {margin-bottom:10px;}
-.home .home-how-heading h2 {font-size:clamp(1.9rem,3vw,2.7rem);margin-bottom:10px;}
-.home .home-how-heading p {margin:0;max-width:680px;}
-.home .home-how-steps {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;list-style:none;padding:0;margin:0;}
-.home .home-how-steps>li {min-width:0;padding:20px;border:1px solid var(--line);border-radius:14px;background:var(--white);}
-.home .home-step-top {display:flex;align-items:center;justify-content:space-between;margin-bottom:14px;}
-.home .home-step-icon {display:grid;place-items:center;width:38px;height:38px;background:var(--mist);color:var(--teal);border-radius:10px;}
-.home .home-step-number {color:var(--navy);font-size:.72rem;letter-spacing:.12em;border-bottom:2px solid var(--gold);padding-bottom:3px;}
-.home .home-how-steps h3 {font-size:1.07rem;line-height:1.3;margin:0 0 8px;}
-.home .home-how-steps p {font-size:.9rem;color:var(--muted);margin:0;}
-.home .home-how-steps a {display:inline-flex;align-items:center;gap:8px;font-size:.85rem;min-height:44px;margin-top:6px;}
-@media(max-width:760px){.home .home-how-steps {grid-template-columns:minmax(0,1fr);gap:12px;}.home .home-how {padding:28px 0;}.home .home-how-steps>li {padding:18px;}.home .home-step-top {margin-bottom:10px;}}
+@media(max-width:540px){.home .home-quick-card {display:grid;grid-template-columns:32px minmax(0,1fr);column-gap:12px;row-gap:4px;}.home .home-quick-card .card-ico {grid-row:1/3;width:32px;height:32px;}.home .home-quick-card small {grid-column:2;}}
 
 /* Final homepage system: compact product editorial, CTA and footer. */
-.home .home-how-steps>li {display:flex;flex-direction:column;}
-.home .home-how-steps p {flex:1;}
-.home .home-how-steps a {padding-top:10px;}
 .home .home-product-grid {grid-template-columns:minmax(0,1.22fr) minmax(0,1fr);gap:52px;}
 .home .home-product h2 {max-width:720px;line-height:1.16;letter-spacing:-0.025em;font-weight:700;margin-bottom:20px;}
 .home .home-product-copy>p {max-width:670px;color:#D1DCE5;}
@@ -156,48 +133,16 @@
 .home h3,.home .home-search-panel h2 {font-family:var(--font-body);font-weight:600;letter-spacing:-.015em;}
 .home .btn,.home .card-arrow {font-weight:600;letter-spacing:0;}
 .home .home-intro {font-size:1.0625rem;line-height:1.6;}
-.home .home-how-steps p {font-size:1rem;}
 .home .home-quick-card strong {font-weight:600;}
 .home .home-section-heading {margin-bottom:24px;max-width:720px;}
 .home .home-section-heading h2 {font-size:clamp(1.9rem,3vw,2.7rem);margin-bottom:12px;}
 .home .home-section-heading p {color:var(--muted);margin:0;font-size:1.0625rem;}
 .home .home-section-heading .eyebrow {margin-bottom:10px;}
-.home .home-use-cases {background:var(--white);border-bottom:1px solid var(--line);}
-.home .home-use-cases .home-section-heading {max-width:800px;margin-bottom:36px;}
-.home .home-use-cases .home-section-heading .eyebrow {display:inline-flex;align-items:center;gap:12px;color:var(--navy);font-size:12px;font-weight:700;letter-spacing:1.1px;margin-bottom:16px;}
-.home .home-use-cases .home-section-heading .eyebrow:before {content:'';width:26px;height:2px;background:var(--gold);flex-shrink:0;}
-.home .home-use-cases .home-section-heading h2 {font-size:clamp(32px,3vw,42px);line-height:1.15;margin-bottom:14px;}
-.home .home-use-cases .home-section-heading p {line-height:1.6;}
-.home .home-use-grid {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;}
-@media(max-width:1099px){.home .home-use-grid {grid-template-columns:repeat(2,minmax(0,1fr));}}
-@media(max-width:699px){.home .home-use-grid {grid-template-columns:minmax(0,1fr);gap:16px;}.home .home-use-card {padding:22px;}}
-.home .home-use-card {display:flex;flex-direction:column;align-items:flex-start;padding:28px;background:var(--mist);border:1px solid var(--line);border-radius:18px;min-width:0;}
-.home .home-use-card:nth-child(2) {background:var(--paper);border-top:3px solid var(--gold);}
-.home .home-use-card .card-ico {width:56px;height:56px;border-radius:15px;font-size:1.35rem;margin-bottom:18px;}
-.home .home-use-card .eyebrow {color:var(--teal);font-size:12px;font-weight:700;letter-spacing:1px;margin-bottom:12px;}
-.home .home-use-card h3 {font-size:20px;line-height:1.3;font-weight:700;margin:0 0 12px;}
-.home .home-use-card p {color:var(--muted);font-size:15px;line-height:1.55;flex:1;}
-.home .home-use-card a {display:inline-flex;align-items:center;min-height:44px;font-size:15px;font-weight:700;margin-top:auto;}
-.home .home-benefits-section {background:var(--paper);}
-.home .home-benefit-grid {list-style:none;padding:0;margin:0;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px;}
-.home .home-benefit-grid li {min-width:0;border-top:1px solid var(--line);padding-top:18px;}
-.home .home-benefit-icon {display:grid;place-items:center;width:36px;height:36px;background:var(--mist);color:var(--teal);border-radius:9px;font-size:1.25rem;margin-bottom:14px;}
-.home .home-benefit-grid h3 {font-size:1rem;margin-bottom:8px;}
-.home .home-benefit-grid p {font-size:1rem;color:var(--muted);margin:0;}
-.home .home-faq {background:var(--white);border-block:1px solid var(--line);}
-.home .home-faq-layout {display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);gap:40px;}
-.home .home-faq-list {min-width:0;}
-.home .home-faq details {border-bottom:1px solid var(--line);}
-.home .home-faq details:first-child {border-top:1px solid var(--line);}
-.home .home-faq summary {cursor:pointer;font-weight:600;padding:18px 4px;min-height:52px;line-height:1.5;}
-.home .home-faq summary::marker {color:var(--teal);}
-.home .home-faq summary:focus-visible {outline:3px solid var(--navy);outline-offset:3px;}
-.home .home-faq details[open] summary {color:var(--teal);}
-.home .home-faq details p {padding:0 4px 18px;margin:0;color:var(--muted);font-size:1rem;}
-.home .home-faq details a {color:var(--teal);text-decoration:underline;text-underline-offset:3px;}
-@media(max-width:1000px){.home .home-benefit-grid {grid-template-columns:repeat(2,minmax(0,1fr));}}
-@media(max-width:760px){.home .home-faq-layout {grid-template-columns:minmax(0,1fr);gap:20px;}.home .home-hero h1 {font-size:clamp(2.3rem,6.3vw,3rem);}.home .home-section-heading {margin-bottom:20px;}}
-@media(max-width:540px){.home .home-use-card {padding:20px;}.home .home-benefit-grid {grid-template-columns:minmax(0,1fr);gap:20px;}.home .home-intro {font-size:1rem;}}
+
+
+
+@media(max-width:760px){.home .home-hero h1 {font-size:clamp(2.3rem,6.3vw,3rem);}.home .home-section-heading {margin-bottom:20px;}}
+@media(max-width:540px){.home .home-intro {font-size:1rem;}}
 
 /* P2 standardization: footer padding tiers, matching the shared spec. */
 @media(max-width:1000px){ .footer{padding-top:36px;padding-bottom:24px} }
@@ -250,11 +195,6 @@
 .home .hero-actions .btn-primary {background:var(--hp-teal);box-shadow:0 4px 12px rgba(13,118,110,.10);}
 .home .hero-actions .btn-primary:hover {background:var(--hp-teal-dark);}
 .home .hero-actions .btn-outline {background:#fff;border:1px solid var(--hp-divider);color:var(--hp-navy);}
-/* Feature highlights: quiet three-column row, thin gold accents. */
-.home .home-hero-benefits {display:grid;grid-template-columns:repeat(3,max-content);gap:28px;margin-top:24px;}
-.home .home-hero-benefits li {border-left:2px solid var(--hp-gold);padding-left:14px;}
-.home .home-hero-benefits strong {font-size:13px;font-weight:700;color:var(--hp-navy);}
-.home .home-hero-benefits span {font-size:12px;line-height:1.5;color:var(--hp-body);}
 /* Search panel: product-interface proportions. */
 .home .home-search-panel {padding:20px 28px;border:1px solid var(--hp-border);border-radius:18px;background:#fff;box-shadow:0 12px 40px rgba(16,37,53,.08);}
 .home .home-search-panel h2 {font-size:26px;font-weight:700;letter-spacing:-.7px;line-height:1.2;color:var(--hp-navy);margin:0 0 8px;}
@@ -273,13 +213,6 @@
 .home .home-quick-card .card-ico {width:42px;height:42px;border-radius:10px;background:var(--hp-teal);color:#fff;}
 .home .home-quick-card strong {margin-top:16px;font-size:16px;font-weight:700;line-height:1.35;color:var(--hp-navy);}
 .home .home-quick-card small {margin-top:8px;font-size:13px;line-height:1.6;color:var(--hp-secondary);}
-/* RealtorOS promotion inside the panel: tighter, balanced. */
-.home .home-feature-mini {margin-top:14px;padding:24px 30px;border-radius:18px;background:#102334;display:block;}
-.home .home-feature-mini .eyebrow {display:inline-flex;align-items:center;gap:10px;font-size:11px;font-weight:700;letter-spacing:1.3px;color:var(--hp-gold);margin-bottom:14px;}
-.home .home-feature-mini .eyebrow:before {content:'';width:24px;height:2px;background:var(--hp-gold);}
-.home .home-feature-mini h3 {font-size:28px;font-weight:700;line-height:1.2;color:#fff;margin:0 0 10px;}
-.home .home-feature-mini p {font-size:16px;line-height:1.5;color:#D5E0E4;margin-bottom:18px;}
-.home .home-feature-mini a {display:inline-block;vertical-align:top;color:#83D7CD;font-weight:600;font-size:15px;}
 /* Refinement responsive tiers. */
 @media(max-width:1100px){
   .home .head-inner,.home .home-hero .wrap {width:min(1440px,calc(100% - 56px));}
@@ -301,7 +234,7 @@
   .home .home-intro {font-size:16px;}
   .home .home-search-panel {padding:20px;}
   .home .home-search-panel .field {font-size:16px;}
-  .home .home-hero-benefits {grid-template-columns:repeat(2,minmax(0,1fr));}
+  
 }
 @media(max-width:540px){
   .home .head-inner {width:min(1440px,calc(100% - 32px));}
@@ -310,5 +243,109 @@
   .home .home-quick-card {min-height:0;}
   .home .home-quick-card .card-ico {width:32px;height:32px;}
   .home .home-quick-card strong,.home .home-quick-card small {margin-top:0;}
-  .home .home-feature-mini {padding:24px 22px;}
+  
+}
+
+/* Homepage redesign 2026-11-21: unified calculators with category tabs,
+   factual value strip, guides and FAQ — inside the existing token system. */
+@media(min-width:761px){.home .section {padding:88px 0;}.home .home-product {padding:88px 0;}.home .home-hero {min-height:580px;padding:72px 0;display:flex;align-items:center;}}
+@media(min-width:901px){.home .home-hero-layout {grid-template-columns:minmax(0,11fr) minmax(0,9fr);width:100%;}}
+.home .home-heading-center {margin-inline:auto;text-align:center;}
+.home .home-heading-center p {margin-inline:auto;}
+.home .home-badge {display:inline-block;font-size:11px;font-weight:600;letter-spacing:.05em;text-transform:uppercase;padding:4px 10px;border-radius:999px;background:var(--mist);color:var(--teal);white-space:nowrap;}
+/* Hero: prompt gradient over the same self-hosted photograph. */
+.home .home-hero {background:linear-gradient(90deg,rgba(246,245,240,.97) 0%,rgba(246,245,240,.90) 50%,rgba(246,245,240,.35) 100%),url('home-architecture.jpg') center right/cover;}
+.home .home-hero {background:linear-gradient(90deg,rgba(246,245,240,.97) 0%,rgba(246,245,240,.90) 50%,rgba(246,245,240,.35) 100%),image-set(url('home-architecture.avif') type('image/avif'),url('home-architecture.webp') type('image/webp'),url('home-architecture.jpg') type('image/jpeg')) center right/cover;}
+.home .home-hero .home-intro {font-size:18px;max-width:520px;}
+.home .home-search-panel h2 {font-size:18px;font-weight:600;letter-spacing:-.015em;}
+/* Factual value strip. */
+.home .home-value-strip {background:var(--paper);border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:18px 0;}
+.home .home-value-list {display:flex;flex-wrap:wrap;justify-content:center;gap:14px 40px;list-style:none;margin:0;padding:0;}
+.home .home-value-list li {display:inline-flex;align-items:center;gap:9px;font-size:14px;font-weight:500;color:var(--muted);}
+.home .home-value-list svg {color:var(--teal);flex-shrink:0;}
+/* Unified calculators: tabs + grid. */
+.home .home-calculators {background:var(--white);}
+.home .home-tabs {display:flex;gap:8px;justify-content:flex-start;margin-top:32px;padding-bottom:6px;overflow-x:auto;scrollbar-width:thin;}
+@media(min-width:761px){.home .home-tabs {justify-content:center;}}
+.home .home-tab {flex:0 0 auto;min-height:44px;padding:10px 20px;border-radius:999px;border:1px solid var(--line);background:var(--paper);color:var(--navy);font-size:14px;font-weight:600;cursor:pointer;}
+.home .home-tab:hover {border-color:var(--teal);}
+.home .home-tab[aria-pressed="true"] {background:var(--navy);border-color:var(--navy);color:#fff;}
+.home .home-tab:focus-visible {outline:3px solid var(--navy);outline-offset:3px;}
+.home .home-calc-grid {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;margin-top:32px;}
+.home .home-calc-card {position:relative;display:flex;flex-direction:column;background:var(--white);border:1px solid var(--line);border-radius:12px;padding:24px;min-width:0;transition:transform .15s ease,border-color .15s ease;}
+.home .home-calc-card:hover {transform:translateY(-2px);border-color:var(--teal);}
+.home .home-calc-card[hidden] {display:none;}
+.home .home-calc-top {display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:16px;}
+.home .home-calc-card .card-ico {width:36px;height:36px;border-radius:9px;background:var(--mist);color:var(--teal);font-size:1.05rem;}
+.home .home-calc-card h3 {font-size:19px;line-height:1.3;font-weight:600;margin:0 0 8px;}
+.home .home-calc-card h3 a {color:inherit;text-decoration:none;}
+.home .home-calc-card h3 a::after {content:'';position:absolute;inset:0;}
+.home .home-calc-card h3 a:focus-visible {outline:3px solid var(--navy);outline-offset:4px;}
+.home .home-calc-card p {font-size:14px;line-height:1.5;color:var(--muted);margin:0;}
+.home .home-calc-open {margin-top:auto;padding-top:16px;display:inline-flex;align-items:center;min-height:44px;color:var(--teal);font-size:15px;font-weight:700;}
+/* CRM spotlight: heading-style feature grid + early-access note. */
+.home .home-feature-grid h3 {font-size:18px;font-weight:700;color:var(--white);margin:0 0 5px;}
+.home .home-feature-grid p {margin:0;color:#C4D1DC;font-size:14.5px;line-height:1.5;}
+.home .home-early-access {color:var(--gold);font-size:14px;font-weight:600;margin:16px 0 0;}
+.home .home-product-overview .btn {width:100%;margin-top:24px;justify-content:center;}
+/* Value proposition cards. */
+.home .home-values {background:var(--paper);}
+.home .home-value-grid {display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:24px;margin-top:40px;}
+.home .home-value-card {background:var(--white);border:1px solid var(--line);border-radius:12px;padding:24px;min-width:0;}
+.home .home-value-icon {display:grid;place-items:center;width:38px;height:38px;background:var(--mist);color:var(--teal);border-radius:10px;margin-bottom:14px;}
+.home .home-value-icon svg {width:22px;height:22px;}
+.home .home-value-card h3 {font-size:18px;margin:0 0 8px;}
+.home .home-value-card p {font-size:15px;color:var(--muted);margin:0;}
+/* Guides. */
+.home .home-guides {background:var(--white);}
+.home .home-guide-grid {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:24px;margin-top:32px;}
+.home .home-guide-card {position:relative;background:var(--white);border:1px solid var(--line);border-radius:12px;overflow:hidden;min-width:0;display:flex;flex-direction:column;}
+.home .home-guide-art {height:160px;flex-shrink:0;}
+.home .home-guide-art.art-1 {background:linear-gradient(135deg,var(--teal),var(--navy));}
+.home .home-guide-art.art-2 {background:linear-gradient(135deg,var(--navy),var(--teal));}
+.home .home-guide-art.art-3 {background:linear-gradient(135deg,var(--gold),var(--paper));}
+.home .home-guide-art.art-4 {background:linear-gradient(135deg,var(--mist),var(--teal));}
+.home .home-guide-art.art-5 {background:linear-gradient(135deg,var(--navy),var(--gold));}
+.home .home-guide-body {padding:24px;display:flex;flex-direction:column;align-items:flex-start;gap:12px;flex:1;}
+.home .home-guide-card h3 {font-size:19px;line-height:1.3;font-weight:600;margin:0;}
+.home .home-guide-card h3 a {color:inherit;text-decoration:none;}
+.home .home-guide-card h3 a::after {content:'';position:absolute;inset:0;}
+.home .home-guide-card h3 a:focus-visible {outline:3px solid var(--navy);outline-offset:4px;}
+.home .home-guide-read {margin-top:auto;color:var(--teal);font-size:15px;font-weight:700;}
+/* FAQ: centered single column of white cards on paper. */
+.home .home-faq {background:var(--paper);border-block:1px solid var(--line);}
+.home .home-faq-wrap {max-width:800px;}
+.home .home-faq-list {display:grid;gap:12px;margin-top:32px;}
+.home .home-faq details {background:var(--white);border:1px solid var(--line);border-radius:10px;padding:20px 24px;}
+.home .home-faq summary {cursor:pointer;font-weight:600;min-height:44px;display:flex;align-items:center;line-height:1.5;}
+.home .home-faq summary::marker {color:var(--teal);}
+.home .home-faq summary:focus-visible {outline:3px solid var(--navy);outline-offset:3px;}
+.home .home-faq details[open] summary {color:var(--teal);}
+.home .home-faq details p {padding-top:10px;margin:0;color:var(--muted);font-size:1rem;}
+.home .home-faq details a {color:var(--teal);text-decoration:underline;text-underline-offset:3px;}
+/* Final CTA: white banner. */
+.home .home-closing {background:var(--white);border-top:1px solid var(--line);padding:64px 0;text-align:left;}
+@media(max-width:1099px){
+  .home .home-calc-grid {grid-template-columns:repeat(2,minmax(0,1fr));}
+  .home .home-guide-grid {grid-template-columns:repeat(2,minmax(0,1fr));}
+}
+@media(max-width:1000px){
+  .home .home-value-grid {grid-template-columns:repeat(2,minmax(0,1fr));}
+}
+@media(max-width:900px){
+  .home .home-hero {min-height:0;background:linear-gradient(180deg,rgba(246,245,240,.97) 0%,rgba(246,245,240,.92) 55%,rgba(246,245,240,.55) 100%),url('home-architecture.jpg') center/cover;}
+  .home .home-hero {background:linear-gradient(180deg,rgba(246,245,240,.97) 0%,rgba(246,245,240,.92) 55%,rgba(246,245,240,.55) 100%),image-set(url('home-architecture-768.avif') type('image/avif'),url('home-architecture-768.webp') type('image/webp'),url('home-architecture.jpg') type('image/jpeg')) center/cover;}
+}
+@media(max-width:760px){
+  .home .section {padding:56px 0;}
+  .home .home-product {padding:56px 0;}
+  .home .home-hero {padding:56px 0;}
+  .home .home-hero .home-intro {font-size:16px;}
+  .home .home-closing {padding:48px 0;}
+}
+@media(max-width:699px){
+  .home .home-calc-grid {grid-template-columns:minmax(0,1fr);}
+  .home .home-guide-grid {grid-template-columns:minmax(0,1fr);}
+  .home .home-value-grid {grid-template-columns:minmax(0,1fr);}
+  .home .home-calc-card {padding:22px;}
 }

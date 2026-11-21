@@ -26,9 +26,9 @@ for (const stale of ['currently published Commission and Mortgage', 'current Com
 }
 // 2. Homepage states the ten-calculator reality.
 const home = read('index.html');
-check('homepage says all ten calculators', home.includes('All ten calculators are ready to use'));
-check('homepage FAQ free answer updated', home.includes('All ten calculators are free to use'));
-check('homepage mortgage FAQ corrected', home.includes('plus property tax, homeowners insurance, HOA dues and PMI'));
+check('homepage says all ten calculators', home.includes('All 10 calculators are 100% free'));
+check('homepage FAQ free answer updated', home.includes('All 10 calculators are 100% free to use with no limits'));
+check('homepage mortgage card covers full payment', home.includes('including principal, interest, taxes, insurance, HOA, and PMI'));
 // 3. Inactive automation is not marketed anywhere.
 check('"Follow-up Plans" absent from all pages', !all.includes('Follow-up Plans'));
 // 4. Tools index: static directory lists all ten tools with links.

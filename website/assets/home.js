@@ -34,3 +34,20 @@
   search.addEventListener('input', update);
   update();
 })();
+
+// Category tabs for the unified calculators section: filter the cards in
+// place. All 10 cards stay in the DOM (crawlable); without JS every card
+// is visible and the tabs are inert buttons.
+(function () {
+  if (typeof document.querySelectorAll !== 'function') return;
+  const tabs = [...document.querySelectorAll('.home-tab')];
+  const cards = [...document.querySelectorAll('.home-calc-card')];
+  if (!tabs.length || !cards.length) return;
+  tabs.forEach(tab => tab.addEventListener('click', () => {
+    const filter = tab.getAttribute('data-filter');
+    tabs.forEach(t => t.setAttribute('aria-pressed', String(t === tab)));
+    cards.forEach(card => {
+      card.hidden = filter !== 'all' && card.getAttribute('data-category') !== filter;
+    });
+  }));
+})();
