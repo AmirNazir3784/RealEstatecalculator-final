@@ -232,6 +232,18 @@ ol.dp-steps li::before { content: counter(dpstep); position: absolute; left: 0; 
   .dp-kicker { margin-top: 36px; }
 }
 
+/* Full-width editorial (v10): the side rail is removed — the article runs the
+   full page column, and Key Takeaways becomes a horizontal panel (bullets in
+   two columns) sitting above the FAQ card. CSS-only; DOM order already runs
+   sections → takeaways → FAQs. */
+.dp-editorial { grid-template-columns: minmax(0, 1fr); }
+@media (min-width: 961px) { .dp-rail { position: static; } }
+.dp-main.content > p, .dp-main.content > ul, .dp-main.content > ol { max-width: none; }
+.dp-takeaways { padding: 24px 28px; }
+.dp-rail-card.dp-takeaways ul { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 44px; }
+.dp-rail-card.dp-takeaways li { margin-bottom: 8px; }
+@media (max-width: 640px) { .dp-rail-card.dp-takeaways ul { grid-template-columns: 1fr; } }
+
 /* Short-viewport overrides live at the end so they win over the base rules above. */
 @media (max-height: 840px) and (min-width: 961px) {
   .calc-page .page-hero { padding: 6px 0 6px; }
