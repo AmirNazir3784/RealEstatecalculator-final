@@ -100,7 +100,7 @@ for (const [id, category, minutes] of [['mortgage-guide', 'Mortgage', '3'], ['co
 
 // Sitemap carries all five articles plus the legal pages; 23 URLs in total.
 const sm = read('sitemap.xml');
-equal('sitemap 23 URLs', (sm.match(/<loc>/g) || []).length, 23);
+equal('sitemap 24 URLs', (sm.match(/<loc>/g) || []).length, 24); // +1: down-payment-calculator (2026-11-22)
 check('sitemap privacy page', sm.includes('<loc>https://everyrealestatecalculator.com/privacy-policy/</loc>'));
 check('sitemap terms page', sm.includes('<loc>https://everyrealestatecalculator.com/terms/</loc>'));
 check('sitemap mortgage article', sm.includes('<loc>https://everyrealestatecalculator.com/resources/mortgage-payments/</loc>'));

@@ -1,0 +1,88 @@
+/* Down Payment Calculator — page-scoped styles only.
+   Builds on the shared tools.css layout (panel + result); no shared CSS touched. */
+
+/* Keep the results card compact and in view; never stretch it with the form column. */
+.dp-calc-section .calculator-layout { align-items: start; }
+.dp-calc-section .calculator-layout > * { min-width: 0; }
+@media (min-width: 961px) {
+  .dp-calc-section .result { position: sticky; top: 96px; }
+}
+
+/* Quick Answer callout */
+.dp-intro-section { padding-bottom: 8px; }
+.dp-quick { background: var(--mist); border-left: 3px solid var(--teal); border-radius: 0 10px 10px 0; padding: 14px 18px; }
+
+/* Preset chips: visual pill stays compact, hit area is a full 44px. */
+.dp-chips { display: flex; flex-wrap: wrap; gap: 8px; }
+.dp-chip { min-height: 44px; padding: 6px 18px; border: 1px solid var(--line); border-radius: 999px; background: #fff; color: var(--navy); font: inherit; font-size: 0.95rem; font-weight: 600; cursor: pointer; }
+.dp-chip:hover { border-color: var(--teal); }
+.dp-chip[aria-pressed="true"] { background: var(--teal); border-color: var(--teal); color: #fff; }
+.dp-chip:focus-visible { outline: 3px solid var(--teal); outline-offset: 2px; }
+
+/* Adjust disclosure */
+.dp-adjust { margin-top: 18px; border-top: 1px solid var(--line); padding-top: 6px; }
+.dp-adjust summary { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 44px; cursor: pointer; font-weight: 700; color: var(--navy); list-style: none; }
+.dp-adjust summary::-webkit-details-marker { display: none; }
+.dp-adjust summary:focus-visible { outline: 3px solid var(--teal); outline-offset: 3px; border-radius: 4px; }
+.dp-adjust-chevron { flex: none; width: 10px; height: 10px; border-right: 2px solid var(--teal); border-bottom: 2px solid var(--teal); transform: rotate(45deg); transition: transform 0.2s ease; }
+.dp-adjust[open ] .dp-adjust-chevron { transform: rotate(225deg); }
+.dp-adjust-grid { padding: 10px 0 4px; }
+
+/* Results metric strip */
+.dp-metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 0 18px; margin: 18px 0 6px; }
+.dp-metric { display: flex; flex-direction: column; gap: 2px; padding: 10px 0; border-top: 1px solid rgba(255, 255, 255, 0.18); }
+.dp-metric span { font-size: 0.82rem; color: #A8BBC7; }
+.dp-metric b { font-size: 1.12rem; color: #fff; }
+.dp-handoff { display: inline-block; margin-top: 12px; min-height: 44px; line-height: 44px; color: var(--teal-dark); font-weight: 700; text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1.5px; }
+.dp-handoff:focus-visible { outline: 3px solid var(--teal); outline-offset: 3px; border-radius: 4px; }
+
+/* Tier table */
+.dp-tiers-wrap { margin-top: 34px; }
+.dp-tiers { width: 100%; border-collapse: collapse; font-size: 0.98rem; }
+.dp-tiers th, .dp-tiers td { padding: 12px 14px; text-align: right; border-bottom: 1px solid var(--line); white-space: nowrap; }
+.dp-tiers th:first-child, .dp-tiers td:first-child { text-align: left; }
+.dp-tiers thead th { color: var(--muted); font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.04em; }
+.dp-tiers tbody tr { cursor: pointer; }
+.dp-tiers tbody tr:hover { background: #f2f6f5; }
+.dp-tiers tbody tr.is-selected { background: var(--mist); font-weight: 600; }
+.dp-tier-pick { font: inherit; font-weight: inherit; color: var(--teal-dark); background: none; border: 0; padding: 10px 4px; margin: -10px -4px; min-height: 44px; cursor: pointer; text-align: left; }
+.dp-tier-pick:focus-visible { outline: 3px solid var(--teal); outline-offset: 2px; border-radius: 4px; }
+.dp-badge { display: inline-block; margin-left: 8px; padding: 2px 9px; border-radius: 999px; background: var(--teal); color: #fff; font-size: 0.74rem; font-weight: 700; vertical-align: middle; }
+.dp-footnote { font-size: 0.88rem; color: var(--muted); max-width: 760px; margin: 10px 0 0; }
+
+/* Editorial tables (worked example, program minimums) */
+.dp-table { width: 100%; border-collapse: collapse; font-size: 0.96rem; }
+.dp-table th, .dp-table td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--line); vertical-align: top; }
+.dp-table thead th { color: var(--muted); font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.04em; }
+/* The shared .content rule right-aligns last columns for numeric tables; the
+   program-minimums table is prose, so its last column stays left-aligned. */
+.dp-editorial .dp-table-text td:last-child, .dp-editorial .dp-table-text th:last-child { text-align: left; }
+
+/* Two-column editorial zone: sections left, takeaways + FAQ rail right */
+.dp-editorial { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 44px; align-items: start; }
+.dp-editorial > * { min-width: 0; }
+.dp-rail { display: flex; flex-direction: column; gap: 22px; }
+@media (min-width: 961px) { .dp-rail { position: sticky; top: 96px; } }
+.dp-rail-card { background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 22px; }
+.dp-rail-card h2 { margin-top: 0; font-size: 1.25rem; }
+.dp-rail-card ul { margin: 0; padding-left: 18px; }
+.dp-rail-card li { margin-bottom: 10px; }
+.dp-rail-card li:last-child { margin-bottom: 0; }
+
+/* FAQ accordion (button pattern, one open at a time) */
+.dp-faq-item { border-top: 1px solid var(--line); }
+.dp-faq-item:last-child { border-bottom: 1px solid var(--line); }
+.dp-faq-heading { margin: 0; }
+.dp-faq-toggle { display: flex; align-items: center; justify-content: space-between; gap: 12px; width: 100%; min-height: 44px; padding: 13px 2px; background: none; border: 0; font: inherit; font-size: 0.98rem; font-weight: 600; color: var(--navy); text-align: left; cursor: pointer; }
+.dp-faq-toggle:focus-visible { outline: 3px solid var(--teal); outline-offset: 2px; border-radius: 4px; }
+.dp-faq-icon { flex: none; font-size: 1.25rem; font-weight: 400; color: var(--teal); transition: transform 0.2s ease; }
+.dp-faq-toggle[aria-expanded="true"] .dp-faq-icon { transform: rotate(45deg); }
+.dp-faq-panel p { margin: 0 0 14px; font-size: 0.94rem; }
+
+@media (max-width: 960px) {
+  .dp-editorial { grid-template-columns: minmax(0, 1fr); }
+  .dp-calc-section .result { position: static; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .dp-adjust-chevron, .dp-faq-icon { transition: none; }
+}

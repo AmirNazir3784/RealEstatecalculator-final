@@ -22,6 +22,16 @@ window.realEstateTools = Object.freeze([
     icon: '$'
   }),
   Object.freeze({
+    slug: 'down-payment-calculator',
+    title: 'Down Payment Calculator',
+    category: 'Finance & numbers',
+    description: 'Calculate your down payment, total cash to close and monthly PMI at 3%, 3.5%, 5%, 10%, 15% and 20% down. See how long each tier takes to save. Free, no sign-up.',
+    keywords: 'how much down payment cash to close pmi first time buyer save for a house',
+    status: 'published',
+    publicUrl: 'down-payment-calculator/',
+    icon: '↓'
+  }),
+  Object.freeze({
     slug: 'home-affordability-calculator',
     title: 'Home Affordability Calculator',
     category: 'Finance & numbers',

@@ -38,7 +38,7 @@ for (const slug of ['mortgage-calculator','home-affordability-calculator','rent-
   'capital-gains-tax-calculator','commission-calculator']) {
   check(`tools directory links ${slug}`, tools.includes(`<li><a href="${slug}/">`));
 }
-check('tools meta updated', tools.includes('Explore 10 free real estate calculators'));
+check('tools meta updated', tools.includes('Explore 11 free real estate calculators')); // 11th tool added 2026-11-22
 // 5. CGT sources + mistakes.
 const cgt = read('tools/capital-gains-tax-calculator/index.html');
 for (const u of ['irs.gov/publications/p523', 'irs.gov/taxtopics/tc409', 'irs.gov/publications/p544',
@@ -79,7 +79,7 @@ check('about methodology', ['formulas, inputs and assumptions', 'Worked examples
 check('privacy page published in website tree', fs.existsSync(path.join(ROOT, 'privacy-policy', 'index.html')));
 check('terms page published in website tree', fs.existsSync(path.join(ROOT, 'terms', 'index.html')));
 const sm = read('sitemap.xml');
-check('sitemap still 23 URLs', (sm.match(/<loc>/g) || []).length === 23);
+check('sitemap still 24 URLs', (sm.match(/<loc>/g) || []).length === 24); // +1: down-payment-calculator (2026-11-22)
 console.log(`W7: ${passed} passed, ${failures.length} failed`);
 for (const f of failures) console.log('  FAIL:', f);
 process.exit(failures.length ? 1 : 0);
