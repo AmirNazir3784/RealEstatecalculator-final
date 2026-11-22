@@ -325,3 +325,21 @@
 .home .home-audience-card .text-link:hover {text-decoration:underline;}
 @media(max-width:960px){.home .home-audience-grid {grid-template-columns:repeat(2,minmax(0,1fr));}}
 @media(max-width:640px){.home .home-audience-grid {grid-template-columns:minmax(0,1fr);}}
+
+/* FAQ accordion (homepage redesign WIP): sticky intro column, clean rows,
+   collapsed by default; state is driven by home.js via aria-expanded. */
+.home .home-faq-layout {grid-template-columns:minmax(0,7fr) minmax(0,13fr);gap:48px;align-items:start;}
+.home .home-faq .text-link {display:inline-flex;align-items:center;min-height:44px;color:var(--teal);font-weight:600;text-decoration:none;}
+.home .home-faq .text-link:hover {text-decoration:underline;}
+.home .home-faq-item {border-bottom:1px solid var(--line);}
+.home .home-faq-item h3 {margin:0;}
+.home .home-faq-toggle {appearance:none;-webkit-appearance:none;background:transparent;border:none;text-align:left;cursor:pointer;width:100%;display:flex;justify-content:space-between;align-items:center;gap:16px;min-height:56px;padding:18px 0;font-family:var(--font-body);font-size:17px;font-weight:600;color:var(--navy);}
+.home .home-faq-toggle:hover {color:var(--teal);}
+.home .home-faq-toggle:focus-visible {outline:3px solid var(--navy);outline-offset:3px;}
+.home .home-faq-plus {flex-shrink:0;font-size:20px;line-height:1;color:var(--teal);transition:transform .2s ease;}
+.home .home-faq-toggle[aria-expanded="true"] .home-faq-plus {transform:rotate(45deg);}
+.home .home-faq-answer[hidden] {display:none;}
+.home .home-faq-answer {padding:0 0 20px;}
+.home .home-faq-answer p {font-size:16px;line-height:1.6;color:var(--muted);margin:0;max-width:60ch;}
+@media(min-width:901px){.home .home-faq-layout .home-section-heading {position:sticky;top:96px;}}
+@media(max-width:900px){.home .home-faq-layout {grid-template-columns:minmax(0,1fr);gap:32px;}}

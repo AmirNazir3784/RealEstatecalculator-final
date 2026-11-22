@@ -34,3 +34,21 @@
   search.addEventListener('input', update);
   update();
 })();
+
+// FAQ accordion: one answer open at a time, all collapsed by default.
+// State lives in aria-expanded + the answer's hidden attribute.
+(function () {
+  if (typeof document.querySelectorAll !== 'function') return;
+  const toggles = [...document.querySelectorAll('.home-faq-toggle')];
+  if (!toggles.length) return;
+  function setState(btn, open) {
+    btn.setAttribute('aria-expanded', String(open));
+    const panel = document.getElementById(btn.getAttribute('aria-controls'));
+    if (panel) panel.hidden = !open;
+  }
+  toggles.forEach(btn => btn.addEventListener('click', () => {
+    const willOpen = btn.getAttribute('aria-expanded') !== 'true';
+    toggles.forEach(b => setState(b, false));
+    if (willOpen) setState(btn, true);
+  }));
+})();
