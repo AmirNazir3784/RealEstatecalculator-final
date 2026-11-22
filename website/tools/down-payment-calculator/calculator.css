@@ -8,9 +8,21 @@
   .dp-calc-section .result { position: sticky; top: 96px; }
 }
 
-/* Quick Answer callout */
-.dp-intro-section { padding-bottom: 8px; }
-.dp-quick { background: var(--mist); border-left: 3px solid var(--teal); border-radius: 0 10px 10px 0; padding: 14px 18px; }
+/* Gold eyebrow accent bar (matches the homepage hero treatment) */
+.dp-eyebrow-bar { display: block; width: 26px; height: 2px; background: var(--gold); margin-bottom: 10px; }
+
+/* Contrast polish: crisp dark-slate body text on this page; navy stays on
+   headings, bold, labels and table numbers; secondary text is #475569. */
+.dp-main p, .dp-main li, .dp-rail-card li, .dp-faq-panel p { color: #243442; }
+.dp-main strong, .dp-rail-card strong { color: var(--navy); }
+.dp-calc-section .field-helper, .dp-calc-section .muted, .dp-calc-section .disclaimer, .dp-footnote { color: #475569; }
+.dp-calc-section .result .muted { color: #CBD5E1; }
+.dp-tiers td { color: var(--navy); }
+.dp-table td { color: #243442; }
+
+/* Quick Answer callout: crisp white card with a teal accent edge */
+.dp-quick { background: #fff; border: 1px solid var(--line); border-left: 4px solid var(--teal); border-radius: 10px; padding: 14px 18px; }
+.dp-main p.dp-quick { color: #1E293B; }
 
 /* Preset chips: visual pill stays compact, hit area is a full 44px. */
 .dp-chips { display: flex; flex-wrap: wrap; gap: 8px; }
@@ -33,11 +45,13 @@
 .dp-metric { display: flex; flex-direction: column; gap: 2px; padding: 10px 0; border-top: 1px solid rgba(255, 255, 255, 0.18); }
 .dp-metric span { font-size: 0.82rem; color: #A8BBC7; }
 .dp-metric b { font-size: 1.12rem; color: #fff; }
-.dp-handoff { display: inline-block; margin-top: 12px; min-height: 44px; line-height: 44px; color: var(--teal-dark); font-weight: 700; text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1.5px; }
+.dp-handoff { display: inline-block; margin-top: 12px; min-height: 44px; line-height: 44px; color: #5EEAD4; font-weight: 700; text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1.5px; }
+.dp-handoff:hover { color: #99F6E4; }
 .dp-handoff:focus-visible { outline: 3px solid var(--teal); outline-offset: 3px; border-radius: 4px; }
 
-/* Tier table */
-.dp-tiers-wrap { margin-top: 34px; }
+/* Tier table: crisp white card on the paper background */
+.dp-tiers-wrap { margin-top: 34px; background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 28px; }
+@media (max-width: 760px) { .dp-tiers-wrap { padding: 20px; } }
 .dp-tiers { width: 100%; border-collapse: collapse; font-size: 0.98rem; }
 .dp-tiers th, .dp-tiers td { padding: 12px 14px; text-align: right; border-bottom: 1px solid var(--line); white-space: nowrap; }
 .dp-tiers th:first-child, .dp-tiers td:first-child { text-align: left; }
