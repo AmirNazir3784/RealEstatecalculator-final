@@ -12,7 +12,7 @@ const frozen = {
   "pages": {
     // Homepage baseline includes the approved Google Search Console verification tag.
     // Refreshed on the redesign WIP branch: combined How + Why section, shared header/footer restored, CRM card UI, keyword title/H1/meta re-applied.
-    "index.html": "8f9f6712b4212c6092d4a465f43b0637d04fbd03326741853fb410bb36ff1733",
+    "index.html": "84d197afed55ade0872256b0d9e67901e70aee0e47564d63e607ba6f05281085",
     // About baseline refreshed for the editorial refinement; shared header stays frozen.
     // All page baselines refreshed 2026-11-16: footer Platform column gained the Privacy Policy link on every page.
     // All page baselines refreshed 2026-11-17: footer Platform column gained the Terms of Use link on every page.
