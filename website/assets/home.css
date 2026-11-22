@@ -412,3 +412,15 @@
 .home .home-product {color:var(--text);}
 .home .home-product .eyebrow {color:var(--teal);}
 .home .home-product h2 {color:var(--navy);}
+
+/* Hero polish (WIP): icon inside the search input, tighter spacing,
+   inline trust items, stronger photo overlay. */
+.home .home-hero {padding:56px 0;background:linear-gradient(90deg,rgba(246,245,240,.97) 0%,rgba(246,245,240,.92) 52%,rgba(246,245,240,.35) 100%),image-set(url('home-architecture.avif') type('image/avif'),url('home-architecture.webp') type('image/webp'),url('home-architecture.jpg') type('image/jpeg')) center right/cover;}
+.home .home-search-field {position:relative;}
+.home .home-search-field svg {position:absolute;left:14px;top:50%;transform:translateY(-50%);pointer-events:none;width:20px;height:20px;color:var(--muted);}
+.home .home-search-field .field {padding-left:42px;min-height:44px;}
+.home .home-hero-benefits li {display:flex;align-items:center;gap:8px;border-left:none;padding-left:0;}
+.home .home-hero-benefits svg {width:20px;height:20px;flex-shrink:0;color:var(--teal);}
+.home .home-hero-benefits span {display:inline;font-size:14px;font-weight:500;color:var(--navy);margin-top:0;}
+@media(max-width:760px){.home .home-hero {padding:40px 0;}}
+@media(max-width:640px){.home .home-hero-benefits {display:flex;flex-wrap:wrap;gap:12px 20px;}}
