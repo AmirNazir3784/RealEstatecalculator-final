@@ -1,5 +1,5 @@
 // Down Payment Calculator — scoped to #down-payment-form only.
-// Conventional PMI uses LTV bands; the 3.5% tier-table row uses FHA MIP maths.
+// Conventional PMI uses LTV bands; the 3.5% tier card uses FHA MIP maths.
 // All figures are estimates computed in the browser; nothing is sent anywhere.
 (function () {
   var form = document.querySelector('#down-payment-form');
@@ -101,6 +101,14 @@
     if (!valid) {
       setText('dp-cash-to-close', '—'); setText('sticky-value', '—'); setText('dp-loan', '—'); setText('dp-ltv', '—');
       setText('dp-pi', '—'); setText('dp-pmi', '—'); setText('dp-composition', '');
+      setText('dp-bd-down', '—'); setText('dp-bd-close', '—'); setText('dp-bd-total', '—');
+      setText('dp-f-price', '—'); setText('dp-f-down', '—'); setText('dp-f-loan', '—');
+      var badBanner = el('dp-pmi-banner');
+      if (badBanner) {
+        badBanner.className = 'dp-pmi-banner dp-banner-some';
+        setText('dp-pmi-banner-ic', '!');
+        setText('dp-pmi-banner-text', 'Check your inputs to see the PMI estimate.');
+      }
       return;
     }
 
@@ -123,6 +131,34 @@
     var composition = 'Down payment ' + money(down) + ' + est. closing costs ' + money(closing);
     if (earnest > 0) composition += ' − earnest money ' + money(earnest);
     setText('dp-composition', composition);
+    // Composition bar: down payment (navy) + closing costs (gold) vs the price.
+    var barDown = el('dp-bar-down'), barClose = el('dp-bar-close');
+    if (barDown) barDown.style.width = pct + '%';
+    if (barClose) barClose.style.width = closingPct + '%';
+    // Breakdown panel.
+    setText('dp-bd-down', money(down) + ' (' + pctText(pct) + ')');
+    setText('dp-bd-close', money(closing) + ' (' + pctText(closingPct) + ')');
+    var earnestRow = el('dp-bd-earnest-row');
+    if (earnestRow) earnestRow.hidden = earnest <= 0;
+    setText('dp-bd-earnest', '−' + money(earnest));
+    setText('dp-bd-total', money(cashToClose));
+    // PMI banner: mint confirmation when no PMI, amber estimate otherwise.
+    var banner = el('dp-pmi-banner');
+    if (banner) {
+      if (pmi <= 0) {
+        banner.className = 'dp-pmi-banner dp-banner-none';
+        setText('dp-pmi-banner-ic', '✓');
+        setText('dp-pmi-banner-text', 'No PMI required at ' + pctText(pct) + ' down — one less monthly cost, and a smaller loan.');
+      } else {
+        banner.className = 'dp-pmi-banner dp-banner-some';
+        setText('dp-pmi-banner-ic', '!');
+        setText('dp-pmi-banner-text', 'PMI estimated at ' + money(pmi) + '/mo — it can be cancelled at 80% LTV and ends automatically at 78%.');
+      }
+    }
+    // Formula strip.
+    setText('dp-f-price', money(price));
+    setText('dp-f-down', money(down));
+    setText('dp-f-loan', money(loan));
     setText('dp-pmi-note', ltv > 80
       ? (override !== null
         ? 'Using your rate: ' + trimNum(appliedRate) + '% a year at ' + pctText(ltv) + ' LTV.'
@@ -135,26 +171,23 @@
         '&down=' + Math.round(down) + '&rate=' + trimNum(rate) + '&term=' + years);
     }
 
-    var body = el('dp-tiers-body');
-    if (body) {
-      var rows = body.querySelectorAll('tr');
-      for (var t = 0; t < TIERS.length; t++) {
-        var tierPct = TIERS[t];
-        var tDown = price * tierPct / 100;
-        var tCash = tDown + closing - earnest;
-        var isSelected = Math.abs(tierPct - pct) < 0.001;
-        var tMonthly = tierMonthly(tierPct, price, rate, years, isSelected ? override : null);
-        var row = rows[t];
-        if (!row) continue;
-        row.className = isSelected ? 'is-selected' : '';
-        var cells = row.querySelectorAll('td');
-        if (cells.length === 5) {
-          cells[1].textContent = money(tDown);
-          cells[2].textContent = money(closing);
-          cells[3].textContent = money(tCash);
-          cells[4].textContent = money(tMonthly);
-        }
-      }
+    var cards = document.querySelectorAll('.dp-tier-card');
+    for (var t = 0; t < cards.length; t++) {
+      var card = cards[t];
+      var tierPct = Number(card.getAttribute('data-pct'));
+      if (!Number.isFinite(tierPct)) continue;
+      var isSelected = Math.abs(tierPct - pct) < 0.001;
+      var tDown = price * tierPct / 100;
+      var tCash = tDown + closing - earnest;
+      var tMonthly = tierMonthly(tierPct, price, rate, years, isSelected ? override : null);
+      var fDown = card.querySelector('[data-f="down"]');
+      var fCtc = card.querySelector('[data-f="ctc"]');
+      var fMonthly = card.querySelector('[data-f="monthly"]');
+      if (fDown) fDown.textContent = money(tDown);
+      if (fCtc) fCtc.textContent = money(tCash);
+      if (fMonthly) fMonthly.textContent = money(tMonthly);
+      card.classList.toggle('selected', isSelected);
+      card.setAttribute('aria-pressed', isSelected ? 'true' : 'false');
     }
   }
 
@@ -180,7 +213,7 @@
       compute('chip');
     });
   }
-  var picks = document.querySelectorAll('.dp-tier-pick');
+  var picks = document.querySelectorAll('.dp-tier-card');
   for (var j = 0; j < picks.length; j++) {
     picks[j].addEventListener('click', function () {
       var pctInput = el('dp-down-percent');

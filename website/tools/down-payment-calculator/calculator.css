@@ -1,5 +1,7 @@
 /* Down Payment Calculator — page-scoped styles only.
-   Builds on the shared tools.css layout (panel + result); no shared CSS touched. */
+   Builds on the shared tools.css layout (panel + result); no shared CSS touched.
+   Visual system: approved design mockup (light results card, composition bar,
+   PMI banner, segmented tier pill, tier cards, program cards, formula strip). */
 
 /* Keep the results card compact and in view; never stretch it with the form column. */
 .dp-calc-section .calculator-layout { align-items: start; }
@@ -8,31 +10,51 @@
   .dp-calc-section .result { position: sticky; top: 96px; }
 }
 
+/* First-screen fit: slim hero + compact calculator so Layer 1 sits in the
+   first viewport without scrolling on desktop. */
+.calc-page .page-hero { padding: 16px 0 14px; }
+.calc-page .page-hero .eyebrow { margin-bottom: 10px; }
+.calc-page .page-hero h1 { font-family: Inter, ui-sans-serif, system-ui, sans-serif; font-weight: 800; letter-spacing: -0.02em; font-size: 2.55rem; margin-bottom: 6px; }
+.calc-page .page-hero p { font-size: 0.98rem; line-height: 1.45; }
+.calc-page .section.dp-calc-section { padding-top: 14px; }
+.dp-calc-section .panel { padding: 20px 24px; }
+.dp-calc-section .panel h2 { font-size: 1.35rem; margin-bottom: 2px; }
+.dp-calc-section .panel .muted { margin-bottom: 8px; }
+.dp-calc-section .form-grid { gap: 12px; }
+.dp-calc-section .form-field label { margin-bottom: 5px; }
+.dp-calc-section .form-group legend { margin-bottom: 4px; }
+.dp-calc-section .form-field small { margin-top: 3px; }
+.dp-calc-section .field { padding-top: 9px; padding-bottom: 9px; }
+@media (max-height: 840px) and (min-width: 961px) {
+  .calc-page .page-hero { padding: 10px 0 12px; }
+  .calc-page .page-hero h1 { font-size: 2.3rem; }
+  .calc-page .section.dp-calc-section { padding-top: 10px; }
+}
+
 /* Gold eyebrow accent bar (matches the homepage hero treatment) */
 .dp-eyebrow-bar { display: block; width: 26px; height: 2px; background: var(--gold); margin-bottom: 10px; }
 
-/* Contrast polish: crisp dark-slate body text on this page; navy stays on
-   headings, bold, labels and table numbers; secondary text is #475569. */
+/* Contrast: crisp dark-slate body text on this page; navy stays on headings,
+   bold, labels and table numbers; secondary text is #475569. */
 .dp-main p, .dp-main li, .dp-rail-card li, .dp-faq-panel p { color: #243442; }
 .dp-main strong, .dp-rail-card strong { color: var(--navy); }
 .dp-calc-section .field-helper, .dp-calc-section .muted, .dp-calc-section .disclaimer, .dp-footnote { color: #475569; }
-.dp-calc-section .result .muted { color: #CBD5E1; }
-.dp-tiers td { color: var(--navy); }
 .dp-table td { color: #243442; }
 
 /* Quick Answer callout: crisp white card with a teal accent edge */
 .dp-quick { background: #fff; border: 1px solid var(--line); border-left: 4px solid var(--teal); border-radius: 10px; padding: 14px 18px; }
 .dp-main p.dp-quick { color: #1E293B; }
 
-/* Preset chips: visual pill stays compact, hit area is a full 44px. */
-.dp-chips { display: flex; flex-wrap: wrap; gap: 8px; }
-.dp-chip { min-height: 44px; padding: 6px 18px; border: 1px solid var(--line); border-radius: 999px; background: #fff; color: var(--navy); font: inherit; font-size: 0.95rem; font-weight: 600; cursor: pointer; }
-.dp-chip:hover { border-color: var(--teal); }
-.dp-chip[aria-pressed="true"] { background: var(--teal); border-color: var(--teal); color: #fff; }
+/* Segmented tier pill: one unified control, 48px hit height. */
+.dp-chips { display: flex; flex-wrap: nowrap; border: 1px solid #CBD5E1; border-radius: 999px; overflow: hidden; background: #fff; }
+.dp-chip { flex: 1 1 0; min-width: 0; min-height: 44px; padding: 6px 2px; border: 0; border-right: 1px solid var(--line); border-radius: 0; background: #fff; color: var(--slate, #243442); font: inherit; font-size: 0.95rem; font-weight: 600; cursor: pointer; }
+.dp-chip:last-child { border-right: 0; }
+.dp-chip:hover { background: #f2f6f5; }
+.dp-chip[aria-pressed="true"] { background: var(--mist); color: var(--navy); box-shadow: inset 0 0 0 2px var(--teal); border-radius: 999px; }
 .dp-chip:focus-visible { outline: 3px solid var(--teal); outline-offset: 2px; }
 
 /* Adjust disclosure */
-.dp-adjust { margin-top: 18px; border-top: 1px solid var(--line); padding-top: 6px; }
+.dp-adjust { margin-top: 6px; border-top: 1px solid var(--line); padding-top: 2px; }
 .dp-adjust summary { display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 44px; cursor: pointer; font-weight: 700; color: var(--navy); list-style: none; }
 .dp-adjust summary::-webkit-details-marker { display: none; }
 .dp-adjust summary:focus-visible { outline: 3px solid var(--teal); outline-offset: 3px; border-radius: 4px; }
@@ -40,37 +62,90 @@
 .dp-adjust[open ] .dp-adjust-chevron { transform: rotate(225deg); }
 .dp-adjust-grid { padding: 10px 0 4px; }
 
-/* Results metric strip */
-.dp-metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 0 18px; margin: 18px 0 6px; }
-.dp-metric { display: flex; flex-direction: column; gap: 2px; padding: 10px 0; border-top: 1px solid rgba(255, 255, 255, 0.18); }
-.dp-metric span { font-size: 0.82rem; color: #A8BBC7; }
-.dp-metric b { font-size: 1.12rem; color: #fff; }
-.dp-handoff { display: inline-block; margin-top: 12px; min-height: 44px; line-height: 44px; color: #5EEAD4; font-weight: 700; text-decoration: underline; text-underline-offset: 4px; text-decoration-thickness: 1.5px; }
-.dp-handoff:hover { color: #99F6E4; }
-.dp-handoff:focus-visible { outline: 3px solid var(--teal); outline-offset: 3px; border-radius: 4px; }
+/* Results card: light, with the composition bar and breakdown panel */
+.dp-calc-section .result { background: #fff; color: #243442; border: 1px solid var(--line); border-radius: 20px; box-shadow: 0 16px 40px rgba(16, 33, 49, 0.09); padding: 18px 24px 14px; }
+.dp-calc-section .result-label { display: inline-block; color: var(--navy); font-size: 0.92rem; border-bottom: 1px dotted #94A3B8; padding-bottom: 2px; }
+.dp-calc-section .result-number { color: var(--navy); font-weight: 800; letter-spacing: -0.02em; font-size: 2.45rem; margin: 6px 0 8px; }
+.dp-pbar { height: 10px; border-radius: 99px; background: #EDEBE4; display: flex; overflow: hidden; }
+.dp-seg-down { background: var(--navy); }
+.dp-seg-close { background: var(--gold); }
+.dp-bar-labels { display: flex; justify-content: space-between; font-size: 0.8rem; color: #475569; margin-top: 5px; }
+.dp-calc-section .result-hero-sub { color: #243442; margin: 8px 0 0; font-size: 0.94rem; }
+.dp-calc-section .result-hero-sub b { color: var(--navy); }
+.dp-breakdown { background: #F7F6F1; border-radius: 14px; padding: 8px 14px; margin-top: 10px; }
+.dp-bd-row { display: flex; justify-content: space-between; gap: 14px; padding: 2px 0; font-size: 0.93rem; line-height: 1.45; }
+.dp-bd-row[hidden] { display: none; }
+.dp-bd-row span { color: #475569; }
+.dp-bd-row b { color: var(--navy); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.dp-bd-total { border-top: 1px solid var(--line); margin-top: 6px; padding-top: 11px; font-size: 1.02rem; }
+.dp-bd-total span { color: var(--navy); font-weight: 600; }
 
-/* Tier table: crisp white card on the paper background */
-.dp-tiers-wrap { margin-top: 34px; background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 28px; }
-@media (max-width: 760px) { .dp-tiers-wrap { padding: 20px; } }
-.dp-tiers { width: 100%; border-collapse: collapse; font-size: 0.98rem; }
-.dp-tiers th, .dp-tiers td { padding: 12px 14px; text-align: right; border-bottom: 1px solid var(--line); white-space: nowrap; }
-.dp-tiers th:first-child, .dp-tiers td:first-child { text-align: left; }
-.dp-tiers thead th { color: var(--muted); font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.04em; }
-.dp-tiers tbody tr { cursor: pointer; }
-.dp-tiers tbody tr:hover { background: #f2f6f5; }
-.dp-tiers tbody tr.is-selected { background: var(--mist); font-weight: 600; }
-.dp-tier-pick { font: inherit; font-weight: inherit; color: var(--teal-dark); background: none; border: 0; padding: 10px 4px; margin: -10px -4px; min-height: 44px; cursor: pointer; text-align: left; }
-.dp-tier-pick:focus-visible { outline: 3px solid var(--teal); outline-offset: 2px; border-radius: 4px; }
-.dp-badge { display: inline-block; margin-left: 8px; padding: 2px 9px; border-radius: 999px; background: var(--teal); color: #fff; font-size: 0.74rem; font-weight: 700; vertical-align: middle; }
+/* Dynamic PMI banner */
+.dp-pmi-banner { display: flex; gap: 11px; align-items: flex-start; border-radius: 12px; padding: 9px 12px; margin-top: 10px; font-size: 0.86rem; line-height: 1.4; }
+.dp-banner-ic { flex: none; width: 22px; height: 22px; border-radius: 50%; display: grid; place-items: center; font-size: 0.8rem; font-weight: 800; margin-top: 1px; }
+.dp-banner-none { background: #E7F6F1; color: #14532D; }
+.dp-banner-none .dp-banner-ic { background: #16A34A; color: #fff; }
+.dp-banner-some { background: #FDF6E3; color: #713F12; }
+.dp-banner-some .dp-banner-ic { background: #D97706; color: #fff; }
+
+/* Results metric strip (light card) */
+.dp-metrics { display: grid; grid-template-columns: 1fr 1fr; gap: 0 18px; margin: 10px 0 2px; }
+.dp-metric { display: flex; flex-direction: column; gap: 1px; padding: 5px 0; border-top: 1px solid var(--line); }
+.dp-metric span { font-size: 0.78rem; color: #475569; }
+.dp-metric b { font-size: 1.04rem; color: var(--navy); }
+
+/* Handoff: full-width teal pill CTA */
+.dp-handoff { display: flex; align-items: center; justify-content: center; gap: 8px; width: 100%; margin-top: 12px; min-height: 48px; padding: 8px 12px; background: var(--teal); color: #fff; font-weight: 700; font-size: 0.95rem; text-align: center; text-decoration: none; border-radius: 999px; line-height: 1.3; }
+.dp-calc-section .result .muted { margin: 8px 0 0; font-size: 0.8rem; line-height: 1.5; }
+.dp-handoff:hover { background: var(--teal-dark); color: #fff; }
+.dp-handoff:focus-visible { outline: 3px solid var(--teal); outline-offset: 3px; }
+
+/* Tier comparison: selectable cards instead of a wide table */
+.dp-tiers-wrap { margin-top: 44px; }
+.dp-tier-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 20px; }
+.dp-tier-card { position: relative; text-align: left; font: inherit; background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 20px; cursor: pointer; box-shadow: 0 4px 14px rgba(16, 33, 49, 0.04); }
+.dp-tier-card:hover { border-color: #B6C2CC; }
+.dp-tier-card:focus-visible { outline: 3px solid var(--teal); outline-offset: 2px; }
+.dp-tier-card .dp-pct { font-size: 1.45rem; font-weight: 800; color: var(--navy); letter-spacing: -0.01em; }
+.dp-tag { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.06em; color: var(--teal-dark); background: var(--mist); border-radius: 99px; padding: 3px 9px; vertical-align: middle; margin-left: 8px; }
+.dp-tag-mint { background: #E7F6F1; color: #14532D; }
+.dp-tier-card dl { margin: 14px 0 0; }
+.dp-trow { display: flex; justify-content: space-between; gap: 12px; padding: 6px 0; font-size: 0.92rem; border-top: 1px solid #F0EEE6; }
+.dp-trow:first-child { border-top: 0; }
+.dp-trow span { color: #475569; }
+.dp-trow b { color: var(--navy); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.dp-tier-card.selected { border-color: var(--teal); box-shadow: 0 0 0 1px var(--teal), 0 12px 28px rgba(16, 33, 49, 0.08); }
+.dp-sel-pill { position: absolute; top: 14px; right: 14px; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.05em; background: var(--teal); color: #fff; border-radius: 99px; padding: 4px 10px; display: none; }
+.dp-tier-card.selected .dp-sel-pill { display: block; }
 .dp-footnote { font-size: 0.88rem; color: var(--muted); max-width: 760px; margin: 10px 0 0; }
+@media (max-width: 960px) { .dp-tier-grid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 640px) { .dp-tier-grid { grid-template-columns: 1fr; } }
 
-/* Editorial tables (worked example, program minimums) */
+/* Formula strip: the maths, visually */
+.dp-formula-wrap { margin-top: 48px; }
+.dp-formula-strip { display: flex; align-items: stretch; margin-top: 18px; }
+.dp-fbox { flex: 1; background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 18px 20px; }
+.dp-fbox span { display: block; font-size: 0.78rem; color: #475569; text-transform: uppercase; letter-spacing: 0.07em; font-weight: 600; }
+.dp-fbox b { font-size: 1.4rem; color: var(--navy); font-weight: 800; letter-spacing: -0.01em; }
+.dp-farrow { align-self: center; padding: 0 12px; color: var(--gold); font-size: 1.3rem; font-weight: 800; }
+@media (max-width: 640px) {
+  .dp-formula-strip { flex-direction: column; gap: 8px; }
+  .dp-farrow { transform: rotate(90deg); padding: 0; text-align: center; }
+}
+
+/* Editorial tables (worked example) */
 .dp-table { width: 100%; border-collapse: collapse; font-size: 0.96rem; }
 .dp-table th, .dp-table td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--line); vertical-align: top; }
 .dp-table thead th { color: var(--muted); font-size: 0.82rem; text-transform: uppercase; letter-spacing: 0.04em; }
-/* The shared .content rule right-aligns last columns for numeric tables; the
-   program-minimums table is prose, so its last column stays left-aligned. */
-.dp-editorial .dp-table-text td:last-child, .dp-editorial .dp-table-text th:last-child { text-align: left; }
+
+/* Loan-program cards (replaces the minimums table) */
+.dp-program-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 18px 0 6px; }
+.dp-program-card { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 20px; box-shadow: 0 4px 14px rgba(16, 33, 49, 0.04); }
+.dp-program-card h3 { margin: 0 0 6px; font-size: 1.12rem; color: var(--navy); }
+.dp-program-min { font-size: 1rem; font-weight: 700; color: var(--teal-dark); margin: 0 0 12px; line-height: 1.45; }
+.dp-program-row { font-size: 0.9rem; line-height: 1.55; margin: 0 0 10px; }
+.dp-program-row span { display: block; font-size: 0.74rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: #475569; margin-bottom: 3px; }
+@media (max-width: 640px) { .dp-program-grid { grid-template-columns: 1fr; } }
 
 /* Two-column editorial zone: sections left, takeaways + FAQ rail right */
 .dp-editorial { display: grid; grid-template-columns: minmax(0, 1fr) 340px; gap: 44px; align-items: start; }
