@@ -413,3 +413,8 @@
 .home .home-search-field .field {padding-left:42px;min-height:44px;}
 @media(max-width:760px){.home .home-hero {padding:40px 0;}}
 
+
+/* Hero copy polish (WIP): keep the "View all calculators" link on one line;
+   breathing room between icon and text in the mini cards on mobile. */
+.home .home-panel-heading a {white-space:nowrap;}
+@media(max-width:640px){.home .home-quick-card {gap:12px;}}
