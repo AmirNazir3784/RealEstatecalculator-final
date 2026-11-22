@@ -37,7 +37,8 @@ cards.forEach((card, i) => {
 
 // Scoped CSS contract (home.css audience layer).
 for (const rule of [
-  '.home .home-audience {background:var(--paper);}',
+  '.home .home-audience {background:var(--paper);padding:76px 0;}',
+  '.home .home-audience .wrap {width:min(1440px,calc(100% - 80px));}',
   '.home .home-audience-card img {width:100%;height:auto;aspect-ratio:16/9;',
   '.home .audience-card-badge {position:absolute;bottom:12px;left:12px;width:42px;height:42px;',
   '.home .home-audience-card .text-link {margin-top:auto;',
