@@ -106,25 +106,35 @@
 .dp-handoff:focus-visible { outline: 3px solid var(--teal); outline-offset: 3px; }
 
 /* Tier comparison: selectable cards instead of a wide table */
-.dp-tiers-wrap { margin-top: 44px; }
-.dp-tier-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; margin-top: 20px; }
-.dp-tier-card { position: relative; text-align: left; font: inherit; background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 16px 18px; cursor: pointer; box-shadow: 0 4px 14px rgba(16, 33, 49, 0.04); }
+.dp-tiers-wrap { margin-top: 36px; }
+.dp-tiers-wrap h2 { margin-bottom: 6px; }
+.dp-tiers-wrap > p { margin-bottom: 0; }
+.dp-tier-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 16px; }
+.dp-tier-card { position: relative; text-align: left; font: inherit; background: #fff; border: 1px solid var(--line); border-radius: 14px; padding: 13px 15px; cursor: pointer; box-shadow: 0 4px 14px rgba(16, 33, 49, 0.04); }
 .dp-tier-card:hover { border-color: #B6C2CC; }
 .dp-tier-card:focus-visible { outline: 3px solid var(--teal); outline-offset: 2px; }
-.dp-tier-card .dp-pct { font-size: 1.3rem; font-weight: 800; color: var(--navy); letter-spacing: -0.01em; }
+.dp-tier-card .dp-pct { font-size: 1.22rem; font-weight: 800; color: var(--navy); letter-spacing: -0.01em; }
 .dp-tag { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.06em; color: var(--teal-dark); background: var(--mist); border-radius: 99px; padding: 3px 9px; vertical-align: middle; margin-left: 8px; }
 .dp-tag-mint { background: #E7F6F1; color: #14532D; }
-.dp-tier-card dl { margin: 10px 0 0; }
-.dp-trow { display: flex; justify-content: space-between; gap: 12px; padding: 4px 0; font-size: 0.9rem; border-top: 1px solid #F0EEE6; }
+.dp-tier-card dl { margin: 8px 0 0; }
+.dp-trow { display: flex; justify-content: space-between; gap: 12px; padding: 3px 0; font-size: 0.88rem; border-top: 1px solid #F0EEE6; }
 .dp-trow:first-child { border-top: 0; }
 .dp-trow span { color: #475569; }
 .dp-trow b { color: var(--navy); font-variant-numeric: tabular-nums; white-space: nowrap; }
 .dp-tier-card.selected { border-color: var(--teal); box-shadow: 0 0 0 1px var(--teal), 0 12px 28px rgba(16, 33, 49, 0.08); }
-.dp-sel-pill { position: absolute; top: 14px; right: 14px; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.05em; background: var(--teal); color: #fff; border-radius: 99px; padding: 4px 10px; display: none; }
+.dp-sel-pill { position: absolute; top: 11px; right: 12px; font-size: 0.72rem; font-weight: 700; letter-spacing: 0.05em; background: var(--teal); color: #fff; border-radius: 99px; padding: 4px 10px; display: none; }
 .dp-tier-card.selected .dp-sel-pill { display: block; }
 .dp-footnote { font-size: 0.88rem; color: var(--muted); max-width: 760px; margin: 10px 0 0; }
 @media (max-width: 960px) { .dp-tier-grid { grid-template-columns: 1fr 1fr; } }
 @media (max-width: 640px) { .dp-tier-grid { grid-template-columns: 1fr; } }
+
+/* Notes & assumptions: the footnotes under the tier cards, in one card */
+.dp-notes { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 18px 22px 14px; margin-top: 18px; box-shadow: 0 4px 14px rgba(16, 33, 49, 0.04); }
+.dp-notes-title { font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--teal-dark); margin: 0 0 12px; }
+.dp-notes-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px 32px; }
+.dp-notes .dp-footnote { max-width: none; font-size: 0.88rem; line-height: 1.55; color: #475569; margin: 0 0 10px; }
+.dp-notes-legal { border-top: 1px solid var(--line); padding-top: 11px; margin: 4px 0 2px; font-size: 0.85rem; color: #475569; }
+@media (max-width: 640px) { .dp-notes-grid { grid-template-columns: 1fr; } }
 
 /* Formula strip: the maths, visually */
 .dp-formula-wrap { margin-top: 48px; }
