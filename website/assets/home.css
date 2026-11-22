@@ -343,3 +343,27 @@
 .home .home-faq-answer p {font-size:16px;line-height:1.6;color:var(--muted);margin:0;max-width:60ch;}
 @media(min-width:901px){.home .home-faq-layout .home-section-heading {position:sticky;top:96px;}}
 @media(max-width:900px){.home .home-faq-layout {grid-template-columns:minmax(0,1fr);gap:32px;}}
+
+/* Combined How + Why section (homepage redesign WIP): steps left,
+   benefit cards right, full-width disclaimer below. */
+.home .home-how-why {padding:80px 0;}
+.home .home-how-why-inner {max-width:1200px;margin:0 auto;padding:0 32px;}
+.home .home-how-why-grid {display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.1fr);gap:48px;align-items:start;}
+.home .home-how-why-intro .eyebrow {font-weight:600;margin:0;}
+.home .home-how-why h2 {font-size:34px;margin:10px 0 0;}
+.home .home-how-why-sub {font-size:16px;line-height:1.6;color:var(--muted);margin:12px 0 0;}
+.home .home-how-why-steps {list-style:none;margin:28px 0 0;padding:0;display:flex;flex-direction:column;gap:20px;}
+.home .home-how-why-steps li {display:flex;gap:16px;align-items:flex-start;}
+.home .home-how-why-num {flex-shrink:0;font-size:13px;font-weight:600;line-height:1.5;color:var(--navy);border-bottom:2px solid var(--gold);padding-bottom:2px;}
+.home .home-how-why-steps p {margin:0;font-size:15px;line-height:1.6;color:var(--muted);}
+.home .home-how-why-steps strong {color:var(--navy);font-weight:600;}
+.home .home-how-why-cards {list-style:none;margin:0;padding:0;display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;}
+.home .home-how-why-card {background:var(--white);border:1px solid var(--line);border-radius:12px;padding:24px;}
+.home .home-how-why-icon {display:flex;align-items:center;justify-content:center;width:36px;height:36px;border-radius:8px;background:var(--mist);color:var(--teal);margin-bottom:14px;}
+.home .home-how-why-icon svg {width:20px;height:20px;}
+.home .home-how-why-card h3 {font-family:var(--font-body);font-size:17px;font-weight:600;color:var(--navy);margin:0 0 8px;}
+.home .home-how-why-card p {font-size:15px;line-height:1.6;color:var(--muted);margin:0;}
+.home .home-how-why-note {margin:36px 0 0;padding-top:20px;border-top:1px solid var(--line);font-size:13px;line-height:1.5;color:var(--muted);}
+@media(max-width:900px){.home .home-how-why-grid {grid-template-columns:minmax(0,1fr);gap:36px;}}
+@media(max-width:640px){.home .home-how-why {padding:56px 0;}.home .home-how-why-inner {padding:0 24px;}.home .home-how-why h2 {font-size:26px;}}
+@media(max-width:600px){.home .home-how-why-cards {grid-template-columns:minmax(0,1fr);}}
