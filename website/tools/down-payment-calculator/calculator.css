@@ -7,13 +7,12 @@
 .dp-calc-section .calculator-layout { align-items: start; }
 .dp-calc-section .calculator-layout > * { min-width: 0; }
 @media (min-width: 961px) {
-  .dp-calc-section .result { position: sticky; top: 96px; }
+  .dp-calc-section .result { position: sticky; top: 96px; margin-top: -68px; }
 }
 
 /* First-screen fit: slim hero + compact calculator so Layer 1 sits in the
    first viewport without scrolling on desktop. */
-.calc-page .page-hero { padding: 10px 0 8px; }
-.calc-page .page-hero .eyebrow { margin-bottom: 8px; }
+.calc-page .page-hero { padding: 8px 0 6px; }
 .calc-page .page-hero h1 { font-family: Inter, ui-sans-serif, system-ui, sans-serif; font-weight: 800; letter-spacing: -0.02em; font-size: 2.35rem; margin-bottom: 6px; }
 .calc-page .page-hero p { font-size: 0.98rem; line-height: 1.45; margin-bottom: 0; }
 /* tools.css sets a 24px bottom margin on this paragraph at higher specificity; match it to reclaim the space. */
@@ -34,9 +33,6 @@
 @media (min-width: 961px) {
   .calc-page .wrap { width: min(calc(100% - 96px), 1120px); }
 }
-
-/* Gold eyebrow accent bar (matches the homepage hero treatment) */
-.dp-eyebrow-bar { display: block; width: 26px; height: 2px; background: var(--gold); margin-bottom: 6px; }
 
 /* Contrast: crisp dark-slate body text on this page; navy stays on headings,
    bold, labels and table numbers; secondary text is #475569. */
@@ -193,6 +189,7 @@
   .dp-calc-section .result-hero-sub { display: none; }
   .dp-calc-section .panel { padding: 16px 22px; }
   .dp-calc-section .result { padding: 14px 20px 7px; }
+  .dp-calc-section .result { margin-top: -58px; }
   .dp-calc-section .result-number { font-size: 2.3rem; }
   .dp-calc-section .dp-pmi-banner { padding-top: 6px; padding-bottom: 6px; }
   .dp-calc-section .dp-breakdown { margin-top: 6px; }
