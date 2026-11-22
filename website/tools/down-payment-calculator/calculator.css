@@ -129,15 +129,12 @@
 @media (max-width: 640px) { .dp-tier-grid { grid-template-columns: 1fr; } }
 
 /* Notes & assumptions: the footnotes under the tier cards, in one card */
-.dp-notes { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 15px 20px 11px; margin-top: 16px; box-shadow: 0 4px 14px rgba(16, 33, 49, 0.04); }
+.dp-notes { background: #fff; border: 1px solid var(--line); border-radius: 16px; padding: 15px 20px 14px; margin-top: 16px; box-shadow: 0 4px 14px rgba(16, 33, 49, 0.04); }
 .dp-notes-title { font-size: 0.78rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.07em; color: var(--teal-dark); margin: 0 0 9px; }
 .dp-notes-list { display: grid; grid-template-columns: 1fr 1fr; gap: 7px 34px; list-style: none; margin: 0; padding: 0; }
 .dp-notes-list li { position: relative; padding-left: 17px; font-size: 0.88rem; line-height: 1.5; color: #475569; }
 .dp-notes-list li::before { content: ""; position: absolute; left: 1px; top: 0.52em; width: 6px; height: 6px; border-radius: 50%; background: var(--teal); }
 .dp-notes-list strong { color: var(--navy); }
-.dp-notes-legal { border-top: 1px solid var(--line); padding-top: 10px; margin: 11px 0 2px; font-size: 0.85rem; color: #475569; }
-/* tools.css caps disclaimer paragraphs at 80ch; the legal row must span the card. */
-.calc-page .dp-notes p.dp-notes-legal { max-width: none; }
 @media (max-width: 640px) { .dp-notes-list { grid-template-columns: 1fr; } }
 
 /* Formula strip: the maths, visually */
