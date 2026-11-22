@@ -76,7 +76,7 @@ for (const page of pages) {
 // Browser-tab titles follow the approved concise patterns.
 {
   const expected = new Map([
-    ['index.html', 'Every Real Estate Calculator | Tools &amp; Guides'],
+    ['index.html', 'Free Real Estate Calculators | Mortgage, Commission &amp; More'],
     ['real-estate-crm/index.html', 'RealtorCRM | CRM for Real Estate Agents'],
     ['about/index.html', 'About | Every Real Estate Calculator'],
     ['contact/index.html', 'Contact | Every Real Estate Calculator'],

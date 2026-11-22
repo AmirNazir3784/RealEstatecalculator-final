@@ -11,8 +11,8 @@ function equal(name, actual, expected) { assert.deepEqual(actual, expected, name
 const frozen = {
   "pages": {
     // Homepage baseline includes the approved Google Search Console verification tag.
-    // Refreshed on the redesign WIP branch for the combined How + Why section.
-    "index.html": "97c91b87407a9efbc6ea68f5690c664b87651000b11959e3a1d7636068b44f88",
+    // Refreshed on the redesign WIP branch: combined How + Why section, shared header/footer restored, CRM card UI, keyword title/H1/meta re-applied.
+    "index.html": "9691029800542a1d3a3a87360c4a0d7175cf2921382229d5c09280bbaa9b5375",
     // About baseline refreshed for the editorial refinement; shared header stays frozen.
     // All page baselines refreshed 2026-11-16: footer Platform column gained the Privacy Policy link on every page.
     // All page baselines refreshed 2026-11-17: footer Platform column gained the Terms of Use link on every page.

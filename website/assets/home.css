@@ -367,3 +367,48 @@
 @media(max-width:900px){.home .home-how-why-grid {grid-template-columns:minmax(0,1fr);gap:36px;}}
 @media(max-width:640px){.home .home-how-why {padding:56px 0;}.home .home-how-why-inner {padding:0 24px;}.home .home-how-why h2 {font-size:26px;}}
 @media(max-width:600px){.home .home-how-why-cards {grid-template-columns:minmax(0,1fr);}}
+
+/* All calculators index (keyword-targeting re-application on the WIP). */
+.home .home-all-grid {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px;margin-top:28px;}
+.home .home-all-card {background:var(--white);border:1px solid var(--line);border-radius:12px;padding:20px 22px;}
+.home .home-all-card h3 {font-family:var(--font-body);font-size:16px;font-weight:600;margin:0 0 6px;}
+.home .home-all-card h3 a {color:var(--navy);text-decoration:none;}
+.home .home-all-card h3 a:hover {color:var(--teal);text-decoration:underline;}
+.home .home-all-card p {margin:0;font-size:14px;line-height:1.55;color:var(--muted);}
+@media(max-width:960px){.home .home-all-grid {grid-template-columns:repeat(2,minmax(0,1fr));}}
+@media(max-width:600px){.home .home-all-grid {grid-template-columns:minmax(0,1fr);}}
+
+/* RealtorCRM spotlight (WIP): two-column layout, illustrative pipeline
+   card instead of screenshots, nothing overflows the viewport. */
+.home .home-product {background:var(--paper);border-block:1px solid var(--line);padding:72px 0;}
+.home .home-product-grid {display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:48px;align-items:start;}
+.home .home-product-grid > * {min-width:0;}
+.home .home-product-copy .eyebrow {margin:0;}
+.home .home-product-copy p {color:var(--muted);font-size:16px;line-height:1.65;margin:12px 0 0;}
+.home .home-product-visual {grid-column:2;grid-row:1 / span 3;margin:0;}
+.home .home-crm-card {background:var(--white);border:1px solid var(--line);border-radius:12px;overflow:hidden;box-shadow:0 12px 32px rgba(16,33,49,.08);}
+.home .home-browser-bar {display:flex;align-items:center;gap:6px;padding:10px 14px;border-bottom:1px solid var(--line);}
+.home .home-browser-bar span {width:10px;height:10px;border-radius:50%;background:var(--line);flex-shrink:0;}
+.home .home-browser-bar small {margin-left:8px;color:var(--muted);font-size:12px;font-weight:600;}
+.home .home-pipeline {display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;padding:16px;background:var(--paper);}
+.home .home-pipeline-col {background:var(--white);border:1px solid var(--line);border-radius:8px;padding:12px;display:flex;flex-direction:column;gap:8px;min-width:0;}
+.home .home-pipeline-stage {margin:0;font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;color:var(--teal);}
+.home .home-pipeline-col p:not(.home-pipeline-stage) {margin:0;font-size:13px;font-weight:600;color:var(--navy);background:var(--mist);border-radius:6px;padding:8px 10px;line-height:1.4;}
+.home .home-product-visual figcaption {margin-top:12px;font-size:13px;color:var(--muted);text-align:center;}
+.home .home-feature-grid {display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;margin:28px 0 0;}
+.home .home-feature-grid > div {display:flex;gap:12px;align-items:flex-start;min-width:0;}
+.home .home-feature-ico {flex-shrink:0;width:36px;height:36px;border-radius:8px;background:var(--mist);color:var(--teal);display:flex;align-items:center;justify-content:center;}
+.home .home-feature-ico svg {width:20px;height:20px;}
+.home .home-feature-grid dt {font-weight:600;color:var(--navy);font-size:15px;}
+.home .home-feature-grid dd {margin:4px 0 0;color:var(--muted);font-size:14px;line-height:1.55;}
+.home .home-product-actions {display:flex;flex-wrap:wrap;gap:16px;align-items:center;margin-top:28px;}
+.home .home-workspace-link {color:var(--teal);font-weight:600;text-decoration:none;display:inline-flex;align-items:center;min-height:44px;}
+.home .home-workspace-link:hover {text-decoration:underline;}
+@media(max-width:900px){.home .home-product {padding:56px 0;}.home .home-product-grid {grid-template-columns:minmax(0,1fr);gap:32px;}.home .home-product-visual {grid-column:auto;grid-row:auto;}}
+@media(max-width:600px){.home .home-pipeline {grid-template-columns:minmax(0,1fr);}.home .home-feature-grid {grid-template-columns:minmax(0,1fr);}}
+
+/* Product section text colors on the light background (the live dark-section
+   rules set white/gold text; pin the WIP light design's colors). */
+.home .home-product {color:var(--text);}
+.home .home-product .eyebrow {color:var(--teal);}
+.home .home-product h2 {color:var(--navy);}
