@@ -68,7 +68,7 @@
   var yearlyRows = '';
 
   function amortize(principal, r, pi, extra, lump, price, pmiM) {
-    var bal = principal, months = 0, totalInterest = 0, pmiMonths = 0;
+    var bal = principal, months = 0, totalInterest = 0, totalPaid = 0, pmiMonths = 0;
     var yearly = [], monthly = [];
     var intY = 0, prinY = 0, year = 1;
     while (bal > 0 && months < 1200) {
@@ -81,6 +81,7 @@
       intY += interest; prinY += prin; bal -= prin;
       if (bal < 0.005) bal = 0;
       totalInterest += interest;
+      totalPaid += interest + prin;
       months++;
       monthly.push([months, interest, prin, bal]);
       if (months % 12 === 0 || bal === 0) {
@@ -88,7 +89,7 @@
         year++; intY = 0; prinY = 0;
       }
     }
-    return { months: months, totalInterest: totalInterest, pmiMonths: pmiMonths,
+    return { months: months, totalInterest: totalInterest, totalPaid: totalPaid, pmiMonths: pmiMonths,
       yearly: yearly, monthly: monthly };
   }
 
@@ -190,12 +191,23 @@
     renderSchedule();
 
     var total = pi + taxM + insM + hoaM + pmiM;
-    var totalCost = pi * baseMonths + tax * years + ins * years + hoa * baseMonths + pmiM * plan.pmiMonths;
+    var hasExtra = extra > 0 || lump > 0;
+    var effectiveInterest = hasExtra ? plan.totalInterest : baseInterest;
+    var effectivePaid = hasExtra ? plan.totalPaid : pi * baseMonths;
+    var effectiveMonths = plan.months;
+    var totalCost = effectivePaid
+      + taxM * effectiveMonths
+      + insM * effectiveMonths
+      + hoaM * effectiveMonths
+      + pmiM * (hasExtra ? plan.pmiMonths : baseMonths);
+    if (!hasExtra) {
+      totalCost = pi * baseMonths + tax * years + ins * years + hoa * baseMonths + pmiM * plan.pmiMonths;
+    }
 
     set('monthly-payment', usd(pi));
     set('loan-amount', usd(principal));
-    set('total-interest', usd(baseInterest));
-    set('total-paid', usd(pi * baseMonths));
+    set('total-interest', usd(effectiveInterest));
+    set('total-paid', usd(effectivePaid));
     set('monthly-total', usd(total));
     set('total-cost', usd(totalCost));
     set('down-percent', price > 0 ? downPct.toFixed(1) + '% of price' : '');
@@ -204,7 +216,7 @@
       : 'No PMI — the down payment is 20% or more of the price.');
     set('payoff-date', payoffDate(plan.months));
     set('interest-with-extras', usd(plan.totalInterest));
-    set('interest-saved', usd(Math.max(0, baseInterest - plan.totalInterest)));
+    set('interest-saved', usd(Math.max(0, baseInterest - effectiveInterest)));
     set('time-saved', timeSavedText(baseMonths - plan.months));
     set('schedule-note', (extra > 0 || lump > 0)
       ? 'Schedule includes your extra payments.'
@@ -298,6 +310,81 @@
       pctEl.value = (down / price * 100).toFixed(1);
     }
   }
+  function syncSliders() {
+    var priceEl = document.getElementById('home-price');
+    var priceSlider = document.getElementById('home-price-slider');
+    var downEl = document.getElementById('down-payment');
+    var downSlider = document.getElementById('down-payment-slider');
+    var rateEl = document.getElementById('interest-rate');
+    var rateSlider = document.getElementById('interest-rate-slider');
+    var pctEl = document.getElementById('down-percent-input');
+    var price = priceEl ? Number(String(priceEl.value).replace(/,/g, '').trim()) : NaN;
+    var down = downEl ? Number(String(downEl.value).replace(/,/g, '').trim()) : NaN;
+    var rate = rateEl ? Number(String(rateEl.value).replace(/,/g, '').trim()) : NaN;
+    if (priceSlider && Number.isFinite(price) && price > 0) {
+      var currentMax = Number(priceSlider.max) || 10000000;
+      if (price > currentMax) priceSlider.max = String(price);
+      priceSlider.value = String(price);
+    }
+    if (downSlider) {
+      if (Number.isFinite(price) && price >= 0) downSlider.max = String(price);
+      if (Number.isFinite(down) && down >= 0) {
+        var downMax = Number(downSlider.max);
+        if (Number.isFinite(downMax) && down <= downMax) downSlider.value = String(down);
+      }
+    }
+    if (rateSlider && Number.isFinite(rate) && rate >= 0) {
+      if (rate > Number(rateSlider.max)) rateSlider.max = String(rate);
+      rateSlider.value = String(rate);
+    }
+    if (pctEl && Number.isFinite(price) && price > 0 && Number.isFinite(down)) {
+      pctEl.value = (down / price * 100).toFixed(1);
+    }
+  }
+  function readUrlParameters() {
+    var search = '';
+    if (typeof window !== 'undefined' && window.location && typeof window.location.search === 'string') {
+      search = window.location.search;
+    } else if (typeof location !== 'undefined' && location && typeof location.search === 'string') {
+      search = location.search;
+    }
+    if (!search || search === '?') return;
+    var params = {};
+    search.replace(/^\?/, '').split('&').forEach(function (part) {
+      if (!part) return;
+      var pair = part.split('=');
+      var key = '';
+      var value = '';
+      try { key = decodeURIComponent(pair.shift().replace(/\+/g, ' ')); } catch (e) { return; }
+      try { value = decodeURIComponent(pair.join('=').replace(/\+/g, ' ')); } catch (e) { value = ''; }
+      if (key) params[key] = value;
+    });
+    var price = params.price;
+    var down = params.down;
+    var rate = params.rate;
+    var term = params.term;
+    var priceEl = document.getElementById('home-price');
+    var downEl = document.getElementById('down-payment');
+    var rateEl = document.getElementById('interest-rate');
+    var termEl = document.getElementById('loan-years');
+    if (priceEl && /^\s*-?\d+(\.\d+)?\s*$/.test(price || '') && valid(Number(price), 0, 1e12)) {
+      priceEl.value = String(Number(price));
+    }
+    var finalPrice = priceEl ? Number(String(priceEl.value).replace(/,/g, '').trim()) : NaN;
+    if (downEl && /^\s*-?\d+(\.\d+)?\s*$/.test(down || '') &&
+        valid(Number(down), 0, 1e12) && Number(down) <= finalPrice) {
+      downEl.value = String(Number(down));
+    }
+    if (rateEl && /^\s*-?\d+(\.\d+)?\s*$/.test(rate || '') && valid(Number(rate), 0, 100)) {
+      rateEl.value = String(Number(rate));
+    }
+    if (termEl && /^\s*\d+(\.\d+)?\s*$/.test(term || '') && valid(Number(term), 1, 50)) {
+      termEl.value = String(Number(term));
+      document.querySelectorAll('.seg-control button').forEach(function (b) {
+        setAttr(b, 'aria-pressed', b.getAttribute && b.getAttribute('data-years') === termEl.value ? 'true' : 'false');
+      });
+    }
+  }
   // Sliders and the % field are handled by delegation on the form, so the
   // per-input listeners above are never overwritten (the test stubs keep one
   // listener per event per element).
@@ -313,10 +400,32 @@
       if (slider) {
         var v = Number(String(t.value).replace(/,/g, ''));
         if (Number.isFinite(v)) {
-          var mn = Number(slider.min), mx = Number(slider.max);
-          if (Number.isFinite(mn) && v < mn) v = mn;
-          if (Number.isFinite(mx) && v > mx) v = mx;
-          slider.value = String(v);
+          if (t.id === 'home-price') {
+            var oldMax = Number(slider.max) || 10000000;
+            if (v > oldMax) slider.max = String(v);
+            if (v >= 0) slider.value = String(v);
+            var downSliderHome = document.getElementById('down-payment-slider');
+            var downElHome = document.getElementById('down-payment');
+            if (downSliderHome && v >= 0) downSliderHome.max = String(v);
+            if (downElHome) {
+              var downNow = Number(String(downElHome.value).replace(/,/g, ''));
+              if (Number.isFinite(downNow) && downNow > v && v >= 0) {
+                downElHome.value = String(v);
+                if (downSliderHome) downSliderHome.value = String(v);
+              }
+            }
+            syncDownPct();
+          } else {
+            var mn = Number(slider.min), mx = Number(slider.max);
+            if (Number.isFinite(mn) && v < mn) v = mn;
+            if (Number.isFinite(mx) && v > mx) v = mx;
+            if (t.id === 'down-payment') {
+              var priceEl = document.getElementById('home-price');
+              var priceNow = priceEl ? Number(String(priceEl.value).replace(/,/g, '')) : NaN;
+              if (Number.isFinite(priceNow) && v > priceNow) v = priceNow;
+            }
+            slider.value = String(v);
+          }
         }
       }
       if (t.id === 'down-payment') {
@@ -388,5 +497,7 @@
   if (printBtn) printBtn.addEventListener('click', function () {
     if (typeof window !== 'undefined' && window.print) window.print();
   });
+  readUrlParameters();
+  syncSliders();
   run();
 })();

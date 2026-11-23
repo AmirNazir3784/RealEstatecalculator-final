@@ -45,6 +45,7 @@ class Element {
     return this._closestCache[selector];
   }
   setAttribute(key, value) { this.attributes[key] = value; }
+  getAttribute(key) { return this.attributes[key] ?? null; }
   addEventListener(name, fn) { this.listeners[name] = fn; }
   fire(name, event = {}) {
     // In the DOM, dispatching an event with no listener is a no-op, the
@@ -100,10 +101,15 @@ d.search('draft'); assert.equal(d.visible().length, 0);
 assert.equal(directory([]).ids['no-results'].textContent, 'No tools are published yet.');
 assert.equal(directory(undefined).ids['tool-search'].disabled, true);
 const shared = read('assets/site.js');
-function calculator(name) {
+function calculator(name, search) {
   const html = read(`tools/${name}-calculator/index.html`), elements = {};
   for (const tag of html.matchAll(/<[^>]+\bid="([^"]+)"[^>]*>/g)) {
     const el = new Element(); el.value = tag[0].match(/\bvalue="([^"]*)"/)?.[1] || ''; elements[tag[1]] = el;
+    el.id = tag[1];
+    const type = tag[0].match(/\btype="([^"]+)"/);
+    if (type) el.type = type[1];
+    const years = tag[0].match(/\bdata-years="([^"]+)"/);
+    if (years) el.attributes['data-years'] = years[1];
   }
   const form = `${name}-form`;
   const inputs = [...html.matchAll(/<input[^>]*\bid="([^"]+)"[^>]*>/g)].map(m => elements[m[1]]);
@@ -111,10 +117,15 @@ function calculator(name) {
   for (const input of inputs) input._bubbleTo = elements[form];
   // Each tool runs its own scoped script; the shared script keeps only the menu.
   const script = name === 'mortgage' ? read('tools/mortgage-calculator/calculator.js') : name === 'commission' ? read('tools/commission-calculator/calculator.js') : name === 'home-affordability' ? read('tools/home-affordability-calculator/calculator.js') : name === 'rent-vs-buy' ? read('tools/rent-vs-buy-calculator/calculator.js') : name === 'cap-rate' ? read('tools/cap-rate-calculator/calculator.js') : name === 'bridge-loan' ? read('tools/bridge-loan-calculator/calculator.js') : name === 'property-investment' ? read('tools/property-investment-calculator/calculator.js') : name === 'capital-gains-tax' ? read('tools/capital-gains-tax-calculator/calculator.js') : name === 'roi' ? read('tools/roi-calculator/calculator.js') : name === 'noi' ? read('tools/noi-calculator/calculator.js') : shared;
-  vm.runInNewContext(script, { Intl, document: {
+  const buttons = Object.values(elements).filter(el => el.attributes['data-years']);
+  const ctx = { Intl, document: {
     querySelector: s => s === '#' + form ? elements[form] : null,
-    querySelectorAll: s => s === '#' + form + ' input' ? inputs : [], getElementById: id => elements[id]
-  } });
+    querySelectorAll: s => s === '#' + form + ' input' ? inputs : s === '.seg-control button' ? buttons : [],
+    getElementById: id => elements[id]
+  } };
+  if (search !== undefined) ctx.location = { search };
+  if (search !== undefined) ctx.window = { location: { search } };
+  vm.runInNewContext(script, ctx);
   // Inline onsubmit handlers are banned (CSP script-src 'self'): submission
   // prevention must come from the calculator's own JavaScript. Fire a
   // submit and require the handler to call preventDefault.
@@ -156,6 +167,59 @@ assert.equal(m.get('interest-saved'), '$0.00'); assert.equal(m.get('time-saved')
 assert(m.html('term-compare-body').includes('$2,787.54')); assert(m.html('term-compare-body').includes('mortgage-current-term'));
 m.set('extra-payment', 200); assert.equal(m.get('interest-saved'), '$105,428.67'); assert.equal(m.get('time-saved'), '6 years 7 months sooner');
 m.fire('schedule-monthly-btn', 'click'); assert.equal((m.html('mortgage-schedule-body').match(/<tr>/g) || []).length, 281);
+
+// Mortgage URL parameters: valid values load, missing values preserve defaults,
+// malformed values are ignored, and invalid down payments never exceed price.
+const mu = calculator('mortgage', '?price=2500000&down=500000&rate=5.25&term=15');
+assert.equal(mu.val('home-price'), '2500000');
+assert.equal(mu.val('down-payment'), '500000');
+assert.equal(mu.val('interest-rate'), '5.25');
+assert.equal(mu.val('loan-years'), '15');
+assert.equal(mu.val('home-price-slider'), '2500000');
+assert.equal(mu.val('down-payment-slider'), '500000');
+assert.equal(mu.val('interest-rate-slider'), '5.25');
+const md = calculator('mortgage');
+assert.equal(md.val('home-price'), '400000');
+assert.equal(md.val('down-payment'), '80000');
+assert.equal(md.val('interest-rate'), '6.5');
+assert.equal(md.val('loan-years'), '30');
+const mi = calculator('mortgage', '?price=oops&down=-50&rate=999&term=nope');
+assert.equal(mi.val('home-price'), '400000');
+assert.equal(mi.val('down-payment'), '80000');
+assert.equal(mi.val('interest-rate'), '6.5');
+assert.equal(mi.val('loan-years'), '30');
+const mo = calculator('mortgage', '?price=400000&down=500000&rate=not-a-rate&term=30');
+assert.equal(mo.val('home-price'), '400000');
+assert.equal(mo.val('down-payment'), '80000');
+assert.equal(mo.val('interest-rate'), '6.5');
+assert.equal(mo.val('loan-years'), '30');
+
+// Home-price and down-payment sliders expand and stay synchronized.
+const ms = calculator('mortgage');
+for (const price of [400000, 1000000, 2500000, 12000000]) {
+  ms.set('home-price', price);
+  assert.equal(ms.val('home-price-slider'), String(price));
+  assert.equal(ms.val('down-payment-slider') <= price, true);
+  assert.equal(ms.val('loan-amount') !== '\u2014', true);
+}
+ms.set('down-payment', 300000);
+assert.equal(ms.val('down-payment-slider'), '300000');
+
+// Extra-payment totals agree with the effective amortization plan.
+const money = value => Number(value.replace(/[$,]/g, ''));
+const base = calculator('mortgage');
+assert.equal(base.get('total-interest'), '$408,142.36');
+assert.equal(base.get('total-paid'), '$728,142.36');
+assert.equal(base.get('total-cost'), '$926,142.36');
+const lump = calculator('mortgage');
+lump.set('lump-sum', 50000);
+assert.equal(money(lump.get('total-paid')), money(lump.get('loan-amount')) + money(lump.get('interest-with-extras')));
+assert.equal(lump.get('payoff-date') !== '\u2014', true);
+const both = calculator('mortgage');
+both.set('extra-payment', 200);
+both.set('lump-sum', 50000);
+assert.equal(money(both.get('total-paid')), money(both.get('loan-amount')) + money(both.get('interest-with-extras')));
+assert.equal(both.get('time-saved') !== 'No time saved', true);
 const a = calculator('home-affordability');
 assert.equal(a.get('afford-price'), '$330,118.43'); assert.equal(a.get('afford-loan'), '$270,118.43');
 assert.equal(a.get('afford-monthly'), '$2,300.00'); assert.equal(a.get('lg-pi'), '$1,707.33');
