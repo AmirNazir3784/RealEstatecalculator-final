@@ -10,29 +10,28 @@ function check(name, value) { assert(value, name); passed++; }
 function equal(name, actual, expected) { assert.deepEqual(actual, expected, name); passed++; }
 const frozen = {
   "pages": {
+    // All baselines recaptured 2026-11-24: the redesign stack and the Down Payment Calculator were merged onto main together — every footer gained the Down Payment link, and the Down Payment page gained a frozen header entry.
     // Homepage baseline includes the approved Google Search Console verification tag.
-    // Refreshed on the redesign WIP branch: combined How + Why section, shared header/footer restored, CRM card UI, keyword title/H1/meta re-applied.
-    // Refreshed 2026-11-22 (feat/down-payment-calculator): calc hub gained the Down Payment Calculator row; hub eyebrow/subtitle and hero search placeholder now say 11 tools.
-    // Recaptured 2026-11-24 (DP landed on main): the live homepage is retained — only its header menu gained the Down Payment item — so this baseline is the live homepage's outside-header hash.
-    "index.html": "4d19e31ed1e2511bc9b48328382a1d505892cc9ab4dc19cc6bfb28816a70d1f8",
+    "index.html": "6c5b210f2753dfb6b9b13eddf3ecd58114bb94b67eb942f86f492eb7e98b6c83",
     // About baseline refreshed for the editorial refinement; shared header stays frozen.
     // All page baselines refreshed 2026-11-16: footer Platform column gained the Privacy Policy link on every page.
     // All page baselines refreshed 2026-11-17: footer Platform column gained the Terms of Use link on every page.
-    "about/index.html": "b1e7503b58662362fb67a62f9fa25c8313c7d11773081550c4d81d4042d722dd",
-    "contact/index.html": "76542afd489e4aefce6b780e8a8fe4e9522db794b80f9ac9ea93d6654adecdae",
-    "resources/index.html": "bb4973df7120c5e83667b1d0728a5d0533532b5629f914a8e089ac5965dea0f5",
-    "real-estate-crm/index.html": "ea0275ab95ff6ba3f292be4053effc91b20c8d8e9a7a510ed02f02a2dfd4c8e9",
-    "tools/index.html": "9fc0210295d7ef6d827a3f801d8428a6841debcc1af965ca2b17ee2d0a0dbfec",
-    "tools/bridge-loan-calculator/index.html": "b5abb26b812f2ba65bd504d527701ce9c86af9ed0613d3c0824403aca41b98d2",
-    "tools/cap-rate-calculator/index.html": "71048ee2c56ec55c83e4412c9ad18afd894ffcf6a36c57c548bfedc09407da75",
-    "tools/capital-gains-tax-calculator/index.html": "2ba2fefc289c7a65e4fd38ca8eeeb69ab5096bd67c3bf8ee6bae2b740b58f00d",
-    "tools/commission-calculator/index.html": "5769f33e4312bcc8632a877f7b223b20147e719c4c64cd64b908ba7858c20467",
-    "tools/home-affordability-calculator/index.html": "80979887f58f3c177648fa5b3666698cdd23f8cf81963eff8389be06017794cd",
-    "tools/mortgage-calculator/index.html": "23b7f68fecfe5a0dbbef2376ff118711a7071e072337bf3275ae53c19e82db86",
-    "tools/noi-calculator/index.html": "c5dd3a28b15eec2e532ceb32542368b0fa8cac6bf685fda688abd67468bdc68c",
-    "tools/property-investment-calculator/index.html": "cf5249c7b78d15283e9fdc407d7a240c36d307d42262c512f11681978aa61549",
-    "tools/rent-vs-buy-calculator/index.html": "8acf12111a51c7a583f4216a323e59cbe60155c4c9e8a4708f5abe11b7d5340e",
-    "tools/roi-calculator/index.html": "2ba44c63ecb7c3ddb6f4531c6d8b92f86dc147aadde1a107b940dbd5251e626c"
+    // All page baselines refreshed 2026-11-24: footer Tools list rebuilt (mega-menu order, Title Case, two fixed lists), footer headings h2 -> p, "Access availability" renamed "Early access".
+    "about/index.html": "c497308880e31f6ef4995ec45c0ca097a9075f9c3ae17ca30b1057060d0af393",
+    "contact/index.html": "4b74c99ad6e20620a4abd6af03071b513fe3095eda6f3cf136cd4fa6fe1ba4bf",
+    "resources/index.html": "82a5f7008d4d79d87951ddc86f5b1ee91b265a2117f179a2129c3291f3c1553d",
+    "real-estate-crm/index.html": "ebb0ce36d7014454f9719fd148022708a35894fc48836742b7ac6cbf7de707d1",
+    "tools/index.html": "a71ed5ca019af7f25d9df95c4b7f5e0242706b4a97cb10302c4f5d5983d3a4d2",
+    "tools/bridge-loan-calculator/index.html": "1469e8f4dea7d0f0412eb46e0923125242a35dc2a21f22fda1a38e914ffc036d",
+    "tools/cap-rate-calculator/index.html": "c13d8b0ab54569cb3493474807157b511950fa0c4ad052a0178e601e2f473273",
+    "tools/capital-gains-tax-calculator/index.html": "046a22d6a7d1972dbd1caa47f5ce4f1031f9ffb9d7b44136b1b704b629c6a677",
+    "tools/commission-calculator/index.html": "26ad2292f769e6b8531d549cf911ffb025677d33938089c0f4159a7b6e864d7b",
+    "tools/home-affordability-calculator/index.html": "93650459a58269abdd74da64c32727f8ba21f68cbe3c4ada20fc989671975f24",
+    "tools/mortgage-calculator/index.html": "3e3a70865014d40535dbb0834e1ac74d0b2dda749076936af45355281cdaf680",
+    "tools/noi-calculator/index.html": "9a50ae7b8e40d5a4972621e2b17dd6eae350445cd63b558618bbdde59c0f7dbf",
+    "tools/property-investment-calculator/index.html": "8f35e0f06e1891d9886235281c456d26f7238e20975718ebefe1910091b517bb",
+    "tools/rent-vs-buy-calculator/index.html": "f6a71c6684d673dec9cbd20f44a9618282517d2fe0ae2dfbb876e1af17281ed3",
+    "tools/roi-calculator/index.html": "59a75aa4afb2374f7f689861d330b242b571348c4e5e2d6d6d48ecd8c930826c"
   },
   "headers": {
     "index.html": "8ff8b5602307f1645666134a5b006e4ed3850ed7c983a54259088a2e68ea77e4",
@@ -45,9 +44,9 @@ const frozen = {
     "tools/cap-rate-calculator/index.html": "bc3cd3f9e232ef8b213dc058eac0e159bf9faf2ac4aeb51ea5a5821b8c634181",
     "tools/capital-gains-tax-calculator/index.html": "bc3cd3f9e232ef8b213dc058eac0e159bf9faf2ac4aeb51ea5a5821b8c634181",
     "tools/commission-calculator/index.html": "bc3cd3f9e232ef8b213dc058eac0e159bf9faf2ac4aeb51ea5a5821b8c634181",
+    "tools/down-payment-calculator/index.html": "bc3cd3f9e232ef8b213dc058eac0e159bf9faf2ac4aeb51ea5a5821b8c634181",
     "tools/home-affordability-calculator/index.html": "bc3cd3f9e232ef8b213dc058eac0e159bf9faf2ac4aeb51ea5a5821b8c634181",
     "tools/mortgage-calculator/index.html": "bc3cd3f9e232ef8b213dc058eac0e159bf9faf2ac4aeb51ea5a5821b8c634181",
-    "tools/down-payment-calculator/index.html": "bc3cd3f9e232ef8b213dc058eac0e159bf9faf2ac4aeb51ea5a5821b8c634181",
     "tools/noi-calculator/index.html": "5420965f4804b1eca78d76dc4b2413ccbc9d9f2c30c948e97134e436e0499120",
     "tools/property-investment-calculator/index.html": "bc3cd3f9e232ef8b213dc058eac0e159bf9faf2ac4aeb51ea5a5821b8c634181",
     "tools/rent-vs-buy-calculator/index.html": "bc3cd3f9e232ef8b213dc058eac0e159bf9faf2ac4aeb51ea5a5821b8c634181",
@@ -87,7 +86,7 @@ for(const file of pages) {
   check(`${file} initially hidden`, /id="tools-mega-menu" hidden/.test(menu));
   check(`${file} overlay`, html.includes('<div class="tools-menu-overlay" id="tools-menu-overlay" hidden aria-hidden="true"></div>'));
   check(`${file} overlay outside header`, html.indexOf('id="tools-menu-overlay"')>html.indexOf('</header>'));
-  equal(`${file} tool count`,(menu.match(/data-menu-tool=/g)||[]).length,11); // 11th tool: down-payment-calculator (2026-11-22)
+  equal(`${file} tool count`,(menu.match(/data-menu-tool=/g)||[]).length,11);
   const prefix='../'.repeat(file.split('/').length-1);
   const normalized=menu.replaceAll(`href="${prefix}tools/`,'href="TOOLS/').replaceAll('\r\n','\n');
   if(reference) equal(`${file} identical normalized menu`,normalized,reference);else reference=normalized;
@@ -104,7 +103,11 @@ for(const file of pages) {
     const item=menu.match(new RegExp(`<a class="tools-menu-link" data-menu-tool="${tool.slug}"[\\s\\S]*?</a>`))?.[0]||'';
     check(`${file} ${tool.slug} URL`,item.includes(`href="${prefix}tools/${tool.publicUrl}"`));
     check(`${file} ${tool.slug} name`,item.includes(`class="tools-menu-name">${escape(tool.title)}</span>`));
-    check(`${file} ${tool.slug} description`,item.includes(`class="tools-menu-description">${escape(tool.description)}</span>`));
+    // Menu items show the calculator name only — the registry description was
+    // removed from the mega menu on the owner's instruction (2026-11-24) to
+    // keep the menu compact. Descriptions remain in the registry for other
+    // surfaces (homepage cards, /tools/).
+    check(`${file} ${tool.slug} no description in menu`,!item.includes('tools-menu-description'));
     check(`${file} ${tool.slug} decorative approved icon`,item.includes(`class="tools-menu-icon" aria-hidden="true">${escape(tool.icon)}</span>`));
     equal(`${file} ${tool.slug} unique link`,(menu.match(new RegExp(`data-menu-tool="${tool.slug}"`,'g'))||[]).length,1);
     check(`${file} ${tool.slug} target exists`,fs.existsSync(path.join(root,'tools',tool.publicUrl,'index.html')));
@@ -139,7 +142,7 @@ for(const token of ["--font-body:'Inter'","--font-display:'Source Serif 4'",'--p
 for(const rule of [
  '.header .tools-menu-toggle { display: inline-flex;', 'min-height: 44px;',
  '.header .tools-mega-menu[hidden], .tools-menu-overlay[hidden] { display: none !important; }',
- 'width: min(1200px, calc(100vw - 48px))', 'grid-template-columns: repeat(3, minmax(0, 1fr))',
+ 'width: min(980px, calc(100vw - 48px))', 'grid-template-columns: repeat(3, minmax(0, 1fr))',
  '.tools-menu-overlay { position: fixed; inset: 0; z-index: 19;',
  '.header .nav .tools-menu .tools-menu-link:focus-visible', '.header .tools-menu-toggle[aria-expanded="true"]',
  '@media (max-width: 760px)', '.header .tools-mega-menu { position: static; width: 100%;',
@@ -205,4 +208,4 @@ container.fire('pointerenter');container.fire('pointerleave');equal('hover close
 container.fire('pointerleave');for(const fn of s.timers.values())fn();equal('hover leave closes',panel.hidden,true);
 s=setup({hover:false});s.ids['#tools-menu'].fire('pointerenter');equal('mobile hover does not open',s.ids['#tools-mega-menu'].hidden,true);
 const number={tagName:'INPUT',type:'number',value:'450000',blur(){this.blurred=true;}};s.document.activeElement=number;s.document.fire('wheel',{target:number});equal('existing number-wheel protection',number.blurred,true);equal('wheel leaves calculator value unchanged',number.value,'450000');
-console.log(`W8: ${passed} passed, 0 failed (17 shared menus, 10 preserved financial engine contracts, compact intro, SEO and disclosure behavior).`);
+console.log(`W8: ${passed} passed, 0 failed (16 shared menus, 10 preserved financial engine contracts, compact intro, SEO and disclosure behavior).`);
