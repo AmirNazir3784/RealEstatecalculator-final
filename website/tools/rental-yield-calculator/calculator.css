@@ -123,6 +123,7 @@
    even when browser bars or display scaling shrink the usable area. */
 @media (min-width: 1100px) and (max-height: 820px) {
   .calc-page .page-hero { padding-top: 0; }
+  .calculator-layout .field-helper { display: none; }
   .calc-page .page-hero h1 { font-size: 32px; }
   .calculator-layout .panel { padding-top: 16px; padding-bottom: 16px; }
   .calculator-layout .form-field input { padding-top: 6px; padding-bottom: 6px; }
@@ -145,4 +146,16 @@
   .calculator-layout .result-tiles { margin-top: 2px; }
   .calculator-layout .result-row { padding-top: 2px; padding-bottom: 2px; }
   .calculator-layout .result-tile { padding: 5px 10px; }
+}
+
+/* How-to-use fills the left column (2026-11-24): the note sits under the
+   form inside a left-column wrapper, so the two columns end level; the
+   standalone disclaimer line under the calculator is removed. */
+.calculator-layout .calc-left { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.calculator-layout .calc-left > .panel { border-radius: 16px; }
+.calculator-layout .calc-left .note { margin: 0; }
+
+.calculator-layout .calc-left .note { padding: 12px 16px; font-size: 15px; }
+@media (min-width: 1100px) and (max-height: 720px) {
+  .calculator-layout .calc-left { gap: 10px; }
 }
