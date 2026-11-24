@@ -10,9 +10,7 @@
   function rateLabel(x) { return (Math.round(x * 100) / 100).toString() + '%'; }
   var OUTPUTS = ['irr-value', 'irr-verdict', 'sub-profit', 'sub-multiple', 'row-initial',
     'row-cashflow', 'row-sale', 'row-profit', 'tile-avg-cf', 'tile-coc',
-    'sens-appr-low', 'sens-appr-base', 'sens-appr-high',
-    'sens-rent-low', 'sens-rent-base', 'sens-rent-high',
-    'sens-hold-low', 'sens-hold-base', 'sens-hold-high'];
+];
   var last = null;
 
   function readInputs() {
@@ -110,12 +108,6 @@
     var inp = readInputs();
     if (!(inp.price > 0) || !(inp.holdYears >= 1)) { clearOutputs(); return; }
     var res = solve(inp, null, null);
-    var apprLow = solve(inp, inp.appr - 1, null), apprHigh = solve(inp, inp.appr + 1, null);
-    var rentLow = solve(inp, null, inp.rentG - 1), rentHigh = solve(inp, null, inp.rentG + 1);
-    var holdBase = Math.round(inp.holdYears);
-    var holdLowY = Math.max(1, holdBase - 5), holdHighY = Math.min(30, holdBase + 5);
-    var holdLow = solve(Object.assign({}, inp, { holdYears: holdLowY }), null, null);
-    var holdHigh = solve(Object.assign({}, inp, { holdYears: holdHighY }), null, null);
     last = res;
     set('irr-value', res.irr == null ? '—' : pct(res.irr));
     set('irr-verdict', verdictFor(res.irr));
@@ -133,19 +125,6 @@
     var segRent = document.getElementById('seg-rent'), segSale = document.getElementById('seg-sale');
     if (segRent) segRent.style.width = res.rentShare + '%';
     if (segSale) segSale.style.width = (100 - res.rentShare) + '%';
-    function sens(id, labelId, value, label) {
-      set(id, value == null || value.irr == null ? '—' : pct(value.irr));
-      set(labelId, label);
-    }
-    sens('sens-appr-low', 'sens-appr-low-label', apprLow, rateLabel(inp.appr - 1));
-    sens('sens-appr-base', 'sens-appr-base-label', res, rateLabel(inp.appr) + ' — yours');
-    sens('sens-appr-high', 'sens-appr-high-label', apprHigh, rateLabel(inp.appr + 1));
-    sens('sens-rent-low', 'sens-rent-low-label', rentLow, rateLabel(inp.rentG - 1));
-    sens('sens-rent-base', 'sens-rent-base-label', res, rateLabel(inp.rentG) + ' — yours');
-    sens('sens-rent-high', 'sens-rent-high-label', rentHigh, rateLabel(inp.rentG + 1));
-    sens('sens-hold-low', 'sens-hold-low-label', holdLow, String(holdLowY));
-    sens('sens-hold-base', 'sens-hold-base-label', res, String(holdBase) + ' — yours');
-    sens('sens-hold-high', 'sens-hold-high-label', holdHigh, String(holdHighY));
     var body = document.getElementById('years-body');
     if (body) {
       var html = '';
