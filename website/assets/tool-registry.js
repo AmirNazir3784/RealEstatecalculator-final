@@ -72,6 +72,16 @@ window.realEstateTools = Object.freeze([
     icon: '◉'
   }),
   Object.freeze({
+    slug: 'commercial-real-estate-calculator',
+    title: 'Commercial Real Estate Calculator',
+    category: 'Finance & numbers',
+    description: 'Underwrite a commercial property purchase like a lender: NOI, cap rate, DSCR, cash flow and the balloon payment due at the end of the term.',
+    keywords: 'commercial real estate commercial loan dscr balloon cash-on-cash',
+    status: 'published',
+    publicUrl: 'commercial-real-estate-calculator/',
+    icon: '▦'
+  }),
+  Object.freeze({
     slug: 'bridge-loan-calculator',
     title: 'Bridge Loan Calculator',
     category: 'Finance & numbers',

@@ -24,6 +24,7 @@
     'rent-vs-buy-calculator': { category: 'Buying', youGet: 'Breakeven year · Total cost', isNew: false },
     'cap-rate-calculator': { category: 'Investing', youGet: 'Cap rate · NOI', isNew: false },
     'rental-yield-calculator': { category: 'Investing', youGet: 'Gross yield · Net yield', isNew: true },
+    'commercial-real-estate-calculator': { category: 'Investing', youGet: 'DSCR · Cash-on-cash', isNew: true },
     'bridge-loan-calculator': { category: 'Selling', youGet: 'Max loan · Cash left after sale', isNew: false },
     'property-investment-calculator': { category: 'Investing', youGet: 'Cash flow · Cash-on-cash', isNew: false },
     'capital-gains-tax-calculator': { category: 'Tax', youGet: 'Tax due · Net proceeds', isNew: true },

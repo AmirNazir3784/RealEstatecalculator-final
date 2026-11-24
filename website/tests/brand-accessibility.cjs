@@ -5,7 +5,7 @@ const root=path.resolve(__dirname,'..');
 function pages(dir){return fs.readdirSync(dir,{withFileTypes:true}).flatMap(e=>e.isDirectory()&&!['tests','reference','dist-production'].includes(e.name)?pages(path.join(dir,e.name)):e.isFile()&&e.name==='index.html'?[path.join(dir,e.name)]:[]);}
 let checks=0;function check(value,message){assert(value,message);checks++;}
 const label='Every Real Estate Calculator Tools · Software · Guides, homepage';
-const files=pages(root);check(files.length===25,'All twenty-five public pages checked'); // 25th page: tools/rental-yield-calculator (2026-11-24)
+const files=pages(root);check(files.length===26,'All twenty-six public pages checked'); // 26th page: tools/commercial-real-estate-calculator (2026-11-24)
 for(const file of files){
  const html=fs.readFileSync(file,'utf8');
  const links=Array.from(html.matchAll(/<a\b[^>]*class="brand"[^>]*>[\s\S]*?<\/a>/g),m=>m[0]);
