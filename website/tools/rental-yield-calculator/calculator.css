@@ -100,3 +100,20 @@
 .calculator-layout .result .result-group { margin-top: 12px; padding-top: 10px; }
 .calculator-layout .result-row { padding-top: 5px; padding-bottom: 5px; }
 .calculator-layout .copy-note { margin-top: 4px; }
+
+/* First-screen fit v2 (2026-11-24): sized for a real browser window
+   (page area ~744px tall on a 1080p screen at 125% scaling, after the
+   tab and bookmarks bars) — slightly smaller heading, inputs, helpers
+   and card spacing so nothing is cut off. */
+.calc-page .page-hero h1 { font-size: clamp(30px, 3.4vw, 38px); }
+.calculator-layout .form-field input { padding-top: 8px; padding-bottom: 8px; }
+.calculator-layout .field-helper { font-size: 12.5px; margin-top: 4px; }
+.calculator-layout .form-grid { gap: 12px; }
+.calculator-layout .result .result-number { font-size: 36px; }
+.calculator-layout .result .result-group { margin-top: 10px; padding-top: 8px; }
+.calculator-layout .result-row { padding-top: 4px; padding-bottom: 4px; }
+.calculator-layout .result-tile { padding: 8px 12px; }
+.calculator-layout .copy-row { margin-top: 10px; }
+.calculator-layout .panel { padding-top: 20px; padding-bottom: 20px; }
+.calculator-layout .form-field input { padding-top: 7px; padding-bottom: 7px; }
+.calculator-layout .field-helper { line-height: 1.35; }
