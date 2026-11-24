@@ -235,3 +235,10 @@
    2026-11-24): with the hero title gone, the calculator needs a clearer
    separation from the header. */
 .calc-page .page-hero { padding-top: 32px; }
+
+/* Close the dead space between the FAQs and Related calculators
+   (user's instruction, 2026-11-24): the two stacked section paddings
+   added up to a ~190px gap on this page. */
+.calc-page .section:has(.faq) { padding-bottom: 24px; }
+.calc-page .section:has(.related-cards) { padding-top: 24px; }
+.calc-page .section:has(.related-cards) h2 { margin-top: 0; }
