@@ -99,6 +99,8 @@
   function clearOutputs() {
     OUTPUTS.forEach(function (id) { set(id, '—'); });
     set('sticky-value', '—');
+    var chartEl = document.getElementById('equity-chart');
+    if (chartEl) chartEl.innerHTML = '';
     var body = document.getElementById('years-body');
     if (body) body.innerHTML = '';
     last = null;
@@ -125,11 +127,20 @@
     var segRent = document.getElementById('seg-rent'), segSale = document.getElementById('seg-sale');
     if (segRent) segRent.style.width = res.rentShare + '%';
     if (segSale) segSale.style.width = (100 - res.rentShare) + '%';
+    var chart = document.getElementById('equity-chart');
+    if (chart) {
+      var maxEq = 0;
+      res.years.forEach(function (row) { if (row.equity > maxEq) maxEq = row.equity; });
+      chart.innerHTML = res.years.map(function (row) {
+        var pct = maxEq > 0 ? Math.max(4, Math.round(row.equity / maxEq * 100)) : 4;
+        return '<span class="eq-bar" style="height:' + pct + '%"></span>';
+      }).join('');
+    }
     var body = document.getElementById('years-body');
     if (body) {
       var html = '';
       res.years.forEach(function (row) {
-        var cfText = usd0(row.cf) + (row.y === res.hold ? ' + sale' : '');
+        var cfText = usd0(row.cf) + (row.y === res.hold ? ' <span class="sale-tag">+ sale</span>' : '');
         html += '<tr><td>' + row.y + '</td><td>' + cfText + '</td><td>' + usd0(row.bal) +
           '</td><td>' + usd0(row.value) + '</td><td>' + usd0(row.equity) + '</td></tr>';
       });
