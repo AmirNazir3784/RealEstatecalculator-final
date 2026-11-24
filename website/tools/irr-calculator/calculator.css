@@ -225,3 +225,8 @@
   .calc-page .calculator-layout > .result .result-tile { padding-top: 16px; padding-bottom: 16px; }
   .calc-page .calculator-layout > .result .copy-row .tool-btn { padding-top: 15px; padding-bottom: 15px; }
 }
+
+/* The panel heading carries the page's single H1 (the hero title was
+   removed at the user's instruction); keep it at the panel H2's size. */
+.panel-head h1 { font-size: clamp(2rem, 3.3vw, 3.15rem); line-height: 1.1;
+  letter-spacing: -0.045em; margin: 0 0 18px; }
