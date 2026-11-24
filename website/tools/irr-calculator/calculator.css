@@ -196,3 +196,22 @@
 .irr-table td { padding: 9px 12px; border-bottom: 1px solid #E5E2DB; text-align: right; }
 .irr-table td:first-child { text-align: left; font-weight: 600; color: #102131; }
 .irr-table tbody tr:last-child td { border-bottom: none; font-weight: 700; background: #FBFAF7; }
+
+/* IRR short-window tiers: when the height tiers compress the form (helpers
+   hidden), the side panels compress too so the columns stay balanced. */
+@media (min-width: 1101px) and (max-height: 820px) {
+  .calc-right { gap: 10px; }
+  .side-panel { padding: 12px 16px; }
+  .side-panel-title { font-size: 18px; margin-bottom: 2px; }
+  .side-panel-sub { display: none; }
+  .side-group-label { margin: 6px 0 2px; }
+  .sens-row { padding: 3px 8px; font-size: 14px; }
+  .band-list { display: grid; grid-template-columns: 1fr 1fr; gap: 6px; }
+  .band-row { padding: 5px 8px; font-size: 14px; border: 1px solid #E5E2DB; border-radius: 8px; }
+  .band-row.is-active { border-color: #0F766E; }
+}
+@media (min-width: 1101px) and (max-height: 720px) {
+  .side-panel { padding: 10px 14px; }
+  .sens-row { padding: 2px 8px; }
+  .band-row { padding: 4px 8px; }
+}
