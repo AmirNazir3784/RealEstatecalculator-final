@@ -39,11 +39,11 @@
     'total-expenses', 'row-noi', 'noi-monthly', 'payback',
     'rent-for-5', 'rent-for-6', 'rent-for-7'];
   function verdictFor(net) {
-    if (net < 0) return 'Negative — expenses exceed the rent at these inputs.';
-    if (net < 3) return 'Low — the income is thin for the price.';
-    if (net < 5) return 'Modest — below the middle of the rental market.';
-    if (net < 7) return 'Solid — in line with strong residential rental markets.';
-    return 'Strong — check what risk the high yield is pricing in.';
+    if (net < 0) return 'Negative — expenses exceed the rent.';
+    if (net < 3) return 'Low — thin income for the price.';
+    if (net < 5) return 'Modest — below the market middle.';
+    if (net < 7) return 'Solid — a strong residential yield.';
+    return 'Strong — check the risk behind it.';
   }
   function run() {
     var price = num('property-price');

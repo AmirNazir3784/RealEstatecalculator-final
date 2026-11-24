@@ -54,17 +54,17 @@
 <p class="muted">Adjust the sample values below to calculate an estimate instantly.</p>
 <form id="rental-yield-form">
 <fieldset class="form-group"><legend>Property &amp; rent</legend><div class="form-grid">
-<div class="form-field"><label for="property-price">Property price (USD)</label><span class="input-unit"><span class="unit-affix" aria-hidden="true">$</span><input class="field" id="property-price" type="number" min="0" max="1000000000000" step="1000" value="300000"></span></div>
-<div class="form-field"><label for="monthly-rent">Monthly rent (USD)</label><span class="input-unit"><span class="unit-affix" aria-hidden="true">$</span><input class="field" id="monthly-rent" type="number" min="0" max="1000000000000" step="10" value="2500"><span class="unit-affix" aria-hidden="true">/ month</span></span></div>
-<div class="form-field"><label for="vacancy-rate">Vacancy rate (%)</label><span class="input-unit"><input class="field" id="vacancy-rate" type="number" min="0" max="100" step="0.5" value="5"><span class="unit-affix" aria-hidden="true">%</span></span><small class="field-helper">Share of the year the property sits empty.</small></div>
-<div class="form-field"><label for="other-income">Other income (USD per year)</label><span class="input-unit"><span class="unit-affix" aria-hidden="true">$</span><input class="field" id="other-income" type="number" min="0" max="1000000000000" step="100" value="0"><span class="unit-affix" aria-hidden="true">/ year</span></span><small class="field-helper">Parking, laundry, storage, pet fees and similar.</small></div>
+<div class="form-field"><label for="property-price">Property price</label><span class="input-unit"><span class="unit-affix" aria-hidden="true">$</span><input class="field" id="property-price" type="number" min="0" max="1000000000000" step="1000" value="300000"></span></div>
+<div class="form-field"><label for="monthly-rent">Monthly rent</label><span class="input-unit"><span class="unit-affix" aria-hidden="true">$</span><input class="field" id="monthly-rent" type="number" min="0" max="1000000000000" step="10" value="2500"><span class="unit-affix" aria-hidden="true">/ month</span></span></div>
+<div class="form-field"><label for="vacancy-rate">Vacancy rate</label><span class="input-unit"><input class="field" id="vacancy-rate" type="number" min="0" max="100" step="0.5" value="5"><span class="unit-affix" aria-hidden="true">%</span></span><small class="field-helper">Share of the year the property sits empty.</small></div>
 </div></fieldset>
-<fieldset class="form-group"><legend>Annual expenses</legend><div class="form-grid">
-<div class="form-field"><label for="property-tax">Property tax (USD per year)</label><span class="input-unit"><span class="unit-affix" aria-hidden="true">$</span><input class="field" id="property-tax" type="number" min="0" max="1000000000000" step="100" value="3000"><span class="unit-affix" aria-hidden="true">/ year</span></span></div>
-<div class="form-field"><label for="home-insurance">Insurance (USD per year)</label><span class="input-unit"><span class="unit-affix" aria-hidden="true">$</span><input class="field" id="home-insurance" type="number" min="0" max="1000000000000" step="100" value="1800"><span class="unit-affix" aria-hidden="true">/ year</span></span></div>
-<div class="form-field"><label for="maintenance-cost">Maintenance &amp; repairs (USD / year)</label><span class="input-unit"><span class="unit-affix" aria-hidden="true">$</span><input class="field" id="maintenance-cost" type="number" min="0" max="1000000000000" step="100" value="1500"><span class="unit-affix" aria-hidden="true">/ year</span></span><small class="field-helper">Repairs and upkeep.</small></div>
-<div class="form-field"><label for="management-rate">Management fee (%)</label><span class="input-unit"><input class="field" id="management-rate" type="number" min="0" max="100" step="0.5" value="8"><span class="unit-affix" aria-hidden="true">%</span></span><small class="field-helper">Percent of effective income. Keep it even if you self-manage.</small></div>
-<div class="form-field"><label for="hoa-other">HOA &amp; other costs (USD per year)</label><span class="input-unit"><span class="unit-affix" aria-hidden="true">$</span><input class="field" id="hoa-other" type="number" min="0" max="1000000000000" step="100" value="0"><span class="unit-affix" aria-hidden="true">/ year</span></span></div>
+<fieldset class="form-group"><legend>Income &amp; expenses (per year)</legend><div class="form-grid">
+<div class="form-field"><label for="other-income">Other income</label><span class="input-unit"><span class="unit-affix" aria-hidden="true">$</span><input class="field" id="other-income" type="number" min="0" max="1000000000000" step="100" value="0"><span class="unit-affix" aria-hidden="true">/ year</span></span><small class="field-helper">Parking, laundry, storage, pet fees and similar.</small></div>
+<div class="form-field"><label for="property-tax">Property tax</label><span class="input-unit"><span class="unit-affix" aria-hidden="true">$</span><input class="field" id="property-tax" type="number" min="0" max="1000000000000" step="100" value="3000"><span class="unit-affix" aria-hidden="true">/ year</span></span></div>
+<div class="form-field"><label for="home-insurance">Insurance</label><span class="input-unit"><span class="unit-affix" aria-hidden="true">$</span><input class="field" id="home-insurance" type="number" min="0" max="1000000000000" step="100" value="1800"><span class="unit-affix" aria-hidden="true">/ year</span></span></div>
+<div class="form-field"><label for="maintenance-cost">Maintenance &amp; repairs</label><span class="input-unit"><span class="unit-affix" aria-hidden="true">$</span><input class="field" id="maintenance-cost" type="number" min="0" max="1000000000000" step="100" value="1500"><span class="unit-affix" aria-hidden="true">/ year</span></span><small class="field-helper">Repairs and upkeep.</small></div>
+<div class="form-field"><label for="management-rate">Management fee</label><span class="input-unit"><input class="field" id="management-rate" type="number" min="0" max="100" step="0.5" value="8"><span class="unit-affix" aria-hidden="true">%</span></span><small class="field-helper">Percent of effective income. Keep it even if you self-manage.</small></div>
+<div class="form-field"><label for="hoa-other">HOA &amp; other costs</label><span class="input-unit"><span class="unit-affix" aria-hidden="true">$</span><input class="field" id="hoa-other" type="number" min="0" max="1000000000000" step="100" value="0"><span class="unit-affix" aria-hidden="true">/ year</span></span></div>
 </div></fieldset>
 </form>
 <p class="validation-note" id="validation-note" role="alert"></p>
@@ -95,10 +95,10 @@
 </div>
 <div class="copy-row"><button class="tool-btn tool-btn-primary" id="copy-results" type="button">Copy results</button><a class="tool-btn tool-btn-outline" href="../cap-rate-calculator/">Cap rate calculator</a></div>
 <p class="copy-note" id="copy-note"></p>
-<p class="disclaimer">Estimate only. Not investment advice. Yield ignores financing, so mortgage payments are not included.</p>
 </aside>
 </div></section>
 <section class="section"><div class="wrap content">
+<p class="disclaimer">Estimate only. Not investment advice. Yield ignores financing, so mortgage payments are not included.</p>
 <div class="note"><strong>How to use:</strong> Enter the property price and monthly rent for the quick gross yield, then add vacancy and expenses for the honest net yield. Everything updates as you type — including the rent you would need for a 5%, 6% or 7% net yield at this price.</div>
 
 <h2>The rental yield formulas</h2><div class="formula-box">

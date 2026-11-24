@@ -80,3 +80,23 @@
 .calculator-layout .result-tile { padding: 10px 12px; }
 .calculator-layout .copy-row { margin-top: 12px; }
 .calculator-layout .copy-row .tool-btn { flex: 1; text-align: center; }
+
+/* Three-across form (2026-11-24): the nine fields regrouped 3-3-3 with
+   shortened labels (the $ / % / per-year units live in the field affixes),
+   so the whole form fits the first screen on desktop. Two columns return
+   below 1100px, one column on mobile as before. */
+@media (min-width: 1100px) {
+  .calculator-layout .form-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+}
+.calculator-layout .form-field input { padding-top: 10px; padding-bottom: 10px; }
+
+
+/* First-screen fit (2026-11-24): no stretching — the form keeps its
+   natural compact height and the result card is put on a diet (smaller
+   headline number, tighter groups and rows) so the whole calculator
+   fits the first screen. The disclaimer moves out of the card, below
+   the calculator. */
+.calculator-layout .result .result-number { font-size: 38px; margin-bottom: 8px; }
+.calculator-layout .result .result-group { margin-top: 12px; padding-top: 10px; }
+.calculator-layout .result-row { padding-top: 5px; padding-bottom: 5px; }
+.calculator-layout .copy-note { margin-top: 4px; }
