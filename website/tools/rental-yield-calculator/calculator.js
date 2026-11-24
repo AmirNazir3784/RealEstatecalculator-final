@@ -36,8 +36,8 @@
     return Number.isFinite(v) && v >= min && v <= max;
   }
   var OUTPUTS = ['gross-yield', 'yield-verdict', 'annual-rent', 'vacancy-loss',
-    'total-expenses', 'row-noi', 'tile-gross', 'noi-monthly', 'payback',
-    'rent-for-5', 'rent-for-6', 'rent-for-7', 'legend-kept', 'legend-vacancy', 'legend-expenses'];
+    'total-expenses', 'row-noi', 'noi-monthly', 'payback',
+    'rent-for-5', 'rent-for-6', 'rent-for-7'];
   function verdictFor(net) {
     if (net < 0) return 'Negative — expenses exceed the rent at these inputs.';
     if (net < 3) return 'Low — the income is thin for the price.';
@@ -87,16 +87,12 @@
     set('net-yield', pct(netYield));
     set('yield-verdict', verdictFor(netYield));
     set('gross-yield', pct(grossYield));
-    set('tile-gross', pct(grossYield));
     set('annual-rent', usd(gross));
     set('vacancy-loss', usd(vacancyLoss));
     set('total-expenses', usd(expenses));
     set('row-noi', usd(noi));
     set('noi-monthly', usd(noi / 12));
     set('payback', noi > 0 ? (price / noi).toFixed(1) + ' years' : '—');
-    set('legend-kept', usd(noi));
-    set('legend-vacancy', usd(vacancyLoss));
-    set('legend-expenses', usd(expenses));
     if (gross > 0) {
       setWidth('seg-kept', Math.max(0, noi / gross * 100));
       setWidth('seg-vacancy', vacancyLoss / gross * 100);
@@ -108,7 +104,7 @@
       var targetNoi = price * targetPct / 100;
       var egiNeeded = (targetNoi + fixed) / (1 - mgmtRate / 100);
       var rentNeeded = (egiNeeded - other) / (12 * (1 - vacancy / 100));
-      return rentNeeded > 0 ? usd0(rentNeeded) + ' / month' : '—';
+      return rentNeeded > 0 ? usd0(rentNeeded) + '/mo' : '—';
     }
     set('rent-for-5', rentFor(5));
     set('rent-for-6', rentFor(6));

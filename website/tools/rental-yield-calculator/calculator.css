@@ -68,3 +68,15 @@
 .calculator-layout .breakdown-legend { display: flex; flex-direction: column; gap: 6px; }
 .calculator-layout .breakdown-legend li { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; }
 .calculator-layout .breakdown-legend li span { white-space: nowrap; }
+
+/* Balanced card (2026-11-24): the legend list, the duplicate gross-yield
+   tile and the full-width rent rows are gone from the markup; here the hero
+   sits closer to the navbar and the card's spacing tightens so the result
+   column ends level with the form. */
+.calc-page .page-hero { padding-top: 4px; }
+.calculator-layout .result .result-group { margin-top: 16px; padding-top: 12px; }
+.calculator-layout .result .result-number { margin-bottom: 12px; }
+.calculator-layout .result-row { padding-top: 6px; padding-bottom: 6px; }
+.calculator-layout .result-tile { padding: 10px 12px; }
+.calculator-layout .copy-row { margin-top: 12px; }
+.calculator-layout .copy-row .tool-btn { flex: 1; text-align: center; }
