@@ -230,3 +230,8 @@
    removed at the user's instruction); keep it at the panel H2's size. */
 .panel-head h1 { font-size: clamp(2rem, 3.3vw, 3.15rem); line-height: 1.1;
   letter-spacing: -0.045em; margin: 0 0 18px; }
+
+/* A little breathing room under the navbar (user's instruction,
+   2026-11-24): with the hero title gone, the calculator needs a clearer
+   separation from the header. */
+.calc-page .page-hero { padding-top: 32px; }
