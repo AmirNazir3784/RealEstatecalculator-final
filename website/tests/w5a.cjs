@@ -2,7 +2,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const assert = require('node:assert/strict');
 const root = path.resolve(__dirname, '..');
-const pages = ['index.html', 'tools/index.html', 'real-estate-crm/index.html', 'about/index.html', 'resources/index.html', 'contact/index.html', 'tools/commission-calculator/index.html', 'tools/mortgage-calculator/index.html', 'tools/down-payment-calculator/index.html', 'tools/home-affordability-calculator/index.html', 'tools/rent-vs-buy-calculator/index.html', 'tools/cap-rate-calculator/index.html', 'tools/bridge-loan-calculator/index.html', 'tools/property-investment-calculator/index.html', 'tools/capital-gains-tax-calculator/index.html', 'tools/roi-calculator/index.html', 'tools/noi-calculator/index.html'];
+const pages = ['index.html', 'tools/index.html', 'real-estate-crm/index.html', 'about/index.html', 'resources/index.html', 'contact/index.html', 'tools/commission-calculator/index.html', 'tools/mortgage-calculator/index.html', 'tools/down-payment-calculator/index.html', 'tools/home-affordability-calculator/index.html', 'tools/rent-vs-buy-calculator/index.html', 'tools/cap-rate-calculator/index.html', 'tools/rental-yield-calculator/index.html', 'tools/bridge-loan-calculator/index.html', 'tools/property-investment-calculator/index.html', 'tools/capital-gains-tax-calculator/index.html', 'tools/roi-calculator/index.html', 'tools/noi-calculator/index.html'];
 const titles = new Set(), descriptions = new Set();
 for (const page of pages) {
   const html = fs.readFileSync(path.join(root, page), 'utf8');
@@ -81,7 +81,7 @@ for (const page of pages) {
     ['about/index.html', 'About | Every Real Estate Calculator'],
     ['contact/index.html', 'Contact | Every Real Estate Calculator'],
     ['resources/index.html', 'Resources | Every Real Estate Calculator'],
-    ['tools/index.html', 'Free Real Estate Calculators | 11 Online Tools'],
+    ['tools/index.html', 'Free Real Estate Calculators | 12 Online Tools'],
     ['tools/down-payment-calculator/index.html', 'Down Payment Calculator: Cash to Close, PMI &amp; Tiers'], // brief-approved title (no brand suffix); pinned explicitly
   ]);
   for (const page of pages) {

@@ -62,6 +62,16 @@ window.realEstateTools = Object.freeze([
     icon: '÷'
   }),
   Object.freeze({
+    slug: 'rental-yield-calculator',
+    title: 'Rental Yield Calculator',
+    category: 'Finance & numbers',
+    description: 'Work out a rental property\'s gross and net yield from its price, rent, vacancy and running costs — plus the rent needed for your target yield.',
+    keywords: 'rental yield gross yield net yield rental return landlord',
+    status: 'published',
+    publicUrl: 'rental-yield-calculator/',
+    icon: '◉'
+  }),
+  Object.freeze({
     slug: 'bridge-loan-calculator',
     title: 'Bridge Loan Calculator',
     category: 'Finance & numbers',

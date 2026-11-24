@@ -43,7 +43,7 @@ assert(results.children[0].textContent.includes('No matching tools'));
 search.value = ''; search.listeners.input(); assert.equal(status.textContent, '2 tools found');
 assert.equal(render([]).ids['home-search-status'].textContent, '0 tools found');
 search.value = 'Finance & numbers'; search.listeners.input();
-assert.equal(status.textContent, '11 tools found');
+assert.equal(status.textContent, '12 tools found');
 search.value = 'NOI'; search.listeners.input();
 assert.deepEqual(results.children.map(c => c.href), ['tools/cap-rate-calculator/', 'tools/noi-calculator/']);
 search.value = 'cgt'; search.listeners.input();
@@ -51,7 +51,7 @@ assert.deepEqual(results.children.map(c => c.href), ['tools/capital-gains-tax-ca
 search.value = 'net operating'; search.listeners.input();
 assert.deepEqual(results.children.map(c => c.href), ['tools/cap-rate-calculator/', 'tools/noi-calculator/']);
 search.value = 'vacancy'; search.listeners.input();
-assert.deepEqual(results.children.map(c => c.href), ['tools/cap-rate-calculator/', 'tools/noi-calculator/']);
+assert.deepEqual(results.children.map(c => c.href), ['tools/cap-rate-calculator/', 'tools/rental-yield-calculator/', 'tools/noi-calculator/']);
 search.value = 'mort'; search.listeners.input();
 assert.deepEqual(results.children.map(c => c.href), ['tools/mortgage-calculator/']);
 search.value = 'how much house'; search.listeners.input();
