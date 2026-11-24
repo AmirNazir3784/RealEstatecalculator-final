@@ -11,7 +11,8 @@
   var OUTPUTS = ['irr-value', 'irr-verdict', 'sub-profit', 'sub-multiple', 'row-initial',
     'row-cashflow', 'row-sale', 'row-profit', 'tile-avg-cf', 'tile-coc',
     'sens-appr-low', 'sens-appr-base', 'sens-appr-high',
-    'sens-rent-low', 'sens-rent-base', 'sens-rent-high'];
+    'sens-rent-low', 'sens-rent-base', 'sens-rent-high',
+    'sens-hold-low', 'sens-hold-base', 'sens-hold-high'];
   var last = null;
 
   function readInputs() {
@@ -89,13 +90,6 @@
     };
   }
 
-  function bandFor(v) {
-    if (v == null) return 'none';
-    if (v < 8) return 'modest';
-    if (v < 12) return 'fair';
-    if (v < 18) return 'solid';
-    return 'excellent';
-  }
   function verdictFor(v) {
     if (v == null) return 'No positive return on these numbers.';
     if (v < 8) return 'Modest — below typical investor targets.';
@@ -109,8 +103,6 @@
     set('sticky-value', '—');
     var body = document.getElementById('years-body');
     if (body) body.innerHTML = '';
-    var rows = document.querySelectorAll('.band-row');
-    rows.forEach(function (row) { row.classList.remove('is-active'); });
     last = null;
   }
 
@@ -120,6 +112,10 @@
     var res = solve(inp, null, null);
     var apprLow = solve(inp, inp.appr - 1, null), apprHigh = solve(inp, inp.appr + 1, null);
     var rentLow = solve(inp, null, inp.rentG - 1), rentHigh = solve(inp, null, inp.rentG + 1);
+    var holdBase = Math.round(inp.holdYears);
+    var holdLowY = Math.max(1, holdBase - 5), holdHighY = Math.min(30, holdBase + 5);
+    var holdLow = solve(Object.assign({}, inp, { holdYears: holdLowY }), null, null);
+    var holdHigh = solve(Object.assign({}, inp, { holdYears: holdHighY }), null, null);
     last = res;
     set('irr-value', res.irr == null ? '—' : pct(res.irr));
     set('irr-verdict', verdictFor(res.irr));
@@ -147,9 +143,9 @@
     sens('sens-rent-low', 'sens-rent-low-label', rentLow, rateLabel(inp.rentG - 1));
     sens('sens-rent-base', 'sens-rent-base-label', res, rateLabel(inp.rentG) + ' — yours');
     sens('sens-rent-high', 'sens-rent-high-label', rentHigh, rateLabel(inp.rentG + 1));
-    var band = bandFor(res.irr);
-    var rows = document.querySelectorAll('.band-row');
-    rows.forEach(function (row) { row.classList.toggle('is-active', row.getAttribute('data-band') === band); });
+    sens('sens-hold-low', 'sens-hold-low-label', holdLow, String(holdLowY));
+    sens('sens-hold-base', 'sens-hold-base-label', res, String(holdBase) + ' — yours');
+    sens('sens-hold-high', 'sens-hold-high-label', holdHigh, String(holdHighY));
     var body = document.getElementById('years-body');
     if (body) {
       var html = '';
