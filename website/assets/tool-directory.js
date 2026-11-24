@@ -19,6 +19,7 @@
   const DISPLAY = {
     'commission-calculator': { category: 'For agents', youGet: 'Net earnings · Split breakdown', isNew: false },
     'mortgage-calculator': { category: 'Buying', youGet: 'Monthly payment · Total interest', isNew: false },
+    'down-payment-calculator': { category: 'Buying', youGet: 'Cash to close · PMI by tier', isNew: true },
     'home-affordability-calculator': { category: 'Buying', youGet: 'Max price · Payment breakdown', isNew: false },
     'rent-vs-buy-calculator': { category: 'Buying', youGet: 'Breakeven year · Total cost', isNew: false },
     'cap-rate-calculator': { category: 'Investing', youGet: 'Cap rate · NOI', isNew: false },

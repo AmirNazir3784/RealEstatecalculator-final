@@ -43,7 +43,7 @@ assert(results.children[0].textContent.includes('No matching tools'));
 search.value = ''; search.listeners.input(); assert.equal(status.textContent, '2 tools found');
 assert.equal(render([]).ids['home-search-status'].textContent, '0 tools found');
 search.value = 'Finance & numbers'; search.listeners.input();
-assert.equal(status.textContent, '10 tools found');
+assert.equal(status.textContent, '11 tools found');
 search.value = 'NOI'; search.listeners.input();
 assert.deepEqual(results.children.map(c => c.href), ['tools/cap-rate-calculator/', 'tools/noi-calculator/']);
 search.value = 'cgt'; search.listeners.input();
@@ -55,7 +55,7 @@ assert.deepEqual(results.children.map(c => c.href), ['tools/cap-rate-calculator/
 search.value = 'mort'; search.listeners.input();
 assert.deepEqual(results.children.map(c => c.href), ['tools/mortgage-calculator/']);
 search.value = 'how much house'; search.listeners.input();
-assert.deepEqual(results.children.map(c => c.href), ['tools/home-affordability-calculator/']);
+assert.deepEqual(results.children.map(c => c.href), ['tools/down-payment-calculator/', 'tools/home-affordability-calculator/']);
 const section = html.match(/<section class="section home-how"[\s\S]*?<\/section>/)[0];
 assert(section.includes('From numbers to clarity in seconds.'));
 assert.equal((section.match(/<li>/g) || []).length, 3);

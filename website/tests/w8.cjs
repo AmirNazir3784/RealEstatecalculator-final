@@ -11,6 +11,9 @@ function equal(name, actual, expected) { assert.deepEqual(actual, expected, name
 const frozen = {
   "pages": {
     // Homepage baseline includes the approved Google Search Console verification tag.
+    // Refreshed on the redesign WIP branch: combined How + Why section, shared header/footer restored, CRM card UI, keyword title/H1/meta re-applied.
+    // Refreshed 2026-11-22 (feat/down-payment-calculator): calc hub gained the Down Payment Calculator row; hub eyebrow/subtitle and hero search placeholder now say 11 tools.
+    // Recaptured 2026-11-24 (DP landed on main): the live homepage is retained — only its header menu gained the Down Payment item — so this baseline is the live homepage's outside-header hash.
     "index.html": "4d19e31ed1e2511bc9b48328382a1d505892cc9ab4dc19cc6bfb28816a70d1f8",
     // About baseline refreshed for the editorial refinement; shared header stays frozen.
     // All page baselines refreshed 2026-11-16: footer Platform column gained the Privacy Policy link on every page.
@@ -44,6 +47,7 @@ const frozen = {
     "tools/commission-calculator/index.html": "bc3cd3f9e232ef8b213dc058eac0e159bf9faf2ac4aeb51ea5a5821b8c634181",
     "tools/home-affordability-calculator/index.html": "bc3cd3f9e232ef8b213dc058eac0e159bf9faf2ac4aeb51ea5a5821b8c634181",
     "tools/mortgage-calculator/index.html": "bc3cd3f9e232ef8b213dc058eac0e159bf9faf2ac4aeb51ea5a5821b8c634181",
+    "tools/down-payment-calculator/index.html": "bc3cd3f9e232ef8b213dc058eac0e159bf9faf2ac4aeb51ea5a5821b8c634181",
     "tools/noi-calculator/index.html": "5420965f4804b1eca78d76dc4b2413ccbc9d9f2c30c948e97134e436e0499120",
     "tools/property-investment-calculator/index.html": "bc3cd3f9e232ef8b213dc058eac0e159bf9faf2ac4aeb51ea5a5821b8c634181",
     "tools/rent-vs-buy-calculator/index.html": "bc3cd3f9e232ef8b213dc058eac0e159bf9faf2ac4aeb51ea5a5821b8c634181",
@@ -83,7 +87,7 @@ for(const file of pages) {
   check(`${file} initially hidden`, /id="tools-mega-menu" hidden/.test(menu));
   check(`${file} overlay`, html.includes('<div class="tools-menu-overlay" id="tools-menu-overlay" hidden aria-hidden="true"></div>'));
   check(`${file} overlay outside header`, html.indexOf('id="tools-menu-overlay"')>html.indexOf('</header>'));
-  equal(`${file} tool count`,(menu.match(/data-menu-tool=/g)||[]).length,10);
+  equal(`${file} tool count`,(menu.match(/data-menu-tool=/g)||[]).length,11); // 11th tool: down-payment-calculator (2026-11-22)
   const prefix='../'.repeat(file.split('/').length-1);
   const normalized=menu.replaceAll(`href="${prefix}tools/`,'href="TOOLS/').replaceAll('\r\n','\n');
   if(reference) equal(`${file} identical normalized menu`,normalized,reference);else reference=normalized;
@@ -91,7 +95,7 @@ for(const file of pages) {
     check(`${file} category ${index}`,menu.includes(`id="tools-group-${index}">${escape(category)}</p>`));
     const group=menu.match(new RegExp(`<div class="tools-menu-group" aria-labelledby="tools-group-${index}">[\\s\\S]*?</ul>`))[0];
     equal(`${file} approved category members ${index}`,Array.from(group.matchAll(/data-menu-tool="([^"]+)"/g),m=>m[1]),[
-      ['mortgage-calculator','home-affordability-calculator','rent-vs-buy-calculator','bridge-loan-calculator'],
+      ['mortgage-calculator','down-payment-calculator','home-affordability-calculator','rent-vs-buy-calculator','bridge-loan-calculator'],
       ['cap-rate-calculator','noi-calculator','roi-calculator','property-investment-calculator'],
       ['commission-calculator','capital-gains-tax-calculator']
     ][index]);
@@ -148,7 +152,7 @@ for(const tool of tools) {
 }
 const html=read('tools/index.html');
 check('requested H1',html.includes('<h1>Free Real Estate Calculators</h1>'));
-check('intro copy',html.includes('Explore 10 free real estate calculators for buying, investing and selling. Compare estimates, understand the assumptions, and plan your next step.'));
+check('intro copy',html.includes('Explore 11 free real estate calculators for buying, investing and selling. Compare estimates, understand the assumptions, and plan your next step.'));
 check('trust right column markup',/<div class="wrap tools-intro"><div class="tools-intro-copy">[\s\S]*?<\/div><div class="trust-chips"/.test(html));
 for(const chip of ['✓ No signup','✓ Free to use','✓ Calculations stay in your browser'])check('trust '+chip,html.includes(`<span>${chip}</span>`));
 check('desktop right trust column',listing.includes('grid-template-columns: minmax(0, 1fr) auto'));
@@ -157,9 +161,9 @@ check('SVG search icon',/<svg class="listing-search-icon"[\s\S]*?aria-hidden="tr
 check('no emoji in search placeholder',!html.includes('placeholder="🔍'));
 check('search input retains label',html.includes('aria-label="Search tools"'));
 check('search icon does not block input',listing.includes('pointer-events: none'));
-check('SEO title',html.includes('<title>Free Real Estate Calculators | 10 Online Tools</title>'));
-check('SEO description',html.includes('name="description" content="Explore 10 free real estate calculators for mortgages, affordability, rental returns, commissions and selling costs. Clear estimates, no signup required."'));
-for(const attr of ['property="og:title"','name="twitter:title"'])check('social title '+attr,html.includes(`${attr} content="Free Real Estate Calculators | 10 Online Tools"`));
+check('SEO title',html.includes('<title>Free Real Estate Calculators | 11 Online Tools</title>'));
+check('SEO description',html.includes('name="description" content="Explore 11 free real estate calculators for mortgages, affordability, rental returns, commissions and selling costs. Clear estimates, no signup required."'));
+for(const attr of ['property="og:title"','name="twitter:title"'])check('social title '+attr,html.includes(`${attr} content="Free Real Estate Calculators | 11 Online Tools"`));
 check('canonical unchanged',html.includes('rel="canonical" href="https://everyrealestatecalculator.com/tools/"'));
 for(const tool of tools)check('static directory kept '+tool.slug,html.includes(`<li><a href="${tool.publicUrl}">`));
 
@@ -201,4 +205,4 @@ container.fire('pointerenter');container.fire('pointerleave');equal('hover close
 container.fire('pointerleave');for(const fn of s.timers.values())fn();equal('hover leave closes',panel.hidden,true);
 s=setup({hover:false});s.ids['#tools-menu'].fire('pointerenter');equal('mobile hover does not open',s.ids['#tools-mega-menu'].hidden,true);
 const number={tagName:'INPUT',type:'number',value:'450000',blur(){this.blurred=true;}};s.document.activeElement=number;s.document.fire('wheel',{target:number});equal('existing number-wheel protection',number.blurred,true);equal('wheel leaves calculator value unchanged',number.value,'450000');
-console.log(`W8: ${passed} passed, 0 failed (16 shared menus, 10 preserved financial engine contracts, compact intro, SEO and disclosure behavior).`);
+console.log(`W8: ${passed} passed, 0 failed (17 shared menus, 10 preserved financial engine contracts, compact intro, SEO and disclosure behavior).`);
