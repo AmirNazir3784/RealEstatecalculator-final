@@ -215,3 +215,9 @@
   .sens-row { padding: 2px 8px; }
   .band-row { padding: 4px 8px; }
 }
+
+/* The shared .result card is position:sticky (site.css) — right for the
+   other tools, where the card is alone in its column. Here the column also
+   carries the panels below the card, so a stuck card would cover them while
+   scrolling. The IRR card scrolls with the page. */
+.calc-right > .result { position: static; }
