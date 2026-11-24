@@ -82,6 +82,16 @@ window.realEstateTools = Object.freeze([
     icon: '▦'
   }),
   Object.freeze({
+    slug: 'irr-calculator',
+    title: 'IRR Calculator',
+    category: 'Finance & numbers',
+    description: 'Solve the internal rate of return on a rental property — yearly cash flow, appreciation and the final sale combined into one true annualized return.',
+    keywords: 'irr internal rate of return annualized return investment return',
+    status: 'published',
+    publicUrl: 'irr-calculator/',
+    icon: '↗'
+  }),
+  Object.freeze({
     slug: 'bridge-loan-calculator',
     title: 'Bridge Loan Calculator',
     category: 'Finance & numbers',

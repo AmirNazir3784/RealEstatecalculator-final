@@ -43,7 +43,7 @@ assert(results.children[0].textContent.includes('No matching tools'));
 search.value = ''; search.listeners.input(); assert.equal(status.textContent, '2 tools found');
 assert.equal(render([]).ids['home-search-status'].textContent, '0 tools found');
 search.value = 'Finance & numbers'; search.listeners.input();
-assert.equal(status.textContent, '13 tools found');
+assert.equal(status.textContent, '14 tools found');
 search.value = 'NOI'; search.listeners.input();
 assert.deepEqual(results.children.map(c => c.href), ['tools/cap-rate-calculator/', 'tools/commercial-real-estate-calculator/', 'tools/noi-calculator/']);
 search.value = 'cgt'; search.listeners.input();
