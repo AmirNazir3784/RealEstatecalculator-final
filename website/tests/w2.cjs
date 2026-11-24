@@ -117,7 +117,18 @@ function calculator(name, search) {
   for (const input of inputs) input._bubbleTo = elements[form];
   // Each tool runs its own scoped script; the shared script keeps only the menu.
   const script = name === 'mortgage' ? read('tools/mortgage-calculator/calculator.js') : name === 'commission' ? read('tools/commission-calculator/calculator.js') : name === 'home-affordability' ? read('tools/home-affordability-calculator/calculator.js') : name === 'rent-vs-buy' ? read('tools/rent-vs-buy-calculator/calculator.js') : name === 'cap-rate' ? read('tools/cap-rate-calculator/calculator.js') : name === 'bridge-loan' ? read('tools/bridge-loan-calculator/calculator.js') : name === 'property-investment' ? read('tools/property-investment-calculator/calculator.js') : name === 'capital-gains-tax' ? read('tools/capital-gains-tax-calculator/calculator.js') : name === 'roi' ? read('tools/roi-calculator/calculator.js') : name === 'noi' ? read('tools/noi-calculator/calculator.js') : shared;
-  const buttons = Object.values(elements).filter(el => el.attributes['data-years']);
+  // The mortgage script scopes two handlers over the shared .seg-control
+  // class (term buttons carry data-years, loan-type buttons carry
+  // data-loan-type), so its stub needs every button in the page, not just
+  // the elements that happen to carry an id.
+  const buttons = name === 'mortgage'
+    ? [...html.matchAll(/<button[^>]*>/g)].map(tag => {
+        const el = new Element();
+        const y = tag[0].match(/\bdata-years="([^"]+)"/); if (y) el.attributes['data-years'] = y[1];
+        const t = tag[0].match(/\bdata-loan-type="([^"]+)"/); if (t) el.attributes['data-loan-type'] = t[1];
+        return el;
+      })
+    : Object.values(elements).filter(el => el.attributes['data-years']);
   const ctx = { Intl, document: {
     querySelector: s => s === '#' + form ? elements[form] : null,
     querySelectorAll: s => s === '#' + form + ' input' ? inputs : s === '.seg-control button' ? buttons : [],
@@ -132,7 +143,9 @@ function calculator(name, search) {
   const submitEvent = { prevented: false, preventDefault() { this.prevented = true; } };
   elements[form].fire('submit', submitEvent);
   assert(submitEvent.prevented, `${name}: form submission is not prevented by its script`);
-  return { get: id => elements[id].textContent, html: id => elements[id].innerHTML, fire(id, event) { elements[id].fire(event); }, put(id, value) { elements[id].value = String(value); }, val: id => elements[id].value, set(id, value) { elements[id].value = String(value); elements[id].fire('input'); } };
+  return { get: id => elements[id].textContent, html: id => elements[id].innerHTML, fire(id, event) { elements[id].fire(event); }, put(id, value) { elements[id].value = String(value); }, val: id => elements[id].value, set(id, value) { elements[id].value = String(value); elements[id].fire('input'); },
+    press(attr, value) { const b = buttons.find(x => x.attributes[attr] === value); assert(b, `button ${attr}=${value} not found`); b.fire('click'); },
+    hidden: id => elements[id].hidden, disabled: id => elements[id].disabled };
 }
 const c = calculator('commission');
 c.fire('mode-agent', 'click');
@@ -220,6 +233,75 @@ both.set('extra-payment', 200);
 both.set('lump-sum', 50000);
 assert.equal(money(both.get('total-paid')), money(both.get('loan-amount')) + money(both.get('interest-with-extras')));
 assert.equal(both.get('time-saved') !== 'No time saved', true);
+
+// Loan types: pressing a loan-type button must not blank the term (the two
+// controls share the .seg-control class), and each type runs its own maths.
+const lt = calculator('mortgage');
+lt.press('data-loan-type', 'fha');
+assert.equal(lt.val('loan-type'), 'fha');
+assert.equal(lt.val('loan-years'), '30');
+assert.equal(lt.get('monthly-payment') !== '—', true);
+lt.press('data-loan-type', 'fixed');
+assert.equal(lt.val('loan-type'), 'fixed');
+assert.equal(lt.get('monthly-payment'), '$2,022.62');
+lt.press('data-years', '15');
+assert.equal(lt.val('loan-years'), '15');
+assert.equal(lt.get('monthly-payment'), '$2,787.54');
+
+// FHA at the defaults: base loan $320,000, 1.75% upfront MIP financed,
+// annual MIP 0.50% (LTV 80%) billed monthly on the base loan.
+const fha = calculator('mortgage');
+fha.press('data-loan-type', 'fha');
+assert.equal(fha.hidden('row-upfront-mip'), false);
+assert.equal(fha.get('upfront-mip'), '$5,600.00');
+assert.equal(fha.get('loan-amount'), '$325,600.00');
+assert.equal(fha.get('monthly-payment'), '$2,058.01');
+assert.equal(fha.get('lg-pmi'), '$133.33');
+assert.equal(fha.get('pmi-label'), 'FHA MIP');
+assert.equal(fha.get('monthly-total'), '$2,741.35');
+assert.equal(fha.disabled('pmi-rate'), true);
+// FHA at 3.5% down: LTV above 95% — annual MIP 0.55% for the life of the loan.
+fha.set('down-payment', 14000);
+assert.equal(fha.get('upfront-mip'), '$6,755.00');
+assert.equal(fha.get('loan-amount'), '$392,755.00');
+assert.equal(fha.get('monthly-payment'), '$2,482.48');
+assert.equal(fha.get('lg-pmi'), '$176.92');
+assert.equal(fha.get('monthly-total'), '$3,209.40');
+assert(fha.get('mortgage-pmi-note').includes('life of the loan'));
+
+// ARM: the fixed-period payment matches the fixed-rate maths; the projected
+// payment is the recast P&I at the first adjustment (6.5% rising by the 2%
+// first cap to the 8.5% assumed rate).
+const arm5 = calculator('mortgage');
+arm5.press('data-loan-type', 'arm5');
+assert.equal(arm5.val('loan-years'), '30');
+assert.equal(arm5.hidden('arm-details'), false);
+assert.equal(arm5.hidden('row-arm-projected'), false);
+assert.equal(arm5.get('monthly-payment'), '$2,022.62');
+assert.equal(arm5.get('arm-projected-payment'), '$2,412.10');
+const arm7 = calculator('mortgage');
+arm7.press('data-loan-type', 'arm7');
+assert.equal(arm7.get('monthly-payment'), '$2,022.62');
+assert.equal(arm7.get('arm-projected-payment'), '$2,390.13');
+
+// State selector: fills rate, tax (state rate x price) and insurance from
+// the published averages; the tax follows the price until edited by hand;
+// National restores the sample defaults.
+const st = calculator('mortgage');
+st.put('property-location', 'TX'); st.fire('property-location', 'change');
+assert.equal(st.val('interest-rate'), '7.32');
+assert.equal(st.val('property-tax'), '5600');
+assert.equal(st.val('home-insurance'), '2864');
+st.set('home-price', 500000);
+assert.equal(st.val('property-tax'), '7000');
+st.set('property-tax', 1234);
+st.set('home-price', 600000);
+assert.equal(st.val('property-tax'), '1234');
+st.put('property-location', 'national'); st.fire('property-location', 'change');
+assert.equal(st.val('interest-rate'), '6.5');
+assert.equal(st.val('property-tax'), '4800');
+assert.equal(st.val('home-insurance'), '1800');
+
 const a = calculator('home-affordability');
 assert.equal(a.get('afford-price'), '$330,118.43'); assert.equal(a.get('afford-loan'), '$270,118.43');
 assert.equal(a.get('afford-monthly'), '$2,300.00'); assert.equal(a.get('lg-pi'), '$1,707.33');
@@ -356,5 +438,5 @@ for (const file of walk(root).filter(f => /\.(html|css|js)$/.test(f))) {
 const directoryHtml = read('tools/index.html');
 assert(directoryHtml.indexOf('tool-registry.js') < directoryHtml.indexOf('tool-directory.js'));
 assert(read('assets/tool-listing.css').includes('#tool-grid .listing-card[hidden] {display:none;}'));
-console.log(`PASS: registry, published-only rendering, search/category combinations, empty/error states, navigation, 143 calculator assertions, JS syntax, ${references} internal references across ${pages} pages.`);
+console.log(`PASS: registry, published-only rendering, search/category combinations, empty/error states, navigation, calculator assertions, JS syntax, ${references} internal references across ${pages} pages.`);
 console.log('DOM behavior uses stubs; browser responsive/visual verification remains manual.');

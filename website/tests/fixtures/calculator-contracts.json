@@ -423,9 +423,14 @@
         "lump-sum": {
           "value": "0",
           "min": "0"
+        },
+        "arm-assumed-rate": {
+          "value": "8.5",
+          "min": "1",
+          "max": "100"
         }
       },
-      "engineHash": "3ceb423f3859005e48067775bcb61e0011761bf81a6d87918d3383840a8f30bc"
+      "engineHash": "12480d4937f70f25af90ab039b19163aa08adf054394ac54553bde2b5a3e8bfa"
     },
     "noi-calculator": {
       "metadata": {

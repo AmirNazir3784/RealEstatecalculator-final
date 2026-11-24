@@ -67,12 +67,16 @@
   var monthlyData = [];
   var yearlyRows = '';
 
-  function amortize(principal, r, pi, extra, lump, price, pmiM) {
+  // mipCapMonths: when a number is passed (FHA), the insurance-month counter
+  // counts months while months < mipCapMonths instead of using the 80%-of-price
+  // PMI rule — 132 for the 11-year MIP bands, Infinity for life-of-loan MIP.
+  function amortize(principal, r, pi, extra, lump, price, pmiM, mipCapMonths) {
     var bal = principal, months = 0, totalInterest = 0, totalPaid = 0, pmiMonths = 0;
     var yearly = [], monthly = [];
     var intY = 0, prinY = 0, year = 1;
     while (bal > 0 && months < 1200) {
-      if (pmiM > 0 && bal > price * 0.8) pmiMonths++;
+      if (typeof mipCapMonths === 'number') { if (months < mipCapMonths) pmiMonths++; }
+      else if (pmiM > 0 && bal > price * 0.8) pmiMonths++;
       var interest = bal * r;
       var prin = pi + extra - interest;
       if (months === 0) prin += lump;
@@ -91,6 +95,63 @@
     }
     return { months: months, totalInterest: totalInterest, totalPaid: totalPaid, pmiMonths: pmiMonths,
       yearly: yearly, monthly: monthly };
+  }
+
+  // ARM projection: the rate is fixed for fixedYears, then adjusts once a
+  // year toward the assumed rate — at most 2% at the first adjustment, 1% at
+  // later ones, never above the starting rate + 5% and never below 1%. The
+  // payment is recalculated (recast) on the remaining balance and term at
+  // each adjustment. firstAdjPi is the principal & interest right after the
+  // first adjustment.
+  function amortizeArm(principal, rate0, assumed, fixedYears, extra, lump, price, pmiM) {
+    function paymentFor(b, annualRate, n) {
+      if (n <= 0) return b;
+      var rr = annualRate / 1200;
+      if (rr === 0) return b / n;
+      var f = Math.pow(1 + rr, n);
+      return b * rr * f / (f - 1);
+    }
+    var bal = principal, months = 0, totalInterest = 0, totalPaid = 0, pmiMonths = 0;
+    var yearly = [], monthly = [];
+    var intY = 0, prinY = 0, year = 1;
+    var totalMonths = 360;
+    var rate = rate0;
+    var pi = paymentFor(bal, rate, totalMonths);
+    var firstAdjPi = null;
+    var adjCount = 0;
+    while (bal > 0 && months < 1200) {
+      if (months >= fixedYears * 12 && (months - fixedYears * 12) % 12 === 0 && months < totalMonths) {
+        adjCount++;
+        var cap = adjCount === 1 ? 2 : 1;
+        var next = rate;
+        if (assumed > rate) next = Math.min(rate + cap, assumed);
+        else if (assumed < rate) next = Math.max(rate - cap, assumed);
+        if (next > rate0 + 5) next = rate0 + 5;
+        if (next < 1) next = 1;
+        rate = next;
+        pi = paymentFor(bal, rate, totalMonths - months);
+        if (firstAdjPi === null) firstAdjPi = pi;
+      }
+      if (pmiM > 0 && bal > price * 0.8) pmiMonths++;
+      var interest = bal * (rate / 1200);
+      var prin = pi + extra - interest;
+      if (months === 0) prin += lump;
+      if (prin > bal) prin = bal;
+      if (prin < 0) prin = 0;
+      intY += interest; prinY += prin; bal -= prin;
+      if (bal < 0.005) bal = 0;
+      totalInterest += interest;
+      totalPaid += interest + prin;
+      months++;
+      monthly.push([months, interest, prin, bal]);
+      if (months % 12 === 0 || bal === 0) {
+        yearly.push([year, intY, prinY, bal]);
+        year++; intY = 0; prinY = 0;
+      }
+    }
+    if (firstAdjPi === null) firstAdjPi = pi;
+    return { months: months, totalInterest: totalInterest, totalPaid: totalPaid, pmiMonths: pmiMonths,
+      yearly: yearly, monthly: monthly, firstAdjPi: firstAdjPi };
   }
 
   function renderSchedule() {
@@ -142,6 +203,11 @@
     else if (!valid(extra, 0, 1e12)) problems.push('Extra payment must be 0 or more.');
     if (isEmpty('lump-sum')) problems.push('One-time extra payment is empty.');
     else if (!valid(lump, 0, 1e12)) problems.push('One-time extra payment must be 0 or more.');
+    var loanTypeCheck = currentLoanType();
+    if (loanTypeCheck === 'arm5' || loanTypeCheck === 'arm7') {
+      if (isEmpty('arm-assumed-rate')) problems.push('Assumed rate after the fixed period is empty.');
+      else if (!valid(num('arm-assumed-rate'), 1, 100)) problems.push('Assumed rate after the fixed period must be 1–100%.');
+    }
     var ok = problems.length === 0;
 
     if (!ok) {
@@ -157,6 +223,7 @@
       setHtml('balance-chart', '');
       set('chart-balance-end', '—'); set('chart-interest-end', '—');
       hideRow('result-body', true); hideRow('result-empty', false);
+      hideRow('row-upfront-mip', true); hideRow('row-arm-projected', true);
       setWidth('bd-pi', 0); setWidth('bd-tax', 0); setWidth('bd-ins', 0);
       setWidth('bd-hoa', 0); setWidth('bd-pmi', 0);
       setHtml('mortgage-schedule-body', '');
@@ -167,20 +234,63 @@
     hideRow('result-body', false); hideRow('result-empty', true);
 
     var principal = price - down;
+    var loanType = currentLoanType();
+    var isFha = loanType === 'fha';
+    var isArm = loanType === 'arm5' || loanType === 'arm7';
+    if (isFha || isArm) years = 30;
     var baseMonths = years * 12;
     var r = rate / 1200;
-    var pi = r === 0 ? principal / baseMonths
-      : principal * r * Math.pow(1 + r, baseMonths) / (Math.pow(1 + r, baseMonths) - 1);
-    if (!Number.isFinite(pi)) pi = 0;
-
     var taxM = tax / 12, insM = ins / 12, hoaM = hoa;
     var downPct = price > 0 ? (down / price) * 100 : 0;
-    var pmiM = downPct < 20 ? principal * pmiRate / 100 / 12 : 0;
+
+    // FHA (HUD Mortgagee Letter 2023-05, 30-year term): the 1.75% upfront
+    // MIP is financed into the loan; the annual MIP rate depends on the base
+    // loan amount and LTV, and lasts 11 years at LTV ≤ 90% or the life of
+    // the loan above that. Annual MIP is billed monthly on the base loan,
+    // the same convention as the Down Payment Calculator.
+    var loanAmt = principal;
+    var ufmip = 0;
+    var mipM = 0, mipCap = null, mipLife = false;
+    if (isFha) {
+      ufmip = principal * 0.0175;
+      loanAmt = principal + ufmip;
+      var ltv = price > 0 ? principal / price * 100 : 0;
+      var mipRate;
+      if (principal <= 726200) {
+        if (ltv <= 90) { mipRate = 0.50; mipCap = 132; }
+        else if (ltv <= 95) { mipRate = 0.50; mipLife = true; }
+        else { mipRate = 0.55; mipLife = true; }
+      } else {
+        if (ltv <= 90) { mipRate = 0.70; mipCap = 132; }
+        else if (ltv <= 95) { mipRate = 0.70; mipLife = true; }
+        else { mipRate = 0.75; mipLife = true; }
+      }
+      mipM = principal * mipRate / 100 / 12;
+    }
+    var pi = r === 0 ? loanAmt / baseMonths
+      : loanAmt * r * Math.pow(1 + r, baseMonths) / (Math.pow(1 + r, baseMonths) - 1);
+    if (!Number.isFinite(pi)) pi = 0;
+
+    var pmiM = (!isFha && downPct < 20) ? principal * pmiRate / 100 / 12 : 0;
+    var insM2 = isFha ? mipM : pmiM;
 
     // Effective scenario: base plan, or accelerated when extra payments exist.
-    var plan = amortize(principal, r, pi, extra, lump, price, pmiM);
-    var baseInterest = pi * baseMonths - principal;
-    if (r === 0) baseInterest = 0;
+    var plan, baseInterest, basePlan = null;
+    if (isArm) {
+      var assumedRate = num('arm-assumed-rate');
+      var fixedYears = loanType === 'arm5' ? 5 : 7;
+      basePlan = amortizeArm(principal, rate, assumedRate, fixedYears, 0, 0, price, pmiM);
+      plan = amortizeArm(principal, rate, assumedRate, fixedYears, extra, lump, price, pmiM);
+      baseInterest = basePlan.totalInterest;
+    } else if (isFha) {
+      plan = amortize(loanAmt, r, pi, extra, lump, price, 0, mipLife ? Infinity : mipCap);
+      baseInterest = pi * baseMonths - loanAmt;
+      if (r === 0) baseInterest = 0;
+    } else {
+      plan = amortize(principal, r, pi, extra, lump, price, pmiM);
+      baseInterest = pi * baseMonths - principal;
+      if (r === 0) baseInterest = 0;
+    }
 
     yearlyRows = '';
     for (var i = 0; i < plan.yearly.length; i++) {
@@ -190,34 +300,55 @@
     monthlyData = plan.monthly;
     renderSchedule();
 
-    var total = pi + taxM + insM + hoaM + pmiM;
+    var total = pi + taxM + insM + hoaM + insM2;
     var hasExtra = extra > 0 || lump > 0;
-    var effectiveInterest = hasExtra ? plan.totalInterest : baseInterest;
-    var effectivePaid = hasExtra ? plan.totalPaid : pi * baseMonths;
-    var effectiveMonths = plan.months;
-    var totalCost = effectivePaid
-      + taxM * effectiveMonths
-      + insM * effectiveMonths
-      + hoaM * effectiveMonths
-      + pmiM * (hasExtra ? plan.pmiMonths : baseMonths);
-    if (!hasExtra) {
-      totalCost = pi * baseMonths + tax * years + ins * years + hoa * baseMonths + pmiM * plan.pmiMonths;
+    var effectiveInterest, effectivePaid, totalCost;
+    if (isArm) {
+      effectiveInterest = plan.totalInterest;
+      effectivePaid = plan.totalPaid;
+      totalCost = plan.totalPaid + taxM * plan.months + insM * plan.months
+        + hoaM * plan.months + insM2 * plan.pmiMonths;
+    } else if (hasExtra) {
+      effectiveInterest = plan.totalInterest;
+      effectivePaid = plan.totalPaid;
+      totalCost = effectivePaid + taxM * plan.months + insM * plan.months
+        + hoaM * plan.months + insM2 * plan.pmiMonths;
+    } else {
+      effectiveInterest = baseInterest;
+      effectivePaid = pi * baseMonths;
+      totalCost = pi * baseMonths + tax * years + ins * years + hoa * baseMonths + insM2 * plan.pmiMonths;
     }
 
     set('monthly-payment', usd(pi));
-    set('loan-amount', usd(principal));
+    set('loan-amount', usd(loanAmt));
     set('total-interest', usd(effectiveInterest));
     set('total-paid', usd(effectivePaid));
     set('monthly-total', usd(total));
     set('total-cost', usd(totalCost));
+    hideRow('row-upfront-mip', !isFha);
+    if (isFha) set('upfront-mip', usd(ufmip));
+    hideRow('row-arm-projected', !isArm);
+    if (isArm) set('arm-projected-payment', usd(plan.firstAdjPi));
+    set('pmi-label', isFha ? 'FHA MIP' : 'PMI');
     set('down-percent', price > 0 ? downPct.toFixed(1) + '% of price' : '');
-    set('mortgage-pmi-note', pmiM > 0
-      ? 'PMI applies for about ' + plan.pmiMonths + ' months, until the balance drops to 80% of the price.'
-      : 'No PMI — the down payment is 20% or more of the price.');
+    if (isFha) {
+      set('mortgage-pmi-note', mipLife
+        ? 'FHA MIP applies for the life of the loan at this loan-to-value ratio, plus a 1.75% upfront premium financed into the loan.'
+        : 'FHA MIP applies for 11 years at this loan-to-value ratio, plus a 1.75% upfront premium financed into the loan.');
+    } else if (isArm) {
+      set('mortgage-pmi-note', (pmiM > 0
+        ? 'PMI applies for about ' + plan.pmiMonths + ' months, until the balance drops to 80% of the price. '
+        : 'No PMI — the down payment is 20% or more of the price. ')
+        + 'ARM projection: the rate is fixed for ' + fixedYears + ' years, then adjusts once a year toward your assumed rate — a projection, not a prediction.');
+    } else {
+      set('mortgage-pmi-note', pmiM > 0
+        ? 'PMI applies for about ' + plan.pmiMonths + ' months, until the balance drops to 80% of the price.'
+        : 'No PMI — the down payment is 20% or more of the price.');
+    }
     set('payoff-date', payoffDate(plan.months));
     set('interest-with-extras', usd(plan.totalInterest));
     set('interest-saved', usd(Math.max(0, baseInterest - effectiveInterest)));
-    set('time-saved', timeSavedText(baseMonths - plan.months));
+    set('time-saved', timeSavedText((isArm ? basePlan.months : baseMonths) - plan.months));
     set('schedule-note', (extra > 0 || lump > 0)
       ? 'Schedule includes your extra payments.'
       : 'Schedule shows the standard plan without extra payments.');
@@ -226,13 +357,13 @@
     // HOA, PMI, interest-saved and time-saved rows always show, even at $0,
     // so the panel never contradicts itself with a "not shown" note.
     set('lg-tax', usd(taxM)); set('lg-ins', usd(insM));
-    set('lg-hoa', usd(hoaM)); set('lg-pmi', usd(pmiM));
+    set('lg-hoa', usd(hoaM)); set('lg-pmi', usd(insM2));
     set('sticky-value', usd(total));
     syncDownPct();
 
     // Balance-over-time chart from the yearly schedule rows.
     var maxYear = plan.yearly.length || 1;
-    var maxVal = Math.max(principal, plan.totalInterest, 1);
+    var maxVal = Math.max(loanAmt, plan.totalInterest, 1);
     var cumInt = 0, balPts = '', intPts = '';
     for (var ci = 0; ci < plan.yearly.length; ci++) {
       var yr = plan.yearly[ci];
@@ -252,7 +383,7 @@
       setWidth('bd-tax', (taxM / total) * 100);
       setWidth('bd-ins', (insM / total) * 100);
       setWidth('bd-hoa', (hoaM / total) * 100);
-      setWidth('bd-pmi', (pmiM / total) * 100);
+      setWidth('bd-pmi', (insM2 / total) * 100);
     } else {
       setWidth('bd-pi', 0); setWidth('bd-tax', 0); setWidth('bd-ins', 0);
       setWidth('bd-hoa', 0); setWidth('bd-pmi', 0);
@@ -381,7 +512,9 @@
     if (termEl && /^\s*\d+(\.\d+)?\s*$/.test(term || '') && valid(Number(term), 1, 50)) {
       termEl.value = String(Number(term));
       document.querySelectorAll('.seg-control button').forEach(function (b) {
-        setAttr(b, 'aria-pressed', b.getAttribute && b.getAttribute('data-years') === termEl.value ? 'true' : 'false');
+        if (b.getAttribute && b.getAttribute('data-years')) {
+          setAttr(b, 'aria-pressed', b.getAttribute('data-years') === termEl.value ? 'true' : 'false');
+        }
       });
     }
   }
@@ -391,10 +524,16 @@
   form.addEventListener('input', function (e) {
     var t = e && e.target;
     if (!t || !t.id) return;
+    if (t.type === 'number' && t.id === 'property-tax') taxAuto = false;
     if (t.type === 'range') {
       var numEl = document.getElementById(t.id.replace(/-slider$/, ''));
       if (numEl) numEl.value = t.value;
       run();
+      if (t.id === 'home-price-slider' && taxAuto && taxState && STATE_DATA[taxState]) {
+        var taxElR = document.getElementById('property-tax');
+        if (taxElR) taxElR.value = String(Math.round(Number(t.value) * STATE_DATA[taxState].tax / 100));
+        run();
+      }
     } else if (t.type === 'number') {
       var slider = document.getElementById(t.id + '-slider');
       if (slider) {
@@ -415,6 +554,11 @@
               }
             }
             syncDownPct();
+            if (taxAuto && taxState && STATE_DATA[taxState]) {
+              var taxElF = document.getElementById('property-tax');
+              if (taxElF) taxElF.value = String(Math.round(v * STATE_DATA[taxState].tax / 100));
+              run();
+            }
           } else {
             var mn = Number(slider.min), mx = Number(slider.max);
             if (Number.isFinite(mn) && v < mn) v = mn;
@@ -453,13 +597,20 @@
       run();
     }
   });
-  // Segmented loan term: buttons set the hidden loan-years value.
+  // Segmented loan term: buttons set the hidden loan-years value. The
+  // loan-type buttons share the .seg-control class but carry data-loan-type
+  // instead of data-years — this handler must ignore them (and disabled
+  // buttons), or clicking FHA/ARM would blank the term.
   document.querySelectorAll('.seg-control button').forEach(function (btn) {
     btn.addEventListener('click', function () {
+      var yrs = btn.getAttribute ? btn.getAttribute('data-years') : null;
+      if (!yrs || btn.disabled) return;
       var yearsEl = document.getElementById('loan-years');
-      if (yearsEl) yearsEl.value = btn.getAttribute ? btn.getAttribute('data-years') : '';
+      if (yearsEl) yearsEl.value = yrs;
       document.querySelectorAll('.seg-control button').forEach(function (b) {
-        setAttr(b, 'aria-pressed', b === btn ? 'true' : 'false');
+        if (b.getAttribute && b.getAttribute('data-years')) {
+          setAttr(b, 'aria-pressed', b === btn ? 'true' : 'false');
+        }
       });
       run();
     });
@@ -497,7 +648,114 @@
   if (printBtn) printBtn.addEventListener('click', function () {
     if (typeof window !== 'undefined' && window.print) window.print();
   });
+  // --- Loan types -------------------------------------------------------
+  function currentLoanType() {
+    var el = document.getElementById('loan-type');
+    return el ? String(el.value) : 'fixed';
+  }
+  // FHA and ARM are 30-year products here: selecting one forces the term
+  // to 30 and disables the other term buttons. FHA also disables the PMI
+  // rate field, because FHA loans charge MIP instead of PMI.
+  function applyLoanType() {
+    var type = currentLoanType();
+    var restricted = type !== 'fixed';
+    if (restricted) {
+      var yearsEl = document.getElementById('loan-years');
+      if (yearsEl) yearsEl.value = '30';
+    }
+    document.querySelectorAll('.seg-control button').forEach(function (b) {
+      if (!b.getAttribute) return;
+      var yrs = b.getAttribute('data-years');
+      if (!yrs) return;
+      if (restricted && yrs !== '30') { b.disabled = true; setAttr(b, 'aria-disabled', 'true'); }
+      else { b.disabled = false; setAttr(b, 'aria-disabled', 'false'); }
+      if (restricted) setAttr(b, 'aria-pressed', yrs === '30' ? 'true' : 'false');
+    });
+    var armBox = document.getElementById('arm-details');
+    if (armBox) armBox.hidden = !(type === 'arm5' || type === 'arm7');
+    var pmiEl = document.getElementById('pmi-rate');
+    if (pmiEl) pmiEl.disabled = type === 'fha';
+  }
+  document.querySelectorAll('.seg-control button').forEach(function (btn) {
+    if (!btn.getAttribute || !btn.getAttribute('data-loan-type')) return;
+    btn.addEventListener('click', function () {
+      var typeEl = document.getElementById('loan-type');
+      if (typeEl) typeEl.value = btn.getAttribute('data-loan-type');
+      document.querySelectorAll('.seg-control button').forEach(function (b) {
+        if (b.getAttribute && b.getAttribute('data-loan-type')) {
+          setAttr(b, 'aria-pressed', b === btn ? 'true' : 'false');
+        }
+      });
+      applyLoanType();
+      run();
+    });
+  });
+
+  // --- State averages ---------------------------------------------------
+  // Estimates only, never a quote. Sources, one per column:
+  // rate: average 30-year fixed conventional rate (%), Mortech data via The
+  //   Mortgage Reports, snapshot of Nov 12, 2026. Hawaii and DC had no
+  //   state figure in that snapshot and use its national average, 7.20.
+  // tax: effective property tax rate on owner-occupied homes (%), Tax
+  //   Foundation, Facts & Figures 2026 (2024 American Community Survey).
+  // ins: average annual HO-3 homeowners premium ($), NAIC Homeowners
+  //   Insurance Report, data for 2023.
+  var STATE_DATA = {
+    AL: { rate: 7.33, tax: 0.37, ins: 1906 }, AK: { rate: 7.20, tax: 0.94, ins: 1216 },
+    AZ: { rate: 7.45, tax: 0.48, ins: 1194 }, AR: { rate: 7.30, tax: 0.56, ins: 1870 },
+    CA: { rate: 7.13, tax: 0.70, ins: 1655 }, CO: { rate: 7.34, tax: 0.50, ins: 2492 },
+    CT: { rate: 7.14, tax: 1.54, ins: 2036 }, DE: { rate: 7.43, tax: 0.54, ins: 1196 },
+    DC: { rate: 7.20, tax: 0.60, ins: 1545 }, FL: { rate: 7.00, tax: 0.78, ins: 2779 },
+    GA: { rate: 7.13, tax: 0.79, ins: 1828 }, HI: { rate: 7.20, tax: 0.29, ins: 1549 },
+    ID: { rate: 7.44, tax: 0.50, ins: 1135 }, IL: { rate: 7.27, tax: 1.88, ins: 1480 },
+    IN: { rate: 7.35, tax: 0.76, ins: 1259 }, IA: { rate: 7.08, tax: 1.33, ins: 1342 },
+    KS: { rate: 7.35, tax: 1.21, ins: 1733 }, KY: { rate: 7.40, tax: 0.74, ins: 1525 },
+    LA: { rate: 7.41, tax: 0.55, ins: 3027 }, ME: { rate: 7.29, tax: 0.98, ins: 1150 },
+    MD: { rate: 7.18, tax: 0.92, ins: 1578 }, MA: { rate: 7.20, tax: 1.00, ins: 2134 },
+    MI: { rate: 7.16, tax: 1.19, ins: 1110 }, MN: { rate: 7.16, tax: 1.00, ins: 1988 },
+    MS: { rate: 7.39, tax: 0.58, ins: 2029 }, MO: { rate: 7.34, tax: 0.89, ins: 1589 },
+    MT: { rate: 7.50, tax: 0.61, ins: 1768 }, NE: { rate: 7.45, tax: 1.44, ins: 2142 },
+    NV: { rate: 7.13, tax: 0.50, ins: 1013 }, NH: { rate: 7.31, tax: 1.50, ins: 1300 },
+    NJ: { rate: 7.14, tax: 1.88, ins: 1551 }, NM: { rate: 7.35, tax: 0.63, ins: 1490 },
+    NY: { rate: 7.09, tax: 1.30, ins: 1801 }, NC: { rate: 7.16, tax: 0.66, ins: 1852 },
+    ND: { rate: 7.48, tax: 0.92, ins: 1414 }, OH: { rate: 7.40, tax: 1.36, ins: 1116 },
+    OK: { rate: 7.33, tax: 0.79, ins: 2486 }, OR: { rate: 7.51, tax: 0.81, ins: 1003 },
+    PA: { rate: 7.15, tax: 1.26, ins: 1217 }, RI: { rate: 7.25, tax: 1.12, ins: 2396 },
+    SC: { rate: 7.32, tax: 0.49, ins: 1753 }, SD: { rate: 7.43, tax: 1.00, ins: 1614 },
+    TN: { rate: 7.33, tax: 0.52, ins: 1649 }, TX: { rate: 7.32, tax: 1.40, ins: 2864 },
+    UT: { rate: 7.46, tax: 0.48, ins: 1107 }, VT: { rate: 7.33, tax: 1.51, ins: 1215 },
+    VA: { rate: 7.25, tax: 0.78, ins: 1537 }, WA: { rate: 7.43, tax: 0.75, ins: 1232 },
+    WV: { rate: 7.40, tax: 0.51, ins: 1179 }, WI: { rate: 7.22, tax: 1.32, ins: 923 },
+    WY: { rate: 7.39, tax: 0.53, ins: 1853 }
+  };
+  // While a state is selected, the tax field follows the home price (state
+  // rate × price) until the user types their own tax figure.
+  var taxAuto = false;
+  var taxState = null;
+  var locEl = document.getElementById('property-location');
+  if (locEl && locEl.addEventListener) locEl.addEventListener('change', function () {
+    var code = String(locEl.value || 'national');
+    var rateElS = document.getElementById('interest-rate');
+    var taxElS = document.getElementById('property-tax');
+    var insElS = document.getElementById('home-insurance');
+    if (code === 'national' || !STATE_DATA[code]) {
+      taxState = null; taxAuto = false;
+      if (rateElS) rateElS.value = '6.5';
+      if (taxElS) taxElS.value = '4800';
+      if (insElS) insElS.value = '1800';
+    } else {
+      var d = STATE_DATA[code];
+      taxState = code; taxAuto = true;
+      if (rateElS) rateElS.value = String(d.rate);
+      if (taxElS) taxElS.value = String(Math.round(num('home-price') * d.tax / 100));
+      if (insElS) insElS.value = String(d.ins);
+    }
+    syncSliders();
+    run();
+  });
+
   readUrlParameters();
+  applyLoanType();
   syncSliders();
   run();
 })();

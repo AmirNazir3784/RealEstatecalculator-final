@@ -93,7 +93,8 @@
 <p class="copy-note" id="copy-note"></p></div>
 </aside>
 </div><div class="wrap"><a class="realtoros-link" href="../../real-estate-crm/">Manage client follow-ups in RealtorCRM ↗</a></div><div class="wrap calculator-disclaimers"><p class="disclaimer">Principal and interest use a standard amortizing fixed-rate formula. PMI is estimated only while the loan balance is above 80% of the price. Taxes, insurance and HOA figures are your own inputs, not quotes.</p>
-<p class="disclaimer">Estimates only. Not a loan offer or financial advice.</p></div></section>
+<p class="disclaimer">Estimates only. Not a loan offer or financial advice.</p>
+<p class="disclaimer">FHA estimates include the 1.75% upfront mortgage insurance premium financed into the loan and annual MIP under HUD Mortgagee Letter 2023-05. ARM figures are a projection using your assumed rate after the fixed period, with standard adjustment caps — not a prediction. State averages are sample figures (see Sources), not live rates or quotes.</p></div></section>
 <section class="section"><div class="wrap content">
 <div class="note"><strong>How to use:</strong> Enter the home price, down payment, rate and term, then add yearly tax and insurance and any HOA or PMI. The total monthly payment, loan totals and payoff date update as you type.</div>
 <h2>Loan balance over time</h2>
@@ -117,6 +118,9 @@
 <div class="formula-box">
 <p>Principal and interest use the standard fixed-rate formula: M = P × r(1 + r)<sup>n</sup> ÷ ((1 + r)<sup>n</sup> − 1), where P is the loan amount, r is the monthly interest rate (annual rate ÷ 12), and n is the number of monthly payments. At 0% interest, the payment is simply P ÷ n. Property tax and home insurance are each divided by 12, HOA dues are added monthly, and PMI is added only while it applies. Extra monthly and one-time payments go straight to principal, which shortens the loan and reduces total interest.</p>
 </div>
+<p><strong>FHA loans.</strong> Selecting FHA adds the 1.75% upfront mortgage insurance premium (MIP) to the loan amount and charges annual MIP monthly: 0.50%–0.55% of the loan per year on base loans up to $726,200 (0.70%–0.75% above that), lasting 11 years when the loan-to-value ratio is 90% or less and the life of the loan above that, per HUD Mortgagee Letter 2023-05. FHA loans require at least 3.5% down with a credit score of 580 or higher.</p>
+<p><strong>Adjustable-rate loans.</strong> For a 5-year or 7-year ARM, the rate holds for the fixed period, then adjusts once a year toward the assumed rate you set — moving at most 2% at the first adjustment and 1% at later ones, never above your starting rate plus 5% and never below 1%. The payment is recalculated at each adjustment on the remaining balance, and the schedule, chart and totals all use that projection.</p>
+<p><strong>Location.</strong> Choosing a state fills the rate, property tax and home insurance fields with that state's published averages (see Sources). Every figure stays editable, and if you change the home price after choosing a state, the tax updates with it until you type your own tax figure.</p>
 <h2>Worked example</h2>
 <p>These are the values already filled in when the page loads. The 6.5% rate is a sample default, not a current market rate or a quote.</p>
 <div class="table-scroll"><table class="mortgage-schedule">
@@ -146,6 +150,7 @@
 <p>Extra principal reduces the balance that future interest is charged on, so the loan can finish early. On the default loan, adding $200 a month with no other change finishes the loan in 281 months instead of 360, saves $105,428.67 in interest, and finishes 6 years 7 months sooner. Check with your servicer how extra payments are applied — some need an explicit “apply to principal” instruction.</p>
 <h2>PMI</h2>
 <p>This calculator uses a simplified PMI rule: if the down payment is below 20%, it charges PMI at your entered annual rate on the loan amount, divided by 12, and stops once the balance is no longer above 80% of the home price. For example, a $400,000 home with 10% down gives a $360,000 loan, $2,275.44 principal and interest, $150.00 PMI a month, and a $2,975.44 total with the default tax and insurance; PMI runs for about 95 months on those inputs. That is an estimate of the simplified rule, not a promise about a real loan. For many U.S. conventional loans with borrower-paid PMI, the Consumer Financial Protection Bureau (CFPB) describes a different set of rights: you may request cancellation in writing at a scheduled 80% of the home's original value, subject to being current and other conditions, and the servicer must generally terminate PMI automatically at a scheduled 78% if you are current. FHA and VA loans and lender-paid mortgage insurance follow different rules.</p>
+<h2>Common mistakes</h2><ul><li><strong>Comparing loans by the interest rate alone.</strong> The same rate on different terms, taxes or insurance produces very different totals. Compare the full monthly payment and the total interest over the time you realistically expect to keep the loan.</li><li><strong>Quoting the principal-and-interest figure as "the payment".</strong> Property tax, homeowners insurance, HOA dues and PMI are real monthly costs. A quote that leaves them out is not comparable with one that includes them.</li><li><strong>Assuming PMI lasts the whole loan.</strong> PMI is normally removable once the balance reaches 80% of the home’s value, and terminates automatically at 78% on most loans — the PMI section above explains both routes.</li><li><strong>Testing only today’s rate.</strong> Run the same home at a rate half a point higher and lower. If the higher payment would strain the budget, the home — not the rate — is the risk.</li></ul>
 <h2>Frequently Asked Questions About Mortgages</h2>
 <details class="faq"><summary>How Can a Mortgage Calculator Help You?</summary>
 <p>A mortgage calculator helps you understand the financial commitment involved in purchasing a home. Instead of looking only at the property's asking price, you can estimate the monthly cost of borrowing and see how different loan details affect your budget. Try changing the down payment, interest rate, or repayment period. Comparing these figures can help you understand which loan arrangement may be more manageable before speaking with a lender.</p></details>
@@ -167,6 +172,8 @@
 <p>Mortgage pre-approval gives you an initial assessment of how much a lender may be willing to finance after reviewing your financial information. It can help you establish a realistic property budget and demonstrate to sellers that you have taken steps toward arranging financing. Pre-approval differs from pre-qualification, which may rely on information you provide without the same level of document verification. Neither guarantees final approval. Lenders still need to complete underwriting and review the property.</p></details>
 <details class="faq"><summary>How Long Does Mortgage Pre-Approval Last?</summary>
 <p>A pre-approval letter usually has an expiration date set by the lender. Its validity period varies, so check the letter rather than assuming it remains active for a fixed number of months. If it expires before you find a property, the lender may ask for updated income, asset, and credit information.</p></details>
+<details class="faq"><summary>What Does the State Selector Change?</summary>
+<p>It fills three fields with published state averages: the interest rate (a snapshot of average 30-year fixed rates), the property tax (your home price multiplied by the state's effective tax rate from the Tax Foundation), and the home insurance premium (the NAIC's average for the state). They are starting estimates, not quotes — edit any of them, and choose "National average" to return to the sample defaults.</p></details>
 
 <h2>Common Mortgage Terms</h2>
 <div class="mortgage-term-grid">
@@ -179,6 +186,10 @@
 <ul>
 <li>Consumer Financial Protection Bureau — <a href="https://www.consumerfinance.gov/ask-cfpb/on-a-mortgage-whats-the-difference-between-my-principal-and-interest-payment-and-my-total-monthly-payment-en-1941/">On a mortgage, what's the difference between my principal and interest payment and my total monthly payment?</a></li>
 <li>Consumer Financial Protection Bureau — <a href="https://www.consumerfinance.gov/ask-cfpb/when-can-i-remove-private-mortgage-insurance-pmi-from-my-loan-en-202/">When can I remove private mortgage insurance (PMI) from my loan?</a></li>
+<li>U.S. Department of Housing and Urban Development — Mortgagee Letter 2023-05 (FHA mortgage insurance premiums)</li>
+<li>Tax Foundation — Facts &amp; Figures 2026, effective property tax rates by state (2024 American Community Survey)</li>
+<li>National Association of Insurance Commissioners — Homeowners Insurance Report, data for 2023 (average HO-3 premiums by state)</li>
+<li>The Mortgage Reports — average 30-year fixed rates by state, Mortech data, November 12, 2026 snapshot</li>
 </ul>
 </div></section>
 <section class="section"><div class="wrap content">

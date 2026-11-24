@@ -42,8 +42,8 @@ for (const slug of SLUGS) {
     check(`${slug} has a shared .result-number hero`, html.includes('class="result-number"'));
   }
   const faqCount = (html.match(/<details\b[^>]*class="faq"/g) || []).length;
-  check(`${slug} has ${slug === 'mortgage-calculator' ? 10 : slug === 'commission-calculator' ? 10 : 6} FAQ accordions (got ${faqCount})`,
-    faqCount === (slug === 'mortgage-calculator' ? 10 : slug === 'commission-calculator' ? 10 : 6));
+  check(`${slug} has ${slug === 'mortgage-calculator' ? 11 : slug === 'commission-calculator' ? 10 : 6} FAQ accordions (got ${faqCount})`,
+    faqCount === (slug === 'mortgage-calculator' ? 11 : slug === 'commission-calculator' ? 10 : 6));
   check(`${slug} has the approved related cards`, count(html, 'class="related-card"') === (slug === 'commission-calculator' ? 4 : 3));
   check(`${slug} has a how-to note`, html.includes('How to use:'));
 }
