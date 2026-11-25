@@ -10,20 +10,21 @@ function check(name, value) { assert(value, name); passed++; }
 function equal(name, actual, expected) { assert.deepEqual(actual, expected, name); passed++; }
 const frozen = {
   "pages": {
+    // All baselines recaptured 2026-11-25 (Depreciation): the Depreciation Calculator became the 15th tool — every footer gained the Depreciation link, and the Depreciation page gained a frozen header entry.
     // All baselines recaptured 2026-11-24 (IRR): the IRR Calculator became the 14th tool — every footer gained the IRR link (footer lists rebalanced), and the IRR page gained a frozen header entry.
     // All baselines recaptured 2026-11-24 (Commercial Real Estate): the Commercial Real Estate Calculator became the 13th tool — every footer gained the Commercial link (footer lists rebalanced), and the Commercial page gained a frozen header entry.
     // All baselines recaptured 2026-11-24 (Rental Yield): the Rental Yield Calculator became the 12th tool — every footer gained the Rental Yield link, and the Rental Yield page gained a frozen header entry.
     // All baselines recaptured 2026-11-24: the redesign stack and the Down Payment Calculator were merged onto main together — every footer gained the Down Payment link, and the Down Payment page gained a frozen header entry.
     // Homepage baseline includes the approved Google Search Console verification tag.
-    "index.html": "25dbde02c8d300b243f6e7456d868bb04070d37aadeb116ca8385d78dd8ed227",
+    "index.html": "bae51b7a74c4c9e9925b1bf0dcaac3e0049a5f88d97d9ab21d2d38ce0bd1dd27",
     // About baseline refreshed for the editorial refinement; shared header stays frozen.
     // All page baselines refreshed 2026-11-16: footer Platform column gained the Privacy Policy link on every page.
     // All page baselines refreshed 2026-11-17: footer Platform column gained the Terms of Use link on every page.
     // All page baselines refreshed 2026-11-24: footer Tools list rebuilt (mega-menu order, Title Case, two fixed lists), footer headings h2 -> p, "Access availability" renamed "Early access".
-    "about/index.html": "832793570177a5b1a5c09f416d4e9197490fefc062e909b92c81d04513ca911b",
-    "contact/index.html": "20403c1c08c42dc64d2672e245de428d8810afa976e577f89cae2dbc4515167b",
-    "resources/index.html": "e2ea23c6b82f22756e3d04a68bc630f668d1fd5a9661f9d7ed5ade93639dd250",
-    "real-estate-crm/index.html": "86eabc909023655cfc37def50541ff1c3a9490d3195c48bfe96d637b51158ca4",
+    "about/index.html": "80666c32dd0de8c68af28136466081fe2172a1e22f7abd796054367a83fdd4ee",
+    "contact/index.html": "9783e06297eb3ff8552d772731ac5d0010706ad30d7288e2bba050c4699c9e3b",
+    "resources/index.html": "23244af911f2617411466708cbf457633f3e3d1bd05a9a043d8138c729ef9f6b",
+    "real-estate-crm/index.html": "33218bef10bb487ecf9f8a2609361e43c69ea034ab26694a93f396fff2aff670",
     "tools/index.html": "a71ed5ca019af7f25d9df95c4b7f5e0242706b4a97cb10302c4f5d5983d3a4d2",
     "tools/bridge-loan-calculator/index.html": "1469e8f4dea7d0f0412eb46e0923125242a35dc2a21f22fda1a38e914ffc036d",
     "tools/cap-rate-calculator/index.html": "c13d8b0ab54569cb3493474807157b511950fa0c4ad052a0178e601e2f473273",
@@ -55,6 +56,7 @@ const frozen = {
     "tools/rental-yield-calculator/index.html": "bc3cd3f9e232ef8b213dc058eac0e159bf9faf2ac4aeb51ea5a5821b8c634181",
     "tools/commercial-real-estate-calculator/index.html": "bc3cd3f9e232ef8b213dc058eac0e159bf9faf2ac4aeb51ea5a5821b8c634181",
     "tools/irr-calculator/index.html": "bc3cd3f9e232ef8b213dc058eac0e159bf9faf2ac4aeb51ea5a5821b8c634181",
+    "tools/depreciation-calculator/index.html": "bc3cd3f9e232ef8b213dc058eac0e159bf9faf2ac4aeb51ea5a5821b8c634181",
     "tools/rent-vs-buy-calculator/index.html": "bc3cd3f9e232ef8b213dc058eac0e159bf9faf2ac4aeb51ea5a5821b8c634181",
     "tools/roi-calculator/index.html": "bc3cd3f9e232ef8b213dc058eac0e159bf9faf2ac4aeb51ea5a5821b8c634181"
   },
@@ -92,7 +94,7 @@ for(const file of pages) {
   check(`${file} initially hidden`, /id="tools-mega-menu" hidden/.test(menu));
   check(`${file} overlay`, html.includes('<div class="tools-menu-overlay" id="tools-menu-overlay" hidden aria-hidden="true"></div>'));
   check(`${file} overlay outside header`, html.indexOf('id="tools-menu-overlay"')>html.indexOf('</header>'));
-  equal(`${file} tool count`,(menu.match(/data-menu-tool=/g)||[]).length,14);
+  equal(`${file} tool count`,(menu.match(/data-menu-tool=/g)||[]).length,15);
   const prefix='../'.repeat(file.split('/').length-1);
   const normalized=menu.replaceAll(`href="${prefix}tools/`,'href="TOOLS/').replaceAll('\r\n','\n');
   if(reference) equal(`${file} identical normalized menu`,normalized,reference);else reference=normalized;
@@ -102,7 +104,7 @@ for(const file of pages) {
     equal(`${file} approved category members ${index}`,Array.from(group.matchAll(/data-menu-tool="([^"]+)"/g),m=>m[1]),[
       ['mortgage-calculator','down-payment-calculator','home-affordability-calculator','rent-vs-buy-calculator','bridge-loan-calculator'],
       ['cap-rate-calculator','rental-yield-calculator','commercial-real-estate-calculator','irr-calculator','noi-calculator','roi-calculator','property-investment-calculator'],
-      ['commission-calculator','capital-gains-tax-calculator']
+      ['commission-calculator','capital-gains-tax-calculator','depreciation-calculator']
     ][index]);
   }
   for(const tool of tools) {
@@ -161,7 +163,7 @@ for(const tool of tools) {
 }
 const html=read('tools/index.html');
 check('requested H1',html.includes('<h1>Free Real Estate Calculators</h1>'));
-check('intro copy',html.includes('Explore 14 free real estate calculators for buying, investing and selling. Compare estimates, understand the assumptions, and plan your next step.'));
+check('intro copy',html.includes('Explore 15 free real estate calculators for buying, investing and selling. Compare estimates, understand the assumptions, and plan your next step.'));
 check('trust right column markup',/<div class="wrap tools-intro"><div class="tools-intro-copy">[\s\S]*?<\/div><div class="trust-chips"/.test(html));
 for(const chip of ['✓ No signup','✓ Free to use','✓ Calculations stay in your browser'])check('trust '+chip,html.includes(`<span>${chip}</span>`));
 check('desktop right trust column',listing.includes('grid-template-columns: minmax(0, 1fr) auto'));
@@ -170,9 +172,9 @@ check('SVG search icon',/<svg class="listing-search-icon"[\s\S]*?aria-hidden="tr
 check('no emoji in search placeholder',!html.includes('placeholder="🔍'));
 check('search input retains label',html.includes('aria-label="Search tools"'));
 check('search icon does not block input',listing.includes('pointer-events: none'));
-check('SEO title',html.includes('<title>Free Real Estate Calculators | 14 Online Tools</title>'));
-check('SEO description',html.includes('name="description" content="Explore 14 free real estate calculators for mortgages, affordability, rental returns, commissions and selling costs. Clear estimates, no signup required."'));
-for(const attr of ['property="og:title"','name="twitter:title"'])check('social title '+attr,html.includes(`${attr} content="Free Real Estate Calculators | 14 Online Tools"`));
+check('SEO title',html.includes('<title>Free Real Estate Calculators | 15 Online Tools</title>'));
+check('SEO description',html.includes('name="description" content="Explore 15 free real estate calculators for mortgages, affordability, rental returns, commissions and selling costs. Clear estimates, no signup required."'));
+for(const attr of ['property="og:title"','name="twitter:title"'])check('social title '+attr,html.includes(`${attr} content="Free Real Estate Calculators | 15 Online Tools"`));
 check('canonical unchanged',html.includes('rel="canonical" href="https://everyrealestatecalculator.com/tools/"'));
 for(const tool of tools)check('static directory kept '+tool.slug,html.includes(`<li><a href="${tool.publicUrl}">`));
 

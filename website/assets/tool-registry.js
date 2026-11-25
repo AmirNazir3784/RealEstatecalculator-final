@@ -92,6 +92,16 @@ window.realEstateTools = Object.freeze([
     icon: '↗'
   }),
   Object.freeze({
+    slug: 'depreciation-calculator',
+    title: 'Depreciation Calculator',
+    category: 'Finance & numbers',
+    description: 'Work out the yearly tax depreciation on a rental property: the depreciable basis after land, the mid-month first year and the full 27.5 or 39-year schedule.',
+    keywords: 'depreciation macrs rental property tax deduction basis schedule',
+    status: 'published',
+    publicUrl: 'depreciation-calculator/',
+    icon: '↘'
+  }),
+  Object.freeze({
     slug: 'bridge-loan-calculator',
     title: 'Bridge Loan Calculator',
     category: 'Finance & numbers',

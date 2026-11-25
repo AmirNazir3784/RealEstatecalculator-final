@@ -73,8 +73,8 @@ function directory(data) {
   };
 }
 let d = directory(registry);
-assert.equal(d.visible().length, 14);
-assert.deepEqual(d.visible().map(c => c.href), ['commission-calculator/', 'mortgage-calculator/', 'down-payment-calculator/', 'home-affordability-calculator/', 'rent-vs-buy-calculator/', 'cap-rate-calculator/', 'rental-yield-calculator/', 'commercial-real-estate-calculator/', 'irr-calculator/', 'bridge-loan-calculator/', 'property-investment-calculator/', 'capital-gains-tax-calculator/', 'roi-calculator/', 'noi-calculator/']);
+assert.equal(d.visible().length, 15);
+assert.deepEqual(d.visible().map(c => c.href), ['commission-calculator/', 'mortgage-calculator/', 'down-payment-calculator/', 'home-affordability-calculator/', 'rent-vs-buy-calculator/', 'cap-rate-calculator/', 'rental-yield-calculator/', 'commercial-real-estate-calculator/', 'irr-calculator/', 'depreciation-calculator/', 'bridge-loan-calculator/', 'property-investment-calculator/', 'capital-gains-tax-calculator/', 'roi-calculator/', 'noi-calculator/']);
 d.search('  MORTGAGE  '); assert.equal(d.visible().length, 1);
 d.search('transaction fees'); assert.equal(d.visible()[0].href, 'commission-calculator/');
 d.search('NOI'); assert.deepEqual(d.visible().map(c => c.href), ['cap-rate-calculator/', 'commercial-real-estate-calculator/', 'noi-calculator/']);
@@ -83,20 +83,20 @@ d.search('net operating income'); assert.deepEqual(d.visible().map(c => c.href),
 d.search('vacancy'); assert.deepEqual(d.visible().map(c => c.href), ['cap-rate-calculator/', 'rental-yield-calculator/', 'noi-calculator/']);
 d.search('afford'); assert.deepEqual(d.visible().map(c => c.href), ['home-affordability-calculator/']);
 d.search('not-a-tool'); assert.equal(d.visible().length, 0); assert.equal(d.ids['no-results'].style.display, 'block');
-d.search(''); assert.equal(d.visible().length, 14);
-assert.deepEqual(d.ids['tool-filters'].children.map(b => b.textContent), ['All tools · 14', 'Buying · 4', 'Investing · 7', 'Selling · 1', 'Tax · 1', 'For agents · 1']);
-assert.equal(d.ids['tool-count'].textContent, '14 tools found · Sort: Newest first');
+d.search(''); assert.equal(d.visible().length, 15);
+assert.deepEqual(d.ids['tool-filters'].children.map(b => b.textContent), ['All tools · 15', 'Buying · 4', 'Investing · 7', 'Selling · 1', 'Tax · 2', 'For agents · 1']);
+assert.equal(d.ids['tool-count'].textContent, '15 tools found · Sort: Newest first');
 // Synthetic records exist only in memory, never as fake published pages.
 d = directory([...registry, { slug: 'test', title: 'Test', category: 'Planning', description: 'Schedule', status: 'published', publicUrl: 'test/' },
   { slug: 'draft', title: 'Secret draft', category: 'Draft category', description: '', status: 'draft', publicUrl: 'draft/' }]);
-assert.equal(d.visible().length, 15); assert.equal(d.ids['tool-filters'].children.length, 7);
-assert.deepEqual(d.ids['tool-filters'].children.map(b => b.textContent), ['All tools · 15', 'Buying · 4', 'Investing · 7', 'Selling · 1', 'Tax · 1', 'For agents · 1', 'Planning · 1']);
-assert.equal(d.ids['tool-count'].textContent, '15 tools found · Sort: Newest first');
+assert.equal(d.visible().length, 16); assert.equal(d.ids['tool-filters'].children.length, 7);
+assert.deepEqual(d.ids['tool-filters'].children.map(b => b.textContent), ['All tools · 16', 'Buying · 4', 'Investing · 7', 'Selling · 1', 'Tax · 2', 'For agents · 1', 'Planning · 1']);
+assert.equal(d.ids['tool-count'].textContent, '16 tools found · Sort: Newest first');
 d.filter('Planning · 1'); assert.equal(d.visible().length, 1);
 assert.equal(d.ids['tool-filters'].children.find(b => b.textContent === 'Planning · 1').attributes['aria-pressed'], 'true');
 assert.equal(d.ids['tool-count'].textContent, '1 tool found · Sort: Newest first');
 d.search('mortgage'); assert.equal(d.visible().length, 0);
-d.filter('All tools · 15'); assert.equal(d.visible().length, 1);
+d.filter('All tools · 16'); assert.equal(d.visible().length, 1);
 d.search('draft'); assert.equal(d.visible().length, 0);
 assert.equal(directory([]).ids['no-results'].textContent, 'No tools are published yet.');
 assert.equal(directory(undefined).ids['tool-search'].disabled, true);
