@@ -243,3 +243,7 @@
 .calc-page .section:has(.faq) { padding-bottom: 24px; }
 .calc-page .section:has(.related-cards) { padding-top: 24px; }
 .calc-page .section:has(.related-cards) h2 { margin-top: 0; }
+
+/* The intro line must run the panel's full width: site.css caps hero
+   paragraphs at 720px (.page-hero p), which this panel sits inside. */
+.irr-years-panel .irr-years-sub { max-width: none; }
