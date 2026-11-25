@@ -43,7 +43,14 @@
     });
     document.addEventListener('click', function (event) {
       if (!nav.classList.contains || !nav.classList.contains('is-open')) return;
-      if (nav.contains(event.target) || toggle.contains(event.target)) return;
+      // Use the event's composed path: the toggle handler swaps the button's
+      // innerHTML, which detaches the tapped glyph before this handler runs,
+      // so contains(event.target) alone would misread a tap on the button as
+      // an outside click and close the menu the same tap just opened.
+      var path = typeof event.composedPath === 'function' ? event.composedPath() : null;
+      var inside = path ? (path.indexOf(nav) !== -1 || path.indexOf(toggle) !== -1)
+                        : (nav.contains(event.target) || toggle.contains(event.target));
+      if (inside) return;
       nav.classList.remove('is-open');
       toggle.setAttribute('aria-expanded', 'false');
       toggle.setAttribute('aria-label', 'Open navigation');
