@@ -38,7 +38,7 @@ for (const slug of ['mortgage-calculator','home-affordability-calculator','rent-
   'capital-gains-tax-calculator','commission-calculator']) {
   check(`tools directory links ${slug}`, tools.includes(`<li><a href="${slug}/">`));
 }
-check('tools meta updated', tools.includes('Explore 15 free real estate calculators')); // 11th tool added 2026-11-22, 12th (rental yield) 2026-11-24, 13th (commercial real estate) 2026-11-24, 14th (IRR) 2026-11-24, 15th (depreciation) 2026-11-25
+check('tools meta updated', tools.includes('Explore 16 free real estate calculators')); // 11th tool added 2026-11-22, 12th (rental yield) 2026-11-24, 13th (commercial real estate) 2026-11-24, 14th (IRR) 2026-11-24, 15th (depreciation) 2026-11-25, 16th (wholesale) 2026-11-25
 // 5. CGT sources + mistakes.
 const cgt = read('tools/capital-gains-tax-calculator/index.html');
 for (const u of ['irs.gov/publications/p523', 'irs.gov/taxtopics/tc409', 'irs.gov/publications/p544',
@@ -79,7 +79,7 @@ check('about methodology', ['formulas, inputs and assumptions', 'Worked examples
 check('privacy page published in website tree', fs.existsSync(path.join(ROOT, 'privacy-policy', 'index.html')));
 check('terms page published in website tree', fs.existsSync(path.join(ROOT, 'terms', 'index.html')));
 const sm = read('sitemap.xml');
-check('sitemap still 28 URLs', (sm.match(/<loc>/g) || []).length === 28); // +1: down-payment-calculator (2026-11-22), +1: rental-yield-calculator (2026-11-24), +1: commercial-real-estate-calculator (2026-11-24), +1: irr-calculator (2026-11-24), +1: depreciation-calculator (2026-11-25)
+check('sitemap still 29 URLs', (sm.match(/<loc>/g) || []).length === 29); // +1: down-payment-calculator (2026-11-22), +1: rental-yield-calculator (2026-11-24), +1: commercial-real-estate-calculator (2026-11-24), +1: irr-calculator (2026-11-24), +1: depreciation-calculator (2026-11-25), +1: wholesale-calculator (2026-11-25)
 console.log(`W7: ${passed} passed, ${failures.length} failed`);
 for (const f of failures) console.log('  FAIL:', f);
 process.exit(failures.length ? 1 : 0);

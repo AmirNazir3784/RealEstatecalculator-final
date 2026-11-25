@@ -102,6 +102,16 @@ window.realEstateTools = Object.freeze([
     icon: '↘'
   }),
   Object.freeze({
+    slug: 'wholesale-calculator',
+    title: 'Wholesale Calculator',
+    category: 'Finance & numbers',
+    description: 'Work out the maximum allowable offer on a wholesale deal: the after repair value at the investor discount, minus repairs, closing costs and your fee.',
+    keywords: 'wholesale wholesaling mao maximum allowable offer 70% rule arv assignment fee',
+    status: 'published',
+    publicUrl: 'wholesale-calculator/',
+    icon: '⇌'
+  }),
+  Object.freeze({
     slug: 'bridge-loan-calculator',
     title: 'Bridge Loan Calculator',
     category: 'Finance & numbers',

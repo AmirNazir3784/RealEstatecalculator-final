@@ -100,7 +100,7 @@ for (const [id, category, minutes] of [['mortgage-guide', 'Mortgage', '3'], ['co
 
 // Sitemap carries all five articles plus the legal pages; 23 URLs in total.
 const sm = read('sitemap.xml');
-equal('sitemap 28 URLs', (sm.match(/<loc>/g) || []).length, 28); // +1: down-payment-calculator (2026-11-22), +1: rental-yield-calculator (2026-11-24), +1: commercial-real-estate-calculator (2026-11-24), +1: irr-calculator (2026-11-24), +1: depreciation-calculator (2026-11-25)
+equal('sitemap 29 URLs', (sm.match(/<loc>/g) || []).length, 29); // +1: down-payment-calculator (2026-11-22), +1: rental-yield-calculator (2026-11-24), +1: commercial-real-estate-calculator (2026-11-24), +1: irr-calculator (2026-11-24), +1: depreciation-calculator (2026-11-25), +1: wholesale-calculator (2026-11-25)
 check('sitemap privacy page', sm.includes('<loc>https://everyrealestatecalculator.com/privacy-policy/</loc>'));
 check('sitemap terms page', sm.includes('<loc>https://everyrealestatecalculator.com/terms/</loc>'));
 check('sitemap mortgage article', sm.includes('<loc>https://everyrealestatecalculator.com/resources/mortgage-payments/</loc>'));
