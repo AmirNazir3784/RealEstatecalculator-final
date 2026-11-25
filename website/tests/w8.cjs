@@ -10,6 +10,7 @@ function check(name, value) { assert(value, name); passed++; }
 function equal(name, actual, expected) { assert.deepEqual(actual, expected, name); passed++; }
 const frozen = {
   "pages": {
+    // About baseline recaptured 2026-11-25 (hero redesign): the About hero gained the approved eyebrow, dual-product headline and copy, two CTAs and the Down Payment Calculator screenshot panel; all other About sections unchanged.
     // All baselines recaptured 2026-11-25 (Wholesale): the Wholesale Calculator became the 16th tool — every footer gained the Wholesale link, and the Wholesale page gained a frozen header entry.
     // All baselines recaptured 2026-11-25 (Depreciation): the Depreciation Calculator became the 15th tool — every footer gained the Depreciation link, and the Depreciation page gained a frozen header entry.
     // All baselines recaptured 2026-11-24 (IRR): the IRR Calculator became the 14th tool — every footer gained the IRR link (footer lists rebalanced), and the IRR page gained a frozen header entry.
@@ -22,7 +23,7 @@ const frozen = {
     // All page baselines refreshed 2026-11-16: footer Platform column gained the Privacy Policy link on every page.
     // All page baselines refreshed 2026-11-17: footer Platform column gained the Terms of Use link on every page.
     // All page baselines refreshed 2026-11-24: footer Tools list rebuilt (mega-menu order, Title Case, two fixed lists), footer headings h2 -> p, "Access availability" renamed "Early access".
-    "about/index.html": "d8173cf429e71164f4a9264dbca4edd8af98d7bfcd2412c70022dc6a17c17f95",
+    "about/index.html": "c54e5202f343b2ccbf5e41ea78bacc1c5bfed107628b17b68c742cbd2ad7ee76",
     "contact/index.html": "7d316e90010887f92fc476646170e3aaaa9c93a46de277e163237f716cd1128b",
     "resources/index.html": "f1286d190a16589ba53583d9e7f33a2ebaec9ae978a82bd4f3e104c24eb8368f",
     "real-estate-crm/index.html": "50ed3e0d20ce1bc6a7014c713c956741011f109085f4ddadde72557706bfc0b7",
