@@ -247,3 +247,25 @@
 /* The intro line must run the panel's full width: site.css caps hero
    paragraphs at 720px (.page-hero p), which this panel sits inside. */
 .irr-years-panel .irr-years-sub { max-width: none; }
+
+/* The cash-flow timeline as stepped cards (user's pick, 2026-11-25).
+   Alignment is structural: every badge is a fixed 44px circle in the same
+   column, every text block starts at the same x, and the connector line
+   runs exactly through the badge centres. */
+.timeline-box { background: #fff; border: 1px solid var(--line); border-radius: 16px;
+  padding: 22px 24px; margin: 26px 0; }
+.timeline-title { font-weight: 800; color: var(--navy); font-size: 17px; margin: 0 0 16px; }
+.timeline-steps { position: relative; display: flex; flex-direction: column; gap: 12px; }
+.timeline-steps::before { content: ''; position: absolute; left: 37px; top: 36px;
+  bottom: 36px; width: 2px; background: var(--line); }
+.timeline-step { position: relative; display: flex; align-items: flex-start; gap: 14px;
+  background: #FBFAF7; border: 1px solid #EFECE5; border-radius: 12px; padding: 14px 16px; }
+.step-badge { flex: 0 0 44px; width: 44px; height: 44px; border-radius: 50%;
+  background: var(--teal); color: #fff; font-weight: 800; font-size: 15px;
+  display: flex; align-items: center; justify-content: center; }
+.step-badge-final { background: var(--navy); }
+.step-body { flex: 1 1 auto; min-width: 0; padding-top: 2px; }
+.step-when { font-weight: 750; color: var(--navy); margin: 0 0 3px; }
+.step-formula { color: #46586A; margin: 0; }
+.timeline-result { background: var(--mist); border-radius: 10px; padding: 12px 16px;
+  margin: 14px 0 0; color: var(--navy); }
