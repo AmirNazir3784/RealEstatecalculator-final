@@ -5,7 +5,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const assert = require('node:assert/strict');
-const root = path.resolve(__dirname, '..');
+const root = (fs.existsSync(path.resolve(__dirname, '..', 'dist', 'index.html')) ? path.resolve(__dirname, '..', 'dist') : path.resolve(__dirname, '..'));
 function walk(dir) { return fs.readdirSync(dir, { withFileTypes: true }).flatMap(e => e.isDirectory() ? walk(path.join(dir, e.name)) : [path.join(dir, e.name)]); }
 const pages = walk(root).filter(f => f.endsWith('.html') && !f.split(path.sep).includes('dist-production'));
 assert.equal(pages.length, 29, 'expected 29 website pages'); // 29th page: tools/wholesale-calculator (2026-11-25)

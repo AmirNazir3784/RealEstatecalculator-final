@@ -1,0 +1,119 @@
+---
+import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
+---
+
+<CalculatorLayout
+  title="Rent vs Buy Calculator | Every Real Estate Calculator"
+  description="Compare renting vs buying a home: monthly costs, total cost over your stay, and the breakeven year when buying becomes cheaper."
+  canonical="https://everyrealestatecalculator.com/tools/rent-vs-buy-calculator/"
+  stickyLabel="Breakeven year"
+  stickyId="sticky-value"
+  stickyValue="—"
+>
+<section class="page-hero"><div class="wrap"><h1>Rent vs Buy Calculator</h1><p>Is it cheaper to rent or buy? Enter your rent, the home price and how long you'll stay — we'll compare the full cost of both, and tell you the year buying starts winning.</p></div>
+<div class="wrap calculator-layout">
+<div class="panel">
+<h2>Enter your figures</h2>
+<p class="muted">Adjust the sample values below to calculate an estimate instantly.</p>
+<form id="rent-vs-buy-form"><div class="form-grid">
+<div class="form-field"><label for="monthly-rent">Monthly rent (USD)</label><span class="input-unit"><span class="unit-affix" aria-hidden="true">$</span><input class="field" id="monthly-rent" type="number" min="0" max="1000000000000" step="10" value="1800"><span class="unit-affix" aria-hidden="true">/ month</span></span><input class="field-slider" id="monthly-rent-slider" type="range" min="0" max="10000" step="10" value="1800" aria-label="Monthly rent (USD) slider"></div>
+<div class="form-field"><label for="home-price">Home price (USD)</label><span class="input-unit"><span class="unit-affix" aria-hidden="true">$</span><input class="field" id="home-price" type="number" min="0" max="1000000000000" step="1000" value="350000"></span><input class="field-slider" id="home-price-slider" type="range" min="0" max="1000000" step="1000" value="350000" aria-label="Home price (USD) slider"></div>
+<div class="form-field"><label for="down-payment">Down payment (USD)</label><span class="input-unit"><span class="unit-affix" aria-hidden="true">$</span><input class="field" id="down-payment" type="number" min="0" max="1000000000000" step="1000" value="70000"></span></div><div class="form-field"><label for="down-percent-input">Down payment (%)</label><span class="input-unit"><input class="field" id="down-percent-input" type="number" min="0" max="100" step="0.1" value="20"><span class="unit-affix" aria-hidden="true">%</span></span><small class="field-helper">Share of the home price. Edit either value; the other follows.</small></div>
+<div class="form-field"><label for="interest-rate">Mortgage rate (%)</label><span class="input-unit"><input class="field" id="interest-rate" type="number" min="0" max="100" step="0.01" value="6.5"><span class="unit-affix" aria-hidden="true">%</span></span><input class="field-slider" id="interest-rate-slider" type="range" min="0" max="15" step="0.1" value="6.5" aria-label="Mortgage rate (%) slider"></div>
+<div class="form-field form-field-full"><span class="seg-label" id="loan-years-label">Loan term</span><div class="seg-control" role="group" aria-labelledby="loan-years-label"><button type="button" data-years="15" aria-pressed="false">15 years</button><button type="button" data-years="20" aria-pressed="false">20 years</button><button type="button" data-years="30" aria-pressed="true">30 years</button></div><input type="hidden" id="loan-years" value="30"></div>
+<div class="form-field"><label for="years-stay">How long you'll stay (years)</label><span class="input-unit"><input class="field" id="years-stay" type="number" min="1" max="30" step="1" value="7"><span class="unit-affix" aria-hidden="true">years</span></span></div>
+<div class="form-field"><label for="rent-growth">Annual rent increase (%)</label><span class="input-unit"><input class="field" id="rent-growth" type="number" min="0" max="100" step="0.5" value="3"><span class="unit-affix" aria-hidden="true">%</span></span></div>
+<div class="form-field"><label for="home-appreciation">Annual home price growth (%)</label><span class="input-unit"><input class="field" id="home-appreciation" type="number" min="0" max="100" step="0.5" value="3"><span class="unit-affix" aria-hidden="true">%</span></span></div>
+</div>
+<details class="rent-advanced advanced">
+<summary>Ownership costs and assumptions (optional — defaults filled)</summary>
+<div class="form-grid">
+<div class="form-field"><label for="property-tax-rate">Property tax rate (% of price per year)</label><span class="input-unit"><input class="field" id="property-tax-rate" type="number" min="0" max="100" step="0.05" value="1.2"><span class="unit-affix" aria-hidden="true">%</span></span></div>
+<div class="form-field"><label for="home-insurance">Home insurance (USD per year)</label><span class="input-unit"><span class="unit-affix" aria-hidden="true">$</span><input class="field" id="home-insurance" type="number" min="0" max="1000000000000" step="100" value="1800"><span class="unit-affix" aria-hidden="true">/ year</span></span></div>
+<div class="form-field"><label for="hoa-fee">HOA dues (USD per month)</label><span class="input-unit"><span class="unit-affix" aria-hidden="true">$</span><input class="field" id="hoa-fee" type="number" min="0" max="1000000000000" step="10" value="0"><span class="unit-affix" aria-hidden="true">/ month</span></span></div>
+<div class="form-field"><label for="pmi-rate">PMI rate (annual %, only below 20% down)</label><span class="input-unit"><input class="field" id="pmi-rate" type="number" min="0" max="100" step="0.05" value="0.5"><span class="unit-affix" aria-hidden="true">%</span></span></div>
+<div class="form-field"><label for="maintenance-rate">Maintenance (% of price per year)</label><span class="input-unit"><input class="field" id="maintenance-rate" type="number" min="0" max="100" step="0.25" value="1"><span class="unit-affix" aria-hidden="true">%</span></span></div>
+<div class="form-field"><label for="closing-costs">Buying closing costs (% of price)</label><span class="input-unit"><input class="field" id="closing-costs" type="number" min="0" max="100" step="0.5" value="3"><span class="unit-affix" aria-hidden="true">%</span></span></div>
+<div class="form-field"><label for="selling-costs">Selling costs (% of sale price)</label><span class="input-unit"><input class="field" id="selling-costs" type="number" min="0" max="100" step="0.5" value="6"><span class="unit-affix" aria-hidden="true">%</span></span></div>
+<div class="form-field"><label for="investment-return">Investment return if renting (% per year)</label><span class="input-unit"><input class="field" id="investment-return" type="number" min="0" max="100" step="0.5" value="5"><span class="unit-affix" aria-hidden="true">%</span></span></div>
+</div>
+</details>
+</form>
+<p class="validation-note" id="validation-note" role="alert"></p>
+<p class="disclaimer">Buying rarely wins in the first few years — closing and selling costs take time to earn back. This is an estimate, not a lender approval or financial advice.</p>
+
+</div>
+<aside class="result" aria-live="polite">
+<div class="rent-verdict-box">
+<div class="rent-verdict" id="rent-verdict">—</div>
+<p class="rent-verdict-detail" id="rent-verdict-detail"></p>
+</div>
+<p class="result-empty" id="result-empty" hidden>Enter your details to see your estimate.</p>
+        <div id="result-body"><h3 class="result-group">Monthly comparison</h3>
+<div class="result-row"><span>Monthly cost of owning (year 1)</span><b id="buy-monthly">—</b></div>
+<div class="result-row"><span>Monthly rent now</span><b id="rent-now">—</b></div>
+<h3 class="result-group">Breakeven</h3>
+<div class="result-row"><span>Breakeven year</span><b id="breakeven-year">—</b></div>
+<h3 class="result-group">Totals over your stay</h3>
+<div class="rent-bars">
+<div class="rent-bar-row"><span>Total net cost of renting</span><b id="net-rent-cost">—</b><div class="breakdown-track" aria-hidden="true"><div id="bar-rent" class="seg-blue"></div></div></div>
+<div class="rent-bar-row"><span>Total net cost of buying</span><b id="net-buy-cost">—</b><div class="breakdown-track" aria-hidden="true"><div id="bar-buy" class="seg-teal"></div></div></div>
+</div>
+<div class="result-row"><span>Total rent paid over your stay</span><b id="total-rent">—</b></div>
+<div class="result-row"><span id="savings-label">Cheaper option saves</span><b id="savings-amount">—</b></div>
+<div class="copy-row"><button class="tool-btn tool-btn-primary" id="copy-results" type="button">Copy results</button><button class="tool-btn tool-btn-outline" id="print-results" type="button">Print</button></div>
+<p class="copy-note" id="copy-note"></p></div>
+<a class="tool-btn tool-btn-outline result-cta" href="../../tools/mortgage-calculator/">See the payment on the mortgage calculator ↗</a>
+</aside>
+</div></section>
+<section class="section"><div class="wrap content">
+<div class="note"><strong>How to use:</strong> Enter your rent, the home price, down payment, rate and how long you will stay. The verdict, breakeven year and totals update as you type; optional ownership costs sit under the expandable section.</div>
+<h2>How the comparison works</h2>
+<div class="formula-box">
+<p>Comparing monthly rent to a mortgage payment alone is misleading, so this calculator compares full multi-year costs, year by year up to 30 years. The net cost of buying is your down payment and closing costs plus every ownership payment so far — mortgage, property tax, insurance, HOA, PMI and maintenance — minus what selling that year would pocket: the home's value minus the remaining loan balance minus selling costs. The net cost of renting is all rent paid so far minus the investment growth on the down payment and closing costs you never spent. The breakeven year is the first year buying's net cost drops to or below renting's. Tax, insurance and maintenance are charged on the original price, PMI on the original loan while the balance is above 80% of the original price, and rent grows once a year.</p>
+</div>
+<h2>Breakeven over time</h2>
+<p>Net cost of renting vs buying, year by year. The lines cross at the breakeven year.</p>
+<div class="chart-wrap"><svg id="breakeven-chart" viewBox="0 0 600 260" role="img" aria-label="Chart of net renting cost versus net buying cost over thirty years"></svg>
+<div class="chart-legend"><span><span class="swatch seg-blue"></span> Renting, net cost <b id="chart-rent-end">—</b></span><span><span class="swatch seg-teal"></span> Buying, net cost <b id="chart-buy-end">—</b></span><span id="chart-breakeven-label"></span></div></div>
+<h2>What moves the answer</h2>
+<p>Three assumptions you cannot know in advance can each flip the result on their own: home price growth, the investment return a renter earns, and the mortgage rate. That is why the verdict is a test, not a promise — run it with pessimistic, expected and optimistic numbers. If buying wins in all three, it is a strong case; if it only wins in the optimistic run, you are betting on the market rather than on housing.</p>
+<h2>Important note</h2>
+<p>This is an informational estimate, not a pre-approval, a lender quote or financial advice. Renter's insurance, moving costs and tax deductions are not counted; verify terms with your lender before making any buying decision.</p>
+</div></section>
+
+<section class="section"><div class="wrap content">
+
+<p>Comparing a monthly rent figure with a mortgage payment alone is misleading. Buying also involves a down payment, closing costs, tax, insurance, HOA, PMI and maintenance, and later a sale with its own costs. Renting avoids those, but the money not spent on a down payment could otherwise be invested. This calculator puts both sides on the same multi-year footing.</p>
+<h2>Worked example</h2>
+<p>With the values already filled in — $1,800 monthly rent, a $350,000 home, $70,000 down, 6.5% over 30 years, a 7-year stay, 3% annual rent growth and 3% home price growth — the first-year monthly cost of owning is $2,561.46 against $1,800 rent now. Over the 7-year stay, the net cost of buying is $144,199.38 against a net renting cost of $132,737.60, so renting wins for that stay. The breakeven year is year 9, when buying’s net cost first drops to or below renting’s.</p>
+<h2>Key takeaways</h2>
+<ul>
+<li>Compare full multi-year costs, not just rent against a mortgage payment.</li>
+<li>Buying rarely wins in the first few years, because closing and selling costs take time to earn back.</li>
+<li>Home price growth, the investment return a renter earns, and the mortgage rate can each flip the answer on their own.</li>
+<li>Run pessimistic, expected and optimistic numbers. Buying that wins in all three is a stronger case than buying that only wins when everything goes well.</li>
+</ul>
+<h2>Frequently asked questions</h2>
+<details class="faq"><summary>How does the rent vs buy comparison work?</summary>
+<p>The calculator tracks, year by year up to 30 years, the net cost of buying — down payment and closing costs plus ownership payments, minus what a sale that year would pocket — against the net cost of renting, which is rent paid minus investment growth on the money not spent buying.</p></details>
+<details class="faq"><summary>What is the breakeven year?</summary>
+<p>The first year in which buying’s net cost drops to or below renting’s net cost. Before that year, renting is cheaper on these inputs; after it, buying is cheaper, assuming the inputs hold.</p></details>
+<details class="faq"><summary>Why does buying lose at first even if the monthly payment looks close?</summary>
+<p>Closing costs when you buy and selling costs when you sell are large, one-off costs. They are spread over only a few years in a short stay, so they weigh heavily at first and fade over a longer stay.</p></details>
+<details class="faq"><summary>What assumptions matter most?</summary>
+<p>Home price growth, the investment return a renter earns, and the mortgage rate. Tax, insurance and maintenance are charged on the original price in this model, PMI on the original loan while the balance is above 80% of that price, and rent grows once a year.</p></details>
+<details class="faq"><summary>Does this calculator include taxes or moving costs?</summary>
+<p>No. Renter’s insurance, moving costs and tax deductions are not counted. It is an informational estimate, not a pre-approval, a lender quote or financial advice.</p></details>
+<details class="faq"><summary>How long should I plan to stay for buying to make sense?</summary>
+<p>There is no universal answer — it depends on your rent, price, rate and growth assumptions. Enter your own stay length and read the breakeven year, rather than relying on a rule of thumb.</p></details>
+</div></section>
+<section class="section"><div class="wrap content">
+<h2>Related calculators</h2>
+<div class="related-cards">
+<a class="related-card" href="../mortgage-calculator/"><h3>Mortgage Calculator</h3><p>Full monthly payment with tax, insurance, HOA and PMI.</p><span class="open">Open calculator ↗</span></a>
+<a class="related-card" href="../home-affordability-calculator/"><h3>Home Affordability Calculator</h3><p>Maximum price from the payment you can afford.</p><span class="open">Open calculator ↗</span></a>
+<a class="related-card" href="../property-investment-calculator/"><h3>Property Investment Calculator</h3><p>Monthly cash flow, return on cash, cap rate and DSCR.</p><span class="open">Open calculator ↗</span></a>
+</div>
+</div></section>
+</CalculatorLayout>

@@ -1,0 +1,58 @@
+---
+import { FOOTER_COL_1, FOOTER_COL_2 } from '../data/tools';
+
+export interface Props {
+  base: string;
+}
+
+const { base } = Astro.props;
+const homeHref = base === '' ? './' : base;
+---
+
+<footer class="footer">
+  <div class="wrap">
+    <div class="footer-top">
+      <div class="home-footer-brand">
+        <a class="brand" href={homeHref} aria-label="Every Real Estate Calculator Tools · Software · Guides, homepage">
+          <span class="brand-mark" aria-hidden="true"><img src={`${base}assets/logo.png`} alt="" width="192" height="189" /></span>
+          <span class="brand-name"><span data-brand-name>Every Real Estate Calculator</span> <em>Tools &middot; Software &middot; Guides</em></span>
+        </a>
+        <p>Practical tools for everyday decisions. RealtorCRM for the relationships behind them.</p>
+      </div>
+      <div class="footer-tools">
+        <p class="footer-heading">Tools</p>
+        <div class="footer-tools-cols">
+          <ul>
+            <li><a href={`${base}tools/`}>All Tools</a></li>
+            {FOOTER_COL_1.map((tool) => (
+              <li><a href={`${base}tools/${tool.slug}/`}>{tool.name}</a></li>
+            ))}
+          </ul>
+          <ul>
+            {FOOTER_COL_2.map((tool) => (
+              <li><a href={`${base}tools/${tool.slug}/`}>{tool.name}</a></li>
+            ))}
+          </ul>
+        </div>
+      </div>
+      <div>
+        <p class="footer-heading">RealtorCRM</p>
+        <a href={`${base}real-estate-crm/`}>Explore the CRM</a>
+        <a href={`${base}real-estate-crm/#how-it-works`}>How it works</a>
+        <a href={`${base}real-estate-crm/#access`}>Early access</a>
+      </div>
+      <div>
+        <p class="footer-heading">Platform</p>
+        <a href={`${base}resources/`}>Resources</a>
+        <a href={`${base}about/`}>About</a>
+        <a href={`${base}contact/`}>Contact</a>
+        <a href={`${base}privacy-policy/`}>Privacy Policy</a>
+        <a href={`${base}terms/`}>Terms of Use</a>
+      </div>
+    </div>
+    <div class="foot-bottom">
+      <span>&copy; 2026 <span data-brand-name>Every Real Estate Calculator</span></span>
+      <span>Tools for the work behind every property.</span>
+    </div>
+  </div>
+</footer>

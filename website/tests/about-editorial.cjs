@@ -1,5 +1,5 @@
 const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict');
-const root=path.resolve(__dirname,'..'),html=fs.readFileSync(path.join(root,'about/index.html'),'utf8'),main=html.match(/<main\b[\s\S]*?<\/main>/)[0];
+const root=(fs.existsSync(path.resolve(__dirname, '..', 'dist', 'index.html')) ? path.resolve(__dirname, '..', 'dist') : path.resolve(__dirname, '..')),html=fs.readFileSync(path.join(root,'about/index.html'),'utf8'),main=html.match(/<main\b[\s\S]*?<\/main>/)[0];
 let passed=0;function check(name,value){assert(value,name);passed++;}
 check('one H1',main.match(/<h1\b/g).length===1);
 check('six editorial sections',main.match(/<section\b/g).length===6);
@@ -9,7 +9,7 @@ check('no repeated template elements',!/<svg\b|class="eyebrow"|about-highlights|
 check('four semantic audience rows',(main.match(/<dt>/g)||[]).length===4&&(main.match(/<dd>/g)||[]).length===4);
 check('three photographic visuals without screenshots', (main.match(/<img\b/g)||[]).length===3 && !/mortgage-calculator\.webp|<figcaption|<iframe/.test(main));
 check('CRM description is factual text',main.includes('organize contacts, deals, appointments and follow-ups')&&main.includes('daily workflows'));
-check('source and license recorded',fs.readFileSync(path.join(root,'about/IMAGE_SOURCES.md'),'utf8').includes('https://unsplash.com/license'));
+check('source and license recorded',fs.readFileSync(path.resolve(__dirname,'..','about/IMAGE_SOURCES.md'),'utf8').includes('https://unsplash.com/license'));
 check('responsive hero has dimensions',/srcset="down-payment-calculator-hero-720.webp 1240w, down-payment-calculator-hero.webp 2280w"[^>]*width="2280" height="1258"/.test(main));
 check('no new main scripts',!/<script\b/.test(main));
 for(const name of ['architecture-home.webp','architecture-home-720.webp','property-planning.webp','property-planning-720.webp','professional-workspace.webp','professional-workspace-720.webp'])check(name+' exists',fs.existsSync(path.join(root,'about',name)));

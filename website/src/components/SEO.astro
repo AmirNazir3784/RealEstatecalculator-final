@@ -1,0 +1,38 @@
+---
+export interface Props {
+  title: string;
+  description: string;
+  canonical: string;
+  ogType?: string;
+  ogImage?: string;
+  twitterCard?: string;
+  robots?: string;
+  googleSiteVerification?: string;
+}
+
+const {
+  title,
+  description,
+  canonical,
+  ogType = 'website',
+  ogImage = 'https://everyrealestatecalculator.com/assets/home-architecture.jpg',
+  twitterCard = 'summary',
+  robots,
+  googleSiteVerification,
+} = Astro.props;
+---
+
+<meta name="description" content={description} />
+<title>{title}</title>
+{robots && <meta name="robots" content={robots} />}
+{googleSiteVerification && <meta name="google-site-verification" content={googleSiteVerification} />}
+<link rel="canonical" href={canonical} />
+<meta property="og:type" content={ogType} />
+<meta property="og:title" content={title} />
+<meta property="og:description" content={description} />
+<meta property="og:url" content={canonical} />
+<meta property="og:image" content={ogImage} />
+<meta name="twitter:image" content={ogImage} />
+<meta name="twitter:card" content={twitterCard} />
+<meta name="twitter:title" content={title} />
+<meta name="twitter:description" content={description} />

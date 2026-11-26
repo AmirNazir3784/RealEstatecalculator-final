@@ -1,0 +1,69 @@
+---
+import BaseLayout from './BaseLayout.astro';
+
+export interface Props {
+  title: string;
+  description: string;
+  canonical: string;
+  heroTitle?: string;
+  heroSubtitle?: string;
+  stickyLabel?: string;
+  stickyId?: string;
+  stickyValue?: string;
+  includeToolsCss?: boolean;
+  includeCalculatorCss?: boolean;
+  bodyClass?: string;
+  extraStyles?: string[];
+  extraScripts?: string[];
+}
+
+const {
+  title,
+  description,
+  canonical,
+  heroTitle,
+  heroSubtitle,
+  stickyLabel,
+  stickyId = 'sticky-value',
+  stickyValue,
+  includeToolsCss = true,
+  includeCalculatorCss = true,
+  bodyClass,
+  extraStyles = [],
+  extraScripts = [],
+} = Astro.props;
+
+const styles = [
+  ...(includeToolsCss ? ['../../assets/tools.css'] : []),
+  ...(includeCalculatorCss ? ['calculator.css'] : []),
+  ...extraStyles,
+];
+const scripts = ['calculator.js', ...extraScripts];
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  canonical={canonical}
+  bodyClass={bodyClass}
+  extraStyles={styles}
+  extraScripts={scripts}
+>
+  <main id="main" class="calc-page">
+    {stickyLabel && (
+      <div class="sticky-result" id="sticky-result">
+        <span>{stickyLabel}</span>
+        <b id={stickyId}>{stickyValue}</b>
+      </div>
+    )}
+    {heroTitle && (
+      <section class="page-hero">
+        <div class="wrap">
+          <h1>{heroTitle}</h1>
+          {heroSubtitle && <p>{heroSubtitle}</p>}
+        </div>
+      </section>
+    )}
+    <slot />
+  </main>
+</BaseLayout>

@@ -1,0 +1,101 @@
+---
+import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
+---
+
+<CalculatorLayout
+  title="Commercial Real Estate Calculator | Every Real Estate Calculator"
+  description="Our commercial real estate calculator underwrites a purchase the way a lender does: NOI, cap rate, DSCR, monthly cash flow and the balloon payment due at the end of the loan term."
+  canonical="https://everyrealestatecalculator.com/tools/commercial-real-estate-calculator/"
+  stickyLabel="DSCR"
+  stickyId="sticky-value"
+  stickyValue="—"
+>
+<section class="page-hero"><div class="wrap"><h1>Commercial Real Estate Calculator</h1><p>Underwrite a commercial property the way a lender does. Enter the price, the loan and the income — we'll work out the NOI, cap rate, debt coverage (DSCR), monthly cash flow and the balloon payment due when the term ends.</p></div>
+<div class="wrap calculator-layout">
+<div class="calc-left">
+<div class="panel">
+<h2 id="calc-heading">Enter your figures</h2>
+<p class="panel-sub">Adjust the sample values below to calculate an estimate instantly.</p>
+<form id="commercial-form" novalidate>
+<fieldset class="form-group"><legend>Property &amp; loan</legend><div class="form-grid">
+<div class="form-field"><label for="property-price">Property price</label><span class="input-unit"><span class="unit-affix" aria-hidden="true">$</span><input class="field" id="property-price" type="number" min="0" max="1000000000000" step="1000" value="750000"></span></div>
+<div class="form-field"><label for="down-payment-rate">Down payment</label><span class="input-unit"><input class="field" id="down-payment-rate" type="number" min="0" max="100" step="1" value="25"><span class="unit-affix" aria-hidden="true">%</span></span></div>
+<div class="form-field"><label for="interest-rate">Interest rate</label><span class="input-unit"><input class="field" id="interest-rate" type="number" min="0" max="30" step="0.125" value="7.5"><span class="unit-affix" aria-hidden="true">%</span></span></div>
+<div class="form-field"><label for="amortization-years">Amortization</label><span class="input-unit"><input class="field" id="amortization-years" type="number" min="1" max="40" step="1" value="25"><span class="unit-affix" aria-hidden="true">years</span></span></div>
+<div class="form-field"><label for="loan-term-years">Loan term (balloon)</label><span class="input-unit"><input class="field" id="loan-term-years" type="number" min="1" max="40" step="1" value="10"><span class="unit-affix" aria-hidden="true">years</span></span><small class="field-helper">The balance falls due when the term ends.</small></div>
+<div class="form-field"><label for="loan-fees-rate">Loan fees</label><span class="input-unit"><input class="field" id="loan-fees-rate" type="number" min="0" max="10" step="0.25" value="1"><span class="unit-affix" aria-hidden="true">% of loan</span></span></div>
+</div></fieldset>
+<fieldset class="form-group"><legend>Income &amp; expenses (per year)</legend><div class="form-grid">
+<div class="form-field"><label for="gross-rent">Gross rental income</label><span class="input-unit"><span class="unit-affix" aria-hidden="true">$</span><input class="field" id="gross-rent" type="number" min="0" max="1000000000000" step="500" value="96000"><span class="unit-affix" aria-hidden="true">/ year</span></span></div>
+<div class="form-field"><label for="vacancy-rate">Vacancy rate</label><span class="input-unit"><input class="field" id="vacancy-rate" type="number" min="0" max="100" step="0.5" value="8"><span class="unit-affix" aria-hidden="true">%</span></span><small class="field-helper">Share of the year units sit empty.</small></div>
+<div class="form-field"><label for="property-tax">Property tax</label><span class="input-unit"><span class="unit-affix" aria-hidden="true">$</span><input class="field" id="property-tax" type="number" min="0" max="1000000000000" step="100" value="9000"><span class="unit-affix" aria-hidden="true">/ year</span></span></div>
+<div class="form-field"><label for="home-insurance">Insurance</label><span class="input-unit"><span class="unit-affix" aria-hidden="true">$</span><input class="field" id="home-insurance" type="number" min="0" max="1000000000000" step="100" value="4500"><span class="unit-affix" aria-hidden="true">/ year</span></span></div>
+<div class="form-field"><label for="maintenance-cost">Maintenance &amp; other</label><span class="input-unit"><span class="unit-affix" aria-hidden="true">$</span><input class="field" id="maintenance-cost" type="number" min="0" max="1000000000000" step="100" value="6000"><span class="unit-affix" aria-hidden="true">/ year</span></span></div>
+<div class="form-field"><label for="management-rate">Management fee</label><span class="input-unit"><input class="field" id="management-rate" type="number" min="0" max="100" step="0.5" value="5"><span class="unit-affix" aria-hidden="true">%</span></span><small class="field-helper">Percent of effective income. Keep it even if you self-manage.</small></div>
+</div></fieldset>
+</form>
+</div>
+<div class="note"><strong>How to use:</strong> Enter the price, loan and rent roll for the full underwriting — NOI, cap rate and cash flow — and watch the DSCR: it is the first number a commercial lender checks.</div>
+</div>
+<aside class="result" id="result-card" aria-live="polite">
+<p class="result-label">DSCR (debt coverage ratio)</p>
+<p class="result-number" id="dscr">—</p>
+<p class="yield-verdict" id="dscr-verdict">—</p>
+<p class="hero-sub">NOI <b id="sub-noi">—</b> · Cap rate <b id="sub-cap">—</b></p>
+<p class="result-group">Where the income goes</p>
+<div class="breakdown-track" role="img" aria-label="Effective income split between debt service, operating expenses and cash flow"><div class="seg-teal" id="seg-debt"></div><div class="seg-gold" id="seg-expenses"></div><div class="seg-blue" id="seg-cash"></div></div>
+<div class="result-row"><span>Effective rental income</span><b id="row-egi">—</b></div>
+<div class="result-row"><span>Operating expenses</span><b id="row-expenses">—</b></div>
+<div class="result-row"><span>Net operating income</span><b id="row-noi">—</b></div>
+<div class="result-row"><span>Annual debt service</span><b id="row-debt">—</b></div>
+<div class="result-tiles">
+<div class="result-tile"><span>Monthly loan payment</span><b id="tile-payment">—</b></div>
+<div class="result-tile"><span>Cash-on-cash return</span><b id="tile-coc">—</b></div>
+</div>
+<p class="result-group">The loan at a glance</p>
+<div class="result-tiles tiles-3">
+<div class="result-tile"><span>Loan amount</span><b id="strip-loan">—</b></div>
+<div class="result-tile"><span>Down payment</span><b id="strip-down">—</b></div>
+<div class="result-tile"><span id="balloon-label">Balloon due</span><b id="strip-balloon">—</b></div>
+</div>
+<div class="copy-row"><button class="tool-btn tool-btn-primary" id="copy-results" type="button">Copy results</button><a class="tool-btn tool-btn-outline" href="../cap-rate-calculator/">Cap rate calculator</a></div>
+<p class="copy-note" id="copy-note"></p>
+</aside>
+</div></section>
+<section class="section"><div class="wrap content">
+
+<h2>The commercial formulas</h2><div class="formula-box">
+<p><strong>NOI = Effective rental income − Operating expenses</strong>, where effective income is the gross rent after the vacancy allowance. <strong>DSCR = NOI ÷ Annual debt service</strong> — how many times the property's income covers its loan payments. <strong>Cap rate = NOI ÷ Property price</strong>. <strong>Cash-on-cash = Annual cash flow after debt service ÷ Total cash invested</strong> (down payment plus loan fees). The loan payment itself comes from the amortization period; the loan term only decides when the remaining balance — the balloon — falls due.</p>
+</div>
+<h2>Worked example</h2>
+<p>With the values already filled in — a $750,000 property, 25% down and a $562,500 loan at 7.5% amortized over 25 years — the monthly payment is <strong>$4,156.83</strong>, or $49,881.90 a year. Gross rent of $96,000 with 8% vacancy gives effective income of $88,320; expenses of $9,000 tax, $4,500 insurance, $6,000 maintenance and a 5% management fee ($4,416) total $23,916, leaving <strong>NOI of $64,404</strong> and a <strong>cap rate of 8.59%</strong>. The DSCR is $64,404 ÷ $49,881.90 = <strong>1.29</strong>, cash flow is $14,522 a year ($1,210 a month), and the cash-on-cash return on the $193,125 invested is <strong>7.52%</strong>. After the 10-year term, a balloon of <strong>$448,411</strong> falls due.</p>
+<h2>What is a good DSCR?</h2>
+<p>DSCR is the lender's number first and the investor's second. At <strong>1.00</strong> the property exactly breaks even on its loan — one bad quarter puts it underwater. Most commercial lenders set their minimum between <strong>1.20 and 1.25</strong>, and will lend more, or price better, at <strong>1.35+</strong>. Between 1.00 and 1.20 a deal can still work for a buyer with reserves, but expect lenders to shrink the loan or raise the rate until the coverage fits their box. If your DSCR is short, the honest levers are a bigger down payment, a lower price, or verified higher rent — not optimistic expenses.</p>
+<h2>The balloon payment: term vs amortization</h2>
+<p>Commercial loans rarely run for their full amortization. A typical structure is a <strong>10-year term on a 25-year amortization</strong>: payments are calculated as if the loan had 25 years to run, but after year 10 the entire remaining balance — $448,411 in the example — is due at once. Almost nobody pays it from cash; the plan is to refinance or sell before it lands. That makes the balloon a date to manage, not a surprise to discover: know yours before you buy, and stress the deal against the interest rate you might refinance at, not today's.</p>
+<h2>Key takeaways</h2>
+<ul>
+<li>DSCR is the gatekeeper: below about 1.20, most commercial lenders will not play, whatever the cap rate says.</li>
+<li>Cap rate grades the property; cash-on-cash grades your money in it. A deal needs both.</li>
+<li>The balloon is part of the price of the loan — a cheap payment with a balance you cannot refinance is not cheap.</li>
+<li>Vacancy and management belong in every underwriting, even for a single-tenant building you plan to run yourself.</li>
+</ul>
+<p>Next steps: isolate the income figure in the <a href="../noi-calculator/">NOI Calculator</a>, value the same property at a target rate in the <a href="../cap-rate-calculator/">Cap Rate Calculator</a>, and compare a residential deal in the <a href="../rental-yield-calculator/">Rental Yield Calculator</a>.</p>
+<h2>Common mistakes</h2><ul><li><strong>Underwriting with residential terms.</strong> A 30-year fixed fully-amortizing loan is a residential product. Commercial money is shorter, pricier and usually ends in a balloon — model what you will actually be offered.</li><li><strong>Quoting the cap rate as your return.</strong> The cap rate ignores the loan entirely. With leverage, your return is the cash-on-cash figure — and it can be higher or lower than the cap rate depending on the rate you borrow at.</li><li><strong>Using the seller's expense figures.</strong> Sellers' statements routinely omit management, understate maintenance and annualize a good quarter's rent. Rebuild expenses from tax records, quotes and your own management line.</li><li><strong>Forgetting the balloon in the exit plan.</strong> "Refinance later" is not a plan unless the property would still clear a 1.20 DSCR at a rate 2 points higher. Run that version before you commit.</li><li><strong>Assuming full occupancy.</strong> One empty unit in a four-unit building is a 25% vacancy event, not a rounding error. Small buildings need bigger vacancy allowances, not smaller ones.</li></ul><h2>Frequently asked questions</h2>
+<details class="faq"><summary>What does a commercial real estate calculator work out?</summary><p>It underwrites a commercial purchase: from the price, loan terms and rent roll it calculates net operating income (NOI), the cap rate, the debt service coverage ratio (DSCR), monthly and annual cash flow, cash-on-cash return, and the balloon balance due at the end of the loan term.</p></details>
+<details class="faq"><summary>What DSCR do lenders require for a commercial loan?</summary><p>Most commercial lenders look for a DSCR of at least 1.20 to 1.25 — the property's NOI must be 20–25% higher than its annual loan payments. Stronger coverage (1.35+) usually means a larger loan or a better rate; below 1.20, expect the loan to shrink or the deal to be declined.</p></details>
+<details class="faq"><summary>What is a balloon payment on a commercial loan?</summary><p>Commercial loans are often amortized over 20–25 years but mature in 5–10. When the term ends, the remaining balance — the balloon — is due in full. Borrowers normally refinance or sell before that date; this calculator shows the balloon amount so it is part of the plan from day one.</p></details>
+<details class="faq"><summary>How much down payment does a commercial property need?</summary><p>Typically 20–35% of the price, depending on the property type, the borrower's strength and the DSCR at the requested loan size. Owner-occupied properties bought through SBA loans can need less. This calculator defaults to 25%, the middle of the usual range.</p></details>
+<details class="faq"><summary>What is the difference between cap rate and cash-on-cash?</summary><p>The cap rate is NOI divided by the price — the property's unlevered return, the same for every buyer. Cash-on-cash is the annual cash flow after loan payments divided by the cash you actually invested, so it depends on your loan. The same building can show an 8.6% cap rate and a 7.5% cash-on-cash return.</p></details>
+<details class="faq"><summary>Are commercial mortgage rates higher than residential?</summary><p>Usually yes — commercial loans carry more risk for the lender (income depends on tenants' businesses, terms are shorter, and the loans are rarely sold to government-backed buyers), so rates typically sit above residential mortgage rates, and 7.5% is a realistic planning figure rather than a quote.</p></details>
+
+</div></section>
+<section class="section"><div class="wrap content">
+<h2>Related calculators</h2>
+<div class="related-cards">
+<a class="related-card" href="../cap-rate-calculator/"><h3>Cap Rate Calculator</h3><p>The same income maths, with price sensitivity and implied value.</p><span class="open">Open calculator ↗</span></a>
+<a class="related-card" href="../noi-calculator/"><h3>NOI Calculator</h3><p>Operating income before mortgage and tax.</p><span class="open">Open calculator ↗</span></a>
+<a class="related-card" href="../rental-yield-calculator/"><h3>Rental Yield Calculator</h3><p>Gross and net yield for a residential rental, plus the rent needed for your target yield.</p><span class="open">Open calculator ↗</span></a>
+</div>
+</div></section>
+</CalculatorLayout>

@@ -1,0 +1,364 @@
+/* Shared design system for the tools directory and all calculators.
+   Loaded after site.css and theme.css, so these rules win ties.
+   Palette: warm off-white page, white cards, dark navy results, teal accent.
+   Chart colors: teal #2DD4BF, gold #F2C14E, blue #8AB4F8, plus light
+   gray-blue #C9D6E0 and muted coral for the fifth segment. Legends always
+   carry a label and a dollar amount, never color alone. */
+body { background: #F6F4EF; color: #14202B; }
+.page-hero { background: #F6F4EF; border-color: #E2DED5; }
+.page-hero h1 { font-family: var(--font-display); color: #14202B; }
+.page-hero p { color: #4B5B6B; }
+
+/* Cards and form panels */
+.panel { background: #fff; border: 1px solid #E2DED5; border-radius: 18px; box-shadow: 0 8px 28px rgba(20, 32, 43, .06); padding: 30px; }
+.panel h2 { color: #14202B; }
+.calculator-layout { gap: 24px; }
+
+/* Results panel: dark navy, white text */
+.result { background: #0F2230; color: #fff; border-radius: 18px; padding: 30px; box-shadow: 0 8px 28px rgba(20, 32, 43, .18); }
+.result small, .result .muted, .result-row span { color: #C9D6E0; }
+.result-row { border-color: #254055; }
+.result-row b { color: #fff; font-weight: 600; }
+/* Qualified with .result so these win over the shared .page-hero p rule,
+   which would otherwise render them dark on the navy panel. */
+.result .result-number { font-family: var(--font-display); font-size: clamp(2.125rem, 3vw, 2.625rem); line-height: 1.2; color: #fff; margin: 10px 0 22px; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.result .result-label { color: #9FB3C4; font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; margin: 0; }
+.result .result-hero-sub { color: #C9D6E0; margin-top: 10px; font-size: .95rem; }
+.result .result-hero-sub b { color: #fff; }
+.result .result-group { color: #9FB3C4; font-size: 12px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; margin: 24px 0 4px; padding-top: 20px; border-top: 1px solid #254055; }
+.result .result-group:first-of-type { margin-top: 8px; padding-top: 0; border-top: 0; }
+.result .result-empty { color: #C9D6E0; margin: 20px 0 0; font-size: 1rem; line-height: 1.5; }
+.result .btn { max-width: 100%; white-space: normal; text-align: center; min-height: 48px; }
+.result .btn-outline { background: transparent; border-color: #9FB3C4; color: #fff; }
+.result .btn-outline:hover { background: #16384A; border-color: #9FB3C4; color: #fff; }
+.result .tool-btn, .result .btn { min-height: 48px; }
+.result .tool-btn:focus-visible, .result .btn:focus-visible { outline: 2px solid #2DD4BF; outline-offset: 2px; }
+
+/* Inputs */
+.form-field label { font-size: 14px; font-weight: 700; color: #14202B; }
+.form-field small, .field-helper { font-size: .82rem; color: #4B5B6B; }
+.field, .search-field { min-height: 48px; border-radius: 10px; border-color: #D9DEDB; color: #14202B; background: #fff; }
+.field:focus, .search-field:focus { outline: 3px solid #0F766E; outline-offset: 2px; border-color: #0F766E; }
+.input-unit { display: flex; align-items: center; border: 1px solid #D9DEDB; border-radius: 10px; background: #fff; transition: border-color .15s ease, box-shadow .15s ease; }
+.input-unit .field { border: 0; flex: 1; min-width: 0; min-height: 48px; border-radius: 10px; }
+.input-unit .field:focus, .input-unit .field:focus-visible { outline: none; box-shadow: none; border-color: transparent; }
+.input-unit:focus-within { border-color: #0F766E; box-shadow: 0 0 0 3px rgba(15, 118, 110, .25); }
+.input-unit input[type="number"]::-webkit-outer-spin-button, .input-unit input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+.input-unit input[type="number"] { -moz-appearance: textfield; appearance: textfield; }
+.unit-affix { display: flex; align-items: center; align-self: stretch; padding: 0 12px; color: #4B5B6B; font-weight: 600; font-size: .92rem; white-space: nowrap; }
+.unit-affix:first-child { padding-right: 0; }
+.unit-affix:last-child { padding-left: 8px; }
+.field-slider { width: 100%; accent-color: #0F766E; margin-top: 10px; min-height: 44px; }
+.seg-control { display: flex; gap: 8px; }
+.seg-control button { flex: 1; min-height: 48px; border: 1px solid #D9DEDB; background: #fff; border-radius: 10px; font-weight: 700; color: #14202B; transition: background .15s ease, border-color .15s ease, color .15s ease; }
+.seg-control button[aria-pressed="true"] { background: #0F766E; border-color: #0F766E; color: #fff; }
+.seg-control button:focus-visible { outline: 3px solid #0F766E; outline-offset: 2px; }
+.seg-label { display: block; font-size: 14px; font-weight: 700; color: #14202B; margin-bottom: 8px; }
+.advanced { border-top: 1px solid #E2DED5; margin-top: 20px; padding-top: 14px; }
+.advanced summary { font-weight: 700; cursor: pointer; color: #14202B; min-height: 44px; display: flex; align-items: center; }
+.advanced .form-grid { margin-top: 14px; }
+.validation-note { color: #8A5A00; font-weight: 600; font-size: .9rem; }
+.validation-note:empty { display: none; }
+/* See the .result/.panel-qualified validation-note rules below. */
+.result .hidden-row-note { color: #C9D6E0; font-size: .88rem; }
+.result .hidden-row-note:empty { display: none; }
+
+/* Buttons */
+/* Buttons: on the dark panel, Copy is the primary action (teal bg, navy
+   text) and Print is secondary (transparent, light border, white text).
+   Both are 48px high with a 2px teal focus ring. */
+.tool-btn { min-height: 44px; border-radius: 10px; font-weight: 700; transition: background .15s ease, border-color .15s ease, transform .15s ease; }
+.tool-btn-primary { background: #2DD4BF; border: 1px solid #2DD4BF; color: #0F2230; padding: 10px 18px; }
+.tool-btn-primary:hover { background: #5EEAD9; border-color: #5EEAD9; }
+.tool-btn-outline { background: transparent; border: 1px solid #9FB3C4; color: #FFFFFF; padding: 10px 18px; }
+.tool-btn-outline:hover { background: #16384A; border-color: #9FB3C4; color: #FFFFFF; }
+.copy-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 22px; }
+.result .copy-note { color: #C9D6E0; font-size: .85rem; min-height: 1.2em; }
+.result .copy-note:empty { display: none; }
+
+/* Breakdown bars and legends on the dark panel */
+.breakdown-track { display: flex; height: 12px; border-radius: 999px; overflow: hidden; background: #254055; }
+.breakdown-track > div { height: 100%; }
+.breakdown-legend { list-style: none; padding: 10px 12px; margin: 12px 0 0; display: grid; gap: 6px; font-size: .9rem; color: #C9D6E0; background: rgba(255, 255, 255, .04); border-radius: 10px; }
+@media (min-width: 700px) { .breakdown-legend { grid-template-columns: 1fr 1fr; } }
+.breakdown-legend span.swatch { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 6px; }
+.breakdown-legend b { color: #fff; font-weight: 600; }
+.seg-blue { background: #8AB4F8; }
+.seg-teal { background: #2DD4BF; }
+.seg-gold { background: #F2C14E; }
+.seg-gray { background: #C9D6E0; }
+.seg-coral { background: #F2A08C; }
+
+/* Charts */
+.chart-wrap { margin-top: 14px; }
+.chart-wrap svg { width: 100%; height: auto; display: block; }
+.chart-line-balance { fill: none; stroke: #2DD4BF; stroke-width: 2.5; }
+.chart-line-interest { fill: none; stroke: #F2C14E; stroke-width: 2.5; }
+.chart-line-rent { fill: none; stroke: #8AB4F8; stroke-width: 2.5; }
+.chart-line-buy { fill: none; stroke: #2DD4BF; stroke-width: 2.5; }
+.chart-legend { display: flex; flex-wrap: wrap; gap: 16px; font-size: .9rem; color: #4B5B6B; margin-top: 10px; }
+.chart-legend b { color: #14202B; }
+.chart-legend .swatch { display: inline-block; width: 10px; height: 10px; border-radius: 3px; margin-right: 6px; }
+/* Rent verdict callout on the dark panel */
+.rent-verdict-box { background: rgba(255, 255, 255, .06); border: 1px solid #254055; border-radius: 12px; padding: 16px 18px; margin-bottom: 14px; }
+.rent-verdict { font-size: 1.25rem; font-weight: 700; line-height: 1.3; color: #fff; }
+.rent-verdict-detail { margin: 8px 0 0; color: #C9D6E0; font-size: .95rem; }
+.rent-bar-row span { color: #C9D6E0; }
+.rent-bar-row b { color: #fff; }
+
+/* Sticky result summary: mobile only */
+.sticky-result { display: none; }
+@media (max-width: 760px) {
+  .sticky-result { display: flex; justify-content: space-between; align-items: center; gap: 12px; position: sticky; top: 64px; z-index: 15; background: #0F2230; color: #fff; border-radius: 12px; padding: 12px 16px; margin: 0 0 16px; box-shadow: 0 8px 24px rgba(20, 32, 43, .25); }
+  .sticky-result span { color: #C9D6E0; font-size: .82rem; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; }
+  .sticky-result b { font-family: var(--font-display); font-size: 1.3rem; white-space: nowrap; }
+  .panel { padding: 24px; }
+  .result { padding: 24px; }
+}
+
+/* Tools listing page */
+#tool-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
+#tool-grid .tool-card { height: 100%; border: 1px solid #E2DED5; border-radius: 18px; box-shadow: 0 8px 28px rgba(20, 32, 43, .06); transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease; }
+#tool-grid .tool-card:hover { transform: translateY(-3px); border-color: #0F766E; box-shadow: 0 17px 35px rgba(20, 32, 43, .10); }
+#tool-grid .tool-card:focus-visible { outline: 3px solid #0F766E; outline-offset: 3px; }
+#tool-grid .card-ico { width: 56px; height: 56px; border-radius: 14px; font-size: 1.35rem; }
+#tool-grid .card-arrow { color: #0F766E; font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
+#tool-grid .tool-card h3 { color: #14202B; }
+#tool-grid .tool-card p { color: #4B5B6B; }
+@media (max-width: 560px) { #tool-grid { grid-template-columns: 1fr; } }
+.category-filter:focus-visible { outline: 3px solid #0F766E; outline-offset: 2px; }
+
+/* Wide tables scroll horizontally inside their container at phone width
+   instead of pushing the page wider. */
+.table-scroll { overflow-x: auto; }
+
+@media print {
+  .header, .footer, .sticky-result, .copy-row { display: none !important; }
+}
+
+/* P2 Batch 4: calculator panel padding tiers 24/20/16 (form + result panels). */
+.calculator-layout .panel, .calculator-layout .result { padding: 24px; }
+@media (max-width: 1000px) { .calculator-layout .panel, .calculator-layout .result { padding: 20px; } }
+@media (max-width: 760px) { .calculator-layout .panel, .calculator-layout .result { padding: 16px; } }
+
+/* ============================================================
+   Centralized calculator design system — 2026-11-14
+   One layout, one results panel and one component set for all ten
+   calculators. This file loads after site.css and theme.css, so
+   these rules win ties. Calculator pages keep only genuinely
+   unique rules in their own calculator.css.
+   ============================================================ */
+
+/* One two-column layout: inputs left, results right. */
+.calculator-layout { grid-template-columns: minmax(0, 1.25fr) minmax(290px, .75fr); }
+/* Single column on mobile. This must live here (after site.css): the
+   unconditional rule above would otherwise win over site.css's own
+   collapse at the same specificity. */
+@media (max-width: 760px) {
+  .calculator-layout { grid-template-columns: minmax(0, 1fr); }
+}
+/* Mobile overflow guard: a wide table inside the results column must
+   not stretch the single-column mobile grid. */
+.calculator-layout > * { min-width: 0; }
+
+/* One hero rhythm for calculator pages. (The tools listing page
+   overrides this in tool-listing.css, which loads later.) */
+.page-hero { padding: 24px 0 30px; }
+.page-hero h1 { font-size: clamp(2.2rem, 4vw, 2.9rem); }
+
+/* One content rhythm, scoped to calculator pages so the tools
+   listing keeps its own section padding. */
+.calc-page .section { padding: 26px 0 40px; }
+@media (max-width: 1000px) { .calc-page .section { padding: 20px 0 32px; } }
+@media (max-width: 760px) { .calc-page .section { padding: 16px 0 28px; } }
+.calc-page .content { max-width: var(--max); }
+.calc-page .content > p, .calc-page .content > ul { max-width: 74ch; }
+
+/* Panel headings: one size on every calculator (replaces the inline
+   style="font-size:1.7rem" the pages used to carry). */
+.calculator-layout .panel > h2 { font-size: 1.7rem; }
+
+/* One form-group legend style. */
+.form-group { border: 0; padding: 0; margin: 24px 0 0; min-width: 0; }
+.form-group:first-of-type { margin-top: 4px; }
+.form-group legend { font-weight: 800; color: #102131; font-size: .95rem; padding: 0 0 8px; margin-bottom: 16px; width: 100%; border-bottom: 1px solid #E2DED5; }
+
+/* Controls follow their labels directly. Sliders and helper text must not
+   push a neighboring numeric control to the bottom of the grid row. */
+.form-field { display: flex; flex-direction: column; }
+.form-field > .input-unit, .form-field > .field, .form-field > select, .form-field > .seg-control { margin-top: 0; }
+.form-field-full { grid-column: 1 / -1; }
+
+/* Invalid input state (NOI validation): amber, shared. */
+.input-unit.invalid { border-color: #C17932; background: #FFFAF1; box-shadow: 0 0 0 3px rgba(193, 121, 50, .18); }
+
+/* Validation messages inside the dark results panel need the light
+   amber; on white panels the base color applies. Both are qualified
+   so they win over the shared .page-hero p rule. */
+.result .validation-note { color: #F2C14E; }
+.panel .validation-note { color: #8A5A00; }
+
+/* Hidden elements stay hidden even when a display rule would
+   otherwise show them (results rows, notes, empty states). */
+[hidden] { display: none !important; }
+
+/* ---- Results: shared tiles ---- */
+.result-tiles { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-top: 6px; }
+.result-tiles.tiles-3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+@media (max-width: 520px) { .result-tiles.tiles-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); } }
+.result-tile { background: #16384A; border: 1px solid #254055; border-radius: 12px; padding: 12px 14px; min-width: 0; }
+.result-tile > span { display: block; font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase; color: #9FB3C4; margin-bottom: 4px; }
+.result-tile > b { color: #fff; font-size: 1.05rem; font-weight: 600; overflow-wrap: anywhere; }
+/* Three-across tiles are narrow (~96px of value room in the shared results
+   column): the widest 11-character currency values ($233,000.00 — all wide
+   digits, unlike $194,670.00 with its narrow 1) only fit at 0.9rem with
+   tighter tiles, so they drop a size instead of breaking mid-number. */
+.result-tiles.tiles-3 { gap: 8px; }
+.result-tiles.tiles-3 .result-tile { padding: 10px 12px; }
+.result-tiles.tiles-3 .result-tile > b { font-size: .9rem; }
+.result-tile > small { display: block; color: #9FB3C4; font-size: .8rem; margin-top: 2px; }
+/* Total rows inside the results panel. */
+.result-row-total { border-top: 2px solid #9FB3C4; }
+.result-row-total span, .result-row-total b { font-weight: 700; }
+/* Amber note inside the results panel (warnings, negative states). */
+.result .result-note { color: #F2C14E; font-size: .9rem; font-weight: 600; margin-top: 10px; }
+.inv-verdict .result-note { display: none; }
+.inv-verdict.is-negative .result-note { display: block; }
+.inv-verdict.is-negative .result-number { color: #F2C14E; }
+/* Disclaimer text inside the dark results panel. */
+.result .disclaimer { color: #C9D6E0; }
+/* Buttons: work on <button> and <a> alike; the in-panel link CTA. */
+.tool-btn { display: inline-flex; align-items: center; justify-content: center; text-align: center; }
+.panel .tool-btn-primary { background: #0F766E; border-color: #0F766E; color: #fff; }
+.panel .tool-btn-primary:hover { background: #095E58; border-color: #095E58; }
+.panel .tool-btn-outline { border-color: #D9DEDB; color: #14202B; }
+.panel .tool-btn-outline:hover { background: #F6F5F0; border-color: #0F766E; color: #14202B; }
+.tool-btn-dark { background: #102131; border: 1px solid #102131; color: #fff; }
+.tool-btn-dark:hover { background: #223E51; border-color: #223E51; }
+.result-cta { display: flex; width: 100%; margin-top: 22px; }
+
+/* ---- Content components ---- */
+/* Formula box: the calculator's defining formula, set apart. */
+.formula-box { background: #F6F5F0; border: 1px solid #E2DED5; border-left: 3px solid #0F766E; border-radius: 0 12px 12px 0; padding: 16px 18px; margin: 18px 0; }
+.formula-box p { margin: 0; color: #14202B; }
+.formula-box .formula { font-family: 'Source Serif 4', Georgia, serif; font-size: 1.15rem; font-weight: 700; }
+/* FAQ accordion: native <details>, one style everywhere. */
+.faq { border: 1px solid #E2DED5; border-radius: 12px; background: #fff; margin: 0 0 10px; }
+.faq summary { cursor: pointer; font-weight: 600; color: #14202B; min-height: 56px; padding: 16px 20px; list-style: none; display: flex; align-items: center; gap: 12px; }
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::marker { content: none; }
+.faq summary::after { content: "+"; margin-left: auto; flex-shrink: 0; color: #0F766E; font-weight: 700; }
+.faq[open] summary::after { content: "\2212"; }
+.faq summary:focus-visible { outline: 3px solid #0F766E; outline-offset: 2px; }
+.faq p { padding: 0 20px 18px; margin: 0; color: #4B5B6B; font-size: 15px; line-height: 1.65; max-width: 74ch; }
+/* Answer + note boxes (how-it-works answers, important notes). */
+.answer-box { background: #EBF3EF; border: 1px solid #B7D6CC; border-radius: 12px; padding: 16px 18px; margin: 16px 0; }
+.answer-box p { margin: 0; color: #14202B; }
+.note-box { background: #F6F5F0; border: 1px solid #E2DED5; border-radius: 12px; padding: 16px 18px; margin: 16px 0; }
+.note-box p { margin: 0; color: #465F65; }
+/* Numbered steps (formula derivations). Overrides site.css's
+   three-column homepage .steps grid inside calculator content. */
+.content .steps, .article-main .steps { display: block; list-style: none; counter-reset: calc-step; padding: 0; margin: 16px 0; }
+.content .steps li, .article-main .steps li { counter-increment: calc-step; position: relative; padding-left: 40px; margin: 12px 0; color: #14202B; }
+.content .steps li::before, .article-main .steps li::before { content: counter(calc-step); position: absolute; left: 0; top: 0; width: 28px; height: 28px; border-radius: 50%; background: #0F766E; color: #fff; font-weight: 700; font-size: .85rem; display: grid; place-items: center; }
+/* Content tables: one treatment for worked examples, schedules
+   and comparisons. */
+.content table { width: 100%; border-collapse: collapse; font-size: .92rem; margin: 14px 0; }
+.content th, .content td { text-align: left; padding: 10px 12px; border-bottom: 1px solid #E5E2DB; vertical-align: top; }
+.content th { font-size: .78rem; text-transform: uppercase; letter-spacing: .06em; color: #4B5B6B; }
+.content td:last-child, .content th:last-child { text-align: right; font-variant-numeric: tabular-nums; }
+.content td:first-child, .content th:first-child { text-align: left; }
+/* Tables inside the dark results panel (ROI year table). */
+.result table { width: 100%; border-collapse: collapse; font-size: .86rem; margin-top: 16px; }
+.result th, .result td { text-align: right; padding: 9px 10px; border-bottom: 1px solid #254055; color: #fff; font-variant-numeric: tabular-nums; }
+.result th:first-child, .result td:first-child { text-align: left; }
+.result th { font-size: .72rem; text-transform: uppercase; letter-spacing: .06em; color: #9FB3C4; }
+/* Prose links inside calculator content. */
+.content p a, .content li a { color: #0F766E; text-decoration: underline; text-underline-offset: 3px; }
+/* RealtorCRM link below the calculator (light context). */
+.realtoros-link { color: #0F766E; text-decoration: underline; text-underline-offset: 3px; font-weight: 600; }
+/* Related calculator cards. */
+.related-cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-top: 16px; }
+.related-card { display: block; background: #fff; border: 1px solid #E2DED5; border-radius: 14px; padding: 18px; color: inherit; text-decoration: none; }
+.related-card:hover { border-color: #0F766E; transform: translateY(-2px); box-shadow: 0 12px 28px rgba(20, 32, 43, .08); }
+.related-card h3 { font-size: 1rem; margin: 0 0 6px; color: #14202B; }
+.related-card p { font-size: .88rem; line-height: 1.5; color: #4B5B6B; margin: 0; }
+.related-card .open { display: block; margin-top: 10px; color: #0F766E; font-weight: 700; font-size: .85rem; }
+@media (max-width: 760px) { .related-cards { grid-template-columns: 1fr; } }
+
+/* Integrated calculator foundations: reuse local fonts and the same controls. */
+.calc-page h1, .calc-page h2 { font-family: var(--font-display); }
+.calc-page .page-hero h1 { font-size: clamp(2rem, 3.4vw, 2.75rem); line-height: 1.2; margin: 8px 0 10px; max-width: none; }
+.calc-page .page-hero > .wrap > p, .calc-page .commission-intro { font-size: 16px; line-height: 1.6; max-width: 78ch; margin-bottom: 24px; }
+.calc-page .calculator-layout { align-items: start; }
+.calc-page .calculator-layout > .panel, .calc-page .calculator-layout > .result { border-radius: 16px; }
+.calc-page .panel > h2 { font-size: 24px; line-height: 1.3; margin-bottom: 8px; }
+.calc-page .panel-intro, .calc-page .panel > .muted { font-size: 14px; line-height: 1.6; }
+.calc-page .form-grid { gap: 16px; align-items: start; }
+.calc-page .form-field { min-width: 0; }
+.calc-page .form-field label { font-size: 14px; font-weight: 600; line-height: 1.5; }
+.calc-page .field { font-size: 16px; min-height: 48px; }
+.calc-page .form-group legend { font-weight: 600; }
+.calc-page .result-row { gap: 16px; font-size: 14px; line-height: 1.5; }
+.calc-page .result-row b { text-align: right; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+.calc-page .result .result-assumption { color: #C9D6E0; font-size: 13px; line-height: 1.65; margin: 16px 0 0; }
+.calc-page .result .rent-verdict-detail, .calc-page .result .disclaimer { color: #C9D6E0; }
+.calc-page .result .copy-row .tool-btn { min-height: 44px; flex: 1 1 auto; font-size: 14px; }
+.tool-btn:disabled { opacity: .5; cursor: not-allowed; }
+.calc-page .calculator-disclaimers { margin-top: 16px; }
+.calc-page .calculator-disclaimers p { max-width: 80ch; font-size: 13px; line-height: 1.6; }
+.calc-page .how-to-note { color: var(--muted); }
+.calc-page .input-footnote { border-top: 1px solid var(--line); padding-top: 16px; margin: 20px 0 0; font-size: 12px; color: var(--muted); }
+.calc-page .content h2, .calc-page .guide-section h2 { font-size: 30px; line-height: 1.3; margin-bottom: 14px; }
+.calc-page .content h3, .calc-page .guide-section h3 { font-size: 19px; line-height: 1.35; }
+.calc-page .content p, .calc-page .guide-section p { font-size: 16px; line-height: 1.7; margin-bottom: 16px; }
+.calculator-guide { padding-bottom: 48px; }
+.guide-section { padding-top: 40px; }
+.guide-section + .guide-section { border-top: 1px solid var(--line); margin-top: 20px; padding-top: 20px; }
+.guide-section p { max-width: 74ch; }
+.guide-section p:last-child { margin-bottom: 0; }
+.guide-section p a { color: var(--teal); text-decoration: underline; text-underline-offset: 3px; }
+.calculator-steps { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 24px; list-style: none; padding: 0; margin: 24px 0 0; }
+.calculator-steps li { display: flex; align-items: start; gap: 12px; }
+.calculator-steps li > span { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; flex-shrink: 0; color: var(--teal); background: var(--mist); font-size: 14px; font-weight: 600; }
+.calculator-steps h3 { font-family: var(--font-body); font-size: 16px; margin: 3px 0 8px; letter-spacing: normal; }
+.calc-page .calculator-steps p { font-size: 14px; }
+.guide-columns { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 32px; margin: 24px 0; }
+.guide-section table { width: 100%; border-collapse: separate; border-spacing: 0; border: 1px solid var(--line); border-radius: 12px; background: var(--white); font-size: 14px; line-height: 1.6; margin: 16px 0; }
+.guide-section caption { text-align: left; color: var(--muted); font-size: 13px; margin-bottom: 8px; }
+.guide-section th, .guide-section td { padding: 14px 20px; border-bottom: 1px solid var(--line); text-align: left; }
+.guide-section tbody tr:last-child > * { border-bottom: 0; }
+.guide-section tbody th { font-weight: 500; }
+.guide-section td { text-align: right; font-variant-numeric: tabular-nums; }
+.table-total { background: var(--mist); color: var(--navy); font-weight: 600; }
+.table-total th { font-weight: 600; }
+.fee-table { max-width: 960px; }
+.fee-table th { width: 26%; font-weight: 600; }
+.fee-table td { text-align: left; }
+.fee-table thead { background: var(--mist); }
+.split-example { display: flex; max-width: 720px; border-radius: 10px; overflow: hidden; margin: 24px 0; font-size: 14px; font-weight: 600; }
+.split-example span { padding: 14px; background: var(--teal); color: var(--white); width: 70%; }
+.split-example span + span { background: var(--navy); width: 30%; }
+.mistakes-list { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px 40px; padding-left: 22px; line-height: 1.7; }
+.faq-list { display: grid; gap: 8px; }
+.faq-list .faq { margin-bottom: 0; }
+.faq-answer > p { padding-inline: 20px; }
+.calc-page .related-cards .related-card { min-width: 0; }
+.related-cards.related-cards-4 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+@media (max-width: 900px) { .calc-page .calculator-layout { grid-template-columns: minmax(0, 1fr); } }
+@media (max-width: 760px) {
+  .calc-page .form-grid { grid-template-columns: minmax(0, 1fr); }
+  .calc-page .page-hero h1 { font-size: 32px; }
+  .calc-page .result .result-number { font-size: 34px; }
+  .calc-page .content h2, .calc-page .guide-section h2 { font-size: 25px; }
+  .calc-page .content h3, .calc-page .guide-section h3 { font-size: 18px; }
+  .guide-section { padding-top: 28px; }
+  .guide-section + .guide-section { margin-top: 14px; padding-top: 14px; }
+  .calculator-steps, .guide-columns, .mistakes-list { grid-template-columns: 1fr; }
+  .related-cards.related-cards-4 { grid-template-columns: 1fr; }
+  .guide-section th, .guide-section td { padding: 12px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .calc-page *, .calc-page *::before, .calc-page *::after { transition: none !important; animation: none !important; }
+}

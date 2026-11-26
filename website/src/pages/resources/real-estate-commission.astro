@@ -1,0 +1,29 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+---
+
+<BaseLayout
+  title="Understanding Real Estate Commission | Every Real Estate Calculator"
+  description="How real estate commission is calculated from sale price to agent share: gross commission, referral and franchise fees, the split between sides and the transaction fee, with a worked USD example."
+  canonical="https://everyrealestatecalculator.com/resources/real-estate-commission/"
+  bodyClass="article-page"
+  currentNav="resources"
+  extraStyles={["../../assets/resources.css"]}
+>
+<main id="main"><div class="article-col">
+<article class="article">
+<h1>Understanding Real Estate Commission</h1>
+<p class="article-lede">A sale price is not the same as an agent's earnings. This calculator first finds the total commission, takes referral and franchise fees off the top, splits the remainder between the listing and buyer sides, then applies your share and subtracts the transaction fee you enter.</p>
+<nav class="article-toc" aria-label="On this page"><p>On this page</p><ul><li><a href="#terms">The terms</a></li><li><a href="#example">Worked example</a></li><li><a href="#what-changes">What changes the result</a></li><li><a href="#not-included">What is not included</a></li><li><a href="#references-title">References</a></li></ul></nav>
+<div class="article-body">
+<h2 id="terms">The terms behind the estimate</h2><dl class="article-terms"><div><dt>Sale price</dt><dd>The property price used as the calculation base.</dd></div><div><dt>Commission rate</dt><dd>The percentage of that price used to calculate the stated gross commission.</dd></div><div><dt>Agent split</dt><dd>Your percentage of the applicable side after referral and franchise fees.</dd></div><div><dt>Listing share</dt><dd>The percentage of the total commission that goes to the listing side; the buyer side gets the rest.</dd></div><div><dt>Referral and franchise fees</dt><dd>Percentages taken off the total commission before it is split between the sides.</dd></div><div><dt>Net to seller</dt><dd>Sale price minus the full total commission, other closing costs and any mortgage payoff.</dd></div><div><dt>Transaction fee</dt><dd>The fixed amount deducted from your share in this model.</dd></div></dl>
+<h2 id="example">Worked example</h2><div class="article-example"><span class="example-label">Worked example</span><h3>From sale price to your share</h3><span class="example-label">Inputs</span><p>Choose Agent Earnings and keep your role set to Both sides, with referral and franchise fees at 0%. Choose Agent Earnings and keep your role set to Both sides, with referral and franchise fees at 0%. Use a $450,000 sale price, a 3% commission rate, a 70% agent split and a $295 transaction fee.</p><span class="example-label">Calculation</span><ol><li><span>Gross commission: $450,000 × 0.03</span><strong data-example="commission-total">$13,500.00</strong></li><li><span>Your share: $13,500 × 0.70</span><strong data-example="commission-agent">$9,450.00</strong></li><li class="example-result"><span class="example-label">Result</span><span>After fee: $9,450 − $295</span><strong data-example="commission-net">$9,155.00</strong></li></ol><span class="example-label">Explanation</span><p class="example-caption">The final amount is before taxes and any costs not entered.</p></div>
+<h2 id="what-changes">What changes the result?</h2><p>A higher sale price, rate or agent split increases your share when the other inputs stay the same. A higher fee reduces it dollar for dollar. Rates and splits vary; the example is not a standard or prescribed arrangement.</p>
+<h2 id="not-included">What is not included?</h2><p>The model does not deduct taxes, referral payments beyond the percentage you enter, team splits, broker caps or other business costs. A fee larger than your share can produce a negative result.</p>
+<div class="article-cta"><div><strong>Estimate your commission</strong><p>Enter a sale price, commission rate, agent split and transaction fee.</p></div><a class="btn btn-primary" href="../../tools/commission-calculator/">Try the Commission Calculator →</a></div>
+<section class="article-refs" aria-labelledby="references-title"><h2 id="references-title">References</h2><ul><li>This guide describes the model used by our <a href="../../tools/commission-calculator/">Commission Calculator</a>. Commission rates and splits vary by agreement; the worked example is illustrative, not a standard or prescribed arrangement.</li></ul></section>
+</div>
+</article>
+<aside class="related" aria-labelledby="related-title"><h2 id="related-title">Keep reading</h2><div class="related-links"><a href="../mortgage-payments/"><span>Guide</span><strong>Understanding Mortgage Payments</strong></a><a href="../"><span>Directory</span><strong>All real estate resources</strong></a></div></aside>
+</div></main>
+</BaseLayout>

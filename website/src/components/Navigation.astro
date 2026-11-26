@@ -1,0 +1,52 @@
+---
+import { MENU_GROUPS } from '../data/tools';
+
+export interface Props {
+  base: string;
+  currentNav?: 'crm' | 'resources' | 'about' | 'contact' | '';
+}
+
+const { base, currentNav = '' } = Astro.props;
+---
+
+<nav class="nav" id="site-menu" aria-label="Main navigation">
+  <div class="tools-menu" id="tools-menu">
+    <button
+      class="tools-menu-toggle"
+      id="tools-menu-toggle"
+      type="button"
+      aria-expanded="false"
+      aria-controls="tools-mega-menu"
+    >
+      All Tools <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true" focusable="false"><path d="m6 9 6 6 6-6"/></svg>
+    </button>
+    <div class="tools-mega-menu" id="tools-mega-menu" hidden>
+      <div class="tools-menu-heading">
+        <p>Find the right calculator</p>
+        <a class="tools-view-all" href={`${base}tools/`}>View all 16 calculators <span aria-hidden="true">↗</span></a>
+      </div>
+      <div class="tools-menu-columns">
+        {MENU_GROUPS.map((group) => (
+          <div class="tools-menu-group" aria-labelledby={group.id}>
+            <p class="tools-menu-title" id={group.id}>{group.title}</p>
+            <ul>
+              {group.tools.map((tool) => (
+                <li>
+                  <a class="tools-menu-link" data-menu-tool={tool.slug} href={`${base}tools/${tool.slug}/`}>
+                    <span class="tools-menu-icon" aria-hidden="true">{tool.icon}</span>
+                    <span class="tools-menu-copy"><span class="tools-menu-name">{tool.name}</span></span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
+        ))}
+      </div>
+    </div>
+  </div>
+  <a href={`${base}real-estate-crm/`} class={currentNav === 'crm' ? 'current' : ''} aria-current={currentNav === 'crm' ? 'page' : undefined}>RealtorCRM</a>
+  <a href={`${base}resources/`} class={currentNav === 'resources' ? 'current' : ''} aria-current={currentNav === 'resources' ? 'page' : undefined}>Resources</a>
+  <a href={`${base}about/`} class={currentNav === 'about' ? 'current' : ''} aria-current={currentNav === 'about' ? 'page' : undefined}>About</a>
+  <a href={`${base}contact/`} class={currentNav === 'contact' ? 'current' : ''} aria-current={currentNav === 'contact' ? 'page' : undefined}>Contact</a>
+  <a class="btn btn-primary mobile-nav-cta" href={`${base}real-estate-crm/`} data-crm-link="login">Sign in to RealtorCRM <span aria-hidden="true">↗</span></a>
+</nav>

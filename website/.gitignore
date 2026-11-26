@@ -1,3 +1,6 @@
 # Build output of scripts/package-deploy.mjs — a reproducible artifact,
 # never committed. Rebuild with: node website/scripts/package-deploy.mjs
 dist-production/
+dist/
+node_modules/
+.astro/

@@ -1,0 +1,76 @@
+---
+import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
+---
+
+<CalculatorLayout
+  title="Wholesale Calculator | Every Real Estate Calculator"
+  description="Free wholesale real estate calculator: work out the maximum allowable offer on a property from its after repair value, repair costs and your wholesale fee, using the 70% rule."
+  canonical="https://everyrealestatecalculator.com/tools/wholesale-calculator/"
+  stickyLabel="Max offer"
+  stickyId="sticky-value"
+  stickyValue="—"
+>
+<section class="page-hero"><div class="wrap">
+<div class="calculator-wrap"><div class="calculator-layout">
+<div class="calc-left"><section class="panel" aria-labelledby="calc-heading">
+<h1 id="calc-heading">Wholesale Calculator</h1>
+<p class="panel-sub">The most you can offer a seller while protecting your buyer's margin and your fee.</p>
+<form id="wholesale-form" novalidate>
+<fieldset class="form-group"><legend>Value &amp; repairs</legend><div class="form-grid">
+<div class="form-field"><label for="arv">After repair value (ARV)</label><span class="input-unit"><span class="unit-affix">$</span><input class="field" id="arv" type="number" min="0" step="1000" value="250000"></span><small class="field-helper">What the property is worth fully renovated.</small></div>
+<div class="form-field"><label for="repairs">Estimated repairs</label><span class="input-unit"><span class="unit-affix">$</span><input class="field" id="repairs" type="number" min="0" step="500" value="30000"></span><small class="field-helper">The buyer's full rehab budget.</small></div>
+<div class="form-field"><label for="discount-pct">Investor discount</label><span class="input-unit"><input class="field" id="discount-pct" type="number" min="1" max="100" step="1" value="70"><span class="unit-affix">%</span></span><small class="field-helper">70% is the classic rule of thumb.</small></div>
+</div></fieldset>
+<fieldset class="form-group"><legend>Your deal</legend><div class="form-grid">
+<div class="form-field"><label for="wholesale-fee">Your wholesale fee</label><span class="input-unit"><span class="unit-affix">$</span><input class="field" id="wholesale-fee" type="number" min="0" step="500" value="10000"></span><small class="field-helper">Your assignment or resale margin.</small></div>
+<div class="form-field"><label for="asking-price">Seller's asking price</label><span class="input-unit"><span class="unit-affix">$</span><input class="field" id="asking-price" type="number" min="0" step="1000" value="125000"></span><small class="field-helper">Checked against your maximum below.</small></div>
+<div class="form-field"><label for="closing-costs">Closing &amp; holding</label><span class="input-unit"><span class="unit-affix">$</span><input class="field" id="closing-costs" type="number" min="0" step="500" value="5000"></span><small class="field-helper">Costs the buyer's price must absorb.</small></div>
+</div></fieldset>
+</form>
+</section></div>
+<aside class="result" id="result-card" aria-label="Wholesale offer result">
+<p class="result-label">Maximum offer to seller</p>
+<p class="result-number" id="ws-value">—</p>
+<p class="yield-verdict" id="ws-verdict">—</p>
+<p class="result-group">Where the buyer's price goes</p>
+<div class="breakdown-track" aria-hidden="true"><div class="seg seg-blue" id="seg-offer"></div><div class="seg seg-teal" id="seg-fee"></div></div>
+<div class="result-row"><span>End buyer's price</span><b id="row-buyer">—</b></div>
+<div class="result-row"><span><i class="dot dot-teal" aria-hidden="true"></i>Your offer to the seller</span><b id="row-offer">—</b></div>
+<div class="result-row"><span><i class="dot dot-navy" aria-hidden="true"></i>Your wholesale fee</span><b id="row-fee">—</b></div>
+<p class="result-group">In cash terms</p>
+<div class="result-tiles"><div class="result-tile"><span>Offer as % of ARV</span><b id="tile-arv">—</b></div><div class="result-tile"><span>Headroom at asking</span><b id="tile-headroom">—</b></div></div>
+<div class="copy-row"><button class="tool-btn tool-btn-primary" id="copy-results" type="button">Copy results</button><a class="tool-btn tool-btn-outline" href="../../tools/roi-calculator/">ROI calculator</a></div>
+</aside>
+</div></div>
+<div class="offer-panel"><h2>The offer ladder</h2>
+<p class="offer-sub">Your maximum offer at four investor discounts on the same property. Tighter discounts suit slow markets and heavy rehabs; looser ones suit hot markets and light work.</p>
+<div class="table-scroll" tabindex="0"><table class="offer-table"><thead><tr><th>Investor discount</th><th>Buyer's price</th><th>Your max offer</th></tr></thead><tbody id="ladder-body"></tbody></table></div>
+</div>
+</div></section>
+<section class="section"><div class="wrap content">
+<h2>What is real estate wholesaling?</h2>
+<p>Wholesaling is finding a discounted property, putting it under contract, and passing that contract — or the property itself — to an end buyer, usually a landlord or a flipper, for a fee. The wholesaler rarely renovates or holds the property; the skill is finding the deal and pricing it so every party still makes money. That pricing is this calculator's whole job: work backwards from the renovated value to the most you can offer the seller today.</p>
+<h2>How the maximum offer works</h2>
+<div class="timeline-box"><div class="timeline-steps">
+<div class="timeline-step"><span class="step-badge">1</span><div class="step-body"><p class="step-when">Start with the finished value</p><p class="step-formula">The after repair value (ARV) — what the property sells for once renovated.</p></div></div>
+<div class="timeline-step"><span class="step-badge">2</span><div class="step-body"><p class="step-when">Apply the investor discount</p><p class="step-formula">ARV × 70% leaves the end buyer room for profit and risk — then subtract repairs and closing costs to reach the buyer's price.</p></div></div>
+<div class="timeline-step"><span class="step-badge">3</span><div class="step-body"><p class="step-when">Take out your fee</p><p class="step-formula">Buyer's price − your wholesale fee = the maximum you can offer the seller.</p></div></div>
+</div><p class="timeline-result">Maximum offer = (ARV × discount) − repairs − closing costs − your fee. Offer more than this and either your fee or your buyer's margin disappears.</p></div>
+<h2>Worked example</h2>
+<p>A tired rental would be worth $250,000 renovated. The rehab is estimated at $30,000 and closing and holding costs at $5,000. At the 70% rule, the buyer's price is $250,000 × 70% − $30,000 − $5,000 = $140,000. Taking out a $10,000 wholesale fee leaves a maximum offer to the seller of $130,000 — 52% of the finished value. At the seller's $125,000 asking price the deal works with $5,000 to spare; at $150,000 it cannot be wholesaled at this fee, however good the property looks.</p>
+<h2>Where the fee comes from</h2>
+<p>Your fee is not added on top of the buyer's price — it comes out of the spread between what the seller accepts and what the buyer will pay. That is why the asking price matters as much as the ARV: the wider the gap between the seller's price and the buyer's ceiling, the more room for your fee. Wholesalers are usually paid as an assignment fee at the buyer's closing, or by buying and reselling (a double closing) where assignment is restricted. Rules differ by state — some require disclosure or a licence to market contracts — so check your state's position before your first deal.</p>
+</div></section>
+<section class="section"><div class="wrap content"><h2>Frequently asked questions</h2><div class="faq">
+<details><summary>What is the 70% rule in wholesaling?</summary><p>It says an investor should pay no more than 70% of a property's after repair value, minus repair costs. The missing 30% is the buyer's allowance for profit, risk and the costs the simple formula leaves out. In hot markets buyers may accept 75–80%; on heavy rehabs they may demand 60–65%.</p></details>
+<details><summary>How much should my wholesale fee be?</summary><p>Fees of $5,000–$15,000 are common on single-family deals, or roughly 5–10% of the property's value. The fee has to fit inside the spread: if the seller's price and the buyer's ceiling are only $8,000 apart, a $10,000 fee makes the deal impossible at any offer.</p></details>
+<details><summary>What if the repair estimate is wrong?</summary><p>Your buyer prices the risk, not you — but a wholesaler who consistently underestimates repairs loses buyers. Add a contingency, get a contractor walkthrough where you can, and remember every repair dollar comes straight off the maximum offer.</p></details>
+<details><summary>Is wholesaling legal?</summary><p>Assigning a purchase contract is legal in most of the US, but states and cities increasingly regulate it — some require a real estate licence to market a contract you do not own, or written disclosure to the seller. This calculator covers the arithmetic only; check your local rules before contracting.</p></details>
+<details><summary>What if the seller won't accept my maximum offer?</summary><p>Then at those numbers there is no wholesale deal — the honest options are a smaller fee, a buyer who accepts a thinner discount, or walking away. Offering above your maximum turns your fee into a loss the moment the buyer re-prices the repairs.</p></details>
+</div></div></section>
+<section class="section"><div class="wrap"><h2>Related calculators</h2><div class="related-cards">
+<a class="related-card" href="../../tools/property-investment-calculator/"><h3>Property Investment Calculator</h3><p>Model the rental end to end — cash flow, cash-on-cash and cap rate.</p><span class="open">Open →</span></a>
+<a class="related-card" href="../../tools/roi-calculator/"><h3>ROI Calculator</h3><p>Project a property's whole-hold return as a percentage and an annual rate.</p><span class="open">Open →</span></a>
+<a class="related-card" href="../../tools/bridge-loan-calculator/"><h3>Bridge Loan Calculator</h3><p>Estimate short-term borrowing against your current home.</p><span class="open">Open →</span></a>
+</div></div></section>
+</CalculatorLayout>

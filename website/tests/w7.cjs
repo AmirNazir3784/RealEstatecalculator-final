@@ -8,7 +8,7 @@
 // placeholders are untouched, and no legal page is published yet.
 const fs = require('node:fs');
 const path = require('node:path');
-const ROOT = path.join(__dirname, '..');
+const ROOT = (fs.existsSync(path.resolve(__dirname, '..', 'dist', 'index.html')) ? path.resolve(__dirname, '..', 'dist') : path.resolve(__dirname, '..'));
 let passed = 0; const failures = [];
 function check(name, cond) { if (cond) { passed++; } else { failures.push(name); } }
 function read(rel) { return fs.readFileSync(path.join(ROOT, rel), 'utf8'); }

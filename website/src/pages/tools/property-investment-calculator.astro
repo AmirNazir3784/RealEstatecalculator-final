@@ -1,0 +1,187 @@
+---
+import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
+---
+
+<CalculatorLayout
+  title="Property Investment Calculator | Every Real Estate Calculator"
+  description="Analyze a rental property: monthly cash flow, cash-on-cash return, cap rate, DSCR and break-even rent from price, financing, rent and operating costs."
+  canonical="https://everyrealestatecalculator.com/tools/property-investment-calculator/"
+  stickyLabel="Monthly cash flow"
+  stickyId="sticky-value"
+  stickyValue="—"
+>
+<section class="page-hero"><div class="wrap"><h1>Property Investment Calculator</h1><p>Does this deal pencil out? Enter the price, financing, rent and running costs — we'll show the monthly cash flow, the return on your cash, and the rent the property needs just to break even.</p></div>
+<div class="wrap calculator-layout">
+
+<div class="panel">
+<h2>Enter your figures</h2>
+<p class="muted">Adjust the sample values below to calculate an estimate instantly.</p>
+
+<form id="property-investment-form">
+
+<fieldset class="form-group">
+<legend>Purchase and loan</legend>
+<div class="form-grid">
+<div class="form-field"><label for="property-price">Purchase price</label><span class="input-unit"><span class="unit-affix" aria-hidden="true">$</span><input class="field" id="property-price" type="number" min="0" max="1000000000000" step="1000" value="250000"></span></div>
+<div class="form-field"><label for="interest-rate">Mortgage rate</label><span class="input-unit"><input class="field" id="interest-rate" type="number" min="0" max="100" step="0.01" value="7"><span class="unit-affix" aria-hidden="true">%</span></span></div>
+<div class="form-field"><label for="down-payment">Down payment</label><span class="input-unit"><span class="unit-affix" aria-hidden="true">$</span><input class="field" id="down-payment" type="number" min="0" max="1000000000000" step="1000" value="50000"></span></div>
+<div class="form-field"><label for="down-percent-input">Down payment share</label><span class="input-unit"><input class="field" id="down-percent-input" type="number" min="0" max="100" step="0.1" value="20"><span class="unit-affix" aria-hidden="true">%</span></span><small class="field-helper">Edit either one; the other updates.</small></div>
+<div class="form-field form-field-full"><span class="seg-label" id="loan-years-label">Loan term</span><div class="seg-control" role="group" aria-labelledby="loan-years-label"><button type="button" data-years="15" aria-pressed="false">15 years</button><button type="button" data-years="20" aria-pressed="false">20 years</button><button type="button" data-years="30" aria-pressed="true">30 years</button></div><input type="hidden" id="loan-years" value="30"></div>
+</div>
+</fieldset>
+
+<fieldset class="form-group">
+<legend>Income</legend>
+<div class="form-grid">
+<div class="form-field"><label for="monthly-rent">Monthly rent</label><span class="input-unit"><span class="unit-affix" aria-hidden="true">$</span><input class="field" id="monthly-rent" type="number" min="0" max="1000000000000" step="10" value="2400"><span class="unit-affix" aria-hidden="true">/ month</span></span></div>
+<div class="form-field"><label for="vacancy-rate">Vacancy rate</label><span class="input-unit"><input class="field" id="vacancy-rate" type="number" min="0" max="100" step="0.5" value="5"><span class="unit-affix" aria-hidden="true">%</span></span></div>
+<div class="form-field"><label for="other-income">Other income</label><span class="input-unit"><span class="unit-affix" aria-hidden="true">$</span><input class="field" id="other-income" type="number" min="0" max="1000000000000" step="10" value="0"><span class="unit-affix" aria-hidden="true">/ month</span></span></div>
+</div>
+</fieldset>
+
+<fieldset class="form-group">
+<legend>Running costs</legend>
+<div class="form-grid">
+<div class="form-field"><label for="property-tax">Property tax</label><span class="input-unit"><span class="unit-affix" aria-hidden="true">$</span><input class="field" id="property-tax" type="number" min="0" max="1000000000000" step="100" value="3000"><span class="unit-affix" aria-hidden="true">/ year</span></span></div>
+<div class="form-field"><label for="home-insurance">Insurance</label><span class="input-unit"><span class="unit-affix" aria-hidden="true">$</span><input class="field" id="home-insurance" type="number" min="0" max="1000000000000" step="100" value="1200"><span class="unit-affix" aria-hidden="true">/ year</span></span></div>
+<div class="form-field"><label for="hoa-fee">HOA dues</label><span class="input-unit"><span class="unit-affix" aria-hidden="true">$</span><input class="field" id="hoa-fee" type="number" min="0" max="1000000000000" step="10" value="0"><span class="unit-affix" aria-hidden="true">/ month</span></span></div>
+<div class="form-field"><label for="maintenance-rate">Maintenance</label><span class="input-unit"><input class="field" id="maintenance-rate" type="number" min="0" max="100" step="0.5" value="5"><span class="unit-affix" aria-hidden="true">% of rent</span></span></div>
+<div class="form-field"><label for="capex-rate">CapEx reserve</label><span class="input-unit"><input class="field" id="capex-rate" type="number" min="0" max="100" step="0.5" value="5"><span class="unit-affix" aria-hidden="true">% of rent</span></span></div>
+<div class="form-field"><label for="management-rate">Management fee</label><span class="input-unit"><input class="field" id="management-rate" type="number" min="0" max="100" step="0.5" value="8"><span class="unit-affix" aria-hidden="true">% of income</span></span><small class="field-helper">Charged on effective income.</small></div>
+<div class="form-field"><label for="closing-costs">Closing costs</label><span class="input-unit"><span class="unit-affix" aria-hidden="true">$</span><input class="field" id="closing-costs" type="number" min="0" max="1000000000000" step="100" value="7500"></span><small class="field-helper">Counted in the cash you invest.</small></div>
+</div>
+</fieldset>
+
+</form>
+<p class="validation-note" id="validation-note" role="alert"></p>
+<p class="disclaimer">Cash-on-cash return uses all the cash you put in (down payment plus closing costs). The mortgage is counted separately as debt service, not as an operating expense.</p>
+</div>
+
+<aside class="result" id="investment-results" aria-live="polite">
+<div class="inv-verdict">
+<p class="result-label">Monthly cash flow</p>
+<p class="result-number" id="monthly-cash-flow" aria-live="polite">—</p>
+<p class="result-note">Negative cash flow: this property costs more each month than it earns.</p>
+<p class="result-hero-sub"><b id="annual-cash-flow">—</b> per year</p>
+</div>
+<p class="validation-note" id="inv-validation" role="alert"></p>
+<p class="result-empty" id="result-empty" hidden>Enter your details to see your estimate.</p>
+<div id="result-body">
+<div class="result-tiles tiles-3">
+<div class="result-tile"><span>Cash-on-cash return</span><b id="tile-coc">—</b></div>
+<div class="result-tile"><span>Cap rate</span><b id="tile-cap">—</b></div>
+<div class="result-tile"><span>Cash invested</span><b id="tile-invested">—</b></div>
+<div class="result-tile"><span>DSCR</span><b id="tile-dscr">—</b></div>
+<div class="result-tile"><span>Net operating income</span><b id="tile-noi">—</b></div>
+<div class="result-tile"><span>Break-even rent</span><b id="tile-breakeven">—</b></div>
+</div>
+<h3 class="result-group">Monthly breakdown</h3>
+<div class="result-row"><span>Rent after vacancy</span><b id="row-rent-after-vacancy">—</b></div>
+<div class="result-row"><span>Mortgage payment (principal and interest)</span><b id="row-pi">—</b></div>
+<div class="result-row"><span>Operating expenses</span><b id="row-opex">—</b></div>
+<div class="result-row result-row-total"><span>Monthly cash flow</span><b id="row-cash-flow">—</b></div>
+<div class="copy-row"><button class="tool-btn tool-btn-primary" id="copy-results" type="button">Copy results</button></div>
+<p class="copy-note" id="copy-note"></p></div>
+<a class="tool-btn tool-btn-outline result-cta" href="../../tools/mortgage-calculator/">See the payment on the mortgage calculator</a>
+<p class="disclaimer">Estimate only. Not a loan offer or financial advice.</p>
+</aside>
+
+</div></section>
+
+<section class="section"><div class="wrap content">
+<div class="note"><strong>How to use:</strong> Enter the price, down payment, rate, rent and vacancy, then the running costs. Monthly cash flow, cash-on-cash return, cap rate and DSCR update as you type.</div>
+<h2>Understanding the numbers</h2>
+<div class="def-grid">
+<div><h3>DSCR</h3><p>Debt service coverage ratio is net operating income divided by annual debt service. Many lenders look for 1.25 or better, so the income covers the loan payment with a buffer.</p></div>
+<div><h3>Net operating income (NOI)</h3><p>Effective income minus operating expenses, before the mortgage. It is the starting point for both cap rate and DSCR.</p></div>
+<div><h3>Break-even rent</h3><p>The rent the property needs to cover operating expenses and the mortgage with zero cash flow. Any rent above it is your buffer against a vacancy or a repair.</p></div>
+<div><h3>Gross yield</h3><p>Annual rent divided by price, before expenses. It is a quick first screen, not a return, because it ignores vacancy, expenses and financing.</p></div>
+</div>
+</div></section>
+
+<section class="section"><div class="wrap content">
+<h2>How the analysis works</h2>
+<ol class="steps">
+<li><strong>Effective income.</strong> Take the rent, subtract a vacancy allowance, and add any other income.</li>
+<li><strong>Net operating income (NOI).</strong> Subtract every operating expense: tax, insurance, HOA, maintenance, CapEx reserve and management. The mortgage is not included.</li>
+<li><strong>Monthly cash flow.</strong> Subtract the mortgage payment from effective income minus operating expenses.</li>
+<li><strong>Returns.</strong> Cap rate is NOI divided by price. Cash-on-cash is annual cash flow divided by all the cash you invested. DSCR is NOI divided by annual debt service, and most lenders look for 1.25 or better.</li>
+</ol>
+
+<h2>What moves the answer</h2>
+<p>Rent and price matter most, but the quiet assumptions decide whether a deal survives real life: vacancy, maintenance, CapEx reserves and the management fee. Setting any of them to zero flatters every deal, so this calculator keeps them visible.</p>
+<p>Break-even rent runs the math backwards. If your expected rent is only just above it, the deal has no buffer for a vacancy or a repair.</p>
+
+<aside class="note-box">
+<strong>Important note</strong>
+<p>This is an informational estimate, not investment advice. It ignores appreciation, tax, principal paydown and resale costs, and one year of figures does not predict the next. Verify rents, occupancy and costs with local records before you buy.</p>
+</aside>
+</div></section>
+
+<section class="section"><div class="wrap content">
+<h2>Property investment calculator: quick answer</h2>
+<div class="answer-box">
+<p><strong>Quick answer:</strong> A property investment calculator, also called a rental property calculator, tests whether a rental deal pencils out: monthly cash flow, cash-on-cash return, cap rate, DSCR and break-even rent. On this page’s defaults, a $250,000 property with $2,400 rent gives $177.00 monthly cash flow and a 3.69% cash-on-cash return.</p>
+</div>
+<p>A deal can look good on rent alone and fail once vacancy, maintenance, reserves, management and the mortgage are counted. This calculator keeps those assumptions visible, so a deal is tested on its full costs, not just its headline rent.</p>
+
+<h2>Worked example</h2>
+<div class="example-grid">
+<div>
+<h3>What goes in</h3>
+<dl class="kv">
+<div><dt>Purchase price</dt><dd>$250,000</dd></div>
+<div><dt>Down payment</dt><dd>$50,000</dd></div>
+<div><dt>Closing costs</dt><dd>$7,500</dd></div>
+<div><dt>Mortgage</dt><dd>7% over 30 years</dd></div>
+<div><dt>Monthly rent</dt><dd>$2,400</dd></div>
+<div><dt>Vacancy</dt><dd>5%</dd></div>
+<div><dt>Property tax</dt><dd>$3,000 / year</dd></div>
+<div><dt>Insurance</dt><dd>$1,200 / year</dd></div>
+<div><dt>Maintenance and CapEx</dt><dd>5% each of rent</dd></div>
+<div><dt>Management fee</dt><dd>8% of income</dd></div>
+</dl>
+</div>
+<div>
+<h3>What comes out</h3>
+<dl class="kv kv-out">
+<div><dt>Mortgage payment</dt><dd>$1,330.60 / month</dd></div>
+<div><dt>Monthly cash flow</dt><dd>$177.00</dd></div>
+<div><dt>Annual cash flow</dt><dd>$2,123.94</dd></div>
+<div><dt>Cash invested</dt><dd>$57,500</dd></div>
+<div><dt>Cash-on-cash return</dt><dd>3.69%</dd></div>
+<div><dt>Cap rate</dt><dd>7.24%</dd></div>
+<div><dt>Net operating income</dt><dd>$18,091.20 / year</dd></div>
+<div><dt>DSCR</dt><dd>1.13x</dd></div>
+<div><dt>Break-even rent</dt><dd>$2,171.32 / month</dd></div>
+</dl>
+</div>
+</div>
+<p class="example-note">Cash invested is the down payment plus closing costs, not the down payment alone. A DSCR of 1.13x is below the 1.25 most lenders look for.</p>
+
+<h2>Key takeaways</h2>
+<ul class="takeaways">
+<li>Cash flow is effective income minus operating expenses minus the mortgage payment. The mortgage never appears in NOI.</li>
+<li>Cash-on-cash return uses all the cash invested: down payment plus closing costs.</li>
+<li>DSCR is NOI divided by annual debt service. Most lenders want 1.25 or better.</li>
+<li>Break-even rent is your buffer. If expected rent is only just above it, one vacancy or repair erases the profit.</li>
+</ul>
+
+<h2>Common mistakes</h2><ul><li><strong>Leaving vacancy at zero.</strong> Even strong rentals sit empty between tenants. A deal that only works at 100% occupancy has no margin for the real world — test it at 5–8% vacancy.</li><li><strong>Underestimating maintenance.</strong> Roofs, systems and appliances fail on their own schedule, not the spreadsheet’s. A thin maintenance figure flatters cash flow in year one and collects the difference later.</li><li><strong>Judging the deal on cash flow alone.</strong> A property can show positive cash flow and still carry a thin safety margin. Read it together with the DSCR in the results — lenders look for coverage, commonly around 1.25 on commercial-style loans.</li><li><strong>Assuming today’s rent forever.</strong> Rents, taxes and insurance all move. The break-even rent in the results shows how far rent could fall before the property stops covering its costs — the closer it sits to today’s rent, the less room for error.</li></ul><h2>Frequently asked questions</h2>
+<details class="faq"><summary>What is a rental property calculator?</summary><p>It is the same kind of tool as this property investment calculator: it combines price, financing, rent and operating costs to show cash flow, return on cash invested, cap rate, DSCR and break-even rent for a rental property.</p></details>
+<details class="faq"><summary>How is monthly cash flow calculated?</summary><p>Rent minus a vacancy allowance, plus other income, gives effective income. Subtract operating expenses to get net operating income, then subtract the mortgage payment. What remains is monthly cash flow.</p></details>
+<details class="faq"><summary>What is cash-on-cash return?</summary><p>Annual cash flow divided by all the cash you invested, here down payment plus closing costs. It answers how hard your cash is working in the first year, not how the property performs over a whole hold.</p></details>
+<details class="faq"><summary>What is DSCR and why does it matter?</summary><p>Debt service coverage ratio is net operating income divided by annual debt service. Lenders use it to judge whether the property’s income comfortably covers the loan payment.</p></details>
+<details class="faq"><summary>What is break-even rent?</summary><p>The rent the property needs just to cover operating expenses and the mortgage payment, with zero cash flow. It is a useful stress test: the gap between expected rent and break-even rent is your buffer.</p></details>
+<details class="faq"><summary>Does this calculator include appreciation or tax?</summary><p>No. It ignores appreciation, tax, principal paydown and resale costs, and a single year of rent and expenses is not a guarantee of the next year. It is an informational estimate, not investment advice.</p></details>
+
+</div></section>
+<section class="section"><div class="wrap content">
+<h2>Related calculators</h2>
+<div class="related-cards">
+<a class="related-card" href="../roi-calculator/"><h3>ROI Calculator</h3><p>Total return over the hold, year by year.</p><span class="open">Open calculator ↗</span></a>
+<a class="related-card" href="../cap-rate-calculator/"><h3>Cap Rate Calculator</h3><p>Income value from NOI and price.</p><span class="open">Open calculator ↗</span></a>
+<a class="related-card" href="../mortgage-calculator/"><h3>Mortgage Calculator</h3><p>Full monthly payment with tax, insurance, HOA and PMI.</p><span class="open">Open calculator ↗</span></a>
+</div>
+</div></section>
+</CalculatorLayout>

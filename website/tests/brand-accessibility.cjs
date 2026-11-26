@@ -1,7 +1,7 @@
 // Shared branding: labels work before JS and after a configured brand rename.
 // Contrast is checked against the light header and dark footer surfaces.
 const fs=require('node:fs'),path=require('node:path'),vm=require('node:vm'),assert=require('node:assert/strict');
-const root=path.resolve(__dirname,'..');
+const root=(fs.existsSync(path.resolve(__dirname, '..', 'dist', 'index.html')) ? path.resolve(__dirname, '..', 'dist') : path.resolve(__dirname, '..'));
 function pages(dir){return fs.readdirSync(dir,{withFileTypes:true}).flatMap(e=>e.isDirectory()&&!['tests','reference','dist-production'].includes(e.name)?pages(path.join(dir,e.name)):e.isFile()&&e.name==='index.html'?[path.join(dir,e.name)]:[]);}
 let checks=0;function check(value,message){assert(value,message);checks++;}
 const label='Every Real Estate Calculator Tools · Software · Guides, homepage';

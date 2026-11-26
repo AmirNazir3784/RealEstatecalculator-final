@@ -1,0 +1,26 @@
+---
+import Navigation from './Navigation.astro';
+
+export interface Props {
+  base: string;
+  currentNav?: 'crm' | 'resources' | 'about' | 'contact' | '';
+}
+
+const { base, currentNav = '' } = Astro.props;
+---
+
+<a class="skip-link" href="#main">Skip to content</a>
+<header class="header">
+  <div class="wrap head-inner">
+    <a class="brand" href={base} aria-label="Every Real Estate Calculator Tools · Software · Guides, homepage">
+      <span class="brand-mark" aria-hidden="true"><img src={`${base}assets/logo.png`} alt="" width="192" height="189" /></span>
+      <span class="brand-name"><span data-brand-name>Every Real Estate Calculator</span> <em>Tools · Software · Guides</em></span>
+    </a>
+    <Navigation base={base} currentNav={currentNav} />
+    <div class="nav-buttons">
+      <a class="btn btn-primary btn-small" href={`${base}real-estate-crm/`} data-crm-link="login">Sign in to RealtorCRM <span aria-hidden="true">↗</span></a>
+    </div>
+    <button class="menu-toggle" type="button" aria-controls="site-menu" aria-expanded="false" aria-label="Open navigation"><span aria-hidden="true">☰</span></button>
+  </div>
+</header>
+<div class="tools-menu-overlay" id="tools-menu-overlay" hidden aria-hidden="true"></div>

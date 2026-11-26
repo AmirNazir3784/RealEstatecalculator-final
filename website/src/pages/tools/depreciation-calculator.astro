@@ -1,0 +1,61 @@
+---
+import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
+---
+
+<CalculatorLayout
+  title="Depreciation Calculator | Every Real Estate Calculator"
+  description="Free real estate depreciation calculator: work out the yearly MACRS deduction on a rental property over 27.5 or 39 years, with the mid-month first year and a full schedule."
+  canonical="https://everyrealestatecalculator.com/tools/depreciation-calculator/"
+  stickyLabel="Depreciation / yr"
+  stickyId="sticky-value"
+  stickyValue="$10,182"
+>
+<section class="page-hero"><div class="wrap"><p>Work out the yearly tax depreciation on a rental property — the depreciable basis, the part first year under the mid-month convention, and the full schedule to the final year.</p></div><div class="wrap"><div class="calculator-layout"><div class="calc-left"><section class="panel" aria-labelledby="calc-heading"><div class="panel-head"><div><h1 id="calc-heading">Depreciation Calculator</h1><p class="panel-sub">The yearly tax deduction for a rental property, on the IRS MACRS schedule.</p></div></div>
+<form id="calc-form" novalidate>
+<div class="seg-control" role="group" aria-label="Property type"><button type="button" class="seg-btn is-active" data-years="27.5" data-kind="Residential rental">Residential · 27.5 yrs</button><button type="button" class="seg-btn" data-years="39" data-kind="Commercial">Commercial · 39 yrs</button></div>
+<fieldset class="form-group"><legend>Property &amp; basis</legend><div class="form-grid">
+<div class="form-field"><label for="property-price">Purchase price</label><span class="input-unit"><span class="unit-affix">$</span><input class="field" id="property-price" type="number" min="0" step="1000" value="350000"></span><small class="field-helper">What you paid for the property.</small></div>
+<div class="form-field"><label for="land-value">Land value</label><span class="input-unit"><span class="unit-affix">$</span><input class="field" id="land-value" type="number" min="0" step="1000" value="70000"></span><small class="field-helper">Land never depreciates — it is excluded.</small></div>
+<div class="form-field"><label for="improvements-cost">Improvements at purchase</label><span class="input-unit"><span class="unit-affix">$</span><input class="field" id="improvements-cost" type="number" min="0" step="500" value="0"></span><small class="field-helper">Capital work included in the basis.</small></div>
+</div></fieldset>
+<fieldset class="form-group"><legend>Timing &amp; taxes</legend><div class="form-grid">
+<div class="form-field"><label for="service-month">Month placed in service</label><span class="input-unit"><select class="field" id="service-month"><option value="1" selected>January</option><option value="2">February</option><option value="3">March</option><option value="4">April</option><option value="5">May</option><option value="6">June</option><option value="7">July</option><option value="8">August</option><option value="9">September</option><option value="10">October</option><option value="11">November</option><option value="12">December</option></select></span><small class="field-helper">When the rental activity began.</small></div>
+<div class="form-field"><label for="service-year">Year placed in service</label><span class="input-unit"><input class="field" id="service-year" type="number" min="1980" max="2100" step="1" value="2025"></span><small class="field-helper">The first tax year of the schedule.</small></div>
+<div class="form-field"><label for="tax-rate">Marginal tax rate</label><span class="input-unit"><input class="field" id="tax-rate" type="number" min="0" max="60" step="1" value="22"><span class="unit-affix">%</span></span><small class="field-helper">Your bracket, for the tax-saving tile.</small></div>
+</div></fieldset>
+</form></section></div>
+<aside class="result" id="result-card" aria-label="Your depreciation result">
+<p class="result-label">Annual depreciation</p>
+<p class="result-number" id="dep-value">—</p>
+<p class="yield-verdict" id="dep-verdict">—</p>
+<p class="result-group">Where the money goes</p>
+<div class="breakdown-track"><div class="seg seg-blue" id="seg-building"></div><div class="seg seg-gold" id="seg-improve"></div><div class="seg seg-teal" id="seg-land"></div></div>
+<div class="result-row"><span><i class="dot dot-teal" aria-hidden="true"></i>Depreciable basis</span><b id="row-basis">—</b></div>
+<div class="result-row"><span><i class="dot dot-navy" aria-hidden="true"></i>Land — never depreciated</span><b id="row-land">—</b></div>
+<div class="result-row"><span id="row-first-label">First-year deduction</span><b id="row-first">—</b></div>
+<p class="result-group">In cash terms</p>
+<div class="result-tiles"><div class="result-tile"><span>Annual tax savings</span><b id="tile-tax">—</b></div><div class="result-tile"><span>Monthly deduction</span><b id="tile-monthly">—</b></div></div>
+<div class="copy-row"><button class="tool-btn tool-btn-primary" id="copy-results" type="button">Copy results</button><a class="tool-btn tool-btn-outline" href="../../tools/capital-gains-tax-calculator/">Capital gains tax</a></div>
+</aside>
+</div>
+<div class="dep-years-panel is-collapsed"><h2>Depreciation schedule</h2><p class="dep-years-sub" id="dep-schedule-sub">Straight-line over 27.5 years with the mid-month convention — the first and last years are part-years; every year between is a full year.</p><div class="dep-table-wrap" tabindex="0"><table class="dep-table"><thead><tr><th>Tax year</th><th>Depreciation</th><th>Accumulated</th><th>Remaining basis</th></tr></thead><tbody id="schedule-body"></tbody></table></div><div class="schedule-toggle"><button type="button" class="tool-btn tool-btn-outline" id="schedule-toggle-btn">Show full schedule</button></div></div>
+</div></section>
+<section class="section"><div class="wrap content">
+<h2>What is depreciation in real estate?</h2>
+<p>The IRS treats a rental building as wearing out over time, so each year you deduct a slice of what the building cost you — even in years when the property is actually going up in value. That deduction shelters rental income from tax, which is why depreciation is often called the investor's favorite line on the return: a real tax saving with no cash leaving your account.</p>
+<p>Only the building depreciates. Land is treated as permanent, so the land's share of the price comes out of the calculation first; what remains — plus capital improvements included at purchase — is your <strong>depreciable basis</strong>. Residential rentals are written off straight-line over <strong>27.5 years</strong>; commercial property over <strong>39 years</strong>, under the MACRS system.</p>
+<h2>How the schedule works</h2>
+<div class="timeline-box"><p class="timeline-title">From purchase to the final year</p><div class="timeline-steps"><div class="timeline-step"><span class="step-badge">1st</span><div class="step-body"><p class="step-when">Placed in service — a part year</p><p class="step-formula">first-year deduction = full year × (months left in the year ÷ 12), with the first month counted as half (the mid-month convention)</p></div></div><div class="timeline-step"><span class="step-badge">Full</span><div class="step-body"><p class="step-when">Each full year</p><p class="step-formula">depreciable basis ÷ 27.5 for residential rentals — or ÷ 39 for commercial property</p></div></div><div class="timeline-step"><span class="step-badge step-badge-final">Last</span><div class="step-body"><p class="step-when">The final year — the remainder</p><p class="step-formula">whatever basis is left, so the schedule always adds up to your basis exactly</p></div></div></div><p class="timeline-result">Land never appears in the schedule — only the building and capital improvements are depreciated.</p></div>
+<h2>Worked example</h2>
+<p>Buy a rental for $350,000 with the land worth $70,000 and no improvements at purchase, placed in service in January 2025. The depreciable basis is $280,000, so a full year of depreciation is $280,000 ÷ 27.5 = <strong>$10,182</strong>. The first year is a part year under the mid-month convention — 11.5 of 12 months — giving $9,758 for 2025. The schedule then runs a full $10,182 a year and closes in 2052 with a final part year of $5,515: 28 tax years in total, adding up to exactly $280,000. After ten tax years you have claimed $101,394, leaving $178,606 of basis still to deduct. At a 22% marginal rate, each full year's deduction saves about $2,240 in tax.</p>
+<h2>When you sell: depreciation recapture</h2>
+<p>Depreciation is a deferral, not a gift. When you sell, the depreciation you claimed (or were entitled to claim) reduces your basis, and the part of the gain attributable to it can be taxed as unrecaptured section 1250 gain at up to 25%. The longer you hold and the more you claim, the bigger that line — model the sale with the <a href="../../tools/capital-gains-tax-calculator/">capital gains tax calculator</a> before you decide when to exit.</p>
+<h2>Frequently asked questions</h2>
+<details class="faq"><summary>Does land depreciate?</summary><p>No. Land is considered permanent, so its value is always excluded from the depreciable basis. Only the building — and capital improvements to it — can be depreciated. Splitting the price between land and building honestly matters: overstating the building's share inflates deductions the IRS can unwind.</p></details>
+<details class="faq"><summary>Which recovery period applies — 27.5 or 39 years?</summary><p>Residential rental property (buildings where at least 80% of the rent comes from dwelling units) uses 27.5 years. Nonresidential commercial property uses 39 years. Both are straight-line under MACRS, with the mid-month convention in the first and last years.</p></details>
+<details class="faq"><summary>What is the mid-month convention?</summary><p>The IRS treats property as placed in service in the middle of its first month, whatever day it actually started. A January start therefore earns 11.5 months of depreciation in year one, and a December start only half a month — with the balance collected in a short final year at the end of the schedule.</p></details>
+<details class="faq"><summary>I converted my home into a rental — what is my basis?</summary><p>Generally the lower of what the property cost you (plus improvements) and its fair market value on the day it was converted. From that figure you still subtract the land's share before dividing by 27.5. The conversion date is your placed-in-service date.</p></details>
+<details class="faq"><summary>Do renovations get depreciated too?</summary><p>Capital improvements — a new roof, an extension, a replaced HVAC system — are added to the basis and depreciated over their own 27.5 or 39-year schedule from the month they are placed in service. Ordinary repairs and maintenance are not capitalised; they are expensed in the year you pay for them.</p></details>
+</div></section>
+<section class="section"><div class="wrap"><h2>Related calculators</h2><div class="related-cards"><a class="related-card" href="../../tools/capital-gains-tax-calculator/"><h3>Capital Gains Tax Calculator</h3><p>What the sale gives back — including depreciation recapture.</p><span class="open">Open calculator ↗</span></a><a class="related-card" href="../../tools/irr-calculator/"><h3>IRR Calculator</h3><p>The whole-hold annualised return, year by year to the sale.</p><span class="open">Open calculator ↗</span></a><a class="related-card" href="../../tools/property-investment-calculator/"><h3>Property Investment Calculator</h3><p>One rental year in depth: cash flow, cash-on-cash and DSCR.</p><span class="open">Open calculator ↗</span></a></div></div></section>
+</CalculatorLayout>

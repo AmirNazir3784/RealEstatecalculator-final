@@ -2,7 +2,7 @@
 // script before editing; its recorded output is checked against literal answers.
 const fs = require('node:fs'), path = require('node:path'), vm = require('node:vm');
 const assert = require('node:assert/strict');
-const root = path.resolve(__dirname, '..');
+const root = (fs.existsSync(path.resolve(__dirname, '..', 'dist', 'index.html')) ? path.resolve(__dirname, '..', 'dist') : path.resolve(__dirname, '..'));
 let assertions = 0;
 const eq = (actual, expected, label) => { assert.equal(actual, expected, label); assertions++; };
 function calculator(sourceRoot = root) {

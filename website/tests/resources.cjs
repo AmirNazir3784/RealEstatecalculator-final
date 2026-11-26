@@ -1,5 +1,5 @@
 const fs = require('node:fs'), path = require('node:path'), vm = require('node:vm'), assert = require('node:assert/strict');
-const root = path.resolve(__dirname, '..');
+const root = (fs.existsSync(path.resolve(__dirname, '..', 'dist', 'index.html')) ? path.resolve(__dirname, '..', 'dist') : path.resolve(__dirname, '..'));
 const read = file => fs.readFileSync(path.join(root, file), 'utf8');
 const html = read('resources/index.html');
 // The three guides now live on standalone article pages; the worked examples

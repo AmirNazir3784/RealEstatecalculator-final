@@ -4,7 +4,7 @@ const fs = require('node:fs');
 const path = require('node:path');
 const vm = require('node:vm');
 const assert = require('node:assert/strict');
-const root = path.resolve(__dirname, '..');
+const root = (fs.existsSync(path.resolve(__dirname, '..', 'dist', 'index.html')) ? path.resolve(__dirname, '..', 'dist') : path.resolve(__dirname, '..'));
 const read = name => fs.readFileSync(path.join(root, name), 'utf8');
 const registryContext = { window: {} };
 vm.runInNewContext(read('assets/tool-registry.js'), registryContext);

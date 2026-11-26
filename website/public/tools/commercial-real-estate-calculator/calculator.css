@@ -1,0 +1,172 @@
+/* Rental Yield: shares the Cap Rate page system — tools.css plus the mortgage-template block below. */
+
+/* Mortgage-template redesign (2026-11-24): this page adopts the Mortgage
+   Calculator's light-card system — white result card, navy ink, one brand
+   palette for the breakdown bar, compact hero, richer article type. The
+   calculator engine and markup are unchanged. */
+.calc-page .page-hero { padding: 10px 0 16px; }
+.calc-page .page-hero h1 { margin: 0 0 4px; }
+.calculator-layout .result { background: #fff; color: #243442; border: 1px solid var(--line); border-radius: 20px; box-shadow: 0 16px 40px rgba(16, 33, 49, .09); padding: 16px 22px 14px; }
+.calculator-layout .result .result-number { color: var(--navy); font-family: var(--font-display); }
+.calculator-layout .result .result-label, .calculator-layout .result small { color: #5E6C79; }
+.calculator-layout .result .result-group { color: var(--teal-dark); border-top-color: var(--line); }
+.calculator-layout .result-row { border-top-color: var(--line); }
+.calculator-layout .result-row span { color: #475569; }
+.calculator-layout .result-row b { color: var(--navy); }
+.calculator-layout .result .muted, .calculator-layout .result .copy-note { color: #5E6C79; }
+.calculator-layout .result .result-hero-sub { color: #475569; }
+.calculator-layout .result .result-hero-sub b { color: var(--navy); }
+.calculator-layout .result .result-empty { color: #5E6C79; }
+.calculator-layout .result .result-assumption { color: #475569; }
+.calculator-layout .result .disclaimer { color: #5E6C79; }
+.calculator-layout .result .hidden-row-note { color: #5E6C79; }
+.calculator-layout .result .result-formula { color: #475569; }
+.calculator-layout .result-tile { background: #F7F5EF; border-color: var(--line); }
+.calculator-layout .result-tile > span { color: #5E6C79; }
+.calculator-layout .result-tile > b { color: var(--navy); }
+.calculator-layout .result-tile > small { color: #5E6C79; }
+.calculator-layout .result table td { color: #243442; }
+.calculator-layout .result table th { color: var(--navy); }
+.calculator-layout .breakdown-track { background: #EDEBE4; height: 10px; }
+.calculator-layout .breakdown-legend { background: #F7F5EF; color: #475569; }
+.calculator-layout .breakdown-legend b { color: var(--navy); }
+.calculator-layout .seg-blue { background: var(--teal); }
+.calculator-layout .seg-teal { background: var(--navy); }
+.calculator-layout .seg-gold { background: var(--gold); }
+.calculator-layout .seg-gray { background: #CBD5E1; }
+.calculator-layout .seg-coral { background: #D97706; }
+.calculator-layout .rent-bar-row span { color: #475569; }
+.calculator-layout .rent-bar-row b { color: var(--navy); }
+.calculator-layout .result .tool-btn-primary { background: var(--teal); border-color: var(--teal); color: #fff; }
+.calculator-layout .result .tool-btn-primary:hover { background: var(--teal-dark); border-color: var(--teal-dark); }
+.calculator-layout .result .btn-outline, .calculator-layout .result .tool-btn-outline { background: #fff; border-color: #CEDADA; color: var(--navy); }
+.calculator-layout .result .btn-outline:hover, .calculator-layout .result .tool-btn-outline:hover { background: #F7F5EF; border-color: #CEDADA; color: var(--navy); }
+@media (max-width: 760px) { .calculator-layout .result { padding: 16px; } }
+.calc-page .content > p { color: #2A3947; font-size: 17px; line-height: 1.75; }
+.calc-page .content > ul { color: #2A3947; font-size: 17px; line-height: 1.75; }
+.calc-page .content > p, .calc-page .content > ul { max-width: none; }
+.calc-page .content strong { color: var(--navy); }
+.calc-page .content > h3 { color: var(--navy); font-size: 20px; }
+.calc-page .faq p { color: #2A3947; font-size: 16px; line-height: 1.7; max-width: none; }
+
+/* Hero + width alignment (2026-11-24): match the Mortgage page — no divider
+   line under the heading, the intro paragraph hidden so the form sits right
+   under the H1 near the navbar, and every wrap on the page shares the
+   calculator's 1120px column so the heading, form, result and article all
+   align with clear space at the sides. */
+.calc-page .page-hero { border-bottom: 0; }
+.calc-page .page-hero > .wrap > p { display: none; }
+@media (min-width: 961px) { .calc-page .wrap { width: min(calc(100% - 96px), 1120px); } }
+
+/* Rental Yield extras: the verdict line under the headline number and the
+   legend markers for the rent-split bar. */
+.calculator-layout .result .yield-verdict { color: var(--teal-dark); font-weight: 700; font-size: 17px; margin: 2px 0 6px; }
+.calculator-layout .breakdown-legend li { display: flex; justify-content: space-between; gap: 12px; }
+
+/* Legend rows: one clean row per segment, label left and value right (the
+   shared grid legend wrapped untidily at card width). */
+.calculator-layout .breakdown-legend { display: flex; flex-direction: column; gap: 6px; }
+.calculator-layout .breakdown-legend li { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; }
+.calculator-layout .breakdown-legend li span { white-space: nowrap; }
+
+/* Balanced card (2026-11-24): the legend list, the duplicate gross-yield
+   tile and the full-width rent rows are gone from the markup; here the hero
+   sits closer to the navbar and the card's spacing tightens so the result
+   column ends level with the form. */
+.calc-page .page-hero { padding-top: 4px; }
+.calculator-layout .result .result-group { margin-top: 16px; padding-top: 12px; }
+.calculator-layout .result .result-number { margin-bottom: 12px; }
+.calculator-layout .result-row { padding-top: 6px; padding-bottom: 6px; }
+.calculator-layout .result-tile { padding: 10px 12px; }
+.calculator-layout .copy-row { margin-top: 12px; }
+.calculator-layout .copy-row .tool-btn { flex: 1; text-align: center; }
+
+/* Three-across form (2026-11-24): the nine fields regrouped 3-3-3 with
+   shortened labels (the $ / % / per-year units live in the field affixes),
+   so the whole form fits the first screen on desktop. Two columns return
+   below 1100px, one column on mobile as before. */
+@media (min-width: 1100px) {
+  .calculator-layout .form-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; }
+}
+.calculator-layout .form-field input { padding-top: 10px; padding-bottom: 10px; }
+
+
+/* First-screen fit (2026-11-24): no stretching — the form keeps its
+   natural compact height and the result card is put on a diet (smaller
+   headline number, tighter groups and rows) so the whole calculator
+   fits the first screen. The disclaimer moves out of the card, below
+   the calculator. */
+.calculator-layout .result .result-number { font-size: 38px; margin-bottom: 8px; }
+.calculator-layout .result .result-group { margin-top: 12px; padding-top: 10px; }
+.calculator-layout .result-row { padding-top: 5px; padding-bottom: 5px; }
+.calculator-layout .copy-note { margin-top: 4px; }
+
+/* First-screen fit v2 (2026-11-24): sized for a real browser window
+   (page area ~744px tall on a 1080p screen at 125% scaling, after the
+   tab and bookmarks bars) — slightly smaller heading, inputs, helpers
+   and card spacing so nothing is cut off. */
+.calc-page .page-hero h1 { font-size: clamp(30px, 3.4vw, 38px); }
+.calculator-layout .form-field input { padding-top: 8px; padding-bottom: 8px; }
+.calculator-layout .field-helper { font-size: 12.5px; margin-top: 4px; }
+.calculator-layout .form-grid { gap: 12px; }
+.calculator-layout .result .result-number { font-size: 36px; }
+.calculator-layout .result .result-group { margin-top: 10px; padding-top: 8px; }
+.calculator-layout .result-row { padding-top: 4px; padding-bottom: 4px; }
+.calculator-layout .result-tile { padding: 8px 12px; }
+.calculator-layout .copy-row { margin-top: 10px; }
+.calculator-layout .panel { padding-top: 20px; padding-bottom: 20px; }
+.calculator-layout .form-field input { padding-top: 7px; padding-bottom: 7px; }
+.calculator-layout .field-helper { line-height: 1.35; }
+
+/* Height-aware tiers (2026-11-24): the page compresses itself to match
+   the window's height, so the whole calculator stays on the first screen
+   even when browser bars or display scaling shrink the usable area. */
+@media (min-width: 1100px) and (max-height: 820px) {
+  .calc-page .page-hero { padding-top: 0; }
+  .calculator-layout .field-helper { display: none; }
+  .calc-page .page-hero h1 { font-size: 32px; }
+  .calculator-layout .panel { padding-top: 16px; padding-bottom: 16px; }
+  .calculator-layout .form-field input { padding-top: 6px; padding-bottom: 6px; }
+  .calculator-layout .field-helper { font-size: 12px; }
+  .calculator-layout .form-grid { gap: 10px; }
+  .calculator-layout .result .result-number { font-size: 32px; }
+  .calculator-layout .result .result-group { margin-top: 8px; padding-top: 6px; }
+  .calculator-layout .result-row { padding-top: 3px; padding-bottom: 3px; }
+  .calculator-layout .result-tile { padding: 6px 10px; }
+  .calculator-layout .copy-row { margin-top: 8px; }
+}
+@media (min-width: 1100px) and (max-height: 720px) {
+  .calc-page .page-hero h1 { font-size: 28px; }
+  .calculator-layout .panel { padding-top: 14px; padding-bottom: 14px; }
+  .calculator-layout .field-helper { display: none; }
+  .calculator-layout .form-field input { padding-top: 5px; padding-bottom: 5px; }
+  .calculator-layout .result { padding-top: 16px; padding-bottom: 16px; }
+  .calculator-layout .result .result-number { font-size: 28px; margin-bottom: 4px; }
+  .calculator-layout .yield-verdict { font-size: 15px; margin: 4px 0 6px; }
+  .calculator-layout .result-tiles { margin-top: 2px; }
+  .calculator-layout .result-row { padding-top: 2px; padding-bottom: 2px; }
+  .calculator-layout .result-tile { padding: 5px 10px; }
+}
+
+/* How-to-use fills the left column (2026-11-24): the note sits under the
+   form inside a left-column wrapper, so the two columns end level; the
+   standalone disclaimer line under the calculator is removed. */
+.calculator-layout .calc-left { display: flex; flex-direction: column; gap: 16px; min-width: 0; }
+.calculator-layout .calc-left > .panel { border-radius: 16px; }
+.calculator-layout .calc-left .note { margin: 0; }
+
+.calculator-layout .calc-left .note { padding: 12px 16px; font-size: 15px; }
+@media (min-width: 1100px) and (max-height: 720px) {
+  .calculator-layout .calc-left { gap: 10px; }
+}
+
+/* Commercial fit (2026-11-24): twelve fields make this form one row
+   taller than Rental Yield's, so the short-window tiers trim a little
+   more — the panel intro line drops and spacing tightens — to keep the
+   whole calculator on the first screen with the columns level. */
+@media (min-width: 1100px) and (max-height: 820px) {
+  .calculator-layout .panel-sub { display: none; }
+  .calculator-layout .calc-left .note { padding: 10px 14px; font-size: 14.5px; }
+  .calculator-layout .form-field input { padding-top: 5px; padding-bottom: 5px; }
+  .calculator-layout .form-group legend { margin-bottom: 6px; }
+}
