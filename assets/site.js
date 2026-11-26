@@ -28,7 +28,34 @@
     toggle.addEventListener('click', function () {
       var open = nav.classList.toggle('is-open');
       toggle.setAttribute('aria-expanded', String(open));
+      toggle.setAttribute('aria-label', open ? 'Close navigation' : 'Open navigation');
+      toggle.innerHTML = open ? '<span aria-hidden="true">×</span>' : '<span aria-hidden="true">☰</span>';
       if (!open) setTools(false);
+    });
+    nav.addEventListener('click', function (event) {
+      var link = event.target.closest && event.target.closest('a');
+      if (!link) return;
+      nav.classList.remove('is-open');
+      toggle.setAttribute('aria-expanded', 'false');
+      toggle.setAttribute('aria-label', 'Open navigation');
+      toggle.innerHTML = '<span aria-hidden="true">☰</span>';
+      setTools(false);
+    });
+    document.addEventListener('click', function (event) {
+      if (!nav.classList.contains || !nav.classList.contains('is-open')) return;
+      // Use the event's composed path: the toggle handler swaps the button's
+      // innerHTML, which detaches the tapped glyph before this handler runs,
+      // so contains(event.target) alone would misread a tap on the button as
+      // an outside click and close the menu the same tap just opened.
+      var path = typeof event.composedPath === 'function' ? event.composedPath() : null;
+      var inside = path ? (path.indexOf(nav) !== -1 || path.indexOf(toggle) !== -1)
+                        : (nav.contains(event.target) || toggle.contains(event.target));
+      if (inside) return;
+      nav.classList.remove('is-open');
+      toggle.setAttribute('aria-expanded', 'false');
+      toggle.setAttribute('aria-label', 'Open navigation');
+      toggle.innerHTML = '<span aria-hidden="true">☰</span>';
+      setTools(false);
     });
   }
   if (ready) {
@@ -64,7 +91,14 @@
     // overlay behind a now-hidden mobile navigation.
     if (typeof window.matchMedia === 'function') {
       var mobile = window.matchMedia('(max-width: 760px)');
-      if (mobile.addEventListener) mobile.addEventListener('change', function () { setTools(false); });
+      if (mobile.addEventListener) mobile.addEventListener('change', function () {
+        setTools(false);
+        if (!mobile.matches && toggle && nav) {
+          nav.classList.remove('is-open');
+          toggle.setAttribute('aria-expanded', 'false');
+          toggle.setAttribute('aria-label', 'Open navigation');
+        }
+      });
     }
   }
   document.addEventListener('keydown', function (event) {

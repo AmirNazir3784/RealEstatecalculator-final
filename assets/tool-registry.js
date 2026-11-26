@@ -22,6 +22,16 @@ window.realEstateTools = Object.freeze([
     icon: '$'
   }),
   Object.freeze({
+    slug: 'down-payment-calculator',
+    title: 'Down Payment Calculator',
+    category: 'Finance & numbers',
+    description: 'Calculate your down payment, total cash to close and monthly PMI at 3%, 3.5%, 5%, 10%, 15% and 20% down. See how long each tier takes to save. Free, no sign-up.',
+    keywords: 'how much down payment cash to close pmi first time buyer save for a house',
+    status: 'published',
+    publicUrl: 'down-payment-calculator/',
+    icon: '↓'
+  }),
+  Object.freeze({
     slug: 'home-affordability-calculator',
     title: 'Home Affordability Calculator',
     category: 'Finance & numbers',
@@ -50,6 +60,56 @@ window.realEstateTools = Object.freeze([
     status: 'published',
     publicUrl: 'cap-rate-calculator/',
     icon: '÷'
+  }),
+  Object.freeze({
+    slug: 'rental-yield-calculator',
+    title: 'Rental Yield Calculator',
+    category: 'Finance & numbers',
+    description: 'Work out a rental property\'s gross and net yield from its price, rent, vacancy and running costs — plus the rent needed for your target yield.',
+    keywords: 'rental yield gross yield net yield rental return landlord',
+    status: 'published',
+    publicUrl: 'rental-yield-calculator/',
+    icon: '◉'
+  }),
+  Object.freeze({
+    slug: 'commercial-real-estate-calculator',
+    title: 'Commercial Real Estate Calculator',
+    category: 'Finance & numbers',
+    description: 'Underwrite a commercial property purchase like a lender: NOI, cap rate, DSCR, cash flow and the balloon payment due at the end of the term.',
+    keywords: 'commercial real estate commercial loan dscr balloon cash-on-cash',
+    status: 'published',
+    publicUrl: 'commercial-real-estate-calculator/',
+    icon: '▦'
+  }),
+  Object.freeze({
+    slug: 'irr-calculator',
+    title: 'IRR Calculator',
+    category: 'Finance & numbers',
+    description: 'Solve the internal rate of return on a rental property — yearly cash flow, appreciation and the final sale combined into one true annualized return.',
+    keywords: 'irr internal rate of return annualized return investment return',
+    status: 'published',
+    publicUrl: 'irr-calculator/',
+    icon: '↗'
+  }),
+  Object.freeze({
+    slug: 'depreciation-calculator',
+    title: 'Depreciation Calculator',
+    category: 'Finance & numbers',
+    description: 'Work out the yearly tax depreciation on a rental property: the depreciable basis after land, the mid-month first year and the full 27.5 or 39-year schedule.',
+    keywords: 'depreciation macrs rental property tax deduction basis schedule',
+    status: 'published',
+    publicUrl: 'depreciation-calculator/',
+    icon: '↘'
+  }),
+  Object.freeze({
+    slug: 'wholesale-calculator',
+    title: 'Wholesale Calculator',
+    category: 'Finance & numbers',
+    description: 'Work out the maximum allowable offer on a wholesale deal: the after repair value at the investor discount, minus repairs, closing costs and your fee.',
+    keywords: 'wholesale wholesaling mao maximum allowable offer 70% rule arv assignment fee',
+    status: 'published',
+    publicUrl: 'wholesale-calculator/',
+    icon: '⇌'
   }),
   Object.freeze({
     slug: 'bridge-loan-calculator',
