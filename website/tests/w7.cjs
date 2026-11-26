@@ -8,7 +8,7 @@
 // placeholders are untouched, and no legal page is published yet.
 const fs = require('node:fs');
 const path = require('node:path');
-const ROOT = (fs.existsSync(path.resolve(__dirname, '..', 'dist', 'index.html')) ? path.resolve(__dirname, '..', 'dist') : path.resolve(__dirname, '..'));
+const ROOT = (() => { const dist = path.resolve(__dirname, '..', 'dist'); if (!fs.existsSync(path.join(dist, 'index.html'))) { console.error('website/dist not found. Run "npm --prefix website run build" first (tests run against the Astro build output).'); process.exit(1); } return dist; })();
 let passed = 0; const failures = [];
 function check(name, cond) { if (cond) { passed++; } else { failures.push(name); } }
 function read(rel) { return fs.readFileSync(path.join(ROOT, rel), 'utf8'); }

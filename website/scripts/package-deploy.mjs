@@ -33,7 +33,13 @@ import { fileURLToPath } from 'node:url';
 
 const websiteRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const distRoot = path.join(websiteRoot, 'dist');
-const root = fs.existsSync(path.join(distRoot, 'index.html')) ? distRoot : websiteRoot;
+// Packaging always uses the Astro build output. Fail loudly rather than
+// silently packaging the source tree (which also holds src/ and public/).
+if (!fs.existsSync(path.join(distRoot, 'index.html'))) {
+  console.error('website/dist not found. Run "npm --prefix website run build" first (the Astro build output is what gets packaged).');
+  process.exit(1);
+}
+const root = distRoot;
 // The CRM subdomain owns this directory on the shared host. Fail rather
 // than silently exclude a reintroduced marketing folder or app copy.
 if (fs.existsSync(path.join(root, 'realtorcrm')) || fs.existsSync(path.join(root, 'realtoros'))) {

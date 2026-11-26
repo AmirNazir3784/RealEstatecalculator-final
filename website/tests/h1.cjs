@@ -1,5 +1,5 @@
 const fs = require('node:fs'), path = require('node:path'), vm = require('node:vm'), assert = require('node:assert/strict');
-const root = (fs.existsSync(path.resolve(__dirname, '..', 'dist', 'index.html')) ? path.resolve(__dirname, '..', 'dist') : path.resolve(__dirname, '..'));
+const root = (() => { const dist = path.resolve(__dirname, '..', 'dist'); if (!fs.existsSync(path.join(dist, 'index.html'))) { console.error('website/dist not found. Run "npm --prefix website run build" first (tests run against the Astro build output).'); process.exit(1); } return dist; })();
 const read = f => fs.readFileSync(path.join(root, f), 'utf8');
 const html = read('index.html'), css = read('assets/home.css');
 const ctx = { window: {} }; vm.runInNewContext(read('assets/tool-registry.js'), ctx);

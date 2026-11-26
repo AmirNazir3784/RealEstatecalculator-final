@@ -5,7 +5,7 @@
 // card metadata, the calculator directory is intact, and the shared
 // stylesheet lives in assets/. Dependency-free. Run: node website/tests/w9-resources.cjs
 const fs = require('node:fs'), path = require('node:path'), assert = require('node:assert/strict');
-const root = (fs.existsSync(path.resolve(__dirname, '..', 'dist', 'index.html')) ? path.resolve(__dirname, '..', 'dist') : path.resolve(__dirname, '..'));
+const root = (() => { const dist = path.resolve(__dirname, '..', 'dist'); if (!fs.existsSync(path.join(dist, 'index.html'))) { console.error('website/dist not found. Run "npm --prefix website run build" first (tests run against the Astro build output).'); process.exit(1); } return dist; })();
 const read = file => fs.readFileSync(path.join(root, file), 'utf8');
 let passed = 0;
 function check(name, value) { assert(value, name); passed++; }

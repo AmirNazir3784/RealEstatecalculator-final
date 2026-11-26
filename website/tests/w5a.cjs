@@ -1,7 +1,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const assert = require('node:assert/strict');
-const root = (fs.existsSync(path.resolve(__dirname, '..', 'dist', 'index.html')) ? path.resolve(__dirname, '..', 'dist') : path.resolve(__dirname, '..'));
+const root = (() => { const dist = path.resolve(__dirname, '..', 'dist'); if (!fs.existsSync(path.join(dist, 'index.html'))) { console.error('website/dist not found. Run "npm --prefix website run build" first (tests run against the Astro build output).'); process.exit(1); } return dist; })();
 const pages = ['index.html', 'tools/index.html', 'real-estate-crm/index.html', 'about/index.html', 'resources/index.html', 'contact/index.html', 'tools/commission-calculator/index.html', 'tools/mortgage-calculator/index.html', 'tools/down-payment-calculator/index.html', 'tools/home-affordability-calculator/index.html', 'tools/rent-vs-buy-calculator/index.html', 'tools/cap-rate-calculator/index.html', 'tools/rental-yield-calculator/index.html', 'tools/commercial-real-estate-calculator/index.html', 'tools/irr-calculator/index.html', 'tools/depreciation-calculator/index.html', 'tools/wholesale-calculator/index.html', 'tools/bridge-loan-calculator/index.html', 'tools/property-investment-calculator/index.html', 'tools/capital-gains-tax-calculator/index.html', 'tools/roi-calculator/index.html', 'tools/noi-calculator/index.html'];
 const titles = new Set(), descriptions = new Set();
 for (const page of pages) {
