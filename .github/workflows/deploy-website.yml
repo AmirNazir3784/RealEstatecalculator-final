@@ -49,6 +49,11 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+      - name: Build the Astro site (suites and packaging use website/dist)
+        run: |
+          set -euo pipefail
+          npm --prefix website ci
+          npm --prefix website run build
       - name: Run the five website test suites
         run: |
           set -euo pipefail
