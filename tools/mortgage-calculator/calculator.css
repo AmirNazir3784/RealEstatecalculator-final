@@ -317,9 +317,6 @@
 @media (min-width: 961px) {
   .calc-page .wrap { width: min(calc(100% - 96px), 1120px); }
 }
-/* Full-width article text (2026-11-24): tools.css caps content paragraphs and lists at 74ch, which left the lines ending mid-column on this page. The owner's final content runs the full aligned column width instead; FAQ answers follow the same rule. */
-.calc-page .content > p, .calc-page .content > ul { max-width: none; }
-.calc-page .faq p { max-width: none; }
 /* Result polish (2026-11-24): navy joins the breakdown palette (tax segment + legend swatch) so the bar runs in one brand family — teal P&I, navy tax, gold insurance, grey HOA, amber PMI. The pale seg-blue inherited from the old navy card is no longer used on this page. */
 .mortgage-calc-layout .seg-navy { background: var(--navy); }
 /* Cash-to-close total row reads as the group's headline figure. */
@@ -334,7 +331,7 @@
   .summary-bar-inner { display: flex; align-items: center; gap: 30px; height: 52px; }
   .summary-bar-item { font-size: .92rem; color: #4B5B6B; }
   .summary-bar-item b { color: var(--navy); font-size: 1.06rem; margin-left: 6px; }
-  .summary-bar-note { margin-left: auto; font-size: .82rem; color: #7A8794; }
+  .summary-bar-note { margin-left: auto; font-size: .82rem; color: #5A6772; }
 }
 /* Content typography (2026-11-24): the shared content styles render this page's article in muted grey (#4B5B6B body, lighter still for lists), which reads dull on the cream background. Deepen the ink, open the size and leading, and let bold lead-ins carry the navy. Scoped to this page only. */
 .calc-page .content > p { color: #2A3947; font-size: 17px; line-height: 1.75; }
