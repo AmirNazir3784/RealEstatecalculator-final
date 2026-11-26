@@ -1,0 +1,104 @@
+---
+import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
+---
+
+<CalculatorLayout
+  title="Rental Yield Calculator | Every Real Estate Calculator"
+  description="Work out a rental property's gross and net yield from its price, rent, vacancy and running costs — plus the monthly rent needed to hit your target yield."
+  canonical="https://everyrealestatecalculator.com/tools/rental-yield-calculator/"
+  stickyLabel="Net yield"
+  stickyId="sticky-value"
+  stickyValue="—"
+>
+<section class="page-hero"><div class="wrap"><h1>Rental Yield Calculator</h1><p>How much does this property earn for its price? Enter the price, the rent and the running costs — we'll work out the gross yield, the net yield after expenses, and the rent you would need for the yield you want.</p></div>
+<div class="wrap calculator-layout">
+<div class="calc-left">
+<div class="panel">
+<h2>Enter your figures</h2>
+<p class="muted">Adjust the sample values below to calculate an estimate instantly.</p>
+<form id="rental-yield-form">
+<fieldset class="form-group"><legend>Property &amp; rent</legend><div class="form-grid">
+<div class="form-field"><label for="property-price">Property price</label><span class="input-unit"><span class="unit-affix" aria-hidden="true">$</span><input class="field" id="property-price" type="number" min="0" max="1000000000000" step="1000" value="300000"></span></div>
+<div class="form-field"><label for="monthly-rent">Monthly rent</label><span class="input-unit"><span class="unit-affix" aria-hidden="true">$</span><input class="field" id="monthly-rent" type="number" min="0" max="1000000000000" step="10" value="2500"><span class="unit-affix" aria-hidden="true">/ month</span></span></div>
+<div class="form-field"><label for="vacancy-rate">Vacancy rate</label><span class="input-unit"><input class="field" id="vacancy-rate" type="number" min="0" max="100" step="0.5" value="5"><span class="unit-affix" aria-hidden="true">%</span></span><small class="field-helper">Share of the year the property sits empty.</small></div>
+</div></fieldset>
+<fieldset class="form-group"><legend>Income &amp; expenses (per year)</legend><div class="form-grid">
+<div class="form-field"><label for="other-income">Other income</label><span class="input-unit"><span class="unit-affix" aria-hidden="true">$</span><input class="field" id="other-income" type="number" min="0" max="1000000000000" step="100" value="0"><span class="unit-affix" aria-hidden="true">/ year</span></span><small class="field-helper">Parking, laundry, storage, pet fees and similar.</small></div>
+<div class="form-field"><label for="property-tax">Property tax</label><span class="input-unit"><span class="unit-affix" aria-hidden="true">$</span><input class="field" id="property-tax" type="number" min="0" max="1000000000000" step="100" value="3000"><span class="unit-affix" aria-hidden="true">/ year</span></span></div>
+<div class="form-field"><label for="home-insurance">Insurance</label><span class="input-unit"><span class="unit-affix" aria-hidden="true">$</span><input class="field" id="home-insurance" type="number" min="0" max="1000000000000" step="100" value="1800"><span class="unit-affix" aria-hidden="true">/ year</span></span></div>
+<div class="form-field"><label for="maintenance-cost">Maintenance &amp; repairs</label><span class="input-unit"><span class="unit-affix" aria-hidden="true">$</span><input class="field" id="maintenance-cost" type="number" min="0" max="1000000000000" step="100" value="1500"><span class="unit-affix" aria-hidden="true">/ year</span></span><small class="field-helper">Repairs and upkeep.</small></div>
+<div class="form-field"><label for="management-rate">Management fee</label><span class="input-unit"><input class="field" id="management-rate" type="number" min="0" max="100" step="0.5" value="8"><span class="unit-affix" aria-hidden="true">%</span></span><small class="field-helper">Percent of effective income. Keep it even if you self-manage.</small></div>
+<div class="form-field"><label for="hoa-other">HOA &amp; other costs</label><span class="input-unit"><span class="unit-affix" aria-hidden="true">$</span><input class="field" id="hoa-other" type="number" min="0" max="1000000000000" step="100" value="0"><span class="unit-affix" aria-hidden="true">/ year</span></span></div>
+</div></fieldset>
+</form>
+<p class="validation-note" id="validation-note" role="alert"></p>
+</div>
+<div class="note"><strong>How to use:</strong> Enter the price and monthly rent for the quick gross yield, then add vacancy and expenses for the honest net yield — the rent needed for a 5%, 6% or 7% net yield updates as you type.</div>
+</div>
+<aside class="result" id="yield-results" aria-live="polite">
+<p class="result-label">Net rental yield</p>
+<p class="result-number" id="net-yield" aria-live="polite">—</p>
+<p class="yield-verdict" id="yield-verdict">—</p>
+<p class="result-hero-sub">Gross yield <b id="gross-yield">—</b> before expenses</p>
+<p class="result-empty" id="result-empty" hidden>Enter your details to see your estimate.</p>
+<div id="result-body">
+<p class="result-group">Where the rent goes</p>
+<div class="breakdown-track" role="img" aria-label="Annual rent split between net income, vacancy and operating expenses"><div class="seg-blue" id="seg-kept"></div><div class="seg-gray" id="seg-vacancy"></div><div class="seg-gold" id="seg-expenses"></div></div>
+<div class="result-row"><span>Annual rent (gross)</span><b id="annual-rent">—</b></div>
+<div class="result-row"><span>Vacancy loss</span><b id="vacancy-loss">—</b></div>
+<div class="result-row"><span>Operating expenses</span><b id="total-expenses">—</b></div>
+<div class="result-row result-row-total"><span>Net operating income</span><b id="row-noi">—</b></div>
+<div class="result-tiles">
+<div class="result-tile"><span>Monthly net income</span><b id="noi-monthly">—</b></div>
+<div class="result-tile"><span>Rent repays the price in</span><b id="payback">—</b></div>
+</div>
+<p class="result-group">Rent needed for a net yield of</p>
+<div class="result-tiles tiles-3">
+<div class="result-tile"><span>5% net</span><b id="rent-for-5">—</b></div>
+<div class="result-tile"><span>6% net</span><b id="rent-for-6">—</b></div>
+<div class="result-tile"><span>7% net</span><b id="rent-for-7">—</b></div>
+</div>
+</div>
+<div class="copy-row"><button class="tool-btn tool-btn-primary" id="copy-results" type="button">Copy results</button><a class="tool-btn tool-btn-outline" href="../cap-rate-calculator/">Cap rate calculator</a></div>
+<p class="copy-note" id="copy-note"></p>
+</aside>
+</div></section>
+<section class="section"><div class="wrap content">
+
+<h2>The rental yield formulas</h2><div class="formula-box">
+<p><strong>Gross yield (%) = Annual rent ÷ Property price × 100.</strong> <strong>Net yield (%) = Net operating income ÷ Property price × 100</strong>, where net operating income is the rent actually collected — after the vacancy allowance and any other income — minus the year's operating expenses: tax, insurance, maintenance, management and HOA costs. Neither yield includes a mortgage: yield measures the property against its price, not against your loan.</p>
+</div>
+<h2>Worked example</h2>
+<p>With the values already filled in — a $300,000 price and $2,500 monthly rent — the gross rent is $30,000 a year, so the <strong>gross yield is 10.00%</strong>. A 5% vacancy allowance removes $1,500, leaving effective income of $28,500. Operating expenses are $3,000 property tax, $1,800 insurance, $1,500 maintenance and a management fee of 8% of effective income ($2,280) — $8,580 in total. Net operating income is $28,500 − $8,580 = <strong>$19,920</strong>, so the <strong>net yield is 6.64%</strong>. The gap between 10.00% and 6.64% is the whole point of this page: the gross figure is the headline, the net figure is what the property actually earns.</p>
+<h2>Gross yield vs net yield</h2>
+<p><strong>Gross yield</strong> is the fast screen. It needs two numbers anyone can read off a listing — price and rent — which is why adverts and agents quote it, and why it is always the higher of the two. <strong>Net yield</strong> is the comparison number: two properties with the same gross yield can keep very different amounts once tax, insurance, vacancy and management come off, and the net figure is the one that survives contact with a real year of ownership. Use gross to shortlist, net to decide.</p>
+<h2>What is a good rental yield?</h2>
+<p>As a rough guide for residential property: a <strong>gross yield under 5%</strong> is weak for income and usually means the buyer is betting on price growth instead; <strong>5–8%</strong> is the typical middle; <strong>8–12%</strong> is strong; and anything far above that deserves a harder look rather than a celebration, because very high yields often price in rough areas, deferred maintenance or rent that will not be collected. Net yields land lower — roughly <strong>3–5% modest, 5–7% solid, above 7% strong</strong>. Expensive coastal markets often run 3–5% gross because prices carry an appreciation premium, while cash-flow markets in lower-priced cities run much higher. One widely cited benchmark (the Global Property Guide) puts the average US gross yield at about 6.7% — useful as a midpoint, not as a target for any specific street.</p>
+<h2>Rental yield vs cap rate</h2>
+<p>They are the same arithmetic wearing two names. <strong>Net yield = net operating income ÷ price</strong>, and <strong>cap rate = net operating income ÷ price</strong> — when the expense lists match, the two numbers are identical. The difference is habit, not maths: "rental yield" is the term most investors search for and the one used in the UK, Australia and much of the investment press, while "cap rate" is the term US professionals use, usually for comparing and valuing commercial property. Run both if you like — our <a href="../cap-rate-calculator/">Cap Rate Calculator</a> adds price sensitivity and implied value at a target rate.</p>
+<h2>Key takeaways</h2>
+<ul>
+<li>Gross yield is rent ÷ price; net yield subtracts vacancy and every running cost first — and is the number to compare properties by.</li>
+<li>Yield never includes the mortgage. It grades the property, not the loan you happen to buy it with.</li>
+<li>A very high yield is a question, not a trophy: it usually prices in risk, weak demand or costs you have not counted yet.</li>
+<li>The rent-needed table runs the formula backwards — it tells you the rent a property must achieve before you argue about the price.</li>
+</ul>
+<p>Next steps: see the income side alone in the <a href="../noi-calculator/">NOI Calculator</a>, test the full financed deal — cash flow, cash-on-cash and DSCR — in the <a href="../property-investment-calculator/">Property Investment Calculator</a>, and check what the loan would cost in the <a href="../mortgage-calculator/">Mortgage Calculator</a>.</p>
+<h2>Common mistakes</h2><ul><li><strong>Judging a property on gross yield alone.</strong> The gross figure ignores every cost of ownership. Two "10% gross" properties can net 4% and 7%.</li><li><strong>Assuming the property is always let.</strong> Even good rentals lose weeks to turnover and voids. Skipping the vacancy allowance flatters every deal by roughly the vacancy rate itself.</li><li><strong>Counting the mortgage in yield.</strong> The moment a loan payment enters the calculation it stops being yield and becomes a cash-flow figure — a different question, answered by the Property Investment Calculator.</li><li><strong>Setting the management fee to zero because you self-manage.</strong> Your time is a real cost, and the next buyer will price management in. Keeping a market fee makes yields comparable between properties.</li><li><strong>Forgetting the lumpy costs.</strong> Roofs, boilers and appliances do not arrive monthly, but they do arrive. A maintenance line that only covers call-outs understates the true cost of the yield you are quoting.</li></ul><h2>Frequently asked questions</h2>
+<details class="faq"><summary>How do you calculate rental yield?</summary><p>Gross yield is the annual rent divided by the property price, times 100. Net yield first subtracts the vacancy allowance and the year's operating expenses from the rent, then divides by the price the same way. This calculator returns both from the price, rent, vacancy and expense figures you enter.</p></details>
+<details class="faq"><summary>What is a good rental yield?</summary><p>For residential property, a gross yield of 5–8% is typical, 8–12% is strong, and below 5% the return is mostly a bet on price growth. Net yields run lower: 5–7% is solid. What counts as good depends heavily on the market — expensive cities yield less because prices carry an appreciation premium.</p></details>
+<details class="faq"><summary>Does rental yield include the mortgage?</summary><p>No. Yield compares the property's income with its price, before financing. That is deliberate: it lets you compare two properties fairly even if you would buy them with different loans. For the after-loan picture, use cash flow and cash-on-cash return instead.</p></details>
+<details class="faq"><summary>Is rental yield the same as cap rate?</summary><p>The net yield and the cap rate are the same calculation — net operating income divided by price — when both use the same expense list. The terms come from different traditions: rental yield is the investor and international term, cap rate the US professional one.</p></details>
+<details class="faq"><summary>Gross or net yield — which one matters?</summary><p>Gross yield is for screening a long list quickly, because it only needs price and rent. Net yield is for deciding, because it reflects what the property keeps after vacancy and running costs. Never compare one property's gross yield with another's net yield.</p></details>
+<details class="faq"><summary>Does a high yield mean a good investment?</summary><p>Not by itself. Yield says nothing about price growth, the local economy, the condition of the building or how reliable the rent is. A very high yield usually compensates for a real risk somewhere — find it before you buy.</p></details>
+
+</div></section>
+<section class="section"><div class="wrap content">
+<h2>Related calculators</h2>
+<div class="related-cards">
+<a class="related-card" href="../cap-rate-calculator/"><h3>Cap Rate Calculator</h3><p>The same income maths, with price sensitivity and implied value.</p><span class="open">Open calculator ↗</span></a>
+<a class="related-card" href="../noi-calculator/"><h3>NOI Calculator</h3><p>Operating income before mortgage and tax.</p><span class="open">Open calculator ↗</span></a>
+<a class="related-card" href="../property-investment-calculator/"><h3>Property Investment Calculator</h3><p>Monthly cash flow, return on cash, cap rate and DSCR.</p><span class="open">Open calculator ↗</span></a>
+</div>
+</div></section>
+</CalculatorLayout>

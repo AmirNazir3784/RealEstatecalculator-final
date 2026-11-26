@@ -1,5 +1,5 @@
 const fs = require('node:fs'), path = require('node:path'), vm = require('node:vm'), assert = require('node:assert/strict');
-const root = path.resolve(__dirname, '..');
+const root = (() => { const dist = path.resolve(__dirname, '..', 'dist'); if (!fs.existsSync(path.join(dist, 'index.html'))) { console.error('website/dist not found. Run "npm --prefix website run build" first (tests run against the Astro build output).'); process.exit(1); } return dist; })();
 const read = f => fs.readFileSync(path.join(root, f), 'utf8');
 const html = read('index.html'), css = read('assets/home.css');
 const ctx = { window: {} }; vm.runInNewContext(read('assets/tool-registry.js'), ctx);
@@ -93,7 +93,7 @@ assert.equal((faq.match(/<details>/g) || []).length, 4);
 assert.equal((faq.match(/<summary>/g) || []).length, 4);
 assert(faq.includes('excludes taxes'));
 assert(faq.includes('No account or signup is required'));
-for (const capability of ['Follow-ups', 'Contacts', 'Deals', 'Next steps']) assert(html.includes(`<dt>${capability}</dt>`));
+for (const capability of ['Follow-ups', 'Contacts', 'Deals', 'Next steps']) assert(html.includes(`<strong class="home-feature-title">${capability}</strong>`));
 const theme = read('assets/theme.css');
 assert(theme.includes("--font-body:'Inter'"));
 assert(theme.includes("--font-display:'Source Serif 4'"));

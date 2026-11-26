@@ -31,7 +31,15 @@ import vm from 'node:vm';
 import crypto from 'node:crypto';
 import { fileURLToPath } from 'node:url';
 
-const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const websiteRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const distRoot = path.join(websiteRoot, 'dist');
+// Packaging always uses the Astro build output. Fail loudly rather than
+// silently packaging the source tree (which also holds src/ and public/).
+if (!fs.existsSync(path.join(distRoot, 'index.html'))) {
+  console.error('website/dist not found. Run "npm --prefix website run build" first (the Astro build output is what gets packaged).');
+  process.exit(1);
+}
+const root = distRoot;
 // The CRM subdomain owns this directory on the shared host. Fail rather
 // than silently exclude a reintroduced marketing folder or app copy.
 if (fs.existsSync(path.join(root, 'realtorcrm')) || fs.existsSync(path.join(root, 'realtoros'))) {
@@ -42,7 +50,7 @@ if (!fs.existsSync(path.join(root, 'real-estate-crm', 'index.html'))) {
 }
 const args = process.argv.slice(2);
 const outFlag = args.indexOf('--out');
-const outDir = outFlag >= 0 ? path.resolve(args[outFlag + 1]) : path.join(root, 'dist-production');
+const outDir = outFlag >= 0 ? path.resolve(args[outFlag + 1]) : path.join(websiteRoot, 'dist-production');
 
 // Top-level directories that are development-only.
 const EXCLUDED_DIRS = new Set(['tests', 'reference', 'scripts', 'dist-production']);

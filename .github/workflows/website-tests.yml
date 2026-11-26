@@ -23,6 +23,12 @@ jobs:
         with:
           node-version: lts/*
 
+      - name: Build the Astro site (suites run against website/dist)
+        run: |
+          set -euo pipefail
+          npm --prefix website ci
+          npm --prefix website run build
+
       - name: h1 - headings and page structure
         run: node website/tests/h1.cjs
 
@@ -61,6 +67,12 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: lts/*
+
+      - name: Build the Astro site (packaging uses website/dist)
+        run: |
+          set -euo pipefail
+          npm --prefix website ci
+          npm --prefix website run build
 
       - name: Build and verify the production package
         run: node website/scripts/package-deploy.mjs

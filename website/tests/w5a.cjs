@@ -1,11 +1,11 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const assert = require('node:assert/strict');
-const root = path.resolve(__dirname, '..');
+const root = (() => { const dist = path.resolve(__dirname, '..', 'dist'); if (!fs.existsSync(path.join(dist, 'index.html'))) { console.error('website/dist not found. Run "npm --prefix website run build" first (tests run against the Astro build output).'); process.exit(1); } return dist; })();
 const pages = ['index.html', 'tools/index.html', 'real-estate-crm/index.html', 'about/index.html', 'resources/index.html', 'contact/index.html', 'tools/commission-calculator/index.html', 'tools/mortgage-calculator/index.html', 'tools/down-payment-calculator/index.html', 'tools/home-affordability-calculator/index.html', 'tools/rent-vs-buy-calculator/index.html', 'tools/cap-rate-calculator/index.html', 'tools/rental-yield-calculator/index.html', 'tools/commercial-real-estate-calculator/index.html', 'tools/irr-calculator/index.html', 'tools/depreciation-calculator/index.html', 'tools/wholesale-calculator/index.html', 'tools/bridge-loan-calculator/index.html', 'tools/property-investment-calculator/index.html', 'tools/capital-gains-tax-calculator/index.html', 'tools/roi-calculator/index.html', 'tools/noi-calculator/index.html'];
 const titles = new Set(), descriptions = new Set();
 for (const page of pages) {
-  const html = fs.readFileSync(path.join(root, page), 'utf8');
+  const html = fs.readFileSync(path.join(root, page), 'utf8').replaceAll('&#38;', '&amp;');
   const title = [...html.matchAll(/<title>([^<]+)<\/title>/g)];
   const description = [...html.matchAll(/<meta name="description" content="([^"]+)">/g)];
   assert.equal(title.length, 1, page); assert.equal(description.length, 1, page);
@@ -41,7 +41,7 @@ console.log('PASS: 17 unique titles/descriptions, matching social metadata, head
 // so the nav item must not carry it - while the header's two
 // "Sign in to RealtorCRM" CTAs must keep it (they are login buttons).
 for (const page of pages) {
-  const html = fs.readFileSync(path.join(root, page), 'utf8');
+  const html = fs.readFileSync(path.join(root, page), 'utf8').replaceAll('&#38;', '&amp;');
   const header = html.slice(html.indexOf('<header'), html.indexOf('</header>'));
   const navItem = [...header.matchAll(/<a [^>]*>RealtorCRM<\/a>/g)];
   assert.equal(navItem.length, 1, `${page}: exactly one header nav RealtorCRM item`);
@@ -89,7 +89,7 @@ for (const page of pages) {
     ['tools/down-payment-calculator/index.html', 'Down Payment Calculator: Cash to Close, PMI &amp; Tiers'], // brief-approved title (no brand suffix); pinned explicitly
   ]);
   for (const page of pages) {
-    const html = fs.readFileSync(path.join(root, page), 'utf8');
+    const html = fs.readFileSync(path.join(root, page), 'utf8').replaceAll('&#38;', '&amp;');
     const title = html.match(/<title>([^<]+)<\/title>/)[1];
     if (expected.has(page)) assert.equal(title, expected.get(page), `${page} title`);
     else assert(/ Calculator \| Every Real Estate Calculator$/.test(title), `${page} calculator title pattern: ${title}`);

@@ -116,7 +116,7 @@
 .dp-tier-card .dp-pct { font-size: 1.22rem; font-weight: 800; color: var(--navy); letter-spacing: -0.01em; }
 .dp-tag { font-size: 0.72rem; font-weight: 700; letter-spacing: 0.06em; color: var(--teal-dark); background: var(--mist); border-radius: 99px; padding: 3px 9px; vertical-align: middle; margin-left: 8px; }
 .dp-tag-mint { background: #E7F6F1; color: #14532D; }
-.dp-tier-card dl { margin: 8px 0 0; }
+.dp-tier-card .dp-tier-rows { margin: 8px 0 0; }
 .dp-trow { display: flex; justify-content: space-between; gap: 12px; padding: 3px 0; font-size: 0.88rem; border-top: 1px solid #F0EEE6; }
 .dp-trow:first-child { border-top: 0; }
 .dp-trow span { color: #475569; }

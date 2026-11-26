@@ -2,7 +2,7 @@
 // Dependency-free. Run: node website/tests/w8.cjs
 const fs = require('node:fs'), path = require('node:path'), vm = require('node:vm');
 const crypto = require('node:crypto'), assert = require('node:assert/strict');
-const root = path.resolve(__dirname, '..');
+const root = (() => { const dist = path.resolve(__dirname, '..', 'dist'); if (!fs.existsSync(path.join(dist, 'index.html'))) { console.error('website/dist not found. Run "npm --prefix website run build" first (tests run against the Astro build output).'); process.exit(1); } return dist; })();
 const read = file => fs.readFileSync(path.join(root, file), 'utf8');
 const hash = text => crypto.createHash('sha256').update(text).digest('hex');
 let passed = 0;
@@ -19,15 +19,15 @@ const frozen = {
     // All baselines recaptured 2026-11-24 (Rental Yield): the Rental Yield Calculator became the 12th tool — every footer gained the Rental Yield link, and the Rental Yield page gained a frozen header entry.
     // All baselines recaptured 2026-11-24: the redesign stack and the Down Payment Calculator were merged onto main together — every footer gained the Down Payment link, and the Down Payment page gained a frozen header entry.
     // Homepage baseline includes the approved Google Search Console verification tag.
-    "index.html": "6100848bb0da83f0df753a1eb0009d9876f1b10b5dbdf1873667218718a4c058",
+    "index.html": "71854f4a768dc9ae17d5c055554f5b9a228056c0fcbbc847fecc9f77b4262597",
     // About baseline refreshed for the editorial refinement; shared header stays frozen.
     // All page baselines refreshed 2026-11-16: footer Platform column gained the Privacy Policy link on every page.
     // All page baselines refreshed 2026-11-17: footer Platform column gained the Terms of Use link on every page.
     // All page baselines refreshed 2026-11-24: footer Tools list rebuilt (mega-menu order, Title Case, two fixed lists), footer headings h2 -> p, "Access availability" renamed "Early access".
-    "about/index.html": "7487b62a56ddfea4fc946c2056939042c127f50200ddb466e39fe2f7823a6a51",
-    "contact/index.html": "7d316e90010887f92fc476646170e3aaaa9c93a46de277e163237f716cd1128b",
-    "resources/index.html": "f1286d190a16589ba53583d9e7f33a2ebaec9ae978a82bd4f3e104c24eb8368f",
-    "real-estate-crm/index.html": "50ed3e0d20ce1bc6a7014c713c956741011f109085f4ddadde72557706bfc0b7",
+    "about/index.html": "5a81e0b42904092df780db62d81d13153b71cc414286323e51bcbd518013578d",
+    "contact/index.html": "7b4360dce8adad8b392704b095fe29afae5755c8027112d80e65cc09b0b6d6cd",
+    "resources/index.html": "771bc715c496b7e4ffcad9bafe91b42e3175da8ed5485a3fbda905d84457b88e",
+    "real-estate-crm/index.html": "fca9181394648988a7ef275a99d1a2ade4c4a3c9be8e5d6a206ef6243a489af7",
     "tools/index.html": "a71ed5ca019af7f25d9df95c4b7f5e0242706b4a97cb10302c4f5d5983d3a4d2",
     "tools/bridge-loan-calculator/index.html": "1469e8f4dea7d0f0412eb46e0923125242a35dc2a21f22fda1a38e914ffc036d",
     "tools/cap-rate-calculator/index.html": "c13d8b0ab54569cb3493474807157b511950fa0c4ad052a0178e601e2f473273",
@@ -41,28 +41,28 @@ const frozen = {
     "tools/roi-calculator/index.html": "59a75aa4afb2374f7f689861d330b242b571348c4e5e2d6d6d48ecd8c930826c"
   },
   "headers": {
-    "index.html": "8ff8b5602307f1645666134a5b006e4ed3850ed7c983a54259088a2e68ea77e4",
-    "about/index.html": "dcf19b9faa556e2e80415ed8913016ff71dc7807434d38fd5e98036e9c89a516",
-    "contact/index.html": "09b5ef330478d66108c0fddbd8472d220f1af6c9f0f1cfe1556eaff68bed30a9",
-    "resources/index.html": "1e132af771c4f39d6bac996c76c4e9d25f519bed25861be2f221835b266f1a80",
-    "real-estate-crm/index.html": "5b364caf2fb0dd6188b8353181ff1459dc9db46ddf41b2e53f06744e35e6d786",
-    "tools/index.html": "061f31223642b159193adafd0459b8c1b84f08beba8b81cb95a5ed3f68ad9c38",
-    "tools/bridge-loan-calculator/index.html": "bc3cd3f9e232ef8b213dc058eac0e159bf9faf2ac4aeb51ea5a5821b8c634181",
-    "tools/cap-rate-calculator/index.html": "bc3cd3f9e232ef8b213dc058eac0e159bf9faf2ac4aeb51ea5a5821b8c634181",
-    "tools/capital-gains-tax-calculator/index.html": "bc3cd3f9e232ef8b213dc058eac0e159bf9faf2ac4aeb51ea5a5821b8c634181",
-    "tools/commission-calculator/index.html": "bc3cd3f9e232ef8b213dc058eac0e159bf9faf2ac4aeb51ea5a5821b8c634181",
-    "tools/down-payment-calculator/index.html": "bc3cd3f9e232ef8b213dc058eac0e159bf9faf2ac4aeb51ea5a5821b8c634181",
-    "tools/home-affordability-calculator/index.html": "bc3cd3f9e232ef8b213dc058eac0e159bf9faf2ac4aeb51ea5a5821b8c634181",
-    "tools/mortgage-calculator/index.html": "bc3cd3f9e232ef8b213dc058eac0e159bf9faf2ac4aeb51ea5a5821b8c634181",
-    "tools/noi-calculator/index.html": "5420965f4804b1eca78d76dc4b2413ccbc9d9f2c30c948e97134e436e0499120",
-    "tools/property-investment-calculator/index.html": "bc3cd3f9e232ef8b213dc058eac0e159bf9faf2ac4aeb51ea5a5821b8c634181",
-    "tools/rental-yield-calculator/index.html": "bc3cd3f9e232ef8b213dc058eac0e159bf9faf2ac4aeb51ea5a5821b8c634181",
-    "tools/commercial-real-estate-calculator/index.html": "bc3cd3f9e232ef8b213dc058eac0e159bf9faf2ac4aeb51ea5a5821b8c634181",
-    "tools/irr-calculator/index.html": "bc3cd3f9e232ef8b213dc058eac0e159bf9faf2ac4aeb51ea5a5821b8c634181",
-    "tools/depreciation-calculator/index.html": "bc3cd3f9e232ef8b213dc058eac0e159bf9faf2ac4aeb51ea5a5821b8c634181",
-    "tools/wholesale-calculator/index.html": "bc3cd3f9e232ef8b213dc058eac0e159bf9faf2ac4aeb51ea5a5821b8c634181",
-    "tools/rent-vs-buy-calculator/index.html": "bc3cd3f9e232ef8b213dc058eac0e159bf9faf2ac4aeb51ea5a5821b8c634181",
-    "tools/roi-calculator/index.html": "bc3cd3f9e232ef8b213dc058eac0e159bf9faf2ac4aeb51ea5a5821b8c634181"
+    "index.html": "1dc39f52ed3b90e86b1a4a8c82d30da4195866b67d870e6d0bec165a16236f85",
+    "about/index.html": "0b986fc54fe8fc9897fceb243da571e8dbe20dbbb92cd29ee8088e64f5780653",
+    "contact/index.html": "b90b67613a20a5781e747768850aafeb91c1303029dfc7ca00fff39f132342f1",
+    "resources/index.html": "4bf2f6b12da161b8566273a3e576dd5f55da3e6edc38ee901134957433690acf",
+    "real-estate-crm/index.html": "0db7ea5075d4dee95d25a517b93b3f6acec6fba3b36ee1ca4148a3edfad9269b",
+    "tools/index.html": "1cca95d2ff8b205d6832fc41f1bcb7cf88ef14d8828a8b54d9c31103f6f3cf23",
+    "tools/commission-calculator/index.html": "431b5cc39618b7b0c4871b01a312f9109c9c83b363bcd47cb1becc4a351cd320",
+    "tools/mortgage-calculator/index.html": "431b5cc39618b7b0c4871b01a312f9109c9c83b363bcd47cb1becc4a351cd320",
+    "tools/down-payment-calculator/index.html": "431b5cc39618b7b0c4871b01a312f9109c9c83b363bcd47cb1becc4a351cd320",
+    "tools/home-affordability-calculator/index.html": "431b5cc39618b7b0c4871b01a312f9109c9c83b363bcd47cb1becc4a351cd320",
+    "tools/rent-vs-buy-calculator/index.html": "431b5cc39618b7b0c4871b01a312f9109c9c83b363bcd47cb1becc4a351cd320",
+    "tools/cap-rate-calculator/index.html": "431b5cc39618b7b0c4871b01a312f9109c9c83b363bcd47cb1becc4a351cd320",
+    "tools/rental-yield-calculator/index.html": "431b5cc39618b7b0c4871b01a312f9109c9c83b363bcd47cb1becc4a351cd320",
+    "tools/commercial-real-estate-calculator/index.html": "431b5cc39618b7b0c4871b01a312f9109c9c83b363bcd47cb1becc4a351cd320",
+    "tools/irr-calculator/index.html": "431b5cc39618b7b0c4871b01a312f9109c9c83b363bcd47cb1becc4a351cd320",
+    "tools/depreciation-calculator/index.html": "431b5cc39618b7b0c4871b01a312f9109c9c83b363bcd47cb1becc4a351cd320",
+    "tools/wholesale-calculator/index.html": "431b5cc39618b7b0c4871b01a312f9109c9c83b363bcd47cb1becc4a351cd320",
+    "tools/bridge-loan-calculator/index.html": "431b5cc39618b7b0c4871b01a312f9109c9c83b363bcd47cb1becc4a351cd320",
+    "tools/property-investment-calculator/index.html": "431b5cc39618b7b0c4871b01a312f9109c9c83b363bcd47cb1becc4a351cd320",
+    "tools/capital-gains-tax-calculator/index.html": "431b5cc39618b7b0c4871b01a312f9109c9c83b363bcd47cb1becc4a351cd320",
+    "tools/roi-calculator/index.html": "431b5cc39618b7b0c4871b01a312f9109c9c83b363bcd47cb1becc4a351cd320",
+    "tools/noi-calculator/index.html": "431b5cc39618b7b0c4871b01a312f9109c9c83b363bcd47cb1becc4a351cd320"
   },
   "calculators": {
     "bridge-loan-calculator": "74b2f4f6d5330a2b4aec345587ec4e44faffe5228c4643b28f47a2fd4d9d124d",
@@ -82,7 +82,7 @@ vm.runInNewContext(read('assets/tool-registry.js'), context);
 const tools = Array.from(context.window.realEstateTools).filter(t=>t.status==='published');
 const pages = ['index.html','about/index.html','contact/index.html','resources/index.html','real-estate-crm/index.html','tools/index.html',...tools.map(t=>`tools/${t.slug}/index.html`)];
 const escape = s=>s.replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('"','&quot;');
-const menuPattern = /<div class="tools-menu" id="tools-menu">[\s\S]*?<\/div>\s*<\/div><\/div>/;
+const menuPattern = /<div class="tools-menu" id="tools-menu">[\s\S]*?<\/div>\s*<\/div>\s*<\/div>/;
 // The shared brand fix changes only the accessible name. Keep the original
 // appearance/content fingerprints while brand-accessibility.cjs checks the new name.
 // Normalize only the approved route migration; retain the frozen visual/content hashes.
@@ -132,10 +132,10 @@ for(const file of pages) {
 }
 // Calculator composition is intentionally changed by the centralized system.
 // Keep metadata/defaults and financial engine contracts instead of old HTML hashes.
-const contracts = JSON.parse(read('tests/fixtures/calculator-contracts.json'));
+const contracts = JSON.parse(fs.readFileSync(path.join(__dirname, 'fixtures/calculator-contracts.json'), 'utf8'));
 const normalize = s=>s.replaceAll('\r\n','\n');
 for(const [slug,contract] of Object.entries(contracts.calculators)) {
-  const html=read('tools/'+slug+'/index.html');
+  const html=read('tools/'+slug+'/index.html').replaceAll('&#38;', '&amp;');
   const metadata={title:html.match(/<title>([^<]+)<\/title>/)[1]};
   for(const m of html.matchAll(/<meta\b[^>]+>/g)) {const key=m[0].match(/(?:name|property)="([^"]+)"/)?.[1],value=m[0].match(/content="([^"]*)"/)?.[1];if(key)metadata[key]=value;}
   metadata.canonical=html.match(/rel="canonical" href="([^"]+)"/)[1];

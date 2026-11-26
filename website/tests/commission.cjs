@@ -2,7 +2,7 @@
 // script before editing; its recorded output is checked against literal answers.
 const fs = require('node:fs'), path = require('node:path'), vm = require('node:vm');
 const assert = require('node:assert/strict');
-const root = path.resolve(__dirname, '..');
+const root = (() => { const dist = path.resolve(__dirname, '..', 'dist'); if (!fs.existsSync(path.join(dist, 'index.html'))) { console.error('website/dist not found. Run "npm --prefix website run build" first (tests run against the Astro build output).'); process.exit(1); } return dist; })();
 let assertions = 0;
 const eq = (actual, expected, label) => { assert.equal(actual, expected, label); assertions++; };
 function calculator(sourceRoot = root) {

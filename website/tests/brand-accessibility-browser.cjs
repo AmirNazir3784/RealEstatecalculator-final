@@ -2,7 +2,7 @@
 // CHROME_PATH and BASELINE_THEME (original theme CSS for visual geometry checks).
 const {chromium}=require(process.env.PLAYWRIGHT_MODULE||'playwright-core');
 const fs=require('node:fs'),path=require('node:path'),assert=require('node:assert/strict');
-const root=path.resolve(__dirname,'..'),out=path.resolve(process.env.BRAND_REVIEW_DIR||path.resolve(root,'../review/about-page-redesign'));
+const root=(() => { const dist = path.resolve(__dirname, '..', 'dist'); if (!fs.existsSync(path.join(dist, 'index.html'))) { console.error('website/dist not found. Run "npm --prefix website run build" first (tests run against the Astro build output).'); process.exit(1); } return dist; })(),out=path.resolve(process.env.BRAND_REVIEW_DIR||path.resolve(root,'../review/about-page-redesign'));
 const url=process.env.SITE_URL||'http://127.0.0.1:8136/';
 function pages(dir){return fs.readdirSync(dir,{withFileTypes:true}).flatMap(e=>e.isDirectory()&&!['tests','reference','dist-production'].includes(e.name)?pages(path.join(dir,e.name)):e.isFile()&&e.name==='index.html'?[path.relative(root,path.join(dir,e.name)).replaceAll('\\','/').replace(/index.html$/,'')]:[]);}
 const routes=pages(root),reports=[],problems=[],httpErrors=[];let assertions=0;

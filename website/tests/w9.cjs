@@ -7,7 +7,7 @@
 const fs = require('node:fs');
 const path = require('node:path');
 const crypto = require('node:crypto');
-const ROOT = path.join(__dirname, '..');
+const ROOT = (() => { const dist = path.resolve(__dirname, '..', 'dist'); if (!fs.existsSync(path.join(dist, 'index.html'))) { console.error('website/dist not found. Run "npm --prefix website run build" first (tests run against the Astro build output).'); process.exit(1); } return dist; })();
 let passed = 0; const failures = [];
 function check(name, cond) { if (cond) { passed++; } else { failures.push(name); } }
 function read(rel) { return fs.readFileSync(path.join(ROOT, rel), 'utf8'); }
@@ -65,7 +65,7 @@ for (const slug of SLUGS) {
 // 5. Financial code matches the captured contracts. Fixed fixtures keep this
 // guard effective after merges and in shallow CI checkouts, without depending
 // on a moving origin/main ref. Only CGT's two display updates are excluded.
-const contracts = JSON.parse(read('tests/fixtures/calculator-contracts.json')).calculators;
+const contracts = JSON.parse(fs.readFileSync(path.join(__dirname, 'fixtures/calculator-contracts.json'), 'utf8')).calculators;
 const hash = text => crypto.createHash('sha256').update(text).digest('hex');
 for (const slug of SLUGS) {
   let current=read('tools/'+slug+'/calculator.js').replaceAll('\r\n','\n');

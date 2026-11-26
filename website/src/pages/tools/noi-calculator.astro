@@ -1,0 +1,285 @@
+---
+import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
+---
+
+<CalculatorLayout
+  title="NOI Calculator | Every Real Estate Calculator"
+  description="Calculate net operating income (NOI) for a rental property from rent, vacancy and operating expenses — the formula, a worked example, and why the mortgage stays out."
+  canonical="https://everyrealestatecalculator.com/tools/noi-calculator/"
+  stickyLabel="Annual NOI"
+  stickyId="sticky-value"
+  stickyValue="—"
+>
+<section class="page-hero" aria-labelledby="page-title">
+  <div class="wrap hero-intro">
+    <div class="eyebrow">
+      <span class="eyebrow-dot"></span>
+      REAL ESTATE / INVESTMENT TOOLS
+    </div>
+    <div class="hero-heading-row">
+      <div>
+        <h1 id="page-title">
+          NOI Calculator
+        </h1>
+        <p class="hero-lede">
+          Know what a rental property really earns. Model rental income,
+          vacancy and operating costs to see your property's NOI instantly.
+        </p>
+      </div>
+      <div class="hero-fact" aria-label="Calculation formula">
+        <span class="hero-fact-icon">↗</span>
+        <div>
+          <strong>NOI = Income − Expenses</strong>
+          <small>Before financing and income tax</small>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap calculator-layout">
+    <!-- LEFT: PROPERTY INPUTS -->
+    <div class="panel">
+      <div class="panel-heading">
+        <div>
+          <span class="section-kicker">01 / PROPERTY INPUTS</span>
+          <h2>Property details</h2>
+          <p>Start with the sample figures, then make them yours.</p>
+        </div>
+        <button type="button" class="tool-btn tool-btn-outline" id="reset-inputs"
+          aria-label="Reset calculator to example values">
+          <span aria-hidden="true">↺</span> Reset
+        </button>
+      </div>
+
+      <form id="noi-form" novalidate>
+        <fieldset class="form-group">
+          <legend>
+            <span class="legend-icon">↗</span>
+            <span>Rental income</span>
+          </legend>
+          <div class="form-grid">
+            <div class="form-field">
+              <label for="monthly-rent">Monthly rent</label>
+              <div class="input-unit">
+                <span class="unit-affix" aria-hidden="true">$</span>
+                <input class="field" id="monthly-rent" type="number"
+                  min="0" max="1000000000000" step="10" value="2200">
+                <span class="unit-affix unit-trailing" aria-hidden="true">/mo</span>
+              </div>
+              <input class="field-slider" id="monthly-rent-slider"
+                type="range" min="0" max="10000" step="10" value="2200"
+                aria-label="Monthly rent slider">
+            </div>
+            <div class="form-field">
+              <label for="vacancy-rate">
+                Vacancy allowance
+                <span class="field-tip"
+                  title="Percentage of rental income expected to be lost to vacancy">ⓘ</span>
+              </label>
+              <div class="input-unit">
+                <input class="field" id="vacancy-rate" type="number"
+                  min="0" max="100" step="0.5" value="5">
+                <span class="unit-affix unit-trailing" aria-hidden="true">%</span>
+              </div>
+              <input class="field-slider" id="vacancy-rate-slider"
+                type="range" min="0" max="100" step="0.5" value="5"
+                aria-label="Vacancy percentage slider">
+            </div>
+            <div class="form-field form-field-full">
+              <label for="other-income">
+                Additional annual income
+                <span class="optional-label">PARKING, LAUNDRY, ETC.</span>
+              </label>
+              <div class="input-unit">
+                <span class="unit-affix" aria-hidden="true">$</span>
+                <input class="field" id="other-income" type="number"
+                  min="0" max="1000000000000" step="100" value="0">
+                <span class="unit-affix unit-trailing" aria-hidden="true">/yr</span>
+              </div>
+            </div>
+          </div>
+        </fieldset>
+
+        <fieldset class="form-group expenses-group">
+          <legend>
+            <span class="legend-icon">▤</span>
+            <span>Operating expenses</span>
+            <span class="legend-meta">ANNUAL COSTS</span>
+          </legend>
+          <div class="form-grid">
+            <div class="form-field">
+              <label for="property-tax">Property tax</label>
+              <div class="input-unit">
+                <span class="unit-affix" aria-hidden="true">$</span>
+                <input class="field" id="property-tax" type="number"
+                  min="0" max="1000000000000" step="100" value="4200">
+                <span class="unit-affix unit-trailing" aria-hidden="true">/yr</span>
+              </div>
+            </div>
+            <div class="form-field">
+              <label for="home-insurance">Property insurance</label>
+              <div class="input-unit">
+                <span class="unit-affix" aria-hidden="true">$</span>
+                <input class="field" id="home-insurance" type="number"
+                  min="0" max="1000000000000" step="100" value="1800">
+                <span class="unit-affix unit-trailing" aria-hidden="true">/yr</span>
+              </div>
+            </div>
+            <div class="form-field">
+              <label for="maintenance-cost">Maintenance &amp; repairs</label>
+              <div class="input-unit">
+                <span class="unit-affix" aria-hidden="true">$</span>
+                <input class="field" id="maintenance-cost" type="number"
+                  min="0" max="1000000000000" step="100" value="1500">
+                <span class="unit-affix unit-trailing" aria-hidden="true">/yr</span>
+              </div>
+            </div>
+            <div class="form-field">
+              <label for="management-rate">
+                Management fee
+                <span class="field-tip"
+                  title="Percentage of effective gross income">ⓘ</span>
+              </label>
+              <div class="input-unit">
+                <input class="field" id="management-rate" type="number"
+                  min="0" max="100" step="0.5" value="8">
+                <span class="unit-affix unit-trailing" aria-hidden="true">%</span>
+              </div>
+            </div>
+            <div class="form-field form-field-full">
+              <label for="hoa-other">HOA &amp; other operating costs</label>
+              <div class="input-unit">
+                <span class="unit-affix" aria-hidden="true">$</span>
+                <input class="field" id="hoa-other" type="number"
+                  min="0" max="1000000000000" step="100" value="0">
+                <span class="unit-affix unit-trailing" aria-hidden="true">/yr</span>
+              </div>
+            </div>
+          </div>
+        </fieldset>
+      </form>
+
+      <div class="input-footnote">
+        <span class="live-dot"></span>
+        Results update as you type
+        <span class="input-footnote-right">All values in USD</span>
+      </div>
+      <p class="validation-note" id="validation-note" role="alert"></p>
+    </div>
+
+    <!-- RIGHT: RESULTS -->
+    <aside class="result" aria-live="polite" aria-label="Calculation results">
+<p class="result-label">Annual net operating income</p>
+<p class="result-number" id="noi-annual">—</p>
+<p class="result-hero-sub">Monthly NOI <b id="noi-monthly">—</b></p>
+<p class="validation-note" id="noi-validation" role="alert"></p>
+<p class="result-empty" id="result-empty" hidden>Correct the highlighted inputs to see your estimate.</p>
+
+<div id="result-body">
+<div class="result-tiles">
+<div class="result-tile"><span>Effective income</span><b id="tile-effective">—</b><small>Annual collected income</small></div>
+<div class="result-tile"><span>Operating expenses</span><b id="tile-expenses">—</b><small>Annual running costs</small></div>
+<div class="result-tile"><span>Monthly NOI</span><b id="tile-monthly">—</b><small>Before mortgage</small></div>
+<div class="result-tile"><span>Expense ratio</span><b id="tile-ratio">—</b><small>Of effective income</small></div>
+</div>
+
+<h3 class="result-group">Income breakdown</h3>
+<div class="result-row"><span>Gross rental income</span><b id="row-gross-rent">—</b></div>
+<div class="result-row"><span>Vacancy loss</span><b id="row-vacancy-loss">—</b></div>
+<div class="result-row"><span>Other income</span><b id="row-other-income">—</b></div>
+<div class="result-row result-row-total"><span>Effective gross income</span><b id="row-effective">—</b></div>
+
+<h3 class="result-group">Expense distribution</h3>
+<div class="result-row"><span>Total operating expenses</span><b id="row-total-expenses">—</b></div>
+
+<div class="breakdown-track" role="img" aria-label="Operating expenses by category"><div id="bar-tax" class="seg-blue"></div><div id="bar-ins" class="seg-teal"></div><div id="bar-maintenance" class="seg-gold"></div><div id="bar-management" class="seg-gray"></div><div id="bar-hoa" class="seg-coral"></div></div>
+
+<ul class="breakdown-legend">
+<li><span class="swatch seg-blue"></span> Property tax <b id="lg-tax">—</b></li>
+<li><span class="swatch seg-teal"></span> Insurance <b id="lg-ins">—</b></li>
+<li><span class="swatch seg-gold"></span> Maintenance <b id="lg-maintenance">—</b></li>
+<li><span class="swatch seg-gray"></span> Management <b id="lg-management">—</b></li>
+<li><span class="swatch seg-coral"></span> HOA &amp; other <b id="lg-hoa">—</b></li>
+</ul>
+
+<div class="result-row result-row-total"><span>Net operating income</span><b id="row-noi">—</b></div>
+
+<div class="copy-row">
+<button class="tool-btn tool-btn-primary" id="copy-results" type="button">⧉ &nbsp; Copy report</button>
+<button class="tool-btn tool-btn-outline" id="print-results" type="button">↧ &nbsp; Print / Save PDF</button>
+</div>
+<p class="copy-note" id="copy-note" role="status"></p>
+</div>
+
+<a class="tool-btn tool-btn-outline result-cta" href="../../real-estate-crm/">Explore RealtorCRM <span aria-hidden="true">↗</span></a>
+</aside>
+  </div>
+
+  <div class="wrap calculator-disclaimers">
+    <span aria-hidden="true">ⓘ</span>
+    <div>
+      <p><strong>About this estimate.</strong> NOI excludes mortgage payments, depreciation and income tax. It measures the property's operating performance before financing.</p>
+      <p>For informational use only. Verify local property figures before making investment decisions.</p>
+    </div>
+  </div>
+
+
+</section>
+
+<!-- INFORMATIONAL CONTENT -->
+<section class="section article-section">
+<div class="wrap content">
+<div class="note"><strong>How to use:</strong> Enter monthly rent, vacancy and the annual operating expenses. NOI, the expense ratio and the income breakdown update as you type; the mortgage stays out on purpose.</div>
+<h2>How NOI is calculated</h2>
+<div class="formula-box">
+<p>Start with the annual rent, subtract a vacancy allowance and add other income to get effective gross income. Subtract every operating expense — property tax, insurance, maintenance and repairs, the management fee and HOA and other costs — and what remains is the net operating income. The management fee is a percentage of effective income, so it moves with the rent you actually collect, not the rent you hope for.</p>
+</div>
+
+<h2>Why lenders and investors use it</h2>
+<p>NOI is the one number that lets you compare two properties on the asset alone, no matter how each deal is funded — financing never appears in it. Divide NOI by the price and you get the cap rate; divide it by annual debt service and you get DSCR, where most lenders look for 1.25 or better. The expense ratio (expenses divided by effective income) shows how much of every collected dollar the property eats before it pays you anything.</p>
+
+<h2>Important note</h2>
+<p>This is an informational estimate, not investment advice. It ignores appreciation, tax, principal paydown and resale costs, and a single year of rent and expenses is not a guarantee of the next. Verify rents, occupancy and costs with local records before making any buying decision.</p>
+</div>
+</section>
+
+<section class="section article-section">
+<div class="wrap content">
+
+<p>NOI is the one number that lets you compare two properties on the asset alone, no matter how each deal is funded. Financing never appears in it, which is exactly why cap rate and DSCR both start from it.</p>
+
+<h2>Worked example</h2>
+<p>With the values already filled in — $2,200 monthly rent, 5% vacancy, no other income, $4,200 tax, $1,800 insurance, $1,500 maintenance, an 8% management fee and no HOA or other costs — gross rent is $26,400, vacancy loss is $1,320, effective gross income is $25,080, total operating expenses are $9,506.40, and net operating income is $15,573.60 a year. The expense ratio, expenses divided by effective income, is 37.90%. The management fee is a percentage of effective income, so it moves with the rent actually collected, not the rent hoped for.</p>
+
+<h2>Reading the expense side of the example</h2><p>In the worked example above, the $9,506.40 of operating expenses absorbs 37.90% of the property’s effective gross income — the operating expense ratio. Property tax is the largest single line at $4,200, about 44% of all expenses, ahead of the management fee ($2,006.40), insurance ($1,800) and maintenance ($1,500). Watching that ratio, and which line drives it, is how owners spot a property whose costs are creeping up faster than its rent.</p><p>Notice what is missing from the list: the mortgage. Principal and interest are excluded from NOI on purpose. NOI measures how the <em>property</em> performs, not how it was financed, which is why a lender or appraiser can compare two buildings with completely different loans on the same basis — and why this figure feeds directly into the <a href="../cap-rate-calculator/">Cap Rate Calculator</a>.</p><h2>Key takeaways</h2>
+<ul>
+<li>NOI equals effective gross income minus every operating expense. Mortgage, depreciation and income tax are excluded.</li>
+<li>Divide NOI by price to get cap rate; divide it by annual debt service to get DSCR, where most lenders look for 1.25 or better.</li>
+<li>The expense ratio shows how much of every collected dollar the property eats before it pays you anything.</li>
+<li>Vacancy and management move with collected rent, so an optimistic rent figure flatters NOI in more than one place at once.</li>
+</ul>
+
+<h2>Frequently asked questions</h2>
+<details class="faq"><summary>What is NOI in real estate?</summary>
+<p>Net operating income: the income a rental property produces after operating expenses, before mortgage payments, depreciation and income tax. It measures the property as an asset on its own.</p></details>
+<details class="faq"><summary>How is NOI calculated?</summary>
+<p>Annual rent minus a vacancy allowance, plus other income, gives effective gross income. Subtract property tax, insurance, maintenance, management and HOA and other costs, and what remains is net operating income.</p></details>
+<details class="faq"><summary>How is NOI different from cash flow?</summary>
+<p>Cash flow subtracts the mortgage payment as well. NOI stops before financing, so it can be compared across properties and funding structures; cash flow cannot, because it depends on the loan.</p></details>
+<details class="faq"><summary>How does NOI relate to cap rate and DSCR?</summary>
+<p>Cap rate is NOI divided by price. DSCR is NOI divided by annual debt service. Both start from NOI because it is the property’s income before financing.</p></details>
+<details class="faq"><summary>Why does the management fee change with vacancy?</summary>
+<p>Because it is a percentage of effective income, the rent actually collected after vacancy, not the full rent roll. A higher vacancy therefore lowers both income and the management fee.</p></details>
+<details class="faq"><summary>Is NOI a guarantee of future income?</summary>
+<p>No. It is an informational estimate, not investment advice. A single year of rent and expenses is not a guarantee of the next year. Verify rents, occupancy and costs with local records.</p></details>
+</div>
+</section>
+<section class="section"><div class="wrap content">
+<h2>Related calculators</h2>
+<div class="related-cards">
+<a class="related-card" href="../cap-rate-calculator/"><h3>Cap Rate Calculator</h3><p>Income value from NOI and price.</p><span class="open">Open calculator ↗</span></a>
+<a class="related-card" href="../roi-calculator/"><h3>ROI Calculator</h3><p>Total return over the hold, year by year.</p><span class="open">Open calculator ↗</span></a>
+<a class="related-card" href="../property-investment-calculator/"><h3>Property Investment Calculator</h3><p>Monthly cash flow, return on cash, cap rate and DSCR.</p><span class="open">Open calculator ↗</span></a>
+</div>
+</div></section>
+</CalculatorLayout>

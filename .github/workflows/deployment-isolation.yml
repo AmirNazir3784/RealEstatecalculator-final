@@ -16,6 +16,10 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 22
+      - name: Build the Astro site (packaging uses website/dist)
+        run: |
+          npm --prefix website ci
+          npm --prefix website run build
       - run: node website/scripts/package-deploy.mjs
       - run: node deployment/package-crm.mjs
       - name: Artifact ownership, deployment orders and legacy deletion regression
