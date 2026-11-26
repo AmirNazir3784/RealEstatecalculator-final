@@ -74,9 +74,13 @@ for (const page of pages) {
 }
 
 // Browser-tab titles follow the approved concise patterns.
+// 2026-11-26: homepage expectation re-pinned to main's current title. The keyword
+// title below belongs to the unmerged homepage WIP branch; while main carries
+// 'Every Real Estate Calculator | Tools & Guides', the test must expect that —
+// the mismatch had been failing website-tests and Deploy website on every push.
 {
   const expected = new Map([
-    ['index.html', 'Free Real Estate Calculators | Mortgage, Commission &amp; More'],
+    ['index.html', 'Every Real Estate Calculator | Tools &amp; Guides'],
     ['real-estate-crm/index.html', 'RealtorCRM | CRM for Real Estate Agents'],
     ['about/index.html', 'About | Every Real Estate Calculator'],
     ['contact/index.html', 'Contact | Every Real Estate Calculator'],
