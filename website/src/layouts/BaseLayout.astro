@@ -53,6 +53,8 @@ const base = segments.length === 0 ? '' : '../'.repeat(segments.length);
     robots={robots}
     googleSiteVerification={googleSiteVerification}
   />
+  <link rel="preload" as="font" type="font/woff2" href={`${base}assets/fonts/inter-latin.woff2`} crossorigin />
+  <link rel="preload" as="font" type="font/woff2" href={`${base}assets/fonts/source-serif-4-latin.woff2`} crossorigin />
   <link rel="stylesheet" href={`${base}assets/site.css`} />
   <link rel="stylesheet" href={`${base}assets/theme.css`} />
   {extraStyles.map((href) => (
