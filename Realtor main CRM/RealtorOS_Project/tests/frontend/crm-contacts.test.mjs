@@ -70,21 +70,21 @@ dom("a contact's own text is escaped, never rendered as markup", async () => {
 
 dom("the filters narrow the list, and clearing them brings it back", async () => {
   const p = await list([
-    contact({ id: "ct_1", name: "Sarah Khan", role: "Buyer", stage: "New Lead", temperature: "Hot" }),
-    contact({ id: "ct_2", name: "Tom Byrne", role: "Seller", stage: "Client", temperature: "Cold" }),
-    contact({ id: "ct_3", name: "Priya Shah", role: "Buyer", stage: "Client", temperature: "Warm" }),
+    contact({ id: "ct_1", name: "Sarah Khan", role: "Buyer", stage: "New Lead", temperature: "Hot", source: "Referral" }),
+    contact({ id: "ct_2", name: "Tom Byrne", role: "Seller", stage: "Client", temperature: "Cold", source: "Website" }),
+    contact({ id: "ct_3", name: "Priya Shah", role: "Buyer", stage: "Client", temperature: "Warm", source: "Referral" }),
   ]);
   assert.equal(rows(p).length, 3);
 
-  setField(p.document, "#cRole", "Buyer");
+  setField(p.document, "#cSource", "Referral");
   await settle(p.window);
-  assert.deepEqual(names(p), ["Priya Shah", "Sarah Khan"], "the two buyers, A-Z");
+  assert.deepEqual(names(p), ["Priya Shah", "Sarah Khan"], "the two referrals, A-Z");
 
   setField(p.document, "#cStage", "Client");
   await settle(p.window);
   assert.deepEqual(names(p), ["Priya Shah"], "the filters narrow together, not instead of each other");
 
-  setField(p.document, "#cRole", "");
+  setField(p.document, "#cSource", "");
   setField(p.document, "#cStage", "");
   await settle(p.window);
   assert.equal(rows(p).length, 3, "and clearing them brings everybody back");
@@ -243,7 +243,7 @@ dom("a new contact can be given both dates straight away", async () => {
 dom("Past Clients uses the existing stage, independent filters and unchanged contact links", async () => {
   const p = await list([
     contact({ id: "past", name: "Past Buyer", stage: "Past Client" }),
-    contact({ id: "seller", name: "Past Seller", role: "Seller", stage: "Past Client" }),
+    contact({ id: "seller", name: "Past Seller", role: "Seller", stage: "Past Client", temperature: "Hot" }),
     contact({ id: "active", name: "Active Buyer", homePurchaseDate: "2020-01-01" }),
     contact({ id: "role", name: "Wrong classification", role: "Past Client" }),
   ]);
@@ -253,7 +253,7 @@ dom("Past Clients uses the existing stage, independent filters and unchanged con
   assert.equal(p.document.querySelector("#cStage").disabled, true);
   assert.equal(p.document.querySelector("#cStage").value, "Past Client");
   assert.equal(p.pane.querySelector('a[href="#/contacts/past"]').getAttribute("href"), "#/contacts/past");
-  setField(p.document, "#cRole", "Seller");
+  setField(p.document, "#cTemp", "Hot");
   assert.deepEqual(names(p), ["Past Seller"]);
   await p.window.App.pages.contacts.renderList(p.pane);
   assert.deepEqual(names(p), ["Active Buyer", "Wrong classification"]);

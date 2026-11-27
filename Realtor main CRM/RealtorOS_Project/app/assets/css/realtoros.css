@@ -3785,10 +3785,10 @@ input:is([type="email"],[type="url"],[type="tel"],[type="number"],[type="date"])
 .contacts-card { overflow: visible; }
 .contacts-toolbar.filter-bar {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   align-items: center;
   justify-content: space-between;
-  gap: 8px 12px;
+  gap: 8px 10px;
   padding: 12px 16px;
   margin: 0;
   border-bottom: 1px solid var(--border);
@@ -3798,18 +3798,18 @@ input:is([type="email"],[type="url"],[type="tel"],[type="number"],[type="date"])
 .contacts-toolbar-left,
 .contacts-toolbar-right {
   display: flex;
-  flex-wrap: wrap;
+  flex-wrap: nowrap;
   align-items: center;
   gap: 8px;
   min-width: 0;
 }
-.contacts-toolbar-left { flex: 1 1 560px; }
+.contacts-toolbar-left { flex: 1 1 auto; }
 .contacts-toolbar-right { flex: 0 0 auto; margin-left: auto; }
 
 .contacts-toolbar .search-wrap {
   flex: 1 1 240px;
   min-width: 240px;
-  max-width: 320px;
+  max-width: 360px;
   height: 36px;
 }
 .contacts-toolbar select,
@@ -3823,22 +3823,11 @@ input:is([type="email"],[type="url"],[type="tel"],[type="number"],[type="date"])
 .contacts-toolbar select {
   padding: 6px 10px;
   background: var(--card);
+  min-width: 0;
 }
 .contacts-toolbar .search-wrap > input[type="search"] {
   background: var(--surface-sunk);
   padding: 6px 12px 6px 34px;
-}
-.contacts-toolbar .filter-more-toggle {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 6px 12px;
-  background: var(--card);
-}
-.contacts-toolbar .filter-more-toggle.has-active {
-  background: var(--accent-soft);
-  border-color: var(--accent);
-  color: var(--accent-ink);
 }
 .btn-text-clear {
   background: none;
@@ -3850,6 +3839,7 @@ input:is([type="email"],[type="url"],[type="tel"],[type="number"],[type="date"])
   font-weight: 500;
   cursor: pointer;
   border-radius: 8px;
+  flex: 0 0 auto;
 }
 .btn-text-clear:hover {
   background: var(--bg-subtle);
@@ -3863,62 +3853,29 @@ input:is([type="email"],[type="url"],[type="tel"],[type="number"],[type="date"])
   font-weight: 500;
   white-space: nowrap;
 }
-.sort-wrap {
-  position: relative;
-  display: inline-flex;
-  align-items: center;
-}
-.sort-wrap .sort-icon {
-  position: absolute;
-  left: 10px;
-  color: var(--text-soft);
-  pointer-events: none;
-}
-.contacts-toolbar .sort-wrap select {
-  padding-left: 30px;
-  max-width: 210px;
-}
 
-.filter-chips {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 16px;
-  border-bottom: 1px solid var(--border);
-  background: var(--bg-subtle);
-}
-.filter-chips[hidden] { display: none; }
-.filter-chip {
+.tbl-sort-btn {
   display: inline-flex;
   align-items: center;
-  gap: 6px;
-  padding: 4px 8px 4px 10px;
-  border-radius: 999px;
-  background: var(--card);
-  border: 1px solid var(--border-strong);
-  font-size: 12px;
-  font-weight: 500;
-  color: var(--text);
-}
-.filter-chip-x {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 18px;
-  height: 18px;
-  border: 0;
-  border-radius: 50%;
-  background: transparent;
-  color: var(--text-muted);
-  font-size: 14px;
-  line-height: 1;
-  cursor: pointer;
+  gap: 4px;
   padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  cursor: pointer;
+  white-space: nowrap;
 }
-.filter-chip-x:hover {
-  background: var(--bg-subtle);
-  color: var(--text);
+.tbl-sort-btn:hover,
+.tbl-sort-btn.is-sorted {
+  color: var(--text-strong);
+}
+.tbl-sort-ind {
+  font-size: 12px;
+  line-height: 1;
+  color: var(--accent-ink);
 }
 
 :root[data-theme="dark"] .btn.btn-primary.header-new {
@@ -3930,26 +3887,24 @@ input:is([type="email"],[type="url"],[type="tel"],[type="number"],[type="date"])
   background: var(--surface-sunk);
 }
 :root[data-theme="dark"] .contacts-toolbar.filter-bar,
-:root[data-theme="dark"] .contacts-toolbar select,
-:root[data-theme="dark"] .contacts-toolbar .filter-more-toggle {
+:root[data-theme="dark"] .contacts-toolbar select {
   background: var(--card);
 }
 :root[data-theme="dark"] .hub-tab-actions .btn-import:hover {
   background: var(--surface-sunk);
 }
 
-@media (max-width: 1024px) {
-  .contacts-toolbar-left { flex: 1 1 100%; }
-  .contacts-toolbar-right { margin-left: 0; width: 100%; justify-content: space-between; }
+@media (max-width: 960px) {
+  .contacts-toolbar.filter-bar { flex-wrap: wrap; }
+  .contacts-toolbar-left { flex: 1 1 100%; flex-wrap: wrap; }
+  .contacts-toolbar-right { margin-left: 0; width: 100%; justify-content: flex-end; }
 }
 @media (max-width: 640px) {
   #hubTabs { padding: 6px var(--page-pad, 14px); min-height: 48px; gap: 8px; }
   .hub-tabs-select { flex: 1 1 140px; padding: 0; }
   .hub-tab-actions { flex: 0 0 auto; }
   .contacts-toolbar .search-wrap { min-width: 0; max-width: none; flex: 1 1 100%; }
-  .contacts-toolbar .contacts-toolbar-left > select,
-  .contacts-toolbar .filter-more { flex: 1 1 calc(50% - 4px); }
-  .contacts-toolbar .filter-more-toggle { width: 100%; justify-content: center; }
+  .contacts-toolbar .contacts-toolbar-left > select { flex: 1 1 calc(33.33% - 6px); }
 }
 @media (max-width: 520px) {
   .hub-tab-actions .btn-import .btn-label { display: none; }
