@@ -5,6 +5,7 @@
 .realtoros-page [id] { scroll-margin-top: 100px; }
 .realtoros-page .section { padding: 64px 0; }
 .realtoros-page .product-caption { color: var(--muted); font-size: .85rem; margin-top: 16px; }
+.realtoros-page .rc-section-intro { color: var(--muted); font-size: 1.03rem; line-height: 1.6; max-width: 38rem; margin: 0 0 24px; }
 
 /* ---------- Section 1: hero ---------- */
 .realtoros-page .rc-hero {
@@ -18,7 +19,7 @@
   gap: 52px;
   align-items: center;
 }
-.realtoros-page .rc-hero h1 { font-size: clamp(2.37rem, 4.19vw, 3.82rem); max-width: 12.5em; } /* ~9% smaller than the first redesign pass, per review */
+.realtoros-page .rc-hero h1 { font-size: clamp(2.37rem, 4.19vw, 3.82rem); max-width: 12.5em; }
 .realtoros-page .rc-accent {
   background-image: linear-gradient(to right, rgba(8, 126, 128, .42), rgba(8, 126, 128, .42));
   background-repeat: no-repeat;
@@ -38,7 +39,7 @@
 }
 .realtoros-page .rc-trust svg { color: var(--teal); flex: 0 0 auto; }
 
-/* Media placeholders (hero video frame + mobile frame share the language) */
+/* Hero video placeholder (preserved dimensions & aspect ratio) */
 .realtoros-page .rc-media {
   min-width: 0; margin: 0; padding: 18px;
   background: var(--white); border: 1px solid var(--line);
@@ -59,68 +60,134 @@
 }
 .realtoros-page .rc-media-title { color: var(--navy); font-size: 1.25rem; font-weight: 800; letter-spacing: -.02em; }
 .realtoros-page .rc-media-sub { color: var(--muted); font-size: .95rem; margin: 0; }
-.realtoros-page figcaption { font-size: .8rem; color: var(--muted); margin-top: 14px; }
+.realtoros-page figcaption { font-size: .82rem; color: var(--muted); margin-top: 12px; }
 
-/* ---------- Section 2: core features ---------- */
+/* ---------- Section 2: essential tools ---------- */
 .realtoros-page .rc-cards { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 18px; margin-top: 34px; }
 .realtoros-page .rc-card {
   background: var(--white); border: 1px solid var(--line); border-radius: var(--round);
   box-shadow: 0 6px 22px rgba(26, 58, 70, .035); padding: 26px;
 }
 .realtoros-page .rc-card h3 { margin: 16px 0 8px; }
-.realtoros-page .rc-card p { color: var(--muted); font-size: .95rem; margin: 0; }
+.realtoros-page .rc-card p { color: var(--muted); font-size: .95rem; line-height: 1.55; margin: 0; }
 .realtoros-page .rc-icon {
   width: 48px; height: 48px; border-radius: 13px;
   background: #e6f4f1; color: var(--teal);
-  display: grid; place-items: center;
+  display: grid; place-items: center; flex: 0 0 auto;
 }
 
-/* ---------- Section 3: how it works ---------- */
-.realtoros-page .rc-how-box {
-  background: var(--mist); border: 1px solid var(--line); border-radius: 24px;
-  padding: 44px; display: grid;
-  grid-template-columns: minmax(0, 35fr) minmax(0, 65fr);
-  gap: 44px; align-items: center;
+/* ---------- Sections 3 & 4: feature spotlights with real CRM screenshots ---------- */
+.realtoros-page .rc-spotlight-leads {
+  background: var(--mist);
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
 }
-.realtoros-page .rc-how-box h2 { margin-bottom: 0; }
-.realtoros-page .rc-steps {
-  list-style: none; margin: 0; padding: 0;
-  display: flex; align-items: stretch; gap: 14px;
+.realtoros-page .rc-spotlight-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 46fr) minmax(0, 54fr);
+  gap: 44px;
+  align-items: center;
 }
-.realtoros-page .rc-step { flex: 1 1 0; min-width: 0; }
-.realtoros-page .rc-step .rc-icon { background: var(--white); border: 1px solid var(--line); }
-.realtoros-page .rc-step h3 { font-size: 1.08rem; margin: 14px 0 6px; }
-.realtoros-page .rc-step p { color: var(--muted); font-size: .92rem; margin: 0; }
-.realtoros-page .rc-arrow { align-self: center; color: var(--teal); flex: 0 0 auto; }
+.realtoros-page .rc-spotlight-grid-flip {
+  grid-template-columns: minmax(0, 54fr) minmax(0, 46fr);
+}
+.realtoros-page .rc-spotlight-copy h2 { font-size: clamp(1.75rem, 2.7vw, 2.35rem); line-height: 1.15; margin-bottom: 12px; }
 
-/* ---------- Section 4: mobile & PWA ---------- */
-.realtoros-page .rc-mobile { padding: 64px 0; }
-.realtoros-page .rc-split {
-  display: grid; grid-template-columns: minmax(0, 1.3fr) minmax(0, 0.7fr);
-  gap: 48px; align-items: center;
-  max-width: 1000px; margin-inline: auto;
+.realtoros-page .rc-feature-list {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
 }
-.realtoros-page .rc-mobile h2 { font-size: clamp(2rem, 3vw, 2.625rem); line-height: 1.12; }
-.realtoros-page .rc-mobile p:not(.product-caption) { font-size: 1rem; line-height: 1.6; max-width: 520px; }
-.realtoros-page .rc-text-link {
-  color: var(--teal); text-decoration: underline; text-underline-offset: 4px;
-  display: inline-block; padding-block: 12px; font-weight: 650;
+.realtoros-page .rc-feature-item {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: var(--round);
+  padding: 18px 20px;
+  box-shadow: 0 4px 16px rgba(26, 58, 70, .03);
 }
-.realtoros-page .rc-phone {
-  width: min(100%, 250px); margin: 0; justify-self: center; padding: 10px;
-  background: var(--white); border: 1px solid var(--line);
-  border-radius: 32px; box-shadow: var(--shadow);
+.realtoros-page .rc-feature-item h3 { font-size: 1.04rem; margin: 0 0 5px; color: var(--navy); }
+.realtoros-page .rc-feature-item p { font-size: .93rem; line-height: 1.55; color: var(--muted); margin: 0; }
+.realtoros-page .rc-feature-item code {
+  font-size: .86em; background: #eef4f3; color: var(--navy);
+  padding: 1px 5px; border-radius: 4px;
 }
-.realtoros-page .rc-phone-frame {
-  aspect-ratio: 9 / 16; padding: 18px;
-  display: flex; flex-direction: column; align-items: center; justify-content: center;
-  gap: 8px; text-align: center;
-  background: var(--mist); border: 1.5px dashed rgba(8, 126, 128, .5); border-radius: 22px;
-}
-.realtoros-page .rc-phone .rc-media-title { font-size: 1.05rem; }
-.realtoros-page .rc-phone .rc-media-sub { font-size: .88rem; }
 
-/* ---------- Section 5: final CTA ---------- */
+/* Connected 3-step cards in Follow-ups & Email section */
+.realtoros-page .rc-connected-steps {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  position: relative;
+}
+.realtoros-page .rc-connected-step {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: var(--round);
+  padding: 18px 20px;
+  box-shadow: 0 4px 16px rgba(26, 58, 70, .03);
+  position: relative;
+}
+.realtoros-page .rc-connected-step:not(:last-child)::after {
+  content: "";
+  position: absolute;
+  left: 36px;
+  top: 56px;
+  bottom: -15px;
+  width: 2px;
+  background: rgba(8, 126, 128, .25);
+  pointer-events: none;
+}
+.realtoros-page .rc-step-num {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: var(--teal);
+  color: #fff;
+  font-weight: 700;
+  font-size: .92rem;
+  display: grid;
+  place-items: center;
+  flex: 0 0 auto;
+  margin-top: 2px;
+}
+.realtoros-page .rc-connected-step h3 { font-size: 1.04rem; margin: 0 0 5px; color: var(--navy); }
+.realtoros-page .rc-connected-step p { font-size: .93rem; line-height: 1.55; color: var(--muted); margin: 0; }
+
+/* Screenshot frame */
+.realtoros-page .rc-shot {
+  min-width: 0;
+  margin: 0;
+  padding: 14px;
+  background: var(--white);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  box-shadow: var(--shadow);
+}
+.realtoros-page .rc-shot-frame {
+  border-radius: 12px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  background: var(--paper);
+}
+.realtoros-page .rc-shot-frame img {
+  display: block;
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16 / 10;
+  object-fit: cover;
+  object-position: top left;
+}
+
+/* ---------- Final CTA ---------- */
 .realtoros-page .rc-cta {
   background: var(--teal-dark); border-radius: 24px;
   padding: 56px 48px; text-align: center; color: #fff;
@@ -150,33 +217,28 @@
 }
 @media (max-width: 1000px) {
   .realtoros-page .section { padding: 48px 0; }
-}
-@media (max-width: 1199px) {
-  .realtoros-page .rc-split { gap: 30px; }
+  .realtoros-page .rc-spotlight-grid,
+  .realtoros-page .rc-spotlight-grid-flip { grid-template-columns: minmax(0, 1fr); gap: 32px; }
+  .realtoros-page .rc-shot-left { order: 2; }
 }
 @media (max-width: 960px) {
   .realtoros-page .rc-hero-grid { grid-template-columns: minmax(0, 1fr); gap: 36px; }
-  .realtoros-page .rc-how-box { grid-template-columns: minmax(0, 1fr); gap: 30px; padding: 34px; }
 }
 @media (max-width: 760px) {
   .realtoros-page .section { padding: 36px 0; }
   .realtoros-page .rc-hero { padding: 40px 0 36px; }
-  .realtoros-page .rc-steps { flex-direction: column; gap: 22px; }
-  .realtoros-page .rc-arrow { display: none; }
   .realtoros-page .rc-cta { padding: 40px 24px; }
 }
 @media (max-width: 620px) {
   .realtoros-page .rc-cards { grid-template-columns: minmax(0, 1fr); }
+  .realtoros-page .rc-feature-item,
+  .realtoros-page .rc-connected-step { padding: 15px 16px; gap: 12px; }
 }
 @media (max-width: 520px) {
   .realtoros-page .rc-actions .btn { width: 100%; }
-  .realtoros-page .rc-media { padding: 12px; }
+  .realtoros-page .rc-media,
+  .realtoros-page .rc-shot { padding: 12px; }
   .realtoros-page .rc-media-frame { padding: 18px; }
-}
-
-@media (max-width: 768px) {
-  .realtoros-page .rc-mobile { padding: 40px 0; }
-  .realtoros-page .rc-split { grid-template-columns: minmax(0, 1fr); gap: 32px; }
 }
 
 /* Reduced motion: no smooth-scroll or hover transitions on this page. */
