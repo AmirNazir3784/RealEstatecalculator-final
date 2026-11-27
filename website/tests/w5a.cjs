@@ -52,14 +52,14 @@ for (const page of pages) {
 }
 
 // RealtorCRM product page: approved structure, exact copy, live CTAs,
-// media placeholders, and none of the retired sections.
+// the clean video-ready media frame, and none of the retired sections.
 {
   const page = fs.readFileSync(path.join(root, 'real-estate-crm/index.html'), 'utf8');
   assert(page.includes('<h1 id="product-title">Keep every lead, deal, and follow-up'), 'hero headline');
   assert(page.includes('REALTORCRM · BUILT FOR REAL ESTATE AGENTS'), 'hero eyebrow');
   assert(page.includes('Manage buyers, sellers, listings, deals, and automated email follow-ups'), 'hero description');
   for (const t of ['Buyer &amp; Seller workspaces', 'Gmail &amp; Outlook sending', 'Built for realtors']) assert(page.includes(t), `trust item: ${t}`);
-  assert(page.includes('RealtorCRM Product Demo') && page.includes('Add your product video or screenshots here'), 'hero media placeholder');
+  assert(page.includes('rc-media-frame') && !page.includes('Add your product video or screenshots here') && !page.includes('RealtorCRM Product Demo'), 'hero media: clean video-ready frame, placeholder removed');
   assert(page.includes('<h2 id="features-title">The essential tools to run your real estate business.</h2>'), 'features heading');
   assert(page.includes('<h2 id="leads-title">Bring every lead in cleanly and move deals forward.</h2>'), 'lead & deal management heading');
   assert(page.includes('crm-leads-contacts.webp'), 'lead & deal screenshot');

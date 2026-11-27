@@ -64,11 +64,11 @@ check('bridge comparison', read('tools/bridge-loan-calculator/index.html').inclu
 for (const slug of ['mortgage-calculator','commission-calculator','home-affordability-calculator','property-investment-calculator']) {
   check(`${slug} mistakes section`, read(`tools/${slug}/index.html`).includes(slug === 'commission-calculator' ? '<h2>Common Commission Calculation Mistakes</h2>' : slug === 'mortgage-calculator' ? '<h2>Common Mortgage Mistakes to Avoid</h2>' : '<h2>Common mistakes</h2>'));
 }
-// 8. RealtorCRM: early access stated, placeholders byte-identical text.
+// 8. RealtorCRM: early access stated, demo placeholder removed.
 const rc = read('real-estate-crm/index.html');
 check('realtorcrm meta early access', rc.includes('Free during early access'));
 check('realtorcrm access section early access', rc.includes('RealtorCRM is free during early access — organize your contacts'));
-check('demo placeholder untouched', rc.includes('RealtorCRM Product Demo') && rc.includes('Add your product video or screenshots here'));
+check('demo placeholder removed', !rc.includes('RealtorCRM Product Demo') && !rc.includes('Add your product video or screenshots here'));
 check('crm screenshots present', rc.includes('crm-leads-contacts.webp') && rc.includes('crm-followup-automation.webp'));
 // 9. About product scope and methodology, integrated into the approach section.
 const about = read('about/index.html');
