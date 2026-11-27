@@ -31,7 +31,7 @@ App.cloud = (function () {
     });
     return client;
   }
-  const AUTH_ERROR_COPY = { invalid_credentials:"Email or password is incorrect.", email_not_confirmed:"Please confirm your email before signing in.", over_request_rate_limit:"Too many attempts. Please wait and try again.", over_email_send_rate_limit:"Too many attempts. Please wait and try again.", weak_password:"Choose a password that meets all requirements.", user_already_exists:"An account already exists for this email." };
+  const AUTH_ERROR_COPY = { invalid_credentials:"Email or password is incorrect.", email_not_confirmed:"Please confirm your email before signing in.", over_request_rate_limit:"Too many attempts. Please wait and try again.", over_email_send_rate_limit:"Too many attempts. Please wait and try again.", weak_password:"Choose a password that meets all requirements.", user_already_exists:"An account already exists for this email.", same_password:"Choose a new password that is different from your current password." };
   function setMessage(text, kind, targetId) {
     const el = document.getElementById(targetId || "cloudAuthMessage");
     if (el) {
@@ -554,15 +554,23 @@ App.cloud = (function () {
       if (p1 !== p2) return setMessage(App.i18n.t("Passwords do not match."), "error", "cloudUpdateMessage");
       updateSubmitBtn.disabled = true;
       setMessage(App.i18n.t("Updating password…"), null, "cloudUpdateMessage");
-      const r = await initClient().auth.updateUser({ password: p1 });
-      updateSubmitBtn.disabled = false;
-      if (r.error) return setMessage(r.error, "error", "cloudUpdateMessage");
+      let r;
+      try {
+        r = await initClient().auth.updateUser({ password: p1 });
+      } catch (err) {
+        updateSubmitBtn.disabled = false;
+        return setMessage(App.i18n.t("Unable to update your password right now. Check your connection and try again."), "error", "cloudUpdateMessage");
+      }
+      if (r.error) {
+        updateSubmitBtn.disabled = false;
+        return setMessage(r.error, "error", "cloudUpdateMessage");
+      }
       setMessage(App.i18n.t("Password updated. Redirecting you to sign in…"), "success", "cloudUpdateMessage");
       recoveryActive = false;
       // Sign the temporary recovery session out — the user is returned to a
       // clean Sign in with their new password, never straight into the app.
       try { await initClient().auth.signOut(); } catch (err) { /* non-fatal */ }
-      setTimeout(() => showMode("sign-in"), 1800);
+      setTimeout(() => { updateSubmitBtn.disabled = false; showMode("sign-in"); }, 1800);
     });
 
     // Password visibility: each toggle flips only the input inside its own
