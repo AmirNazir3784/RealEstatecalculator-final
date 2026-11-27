@@ -364,7 +364,7 @@ App.app = (function () {
     const shell = App.i18n.html`
 <div id="app-shell">
   <aside id="sidebar" aria-label="Primary navigation">
-    <div class="brand" id="brandBlock"></div>
+    <div class="brand" id="brandBlock"><span class="brand-name">RealtorCRM</span></div>
     <nav id="sidebarNav" aria-label="Main navigation">
       ${App.i18n.value(() => (renderNav()))}
     </nav>
@@ -384,9 +384,7 @@ App.app = (function () {
     <div id="storageWarning"></div>
     <header id="topbar" role="banner">
       <button id="mobileMenuToggle" aria-label="Open menu" aria-controls="sidebar" aria-expanded="false"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" width="20" height="20" aria-hidden="true"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg></button>
-      <div class="topbar-brand" aria-label="Realtor Pipeline & Commission OS">
-        <span class="topbar-brand-name">RealtorCRM</span>
-        <span class="topbar-brand-sep" aria-hidden="true">·</span>
+      <div class="topbar-brand" aria-label="Current page">
         <nav class="breadcrumbs" id="breadcrumbs" aria-label="Breadcrumbs"></nav>
       </div>
       <button id="themeToggle" type="button" aria-label="Toggle light and dark theme" title="Toggle light / dark theme"></button>
@@ -668,10 +666,11 @@ App.app = (function () {
       <label class="hub-tabs-select">
         <span class="sr-only">${App.i18n.value(() => (escapeHtml(hub.label)))} section</span>
         <select id="hubTabSelect">${App.i18n.value(() => (options))}</select>
-      </label>`;
+      </label>
+      <div class="hub-tab-actions" id="hubTabActions"></div>`;
     if (sections.length) {
-      host.insertAdjacentHTML("beforeend", App.i18n.html`<nav class="hub-tabs" aria-label="Template sections">${App.i18n.value(() => (sections.map(tab => App.i18n.html`<a class="hub-tab${App.i18n.value(() => (tab.path === path ? " active" : ""))}" data-hub-tab="${App.i18n.value(() => (tab.path))}" href="#${App.i18n.value(() => (tab.path))}"${App.i18n.value(() => (tab.path === path ? ' aria-current="page"' : ""))}>${App.i18n.value(() => (escapeHtml(tab.label)))}</a>`).join("")))}</nav>
-        <label class="hub-tabs-select"><span class="sr-only">Template section</span><select id="templateSectionSelect">${App.i18n.value(() => (sections.map(tab => App.i18n.html`<option value="${App.i18n.value(() => (tab.path))}"${App.i18n.value(() => (tab.path === path ? " selected" : ""))}>${App.i18n.value(() => (escapeHtml(tab.label)))}</option>`).join("")))}</select></label>`);
+      host.insertAdjacentHTML("beforeend", App.i18n.html`<div class="hub-tabs-subrow"><nav class="hub-tabs" aria-label="Template sections">${App.i18n.value(() => (sections.map(tab => App.i18n.html`<a class="hub-tab${App.i18n.value(() => (tab.path === path ? " active" : ""))}" data-hub-tab="${App.i18n.value(() => (tab.path))}" href="#${App.i18n.value(() => (tab.path))}"${App.i18n.value(() => (tab.path === path ? ' aria-current="page"' : ""))}>${App.i18n.value(() => (escapeHtml(tab.label)))}</a>`).join("")))}</nav>
+        <label class="hub-tabs-select"><span class="sr-only">Template section</span><select id="templateSectionSelect">${App.i18n.value(() => (sections.map(tab => App.i18n.html`<option value="${App.i18n.value(() => (tab.path))}"${App.i18n.value(() => (tab.path === path ? " selected" : ""))}>${App.i18n.value(() => (escapeHtml(tab.label)))}</option>`).join("")))}</select></label></div>`);
       host.querySelector("#templateSectionSelect").addEventListener("change", e => navigate(e.target.value));
     }
     const select = host.querySelector("#hubTabSelect");
@@ -1148,16 +1147,12 @@ App.app = (function () {
     const el = document.getElementById("breadcrumbs");
     if (!el) return;
 
-    // A single-item trail is a top-level page (Contacts, Tasks, Dashboard…),
-    // whose name the page's own .page-title already states — rendering it here
-    // too just repeats it in the topbar. Only a real trail (Contacts › John
-    // Smith, Settings › Pipeline) earns the space. The separator dot is hidden
-    // with it so "RealtorCRM ·" never dangles.
-    const sep = document.querySelector(".topbar-brand-sep");
-    const hasTrail = !!items && items.length > 1;
-    if (sep) sep.hidden = !hasTrail;
-    if (!hasTrail) {
+    if (!items || !items.length) {
       el.innerHTML = "";
+      return;
+    }
+    if (items.length === 1) {
+      el.innerHTML = App.i18n.html`<span class="topbar-page-title" aria-current="page">${App.i18n.value(() => (escapeHtml(items[0].label)))}</span>`;
       return;
     }
 
@@ -1166,9 +1161,39 @@ App.app = (function () {
       const cls = isLast ? "crumb-current" : "crumb";
       const inner = it.route && !isLast
         ? App.i18n.html`<a href="#${App.i18n.value(() => (escapeHtml(it.route)))}" class="link">${App.i18n.value(() => (escapeHtml(it.label)))}</a>`
-        : App.i18n.html`<span class="${App.i18n.value(() => (cls))}">${App.i18n.value(() => (escapeHtml(it.label)))}</span>`;
-      return (i > 0 ? App.i18n.markup('<span class="crumb-sep">›</span>') : '') + inner;
+        : App.i18n.html`<span class="${App.i18n.value(() => (cls))}"${App.i18n.value(() => (isLast ? ' aria-current="page"' : ""))}>${App.i18n.value(() => (escapeHtml(it.label)))}</span>`;
+      return (i > 0 ? App.i18n.markup('<span class="crumb-sep" aria-hidden="true">/</span>') : '') + inner;
     }).join("");
+  }
+
+  // Relocates page-header actions into #hubTabActions on tabbed pages, or
+  // turns .page-header into a compact right-aligned action toolbar on
+  // non-tabbed pages, while removing the hero .page-title/.page-desc block.
+  function relocatePageHeaders(page) {
+    if (!page) return;
+    const tabActions = document.getElementById("hubTabActions");
+    const tabsHost = document.getElementById("hubTabs");
+    const tabsVisible = !!(tabsHost && !tabsHost.hidden && tabActions);
+    if (tabActions) tabActions.replaceChildren();
+
+    page.querySelectorAll(".page-header").forEach((hdr) => {
+      const actions = hdr.querySelector(".page-actions");
+      const hasActions = !!(actions && actions.children.length > 0);
+      if (tabsVisible && hasActions && tabActions) {
+        while (actions.firstChild) {
+          tabActions.appendChild(actions.firstChild);
+        }
+        hdr.remove();
+      } else if (hasActions) {
+        const headingBlock = hdr.firstElementChild;
+        if (headingBlock && !headingBlock.classList.contains("page-actions")) {
+          headingBlock.remove();
+        }
+        hdr.classList.add("page-actions-bar");
+      } else {
+        hdr.remove();
+      }
+    });
   }
 
   function setTopActions(html) {
@@ -1267,15 +1292,17 @@ App.app = (function () {
     // place either way.
     if (isHubListPath(path)) {
       const hub = hubById(hubForPath(path));
-      if (hub && lastBreadcrumbs.length) {
+      if (hub && lastBreadcrumbs.length > 1) {
         const trail = lastBreadcrumbs.slice();
         trail[0] = Object.assign({}, trail[0]);
         Object.defineProperty(trail[0], "label", { enumerable: true, get: () => hub.label });
         setBreadcrumbs(trail);
-      } else if (hub) {
+      } else if (hub && !lastBreadcrumbs.length) {
         setBreadcrumbs([{ get label() { return hub.label; } }]);
       }
     }
+
+    relocatePageHeaders(page);
 
     // The sidebar agent/agency name only reflects whatever entities are
     // currently cached (lazy per-page loading), so re-check it after every

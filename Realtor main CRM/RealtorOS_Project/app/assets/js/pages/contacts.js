@@ -105,84 +105,86 @@ App.pages.contacts = (function () {
     const s = S().getState();
     const settings = s.settings;
 
+    const uploadIcon = '<svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>';
+    const slidersIcon = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="4" y1="21" x2="4" y2="14"/><line x1="4" y1="10" x2="4" y2="3"/><line x1="12" y1="21" x2="12" y2="12"/><line x1="12" y1="8" x2="12" y2="3"/><line x1="20" y1="21" x2="20" y2="16"/><line x1="20" y1="12" x2="20" y2="3"/><line x1="1" y1="14" x2="7" y2="14"/><line x1="9" y1="8" x2="15" y2="8"/><line x1="17" y1="16" x2="23" y2="16"/></svg>';
+    const sortIcon = '<svg class="sort-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 6h18"/><path d="M7 12h10"/><path d="M11 18h2"/></svg>';
+
     container.innerHTML = App.i18n.html`
       <div class="page-header">
-        <div>
-          <div class="page-title">${App.i18n.value(() => (pastOnly ? App.i18n.t("Past Clients") : App.i18n.t("Contacts")))}</div>
-          <div class="page-desc">Your relationships — buyers, sellers, investors, and referral partners. Click any contact to see everything connected to them.</div>
-        </div>
+        <div><div class="page-title">${App.i18n.value(() => (pastOnly ? App.i18n.t("Past Clients") : App.i18n.t("Contacts")))}</div></div>
         <div class="page-actions">
-          <button class="btn" id="importFileBtn" title="One-time upload from a file">Import from file</button>
+          <button class="btn btn-import" id="importFileBtn" title="Import from file" aria-label="Import from file">${App.i18n.value(() => (uploadIcon))}<span class="btn-label">Import</span></button>
           <button class="btn btn-primary" id="addContactBtn">${App.i18n.value(() => (App.app.icon("plus")))} Add Contact</button>
         </div>
       </div>
 
-      <div class="filter-bar">
-        <div class="search-wrap">
-          ${App.i18n.value(() => (App.app.icon("search")))}
-          <input type="search" id="cSearch" placeholder="Search name, email, or phone…" value="${App.i18n.value(() => (U().esc(listFilters.search)))}">
-        </div>
-        <select id="cRole" aria-label="Filter by role">
-          <option value="">All roles</option>
-          ${App.i18n.value(() => (["Buyer","Seller","Investor","Referral Partner"].map(r =>
-            App.i18n.html`<option value="${App.i18n.value(() => (r))}" ${App.i18n.value(() => (listFilters.role===r?"selected":""))}>${App.i18n.value(() => (App.i18n.t(r)))}</option>`).join("")))}
-        </select>
-        <select id="cStage" aria-label="Filter by stage" ${App.i18n.value(() => (pastOnly ? "disabled" : ""))}>
-          ${App.i18n.value(() => (pastOnly ? App.i18n.markup('<option value="Past Client">Past Client</option>') : App.i18n.html`
-          <option value="">All stages</option>
-          ${App.i18n.value(() => (settings.contactStages.map(st =>
-            App.i18n.html`<option value="${App.i18n.value(() => (st))}" ${App.i18n.value(() => (listFilters.stage===st?"selected":""))}>${App.i18n.value(() => (st))}</option>`).join("")))}
-          `))}
-        </select>
-        <!-- Source and Temperature are the two lowest-priority filters here, so
-             they live behind "More filters" rather than on the main row: six
-             controls is one more than the row fits at common widths. Their
-             select ids are unchanged, so the change handlers below still bind
-             to them exactly as before. -->
-        <span class="filter-more">
-          <button type="button" class="btn btn-sm filter-more-toggle" id="cMoreBtn"
-                  aria-haspopup="true" aria-expanded="false" aria-controls="cMorePanel">
-            More filters<span class="filter-more-count" id="cMoreCount" hidden></span>
-          </button>
-          <div class="filter-more-panel" id="cMorePanel" role="group" aria-label="Additional filters" hidden>
-            <label class="filter-more-field">
-              <span>Source</span>
-              <select id="cSource" aria-label="Filter by source">
-                <option value="">All sources</option>
-                ${App.i18n.value(() => (settings.leadSources.map(src =>
-                  App.i18n.html`<option value="${App.i18n.value(() => (src))}" ${App.i18n.value(() => (listFilters.source===src?"selected":""))}>${App.i18n.value(() => (src))}</option>`).join("")))}
-              </select>
-            </label>
-            <label class="filter-more-field">
-              <span>Temperature</span>
-              <select id="cTemp" aria-label="Filter by temperature">
-                <option value="">All temperatures</option>
-                ${App.i18n.value(() => (["Hot","Warm","Cold"].map(t =>
-                  App.i18n.html`<option value="${App.i18n.value(() => (t))}" ${App.i18n.value(() => (listFilters.temp===t?"selected":""))}>${App.i18n.value(() => (App.i18n.t(t)))}</option>`).join("")))}
-              </select>
-            </label>
-            <button type="button" class="btn btn-sm" id="cMoreClear">Clear these filters</button>
+      <div class="card contacts-card">
+        <div class="contacts-toolbar filter-bar" id="cToolbar">
+          <div class="contacts-toolbar-left">
+            <div class="search-wrap">
+              ${App.i18n.value(() => (App.app.icon("search")))}
+              <input type="search" id="cSearch" placeholder="Search name, email, or phone…" value="${App.i18n.value(() => (U().esc(listFilters.search)))}">
+            </div>
+            <select id="cRole" aria-label="Filter by role">
+              <option value="">All roles</option>
+              ${App.i18n.value(() => (["Buyer","Seller","Investor","Referral Partner"].map(r =>
+                App.i18n.html`<option value="${App.i18n.value(() => (r))}" ${App.i18n.value(() => (listFilters.role===r?"selected":""))}>${App.i18n.value(() => (App.i18n.t(r)))}</option>`).join("")))}
+            </select>
+            <select id="cStage" aria-label="Filter by stage" ${App.i18n.value(() => (pastOnly ? "disabled" : ""))}>
+              ${App.i18n.value(() => (pastOnly ? App.i18n.markup('<option value="Past Client">Past Client</option>') : App.i18n.html`
+              <option value="">All stages</option>
+              ${App.i18n.value(() => (settings.contactStages.map(st =>
+                App.i18n.html`<option value="${App.i18n.value(() => (st))}" ${App.i18n.value(() => (listFilters.stage===st?"selected":""))}>${App.i18n.value(() => (st))}</option>`).join("")))}
+              `))}
+            </select>
+            <span class="filter-more">
+              <button type="button" class="btn filter-more-toggle" id="cMoreBtn"
+                      aria-haspopup="true" aria-expanded="false" aria-controls="cMorePanel">
+                ${App.i18n.value(() => (slidersIcon))}<span>More filters</span><span class="filter-more-count" id="cMoreCount" hidden></span>
+              </button>
+              <div class="filter-more-panel" id="cMorePanel" role="group" aria-label="Additional filters" hidden>
+                <label class="filter-more-field">
+                  <span>Source</span>
+                  <select id="cSource" aria-label="Filter by source">
+                    <option value="">All sources</option>
+                    ${App.i18n.value(() => (settings.leadSources.map(src =>
+                      App.i18n.html`<option value="${App.i18n.value(() => (src))}" ${App.i18n.value(() => (listFilters.source===src?"selected":""))}>${App.i18n.value(() => (src))}</option>`).join("")))}
+                  </select>
+                </label>
+                <label class="filter-more-field">
+                  <span>Temperature</span>
+                  <select id="cTemp" aria-label="Filter by temperature">
+                    <option value="">All temperatures</option>
+                    ${App.i18n.value(() => (["Hot","Warm","Cold"].map(t =>
+                      App.i18n.html`<option value="${App.i18n.value(() => (t))}" ${App.i18n.value(() => (listFilters.temp===t?"selected":""))}>${App.i18n.value(() => (App.i18n.t(t)))}</option>`).join("")))}
+                  </select>
+                </label>
+                <button type="button" class="btn btn-sm" id="cMoreClear">Clear these filters</button>
+              </div>
+            </span>
+            <button type="button" class="btn-text-clear" id="cClearAllBtn" hidden>Clear all</button>
+            ${App.i18n.value(() => (showsOwners() ? App.i18n.html`
+            <select id="cOwner" aria-label="Filter by who owns the lead">
+              <option value="" ${App.i18n.value(() => (listFilters.owner === "" ? "selected" : ""))}>All leads</option>
+              <option value="mine" ${App.i18n.value(() => (listFilters.owner === "mine" ? "selected" : ""))}>My leads</option>
+              <option value="unassigned" ${App.i18n.value(() => (listFilters.owner === "unassigned" ? "selected" : ""))}>Nobody owns yet</option>
+            </select>` : ""))}
           </div>
-        </span>
-        ${App.i18n.value(() => (showsOwners() ? App.i18n.html`
-        <select id="cOwner" aria-label="Filter by who owns the lead">
-          <option value="" ${App.i18n.value(() => (listFilters.owner === "" ? "selected" : ""))}>All leads</option>
-          <option value="mine" ${App.i18n.value(() => (listFilters.owner === "mine" ? "selected" : ""))}>My leads</option>
-          <option value="unassigned" ${App.i18n.value(() => (listFilters.owner === "unassigned" ? "selected" : ""))}>Nobody owns yet</option>
-        </select>` : ""))}
-        <select id="cSort" aria-label="Sort by">
-          <option value="name-asc" ${App.i18n.value(() => (listFilters.sort==="name-asc"?"selected":""))}>Name (A–Z)</option>
-          <option value="name-desc" ${App.i18n.value(() => (listFilters.sort==="name-desc"?"selected":""))}>Name (Z–A)</option>
-          <option value="followup-asc" ${App.i18n.value(() => (listFilters.sort==="followup-asc"?"selected":""))}>Next Follow-up (soonest)</option>
-          <option value="lastcontact-desc" ${App.i18n.value(() => (listFilters.sort==="lastcontact-desc"?"selected":""))}>Last Contact (newest)</option>
-          <option value="created-desc" ${App.i18n.value(() => (listFilters.sort==="created-desc"?"selected":""))}>Created (newest)</option>
-        </select>
-      </div>
-
-      <div class="card">
-        <div class="card-header">
-          <div class="card-title" id="cCountLabel">Loading…</div>
+          <div class="contacts-toolbar-right">
+            <span class="toolbar-count" id="cCountLabel">Loading…</span>
+            <div class="sort-wrap">
+              ${App.i18n.value(() => (sortIcon))}
+              <select id="cSort" aria-label="Sort by">
+                <option value="name-asc" ${App.i18n.value(() => (listFilters.sort==="name-asc"?"selected":""))}>Sort: Name (A–Z)</option>
+                <option value="name-desc" ${App.i18n.value(() => (listFilters.sort==="name-desc"?"selected":""))}>Sort: Name (Z–A)</option>
+                <option value="followup-asc" ${App.i18n.value(() => (listFilters.sort==="followup-asc"?"selected":""))}>Sort: Next Follow-up</option>
+                <option value="lastcontact-desc" ${App.i18n.value(() => (listFilters.sort==="lastcontact-desc"?"selected":""))}>Sort: Last Contact</option>
+                <option value="created-desc" ${App.i18n.value(() => (listFilters.sort==="created-desc"?"selected":""))}>Sort: Created</option>
+              </select>
+            </div>
+          </div>
         </div>
+        <div class="filter-chips" id="cFilterChips" hidden></div>
         <div class="card-body zero" id="cTableWrap"></div>
       </div>
     `;
@@ -213,12 +215,40 @@ App.pages.contacts = (function () {
   // a hidden active filter with no indicator reads as lost data.
   function syncMoreCount() {
     const badge = document.getElementById("cMoreCount");
-    if (!badge) return;
     const n = (listFilters.source ? 1 : 0) + (listFilters.temp ? 1 : 0);
-    App.i18n.setText(badge, App.i18n.value(() => (n ? String(n) : "")));
-    badge.hidden = n === 0;
+    if (badge) {
+      App.i18n.setText(badge, App.i18n.value(() => (n ? String(n) : "")));
+      badge.hidden = n === 0;
+    }
     const btn = document.getElementById("cMoreBtn");
     if (btn) btn.classList.toggle("has-active", n > 0);
+    const clearAll = document.getElementById("cClearAllBtn");
+    if (clearAll) clearAll.hidden = n === 0;
+
+    const chipsEl = document.getElementById("cFilterChips");
+    if (chipsEl) {
+      const chips = [];
+      if (listFilters.source) chips.push({ key: "source", label: App.i18n.t("Source") + ": " + listFilters.source });
+      if (listFilters.temp) chips.push({ key: "temp", label: App.i18n.t("Temp") + ": " + App.i18n.t(listFilters.temp) });
+      chipsEl.hidden = chips.length === 0;
+      chipsEl.innerHTML = chips.map(ch =>
+        `<span class="filter-chip"><span>${U().esc(ch.label)}</span><button type="button" class="filter-chip-x" data-clear-chip="${U().esc(ch.key)}" aria-label="Remove ${U().esc(ch.label)}">×</button></span>`
+      ).join("");
+      chipsEl.querySelectorAll("[data-clear-chip]").forEach(x => {
+        x.addEventListener("click", () => {
+          const key = x.getAttribute("data-clear-chip");
+          if (key === "source") {
+            listFilters.source = "";
+            const el = document.getElementById("cSource"); if (el) el.value = "";
+          } else if (key === "temp") {
+            listFilters.temp = "";
+            const el = document.getElementById("cTemp"); if (el) el.value = "";
+          }
+          syncMoreCount();
+          renderTable();
+        });
+      });
+    }
   }
 
   function closeMorePanel() {
@@ -255,13 +285,16 @@ App.pages.contacts = (function () {
       } else detach();
     });
 
-    if (clear) clear.addEventListener("click", () => {
+    const clearFilters = () => {
       listFilters.source = ""; listFilters.temp = "";
       const src = document.getElementById("cSource"); if (src) src.value = "";
       const tmp = document.getElementById("cTemp"); if (tmp) tmp.value = "";
       syncMoreCount();
       renderTable();
-    });
+    };
+    if (clear) clear.addEventListener("click", clearFilters);
+    const clearAllBtn = document.getElementById("cClearAllBtn");
+    if (clearAllBtn) clearAllBtn.addEventListener("click", clearFilters);
 
     syncMoreCount();
   }
@@ -431,7 +464,10 @@ App.pages.contacts = (function () {
     const visible = {};
     filtered.forEach(c => { visible[c.id] = true; });
     selectedIds = selectedIds.filter(id => visible[id]);
-    App.i18n.setText(document.getElementById("cCountLabel"), App.i18n.text`${App.i18n.value(() => (filtered.length))} of ${App.i18n.value(() => (all.length))} contact${App.i18n.value(() => (all.length === 1 ? "" : "s"))}`);
+    const countText = filtered.length === all.length
+      ? `${all.length} contact${all.length === 1 ? "" : "s"}`
+      : `${filtered.length} of ${all.length} contact${all.length === 1 ? "" : "s"}`;
+    App.i18n.setText(document.getElementById("cCountLabel"), countText);
 
     if (!filtered.length) {
       if (pastClientsOnly && all.length === 0) {
