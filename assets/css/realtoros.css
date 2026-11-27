@@ -355,8 +355,23 @@ a:hover { text-decoration: underline; text-underline-offset: 2px; }
    single place the product name appears). This mount point stays only for
    the optional custom-logo swap in updateSidebarAgent() — :empty collapses
    it to nothing when no logo is set, so no empty container is left behind. */
-.brand { padding: 0 20px 12px; }
+.brand {
+  padding: 0 20px 18px;
+  margin-bottom: 10px;
+  border-bottom: 1px solid var(--sb-border);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
 .brand:empty { display: none; }
+.brand-name {
+  font-family: var(--font-display);
+  font-size: 1.25rem;
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  color: var(--sb-fg);
+  line-height: 1.15;
+}
 .nav-item {
   display: flex;
   align-items: center;
@@ -495,10 +510,19 @@ a:hover { text-decoration: underline; text-underline-offset: 2px; }
   font-size: var(--font-size-md);
   flex-shrink: 0;
 }
+.topbar-page-title {
+  font-family: var(--font-display);
+  font-size: var(--font-size-lg);
+  font-weight: 700;
+  color: var(--text-strong);
+  letter-spacing: -0.01em;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 .breadcrumbs {
   display: flex;
   align-items: center;
-  gap: 4px;
+  gap: 6px;
   min-width: 0;
   overflow: hidden;
   font-size: var(--font-size-sm);
@@ -507,7 +531,7 @@ a:hover { text-decoration: underline; text-underline-offset: 2px; }
 }
 .breadcrumbs .crumb-sep {
   color: var(--text-soft);
-  font-size: var(--font-size-xs);
+  font-size: var(--font-size-sm);
 }
 .breadcrumbs .crumb-current {
   color: var(--text);
@@ -912,6 +936,7 @@ a:hover { text-decoration: underline; text-underline-offset: 2px; }
   background: var(--accent); color: var(--accent-text);
   font-size: var(--font-size-2xs); font-weight: 700; line-height: 1;
 }
+.filter-more-count[hidden] { display: none; }
 .filter-more-panel {
   position: absolute;
   right: 0;
@@ -1351,14 +1376,28 @@ a:hover { text-decoration: underline; text-underline-offset: 2px; }
   border-bottom: 1px solid var(--border);
   background: var(--card);
   padding: 0 var(--page-pad, 24px);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0 12px;
+  min-height: 52px;
 }
 #hubTabs[hidden] { display: none; }
+.hub-tabs-subrow {
+  flex: 1 0 100%;
+  border-top: 1px solid var(--border);
+  display: flex;
+  align-items: center;
+  min-height: 44px;
+}
 
 .hub-tabs {
   display: flex;
+  align-items: stretch;
   gap: 2px;
-  /* One line, always. Six tabs at 1000px do not fit, and a wrapped tab
-     row reads as two rows of unrelated links. */
+  min-width: 0;
+  flex: 1 1 auto;
   overflow-x: auto;
   scrollbar-width: none;
 }
@@ -1366,7 +1405,9 @@ a:hover { text-decoration: underline; text-underline-offset: 2px; }
 
 .hub-tab {
   flex: 0 0 auto;
-  padding: 12px 14px 10px;
+  display: inline-flex;
+  align-items: center;
+  padding: 15px 14px 13px;
   border-bottom: 2px solid transparent;
   color: var(--text-muted);
   font-size: var(--font-size-sm);
@@ -1374,6 +1415,42 @@ a:hover { text-decoration: underline; text-underline-offset: 2px; }
   text-decoration: none;
   white-space: nowrap;
   transition: color 0.12s, border-color 0.12s;
+}
+.hub-tab-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 0 0 auto;
+}
+.hub-tab-actions:empty { display: none; }
+.hub-tab-actions .btn {
+  height: 34px;
+  min-height: 34px;
+  padding: 6px 12px;
+  font-size: 13px;
+  font-weight: 500;
+  border-radius: 8px;
+  white-space: nowrap;
+}
+.hub-tab-actions .btn-import {
+  background: transparent;
+  border-color: var(--border-strong);
+  color: var(--text);
+}
+.hub-tab-actions .btn-import:hover {
+  background: var(--bg-subtle);
+}
+.page-header.page-actions-bar {
+  justify-content: flex-end;
+  margin-bottom: 14px;
+}
+.page-header.page-actions-bar .btn {
+  height: 34px;
+  min-height: 34px;
+  padding: 6px 12px;
+  font-size: 13px;
+  font-weight: 500;
+  border-radius: 8px;
 }
 .hub-tab:hover { color: var(--text); text-decoration: none; }
 .hub-tab.active {
@@ -1808,6 +1885,7 @@ a:hover { text-decoration: underline; text-underline-offset: 2px; }
    sidebar spec, kept separate from the app's general 900px content
    breakpoint below so this change stays scoped to the sidebar/nav only. */
 @media (max-width: 860px) {
+  body.sidebar-drawer-open { overflow: hidden; }
   #app-shell { grid-template-columns: 1fr; }
   #sidebar {
     position: fixed;
@@ -1845,7 +1923,8 @@ a:hover { text-decoration: underline; text-underline-offset: 2px; }
      actions and avatar. The compact product name stays. */
   .topbar-brand-name { font-size: var(--font-size-md); }
   .topbar-brand-sep { display: none; }
-  .breadcrumbs { display: none; }
+  .breadcrumbs { display: flex; }
+  .topbar-page-title { font-size: 16px; }
   #page { padding: 18px; }
   /* The filter row wraps at every width, so there is no longer a horizontal
      overflow to hint at — the right-edge scroll fade that used to live here
@@ -3676,3 +3755,159 @@ input:is([type="email"],[type="url"],[type="tel"],[type="number"],[type="date"])
   .cloud-auth-field { margin-bottom:8px; }
   .cloud-auth-divider { margin:8px 0 10px; }
 }
+
+/* ============================================================
+   COMPACT HEADER, TAB-BAR ACTIONS & UNIFIED CONTACTS TOOLBAR
+   ============================================================ */
+.btn.btn-primary.header-new {
+  background: var(--card);
+  color: var(--text);
+  border: 1px solid var(--border-strong);
+  height: 36px;
+  min-height: 36px;
+  padding: 6px 12px;
+  font-size: 13px;
+  font-weight: 500;
+  border-radius: 8px;
+}
+.btn.btn-primary.header-new:hover {
+  background: var(--bg-subtle);
+  border-color: var(--text-soft);
+}
+.header-search {
+  height: 36px;
+  min-height: 36px;
+  padding: 6px 12px;
+  font-size: 13px;
+  border-radius: 8px;
+}
+
+.contacts-card { overflow: visible; }
+.contacts-toolbar.filter-bar {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px 10px;
+  padding: 12px 16px;
+  margin: 0;
+  border-bottom: 1px solid var(--border);
+  background: var(--card);
+  border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+.contacts-toolbar-left,
+.contacts-toolbar-right {
+  display: flex;
+  flex-wrap: nowrap;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+}
+.contacts-toolbar-left { flex: 1 1 auto; }
+.contacts-toolbar-right { flex: 0 0 auto; margin-left: auto; }
+
+.contacts-toolbar .search-wrap {
+  flex: 1 1 240px;
+  min-width: 240px;
+  max-width: 360px;
+  height: 36px;
+}
+.contacts-toolbar select,
+.contacts-toolbar input[type="search"],
+.contacts-toolbar .btn {
+  height: 36px;
+  min-height: 36px;
+  border-radius: 8px;
+  font-size: 13px;
+}
+.contacts-toolbar select {
+  padding: 6px 10px;
+  background: var(--card);
+  min-width: 0;
+}
+.contacts-toolbar .search-wrap > input[type="search"] {
+  background: var(--surface-sunk);
+  padding: 6px 12px 6px 34px;
+}
+.btn-text-clear {
+  background: none;
+  border: 0;
+  padding: 6px 8px;
+  height: 36px;
+  color: var(--accent-ink);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  border-radius: 8px;
+  flex: 0 0 auto;
+}
+.btn-text-clear:hover {
+  background: var(--bg-subtle);
+  text-decoration: underline;
+}
+.btn-text-clear[hidden] { display: none; }
+
+.toolbar-count {
+  color: var(--text-muted);
+  font-size: 13px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+
+.tbl-sort-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.tbl-sort-btn:hover,
+.tbl-sort-btn.is-sorted {
+  color: var(--text-strong);
+}
+.tbl-sort-ind {
+  font-size: 12px;
+  line-height: 1;
+  color: var(--accent-ink);
+}
+
+:root[data-theme="dark"] .btn.btn-primary.header-new {
+  background: var(--card);
+  color: var(--text);
+  border-color: var(--border-strong);
+}
+:root[data-theme="dark"] .btn.btn-primary.header-new:hover {
+  background: var(--surface-sunk);
+}
+:root[data-theme="dark"] .contacts-toolbar.filter-bar,
+:root[data-theme="dark"] .contacts-toolbar select {
+  background: var(--card);
+}
+:root[data-theme="dark"] .hub-tab-actions .btn-import:hover {
+  background: var(--surface-sunk);
+}
+
+@media (max-width: 960px) {
+  .contacts-toolbar.filter-bar { flex-wrap: wrap; }
+  .contacts-toolbar-left { flex: 1 1 100%; flex-wrap: wrap; }
+  .contacts-toolbar-right { margin-left: 0; width: 100%; justify-content: flex-end; }
+}
+@media (max-width: 640px) {
+  #hubTabs { padding: 6px var(--page-pad, 14px); min-height: 48px; gap: 8px; }
+  .hub-tabs-select { flex: 1 1 140px; padding: 0; }
+  .hub-tab-actions { flex: 0 0 auto; }
+  .contacts-toolbar .search-wrap { min-width: 0; max-width: none; flex: 1 1 100%; }
+  .contacts-toolbar .contacts-toolbar-left > select { flex: 1 1 calc(33.33% - 6px); }
+}
+@media (max-width: 520px) {
+  .hub-tab-actions .btn-import .btn-label { display: none; }
+  .hub-tab-actions .btn-import { padding: 6px 10px; }
+}
+

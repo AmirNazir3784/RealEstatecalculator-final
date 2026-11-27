@@ -905,7 +905,8 @@ App.store = (function () {
     resetAllCaches: () => D().resetAllCaches(),
     _emptyState: emptyState,
     _normalize: normalize,
-    _defaultCustomization: defaultCustomization
+    _defaultCustomization: defaultCustomization,
+    _defaultSettings: defaultSettings
   };
 })();
 
