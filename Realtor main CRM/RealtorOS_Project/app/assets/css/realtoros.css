@@ -3878,6 +3878,26 @@ input:is([type="email"],[type="url"],[type="tel"],[type="number"],[type="date"])
   color: var(--accent-ink);
 }
 
+.filters-toggle { display: none; }
+.contacts-filter-panel { display: contents; }
+.contacts-sort-mobile { display: none; }
+.filters-count {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 16px;
+  height: 16px;
+  padding: 0 4px;
+  border-radius: var(--radius-pill);
+  background: var(--accent);
+  color: var(--accent-text);
+  font-size: var(--font-size-2xs);
+  font-weight: 700;
+  line-height: 1;
+}
+.filters-count[hidden] { display: none; }
+.today-status-sep { color: var(--text-soft); }
+
 :root[data-theme="dark"] .btn.btn-primary.header-new {
   background: var(--card);
   color: var(--text);
@@ -3887,7 +3907,8 @@ input:is([type="email"],[type="url"],[type="tel"],[type="number"],[type="date"])
   background: var(--surface-sunk);
 }
 :root[data-theme="dark"] .contacts-toolbar.filter-bar,
-:root[data-theme="dark"] .contacts-toolbar select {
+:root[data-theme="dark"] .contacts-toolbar select,
+:root[data-theme="dark"] .contacts-toolbar .filters-toggle {
   background: var(--card);
 }
 :root[data-theme="dark"] .hub-tab-actions .btn-import:hover {
@@ -3903,8 +3924,148 @@ input:is([type="email"],[type="url"],[type="tel"],[type="number"],[type="date"])
   #hubTabs { padding: 6px var(--page-pad, 14px); min-height: 48px; gap: 8px; }
   .hub-tabs-select { flex: 1 1 140px; padding: 0; }
   .hub-tab-actions { flex: 0 0 auto; }
-  .contacts-toolbar .search-wrap { min-width: 0; max-width: none; flex: 1 1 100%; }
-  .contacts-toolbar .contacts-toolbar-left > select { flex: 1 1 calc(33.33% - 6px); }
+
+  .contacts-toolbar.filter-bar { padding: 10px 12px; gap: 8px; }
+  .contacts-toolbar-left { gap: 8px; }
+  .contacts-toolbar .search-wrap { min-width: 0; max-width: none; flex: 1 1 140px; }
+  .filters-toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 10px;
+    background: var(--card);
+    flex: 0 0 auto;
+  }
+  .filters-toggle.has-active {
+    background: var(--accent-soft);
+    border-color: var(--accent);
+    color: var(--accent-ink);
+  }
+  .contacts-filter-panel {
+    display: none;
+    flex: 1 0 100%;
+    order: 10;
+  }
+  .contacts-filter-panel.open {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px;
+    padding-top: 4px;
+  }
+  .contacts-filter-panel select { width: 100%; max-width: none; min-width: 0; }
+  .contacts-sort-mobile { display: block; grid-column: 1 / -1; }
+  .contacts-toolbar-right { width: auto; flex: 0 0 auto; margin-left: auto; }
+
+  /* Compact 3-line Contact cards */
+  .contacts-card .tbl-responsive tbody tr {
+    display: grid;
+    grid-template-columns: auto auto minmax(0, 1fr) auto auto;
+    grid-template-rows: auto auto auto;
+    align-items: center;
+    gap: 5px 8px;
+    padding: 12px 14px;
+  }
+  .contacts-card .tbl-responsive tbody td {
+    display: block;
+    padding: 0;
+    border: 0;
+    min-width: 0;
+  }
+  .contacts-card .tbl-responsive tbody td::before { display: none; }
+  .contacts-card .tbl-responsive tbody td.actions:has(.c-pick),
+  .contacts-card .tbl-responsive tbody td[data-label="Belongs to"] { display: none; }
+  .contacts-card .tbl-responsive tbody td.primary-cell {
+    grid-column: 1 / 4;
+    grid-row: 1;
+    font-size: 16px;
+    font-weight: 600;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .contacts-card .tbl-responsive tbody td[data-label="Temp"] {
+    grid-column: 4;
+    grid-row: 1;
+    justify-self: end;
+  }
+  .contacts-card .tbl-responsive tbody td.actions:last-child {
+    grid-column: 5;
+    grid-row: 1;
+    margin-top: 0;
+    justify-self: end;
+  }
+  .contacts-card .tbl-responsive tbody td[data-label="Role"],
+  .contacts-card .tbl-responsive tbody td[data-label="Stage"],
+  .contacts-card .tbl-responsive tbody td[data-label="Next Follow-up"] {
+    grid-row: 2;
+    font-size: 13px;
+    color: var(--text-muted);
+    white-space: nowrap;
+  }
+  .contacts-card .tbl-responsive tbody td[data-label="Role"] { grid-column: 1; }
+  .contacts-card .tbl-responsive tbody td[data-label="Role"]::after { content: " ·"; color: var(--text-soft); }
+  .contacts-card .tbl-responsive tbody td[data-label="Stage"] { grid-column: 2; }
+  .contacts-card .tbl-responsive tbody td[data-label="Next Follow-up"] {
+    grid-column: 3 / 6;
+    justify-self: start;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .contacts-card .tbl-responsive tbody td[data-label="Next Follow-up"]::before {
+    display: inline;
+    content: "· ";
+    text-transform: none;
+    letter-spacing: 0;
+    font-size: 13px;
+    margin-right: 2px;
+    color: var(--text-soft);
+  }
+  .contacts-card .tbl-responsive tbody td[data-label="Phone"] {
+    grid-column: 1 / 4;
+    grid-row: 3;
+    font-size: 13px;
+  }
+  .contacts-card .tbl-responsive tbody td[data-label="Source"] {
+    grid-column: 4 / 6;
+    grid-row: 3;
+    justify-self: end;
+    font-size: 12.5px;
+    color: var(--text-muted);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+  }
+
+  /* Today mobile layout */
+  .today-row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+  .today-row-status { flex: 1 1 100%; }
+  .fu-bar {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    gap: 6px;
+    width: 100%;
+  }
+  .fu-bar .fu-btn {
+    min-width: 0;
+    width: 100%;
+    height: 40px;
+    min-height: 40px;
+    padding: 0 4px;
+    font-size: 12.5px;
+    justify-content: center;
+  }
+  .fu-bar [data-today-task] {
+    grid-column: 1 / -1;
+    width: 100%;
+    height: 40px;
+    min-height: 40px;
+    justify-content: center;
+  }
 }
 @media (max-width: 520px) {
   .hub-tab-actions .btn-import .btn-label { display: none; }
