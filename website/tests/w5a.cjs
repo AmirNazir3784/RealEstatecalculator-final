@@ -57,20 +57,18 @@ for (const page of pages) {
   const page = fs.readFileSync(path.join(root, 'real-estate-crm/index.html'), 'utf8');
   assert(page.includes('<h1 id="product-title">Keep every lead, deal, and follow-up'), 'hero headline');
   assert(page.includes('REALTORCRM · BUILT FOR REAL ESTATE AGENTS'), 'hero eyebrow');
-  assert(page.includes('Manage contacts, track deals, plan follow-ups, and stay organized'), 'hero description');
-  for (const t of ['All-in-one workspace', 'Simple and easy to use', 'Built for realtors']) assert(page.includes(t), `trust item: ${t}`);
+  assert(page.includes('Manage buyers, sellers, listings, deals, and automated email follow-ups'), 'hero description');
+  for (const t of ['Buyer &amp; Seller workspaces', 'Gmail &amp; Outlook sending', 'Built for realtors']) assert(page.includes(t), `trust item: ${t}`);
   assert(page.includes('RealtorCRM Product Demo') && page.includes('Add your product video or screenshots here'), 'hero media placeholder');
   assert(page.includes('<h2 id="features-title">The essential tools to run your real estate business.</h2>'), 'features heading');
-  for (const c of ['Keep your clients and leads organized with their details and history.', 'Track opportunities, monitor progress, and manage your pipeline.', 'Plan your next actions and keep conversations moving.', 'Review your activity and understand what needs attention.']) assert(page.includes(c), `feature copy: ${c}`);
-  assert(page.includes('<h2 id="workflow-title">A simple workflow that keeps you ahead.</h2>'), 'workflow heading');
-  for (const s of ['Add a Contact', 'Plan a Follow-up', 'Move the Deal Forward']) assert(page.includes(`<h3>${s}</h3>`), `step: ${s}`);
-  assert(page.includes('<h2 id="mobile-title">Your workspace, wherever your day takes you.</h2>'), 'mobile heading');
-  assert(page.includes('RealtorCRM Mobile Preview') && page.includes('Add your real mobile screenshot here'), 'mobile placeholder');
-  assert(page.includes('href="#access">View access availability'), 'access link kept');
+  assert(page.includes('<h2 id="leads-title">Bring every lead in cleanly and move deals forward.</h2>'), 'lead & deal management heading');
+  assert(page.includes('crm-leads-contacts.webp'), 'lead & deal screenshot');
+  assert(page.includes('<h2 id="followup-title">Consistent follow-up that sends from your own inbox.</h2>'), 'follow-ups & email heading');
+  assert(page.includes('crm-followup-automation.webp'), 'follow-up automation screenshot');
   assert(page.includes('<h2 id="access-title">Your next opportunity starts with better follow-up.</h2>'), 'final CTA heading');
   assert.equal([...page.matchAll(/data-crm-link="signup"[^>]*>Get Started with RealtorCRM/g)].length, 2, 'both Get Started CTAs use the signup app link');
   assert.equal([...page.matchAll(/href="#features">Explore/g)].length, 2, 'both Explore CTAs scroll to the features section');
-  for (const gone of ['Relationships need attention', 'From first conversation to the next opportunity', 'A clear rhythm for your day', 'Make room for the relationships that matter', 'product-access-note', 'RealtorOS']) assert(!page.includes(gone), `retired content must not remain: ${gone}`);
+  for (const gone of ['Relationships need attention', 'From first conversation to the next opportunity', 'A clear rhythm for your day', 'Make room for the relationships that matter', 'A simple workflow that keeps you ahead', 'product-access-note', 'RealtorOS']) assert(!page.includes(gone), `retired content must not remain: ${gone}`);
 }
 
 // Browser-tab titles follow the approved concise patterns.

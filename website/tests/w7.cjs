@@ -69,7 +69,7 @@ const rc = read('real-estate-crm/index.html');
 check('realtorcrm meta early access', rc.includes('Free during early access'));
 check('realtorcrm access section early access', rc.includes('RealtorCRM is free during early access — organize your contacts'));
 check('demo placeholder untouched', rc.includes('RealtorCRM Product Demo') && rc.includes('Add your product video or screenshots here'));
-check('mobile placeholder untouched', rc.includes('RealtorCRM Mobile Preview') && rc.includes('Add your real mobile screenshot here'));
+check('crm screenshots present', rc.includes('crm-leads-contacts.webp') && rc.includes('crm-followup-automation.webp'));
 // 9. About product scope and methodology, integrated into the approach section.
 const about = read('about/index.html');
 check('about verified CRM scope', about.includes('organize contacts, deals, appointments and follow-ups') && !about.includes('Follow-up Plans'));
