@@ -242,3 +242,26 @@ domTest("notifications are read and written as the caller's own", async () => {
   reads.forEach((r) => assert.ok(filtersOf(r).includes("eq:user_id:u-1"),
     "a notification belongs to one person: " + JSON.stringify(r.filters)));
 });
+
+test("empty settings_data falls back to defaultSettings arrays without crashing Contacts or Activities", async (t) => {
+  const b = await browser(["assets/js/config.js", "assets/js/core/utils.js", "assets/js/data/store.js", "assets/js/data/workspace.js", "assets/js/data/data-service.js"]);
+  if (!b) { t.skip(SKIP_DOM); return; }
+  open.push(b);
+  try {
+    const stub = stubClient({
+      rows: {
+        workspace_settings: [{ id: "ws_set_1", workspace_id: "ws-1", settings_data: {}, pipeline_stages: [], commission_defaults: {}, custom_field_definitions: [], business_profile: {}, ui_preferences: {}, module_toggles: {}, metadata: {} }]
+      }
+    });
+    b.window.App.cloud = { getClient: () => stub.client, getUser: () => ({ id: "u-1" }) };
+    await b.window.App.workspace.load();
+    await b.window.App.store.ensureLoaded(["settings"]);
+    const s = b.window.App.store.getState().settings;
+    assert.ok(Array.isArray(s.contactStages) && s.contactStages.length > 0, "contactStages defaulted");
+    assert.ok(Array.isArray(s.leadSources) && s.leadSources.length > 0, "leadSources defaulted");
+    assert.ok(Array.isArray(s.activityTypes) && s.activityTypes.length > 0, "activityTypes defaulted");
+    assert.ok(Array.isArray(s.taskPriorities) && s.taskPriorities.length > 0, "taskPriorities defaulted");
+  } finally {
+    closeAll();
+  }
+});

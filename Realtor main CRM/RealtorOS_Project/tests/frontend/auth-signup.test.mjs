@@ -406,3 +406,25 @@ test("rapid desktop tab changes keep the last requested mode", async t => {
     assert.equal(d.getElementById("cloudAuthCard").classList.contains("cloud-auth-switching"), false);
   } finally { g.b.close(); }
 });
+
+test("update password handles network failures and same_password errors cleanly", async t => {
+  const g = await gate(t); if (!g) return;
+  try {
+    g.fireAuth("PASSWORD_RECOVERY", { user: { id: "u1" } });
+    await settle(g.window);
+    const d = g.document;
+    const btn = d.getElementById("cloudUpdateSubmit");
+    d.getElementById("cloudNewPassword").value = STRONG;
+    d.getElementById("cloudNewPasswordConfirm").value = STRONG;
+
+    g.auth.updateUser = async () => { throw new Error("Network down"); };
+    await submit(g, "cloudUpdateForm");
+    assert.equal(btn.disabled, false, "submit button re-enables after network error");
+    assert.match(msg(g, "cloudUpdateMessage"), /unable to update your password/i);
+
+    g.auth.updateUser = async () => ({ data: {}, error: { code: "same_password", message: "New password should be different" } });
+    await submit(g, "cloudUpdateForm");
+    assert.equal(btn.disabled, false, "submit button re-enables after API error");
+    assert.match(msg(g, "cloudUpdateMessage"), /different from your current password/i);
+  } finally { g.b.close(); }
+});
