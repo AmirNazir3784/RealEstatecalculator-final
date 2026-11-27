@@ -651,8 +651,9 @@ App.data = (function () {
 
   function rowToSettings(row) {
     const defaults = App.store && App.store._defaultCustomization ? App.store._defaultCustomization() : { enabledModules: {}, dashboardWidgets: {}, branding: {} };
+    const baseDefaults = App.store && App.store._defaultSettings ? App.store._defaultSettings() : {};
     const bag = row.settings_data || {};
-    const settings = Object.assign({}, bag, {
+    const settings = Object.assign({}, baseDefaults, bag, {
       pipelineStages: row.pipeline_stages || [],
       commissionDefaults: row.commission_defaults || {},
       customFields: { definitions: row.custom_field_definitions || [] },
