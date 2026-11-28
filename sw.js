@@ -35,7 +35,7 @@
 // (deployment/package-crm.mjs) stamps a unique version into the deployed
 // copy on every build, so a shipped shell can never reuse this cache
 // name; this in-repo value is the fallback for unpackaged copies.
-const VERSION = "crm-20261127-3047468";
+const VERSION = "crm-20261128-8ecbf6e";
 const CACHE = "realtoros-shell-" + VERSION;
 
 // Everything the app needs to render its first screen without a network.

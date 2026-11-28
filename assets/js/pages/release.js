@@ -349,6 +349,9 @@ App.pages.release = (function () {
    * ========================================================== */
 
   const TODAY_SECTION_CAP = 50;
+  function initialCap() {
+    return (typeof window !== "undefined" && window.matchMedia && window.matchMedia("(max-width: 640px)").matches) ? 5 : TODAY_SECTION_CAP;
+  }
   const TEMP_ORDER = { Hot: 0, Warm: 1, Cold: 2 };
 
   // Hot before Warm before Cold, then whatever has waited longest.
@@ -522,14 +525,14 @@ App.pages.release = (function () {
   function contactRowHtml(c, today) {
     const due = dueText(c.__due, today);
     const late = c.__due && c.__due < today;
+    const lastText = lastContactText(c);
     return App.i18n.html`<div class="today-row" data-contact-row="${App.i18n.value(() => (U().esc(c.id)))}">
       <div class="today-row-main">
         <a class="today-row-name link" href="#/contacts/${App.i18n.value(() => (U().esc(c.id)))}">${App.i18n.value(() => (U().esc(c.name || App.i18n.t("Unnamed contact"))))}</a>
         <div class="today-row-meta">
           <span class="badge badge-neutral">${App.i18n.value(() => (U().esc(c.stage || "")))}</span>
           <span class="badge badge-neutral">${App.i18n.value(() => (U().esc(c.temperature || "")))}</span>
-          ${App.i18n.value(() => (due ? App.i18n.html`<span class="${App.i18n.value(() => (late ? "today-due-late" : "today-due"))}">${App.i18n.value(() => (U().esc(due)))}</span>` : ""))}
-          <span class="today-row-last">${App.i18n.value(() => (U().esc(lastContactText(c))))}</span>
+          <span class="today-row-status">${App.i18n.value(() => (due ? App.i18n.html`<span class="${App.i18n.value(() => (late ? "today-due-late" : "today-due"))}">${App.i18n.value(() => (U().esc(due)))}</span>` : ""))}${App.i18n.value(() => (due && lastText ? App.i18n.markup('<span class="today-status-sep" aria-hidden="true"> · </span>') : ""))}${App.i18n.value(() => (lastText ? App.i18n.html`<span class="today-row-last">${App.i18n.value(() => (U().esc(lastText)))}</span>` : ""))}</span>
         </div>
       </div>
       ${App.i18n.value(() => (App.followUp ? App.followUp.barHtml(c) : ""))}
@@ -598,7 +601,7 @@ App.pages.release = (function () {
           </div>
         </div>
         ${App.i18n.value(() => (sections.length
-          ? sections.map((sec) => sectionHtml(sec, today, shownBySection[sec.id] || TODAY_SECTION_CAP)).join("")
+          ? sections.map((sec) => sectionHtml(sec, today, shownBySection[sec.id] || initialCap())).join("")
           : App.i18n.html`<section class="card"><div class="card-body">${
               App.i18n.value(() => (emptyMessage(App.i18n.message("You are all caught up"),
                 App.i18n.message("Nothing is overdue and nothing is due today. New leads and follow-ups appear here as they come in."))))
@@ -614,7 +617,8 @@ App.pages.release = (function () {
       const more = e.target.closest("[data-today-more]");
       if (more) {
         const id = more.getAttribute("data-today-more");
-        shownBySection[id] = (shownBySection[id] || TODAY_SECTION_CAP) + TODAY_SECTION_CAP;
+        const step = initialCap();
+        shownBySection[id] = (shownBySection[id] || step) + step;
         paint();
         return;
       }

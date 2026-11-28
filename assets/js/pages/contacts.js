@@ -123,30 +123,45 @@ App.pages.contacts = (function () {
               ${App.i18n.value(() => (App.app.icon("search")))}
               <input type="search" id="cSearch" placeholder="Search name, email, or phone…" value="${App.i18n.value(() => (U().esc(listFilters.search)))}">
             </div>
-            <select id="cStage" aria-label="Filter by stage" ${App.i18n.value(() => (pastOnly ? "disabled" : ""))}>
-              ${App.i18n.value(() => (pastOnly ? App.i18n.markup('<option value="Past Client">Past Client</option>') : App.i18n.html`
-              <option value="">All stages</option>
-              ${App.i18n.value(() => (settings.contactStages.map(st =>
-                App.i18n.html`<option value="${App.i18n.value(() => (st))}" ${App.i18n.value(() => (listFilters.stage===st?"selected":""))}>${App.i18n.value(() => (st))}</option>`).join("")))}
-              `))}
-            </select>
-            <select id="cSource" aria-label="Filter by source">
-              <option value="">All sources</option>
-              ${App.i18n.value(() => (settings.leadSources.map(src =>
-                App.i18n.html`<option value="${App.i18n.value(() => (src))}" ${App.i18n.value(() => (listFilters.source===src?"selected":""))}>${App.i18n.value(() => (src))}</option>`).join("")))}
-            </select>
-            <select id="cTemp" aria-label="Filter by temperature">
-              <option value="">All temps</option>
-              ${App.i18n.value(() => (["Hot","Warm","Cold"].map(t =>
-                App.i18n.html`<option value="${App.i18n.value(() => (t))}" ${App.i18n.value(() => (listFilters.temp===t?"selected":""))}>${App.i18n.value(() => (App.i18n.t(t)))}</option>`).join("")))}
-            </select>
+            <button type="button" class="btn filters-toggle" id="cFiltersBtn" aria-expanded="false" aria-controls="cFilterPanel">
+              Filters<span class="filters-count" id="cFiltersCount" hidden></span>
+            </button>
+            <div class="contacts-filter-panel" id="cFilterPanel">
+              <select id="cStage" aria-label="Filter by stage" ${App.i18n.value(() => (pastOnly ? "disabled" : ""))}>
+                ${App.i18n.value(() => (pastOnly ? App.i18n.markup('<option value="Past Client">Past Client</option>') : App.i18n.html`
+                <option value="">All stages</option>
+                ${App.i18n.value(() => (settings.contactStages.map(st =>
+                  App.i18n.html`<option value="${App.i18n.value(() => (st))}" ${App.i18n.value(() => (listFilters.stage===st?"selected":""))}>${App.i18n.value(() => (st))}</option>`).join("")))}
+                `))}
+              </select>
+              <select id="cSource" aria-label="Filter by source">
+                <option value="">All sources</option>
+                ${App.i18n.value(() => (settings.leadSources.map(src =>
+                  App.i18n.html`<option value="${App.i18n.value(() => (src))}" ${App.i18n.value(() => (listFilters.source===src?"selected":""))}>${App.i18n.value(() => (src))}</option>`).join("")))}
+              </select>
+              <select id="cTemp" aria-label="Filter by temperature">
+                <option value="">All temps</option>
+                ${App.i18n.value(() => (["Hot","Warm","Cold"].map(t =>
+                  App.i18n.html`<option value="${App.i18n.value(() => (t))}" ${App.i18n.value(() => (listFilters.temp===t?"selected":""))}>${App.i18n.value(() => (App.i18n.t(t)))}</option>`).join("")))}
+              </select>
+              ${App.i18n.value(() => (showsOwners() ? App.i18n.html`
+              <select id="cOwner" aria-label="Filter by who owns the lead">
+                <option value="" ${App.i18n.value(() => (listFilters.owner === "" ? "selected" : ""))}>All leads</option>
+                <option value="mine" ${App.i18n.value(() => (listFilters.owner === "mine" ? "selected" : ""))}>My leads</option>
+                <option value="unassigned" ${App.i18n.value(() => (listFilters.owner === "unassigned" ? "selected" : ""))}>Nobody owns yet</option>
+              </select>` : ""))}
+              <select id="cSortMobile" class="contacts-sort-mobile" aria-label="Sort by">
+                <option value="name-asc" ${App.i18n.value(() => (listFilters.sort==="name-asc"?"selected":""))}>Name (A–Z)</option>
+                <option value="name-desc" ${App.i18n.value(() => (listFilters.sort==="name-desc"?"selected":""))}>Name (Z–A)</option>
+                <option value="stage-asc" ${App.i18n.value(() => (listFilters.sort==="stage-asc"?"selected":""))}>Stage (A–Z)</option>
+                <option value="stage-desc" ${App.i18n.value(() => (listFilters.sort==="stage-desc"?"selected":""))}>Stage (Z–A)</option>
+                <option value="temp-desc" ${App.i18n.value(() => (listFilters.sort==="temp-desc"?"selected":""))}>Temp (Hot first)</option>
+                <option value="temp-asc" ${App.i18n.value(() => (listFilters.sort==="temp-asc"?"selected":""))}>Temp (Cold first)</option>
+                <option value="followup-asc" ${App.i18n.value(() => (listFilters.sort==="followup-asc"?"selected":""))}>Follow-up (soonest)</option>
+                <option value="followup-desc" ${App.i18n.value(() => (listFilters.sort==="followup-desc"?"selected":""))}>Follow-up (latest)</option>
+              </select>
+            </div>
             <button type="button" class="btn-text-clear" id="cClearBtn" hidden>Clear</button>
-            ${App.i18n.value(() => (showsOwners() ? App.i18n.html`
-            <select id="cOwner" aria-label="Filter by who owns the lead">
-              <option value="" ${App.i18n.value(() => (listFilters.owner === "" ? "selected" : ""))}>All leads</option>
-              <option value="mine" ${App.i18n.value(() => (listFilters.owner === "mine" ? "selected" : ""))}>My leads</option>
-              <option value="unassigned" ${App.i18n.value(() => (listFilters.owner === "unassigned" ? "selected" : ""))}>Nobody owns yet</option>
-            </select>` : ""))}
           </div>
           <div class="contacts-toolbar-right">
             <span class="toolbar-count" id="cCountLabel">Loading…</span>
@@ -159,15 +174,37 @@ App.pages.contacts = (function () {
     // Wire up filter controls
     const syncClearBtn = () => {
       const btn = document.getElementById("cClearBtn");
-      if (!btn) return;
-      const active = !!(listFilters.search || (!pastOnly && listFilters.stage) || listFilters.source || listFilters.temp);
-      btn.hidden = !active;
+      if (btn) {
+        const active = !!(listFilters.search || (!pastOnly && listFilters.stage) || listFilters.source || listFilters.temp);
+        btn.hidden = !active;
+      }
+      const badge = document.getElementById("cFiltersCount");
+      const filterBtn = document.getElementById("cFiltersBtn");
+      const n = (!pastOnly && listFilters.stage ? 1 : 0) + (listFilters.source ? 1 : 0) + (listFilters.temp ? 1 : 0) + (listFilters.owner ? 1 : 0);
+      if (badge) {
+        App.i18n.setText(badge, App.i18n.value(() => (n ? String(n) : "")));
+        badge.hidden = n === 0;
+      }
+      if (filterBtn) filterBtn.classList.toggle("has-active", n > 0);
     };
     const rerender = () => { syncClearBtn(); renderTable(); };
     document.getElementById("cSearch").addEventListener("input", (e) => { listFilters.search = e.target.value; rerender(); });
     document.getElementById("cStage").addEventListener("change", (e) => { listFilters.stage = e.target.value; rerender(); });
     document.getElementById("cSource").addEventListener("change", (e) => { listFilters.source = e.target.value; rerender(); });
     document.getElementById("cTemp").addEventListener("change", (e) => { listFilters.temp = e.target.value; rerender(); });
+    const filtersBtn = document.getElementById("cFiltersBtn");
+    const filterPanel = document.getElementById("cFilterPanel");
+    if (filtersBtn && filterPanel) {
+      filtersBtn.addEventListener("click", () => {
+        const open = filterPanel.classList.toggle("open");
+        filtersBtn.setAttribute("aria-expanded", String(open));
+      });
+    }
+    const sortMobile = document.getElementById("cSortMobile");
+    if (sortMobile) sortMobile.addEventListener("change", (e) => {
+      listFilters.sort = e.target.value;
+      renderTable();
+    });
     document.getElementById("cClearBtn").addEventListener("click", () => {
       listFilters.search = "";
       if (!pastOnly) listFilters.stage = "";
@@ -433,7 +470,13 @@ App.pages.contacts = (function () {
                 <td data-label="Temp">${App.i18n.value(() => (tempBadge(c.temperature)))}</td>
                 <td data-label="Next Follow-up">${App.i18n.value(() => (followUpCell(c)))}</td>
                 <td data-label="Source">${App.i18n.value(() => (U().esc(c.source || "—")))}</td>
-                <td data-label="Phone">${App.i18n.value(() => (U().esc(c.phone || "—")))}</td>
+                <td data-label="Phone">${App.i18n.value(() => {
+                  const raw = c.phone ? String(c.phone) : "";
+                  const tel = raw.replace(/[^0-9+]/g, "");
+                  return (raw && tel)
+                    ? `<a href="tel:${U().esc(tel)}" class="link">${U().esc(raw)}</a>`
+                    : U().esc(raw || "—");
+                })}</td>
                 <td class="actions" data-label="">
                   ${App.i18n.value(() => ((!c.assignedToId && claimAllowed) ? App.i18n.html`<button class="btn btn-sm" data-claim="${App.i18n.value(() => (c.id))}">Claim</button>` : ""))}
                   <button class="btn btn-sm btn-ghost" data-edit="${App.i18n.value(() => (c.id))}" aria-label="Edit ${App.i18n.value(() => (U().esc(c.name)))}">${App.i18n.value(() => (App.app.icon("edit")))}</button>
@@ -452,6 +495,8 @@ App.pages.contacts = (function () {
       btn.addEventListener("click", () => {
         const col = btn.getAttribute("data-sort-col");
         listFilters.sort = listFilters.sort === col + "-asc" ? col + "-desc" : col + "-asc";
+        const sm = document.getElementById("cSortMobile");
+        if (sm) sm.value = listFilters.sort;
         renderTable();
       });
     });
@@ -599,9 +644,6 @@ App.pages.contacts = (function () {
               </div>
             </div>
           </div>
-          <!-- Tasks sits in the aside rather than the main column: it is a short
-               checklist that reads fine at this width, and moving it evens out
-               a 7-against-2 split that left most of this column empty. -->
           ${App.i18n.value(() => (renderRelatedTasksCard(contact, relatedTasks)))}
         </div>
       </div>
