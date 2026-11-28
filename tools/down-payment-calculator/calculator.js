@@ -225,6 +225,34 @@
   }
 
   compute('percent');
+
+  function copyResults() {
+    var pairs = [['Estimated cash to close', 'dp-cash-to-close'], ['Down payment', 'dp-bd-down'],
+      ['Est. closing costs', 'dp-bd-close'], ['Loan amount', 'dp-loan'], ['LTV', 'dp-ltv'],
+      ['Monthly P&I', 'dp-pi'], ['Est. monthly PMI', 'dp-pmi']];
+    var lines = ['Down Payment Calculator'];
+    pairs.forEach(function (pair) {
+      var node = el(pair[1]);
+      if (node) lines.push(pair[0] + ': ' + node.textContent);
+    });
+    var text = lines.join('\n');
+    var done = function (ok) {
+      setText('copy-note', ok ? 'Results copied.' : 'Copy is not available in this browser — use Print instead.');
+    };
+    try {
+      if (typeof navigator !== 'undefined' && navigator.clipboard && navigator.clipboard.writeText) {
+        var p = navigator.clipboard.writeText(text);
+        if (p && p.then) p.then(function () { done(true); }, function () { done(false); });
+        else done(true);
+      } else done(false);
+    } catch (err) { done(false); }
+  }
+  var copyBtn = el('copy-results');
+  if (copyBtn) copyBtn.addEventListener('click', copyResults);
+  var printBtn = el('print-results');
+  if (printBtn) printBtn.addEventListener('click', function () {
+    if (typeof window !== 'undefined' && window.print) window.print();
+  });
 })();
 
 // FAQ accordion: button toggles, one open at a time.

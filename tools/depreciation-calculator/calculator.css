@@ -317,3 +317,27 @@ select.field { appearance: none; -webkit-appearance: none; width: 100%; }
    the panel (it inherits a near-white colour from the hero scope). */
 #schedule-toggle-btn { color: var(--navy); background: #fff; }
 #schedule-toggle-btn:hover { color: #fff; background: var(--teal); border-color: var(--teal); }
+
+.calc-page .input-unit { overflow: hidden; box-sizing: border-box; }
+.calculator-layout .copy-row .tool-btn { flex: 1; text-align: center; justify-content: center; }
+.calculator-layout .result .result-cta { width: 100%; margin-top: 8px; justify-content: center; text-align: center; }
+
+@media (min-width: 761px) {
+  .calc-page .page-hero { padding: 10px 0 20px; }
+  .calc-page .calculator-layout { grid-template-columns: minmax(0, 1.14fr) minmax(0, 0.86fr); gap: 16px; align-items: stretch; }
+  .calc-page .calculator-layout .calc-left > .panel { padding: 18px 20px; }
+  .calc-page .panel-head h1 { font-size: clamp(28px, 3vw, 36px); margin: 0 0 4px; }
+  .calc-page .calculator-layout .panel-sub { font-size: 13.5px; margin: 0 0 10px; }
+  .calc-page .seg-control { margin-bottom: 12px; padding: 4px; }
+  .calc-page .seg-btn { min-height: 36px; padding: 6px 10px; font-size: 13.5px; }
+  .calc-page .calculator-layout .form-group { margin: 0 0 12px; }
+  .calc-page .calculator-layout .form-group legend { font-size: 13px; margin-bottom: 8px; }
+  .calc-page .calculator-layout .form-field input,
+  .calc-page .calculator-layout .form-field select { padding: 7px 10px; font-size: 14px; min-height: 36px; }
+  .calc-page .calculator-layout > .result { padding: 18px 20px; }
+  .calc-page .calculator-layout > .result .result-number { font-size: 36px; margin-bottom: 4px; }
+  .calc-page .calculator-layout > .result > .result-row { flex: 0 0 auto; padding: 6px 0; }
+  .calc-page .calculator-layout > .result .result-tile { padding: 9px 12px; }
+  .calc-page .calculator-layout > .result .copy-row { margin-top: auto; padding-top: 10px; }
+  .calc-page .calculator-layout > .result .copy-row .tool-btn { padding: 10px 14px; }
+}

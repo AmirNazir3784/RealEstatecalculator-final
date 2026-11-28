@@ -211,6 +211,11 @@
     setWidth('bar-opex', share(opex));
     setWidth('bar-cf', share(cf));
     set('sticky-value', negUsd(cf));
+    var ctaEl = document.getElementById('inv-mortgage-cta');
+    if (ctaEl && ctaEl.setAttribute) {
+      ctaEl.setAttribute('href', '../../tools/mortgage-calculator/?price=' + Math.round(price) +
+        '&down=' + Math.round(down) + '&rate=' + rate + '&term=' + years);
+    }
     // Hide $0 rows; everything else stays visible.
     hideRow('row-vacancy', vacancyLoss === 0);
     hideRow('row-other', other === 0);

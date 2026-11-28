@@ -316,3 +316,26 @@ select.field { appearance: none; -webkit-appearance: none; width: 100%; }
    the maximum. The neutral no-asking state keeps the calm slate. */
 #result-card .yield-verdict.is-good { color: #0F766E; }
 #result-card .yield-verdict.is-bad { color: #B91C1C; }
+
+.calc-page .input-unit { overflow: hidden; box-sizing: border-box; }
+.calculator-layout .copy-row .tool-btn { flex: 1; text-align: center; justify-content: center; }
+.calculator-layout .result .result-cta { width: 100%; margin-top: 8px; justify-content: center; text-align: center; }
+.calculator-layout .result .result-next { margin-top: 10px; padding-top: 8px; border-top: 1px solid var(--line); font-size: 13px; color: #5E6C79; }
+.calculator-layout .result .result-next a { display: block; margin-top: 2px; font-weight: 600; color: var(--teal-dark); }
+
+@media (min-width: 761px) {
+  .calc-page .page-hero { padding: 10px 0 20px; }
+  .calc-page .calculator-layout { grid-template-columns: minmax(0, 1.14fr) minmax(0, 0.86fr); gap: 16px; align-items: stretch; }
+  .calc-page .calculator-layout .calc-left > .panel { padding: 18px 20px; }
+  .calc-page .panel h1 { font-size: clamp(28px, 3vw, 36px); margin: 0 0 4px; }
+  .calc-page .calculator-layout .panel-sub { font-size: 13.5px; margin: 0 0 12px; }
+  .calc-page .calculator-layout .form-group { margin: 0 0 12px; }
+  .calc-page .calculator-layout .form-group legend { font-size: 13px; margin-bottom: 8px; }
+  .calc-page .calculator-layout .form-field input { padding: 7px 10px; font-size: 14.5px; min-height: 36px; }
+  .calc-page .calculator-layout > .result { padding: 18px 20px; }
+  .calc-page .calculator-layout > .result .result-number { font-size: 36px; margin-bottom: 4px; }
+  .calc-page .calculator-layout > .result > .result-row { flex: 0 0 auto; padding: 6px 0; }
+  .calc-page .calculator-layout > .result .result-tile { padding: 9px 12px; }
+  .calc-page .calculator-layout > .result .copy-row { margin-top: auto; padding-top: 10px; }
+  .calc-page .calculator-layout > .result .copy-row .tool-btn { padding: 10px 14px; }
+}

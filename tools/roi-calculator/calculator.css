@@ -1,25 +1,58 @@
-
+.page-hero .calculator-layout { margin-top: 6px; }
+@media (max-width: 760px) {
+  .page-hero .calculator-layout { margin-top: 0; }
+}
 .page-hero p { color: #5E6C79; }
-.calculator-layout > * { min-width: 0; } /* year-by-year table min-content must not stretch the single-column mobile layout (same guard as property-investment) */
+.calculator-layout > * { min-width: 0; }
 
-/* Input panel: the site's own card treatment */
-.advanced .form-grid { margin-top: 14px; }
+.advanced .form-grid { margin-top: 10px; }
 @media (max-width: 560px) {
   .form-grid { grid-template-columns: 1fr; }
 }
 
-/* Year-by-year table (ROI only) */
-.roi-table-wrap { overflow-x: auto; margin-top: 22px; }
+/* Year-by-year table (below calculator layout on desktop & mobile) */
+.roi-years-panel {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  box-shadow: 0 8px 24px rgba(16, 33, 49, .05);
+  padding: 18px 22px;
+  margin-top: 18px;
+}
+.roi-years-panel h2 { font-size: 1.25rem; color: var(--navy); margin: 0 0 4px; }
+.roi-years-panel .muted { font-size: 0.88rem; color: #5E6C79; margin: 0 0 10px; }
+.roi-table-wrap { overflow-x: auto; margin-top: 8px; }
+.roi-table { width: 100%; border-collapse: collapse; font-size: 0.88rem; }
+.roi-table th, .roi-table td { text-align: right; padding: 8px 10px; border-bottom: 1px solid var(--line); font-variant-numeric: tabular-nums; }
 .roi-table th:first-child, .roi-table td:first-child { text-align: left; }
+.roi-table th { font-size: 0.74rem; text-transform: uppercase; letter-spacing: .06em; color: #5E6C79; }
 .roi-table td:first-child { color: #5E6C79; }
 
-/* Mortgage-template redesign (2026-11-24): this page adopts the Mortgage
-   Calculator's light-card system — white result card, navy ink, one brand
-   palette for the breakdown bar, compact hero, richer article type. The
-   calculator engine and markup are unchanged. */
-.calc-page .page-hero { padding: 10px 0 16px; }
-.calc-page .page-hero h1 { margin: 0 0 4px; }
-.calculator-layout .result { background: #fff; color: #243442; border: 1px solid var(--line); border-radius: 20px; box-shadow: 0 16px 40px rgba(16, 33, 49, .09); padding: 16px 22px 14px; }
+.calc-page .page-hero { padding: 4px 0 8px; border-bottom: 0; }
+.calc-page .page-hero h1 {
+  margin: 0 0 2px;
+  font-size: clamp(1.85rem, 3.2vw, 2.35rem);
+  line-height: 1.15;
+}
+.calc-page .page-hero > .wrap > p { display: none; }
+
+.calculator-layout .panel {
+  background: #fff;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  box-shadow: 0 8px 24px rgba(16, 33, 49, .05);
+}
+.calculator-layout .panel .input-unit {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  overflow: hidden;
+  border-color: #D9DEDB;
+}
+.calculator-layout .panel .input-unit .field { min-width: 0; box-sizing: border-box; }
+
+.calculator-layout .result { background: #fff; color: #243442; border: 1px solid var(--line); border-radius: 18px; box-shadow: 0 16px 40px rgba(16, 33, 49, .09); padding: 16px 20px 14px; }
 .calculator-layout .result .result-number { color: var(--navy); font-family: var(--font-display); }
 .calculator-layout .result .result-label, .calculator-layout .result small { color: #5E6C79; }
 .calculator-layout .result .result-group { color: var(--teal-dark); border-top-color: var(--line); }
@@ -40,8 +73,8 @@
 .calculator-layout .result-tile > small { color: #5E6C79; }
 .calculator-layout .result table td { color: #243442; }
 .calculator-layout .result table th { color: var(--navy); }
-.calculator-layout .breakdown-track { background: #EDEBE4; height: 10px; }
-.calculator-layout .breakdown-legend { background: #F7F5EF; color: #475569; }
+.calculator-layout .breakdown-track { background: #EDEBE4; height: 8px; border-radius: 999px; }
+.calculator-layout .breakdown-legend { background: #F7F5EF; color: #475569; border-radius: 8px; }
 .calculator-layout .breakdown-legend b { color: var(--navy); }
 .calculator-layout .seg-blue { background: var(--teal); }
 .calculator-layout .seg-teal { background: var(--navy); }
@@ -54,19 +87,58 @@
 .calculator-layout .result .tool-btn-primary:hover { background: var(--teal-dark); border-color: var(--teal-dark); }
 .calculator-layout .result .btn-outline, .calculator-layout .result .tool-btn-outline { background: #fff; border-color: #CEDADA; color: var(--navy); }
 .calculator-layout .result .btn-outline:hover, .calculator-layout .result .tool-btn-outline:hover { background: #F7F5EF; border-color: #CEDADA; color: var(--navy); }
-@media (max-width: 760px) { .calculator-layout .result { padding: 16px; } }
+
+@media (min-width: 961px) { .calc-page .wrap { width: min(calc(100% - 64px), 1100px); } }
+
+@media (min-width: 761px) {
+  .calc-page .calculator-layout {
+    grid-template-columns: minmax(0, 1.14fr) minmax(330px, 0.86fr);
+    gap: 16px;
+    align-items: stretch;
+  }
+  .calc-page .calculator-layout > .panel {
+    display: flex;
+    flex-direction: column;
+    padding: 14px 18px 12px;
+  }
+  .calculator-layout .panel > h2 { font-size: 1.22rem; margin: 0 0 2px; color: var(--navy); line-height: 1.2; }
+  .calculator-layout .panel > .muted { font-size: 0.8rem; margin: 0 0 6px; color: #5E6C79; line-height: 1.3; }
+  .calculator-layout .panel .form-grid { gap: 7px 12px; }
+  .calculator-layout .panel .form-field label,
+  .calculator-layout .panel .seg-label { font-size: 12.5px; font-weight: 700; color: #14202B; margin-bottom: 2px; line-height: 1.25; }
+  .calculator-layout .panel .field-helper { font-size: 11px; margin-top: 2px; line-height: 1.25; }
+  .calculator-layout .panel .input-unit { min-height: 36px; height: 36px; border-radius: 8px; }
+  .calculator-layout .panel .input-unit .field { min-height: 36px; height: 36px; font-size: 13.5px; padding: 0 10px; }
+  .calculator-layout .panel .unit-affix { font-size: 12.5px; padding: 0 9px; line-height: 36px; }
+  .calculator-layout .panel .field-slider { min-height: 16px; height: 16px; margin: 2px 0 0; accent-color: var(--teal); cursor: pointer; }
+  .calculator-layout .panel .seg-control button { min-height: 34px; font-size: 12.5px; padding: 4px 8px; }
+  .calculator-layout .panel .advanced { margin-top: 6px; padding-top: 4px; }
+  .calculator-layout .panel .advanced summary { min-height: 34px; font-size: 0.88rem; }
+  .calc-page .calculator-layout > .panel .disclaimer:first-of-type { margin-top: auto; padding-top: 6px; }
+  .calc-page .calculator-layout > .panel .disclaimer { font-size: 0.74rem; line-height: 1.3; margin: 2px 0 0; color: #5E6C79; }
+
+  .calculator-layout .result { padding: 14px 18px 12px; position: static; }
+  .calculator-layout .result .result-number { font-size: 2.15rem; font-weight: 800; line-height: 1.05; margin: 2px 0 3px; }
+  .calculator-layout .result .result-label { font-size: 11px; margin: 0; }
+  .calculator-layout .result .result-hero-sub { font-size: 0.84rem; margin: 0 0 6px; line-height: 1.35; }
+  .calculator-layout .result .result-tiles { gap: 6px; margin-top: 4px; }
+  .calculator-layout .result .result-tile { padding: 7px 10px; }
+  .calculator-layout .result .result-tile > span { font-size: 10px; margin-bottom: 2px; }
+  .calculator-layout .result .result-tile > b { font-size: 0.94rem; }
+  .calculator-layout .result .result-group { font-size: 11px; margin: 8px 0 2px; padding-top: 6px; }
+  .calculator-layout .result-row { padding: 4px 0; font-size: 13px; line-height: 1.35; }
+  .calculator-layout .breakdown-track { margin: 6px 0 4px; }
+  .calculator-layout .breakdown-legend { padding: 4px 8px; margin: 3px 0 0; gap: 2px 10px; font-size: 11.5px; }
+  .calculator-layout .result .copy-row { margin-top: 8px; display: flex; gap: 8px; }
+  .calculator-layout .result .tool-btn { min-height: 36px; padding: 5px 12px; font-size: 0.82rem; border-radius: 8px; }
+  .calculator-layout .result .result-cta { margin-top: 6px; min-height: 36px; padding: 6px 10px; font-size: 0.82rem; border-radius: 8px; }
+  .calculator-layout .result .copy-note { font-size: 0.78rem; margin: 3px 0 0; min-height: 1.1em; }
+}
+
+@media (max-width: 760px) { .calculator-layout .panel, .calculator-layout .result { padding: 16px; } }
 .calc-page .content > p { color: #2A3947; font-size: 17px; line-height: 1.75; }
 .calc-page .content > ul { color: #2A3947; font-size: 17px; line-height: 1.75; }
 .calc-page .content > p, .calc-page .content > ul { max-width: none; }
 .calc-page .content strong { color: var(--navy); }
 .calc-page .content > h3 { color: var(--navy); font-size: 20px; }
 .calc-page .faq p { color: #2A3947; font-size: 16px; line-height: 1.7; max-width: none; }
-
-/* Hero + width alignment (2026-11-24): match the Mortgage page — no divider
-   line under the heading, the intro paragraph hidden so the form sits right
-   under the H1 near the navbar, and every wrap on the page shares the
-   calculator's 1120px column so the heading, form, result and article all
-   align with clear space at the sides. */
-.calc-page .page-hero { border-bottom: 0; }
-.calc-page .page-hero > .wrap > p { display: none; }
-@media (min-width: 961px) { .calc-page .wrap { width: min(calc(100% - 96px), 1120px); } }
