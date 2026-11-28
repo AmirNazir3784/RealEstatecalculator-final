@@ -87,6 +87,21 @@
       margin: 0 0 25px;
     }
 
+    .contact-redesign .contact-notice {
+      background: #eaf2ef;
+      border: 1px solid #bfd8d2;
+      border-radius: 12px;
+      padding: 12px 14px;
+      margin: 0 0 18px;
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--contact-navy);
+    }
+
+    .contact-redesign .draft-actions {
+      margin-top: 12px;
+    }
+
     /* FORM */
     .contact-redesign .contact-form {
       display: block;

@@ -8,3 +8,29 @@
 .legal-prose h2:first-child { margin-top: 8px; }
 .legal-prose p { line-height: 1.75; margin: 0 0 14px; }
 .legal-prose a { color: var(--teal); text-decoration: underline; text-underline-offset: 3px; }
+.legal-prose [id] { scroll-margin-top: 100px; }
+.legal-toc {
+  background: var(--mist, #eaf2ef);
+  border: 1px solid var(--line, #e0e1dc);
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin-bottom: 28px;
+}
+.legal-toc p {
+  font-size: .82rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .08em;
+  color: var(--teal);
+  margin: 0 0 8px;
+}
+.legal-toc ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 18px;
+}
+.legal-toc a { font-size: .92rem; text-decoration: none; font-weight: 600; }
+.legal-toc a:hover { text-decoration: underline; }

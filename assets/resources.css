@@ -176,6 +176,19 @@
 .article-page main [id] { scroll-margin-top: 110px; }
 
 .article-page .article { padding-top: 32px; }
+.article-page .article-col { padding-top: 24px; }
+.article-page .article:has(.article-back) { padding-top: 0; }
+.article-page .article-back {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--teal);
+  text-decoration: none;
+  margin-bottom: 12px;
+}
+.article-page .article-back:hover { text-decoration: underline; text-underline-offset: 3px; }
 
 .article-page .article h1 {
   font-family:var(--font-display);
