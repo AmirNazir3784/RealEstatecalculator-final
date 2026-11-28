@@ -767,8 +767,10 @@ App.pages.release = (function () {
     const qAt = rawCategory.indexOf("?");
     const catId = qAt === -1 ? rawCategory : rawCategory.slice(0, qAt);
     const catQuery = qAt === -1 ? "" : rawCategory.slice(qAt + 1);
+    const isDesktopSettings = typeof window !== "undefined" && window.matchMedia && !window.matchMedia("(max-width: 900px)").matches;
+    const landingDefault = isDesktopSettings ? "business-profile" : DEFAULT_SETTINGS_CATEGORY;
     const known = SETTINGS_CATEGORIES.some(c => c.id === catId && !c.route);
-    const activeCat = known ? catId : DEFAULT_SETTINGS_CATEGORY;
+    const activeCat = known ? catId : landingDefault;
 
     const groupOrder = ["Account & Preferences", "Workspace", "Integrations", "Features", "Advanced"];
     const teamOn = !!(App.customization && App.customization.isTeamMode());
@@ -779,17 +781,29 @@ App.pages.release = (function () {
         const attr = c.route ? `data-settings-route="${U().esc(c.route)}"` : `data-settings-cat="${U().esc(c.id)}"`;
         return App.i18n.html`<button type="button" class="settings-nav-item${App.i18n.value(() => (active?" active":""))}" ${App.i18n.value(() => (attr))} aria-current="${App.i18n.value(() => (active?"page":"false"))}">${App.i18n.value(() => (App.app.icon(c.icon)))}<span>${App.i18n.value(() => (U().esc(c.id === "team-access" && !canManageTeam ? App.i18n.t("Workspace membership") : c.label)))}</span><span class="settings-chevron" aria-hidden="true">›</span></button>`;
       }).join("");
-      if (group === "Advanced") return App.i18n.html`<details class="settings-nav-section" ${App.i18n.value(() => ((window.matchMedia && window.matchMedia("(max-width:900px)").matches) || SETTINGS_CATEGORIES.some(c => c.id === activeCat && c.group === "Advanced") ? "open" : ""))}><summary class="settings-nav-section-title">Advanced</summary>${App.i18n.value(() => (rows))}</details>`;
       return App.i18n.html`<div class="settings-nav-section"><div class="settings-nav-section-title">${App.i18n.value(() => (group))}</div>${App.i18n.value(() => (rows))}</div>`;
     }).join("");
 
     container.innerHTML = App.i18n.html`
       ${App.i18n.value(() => (activeCat !== "overview" ? App.i18n.markup('<button type="button" class="btn btn-ghost settings-back" data-settings-back><span aria-hidden="true">←</span> Back to settings</button>') : ""))}
-      <div class="page-header"><div><div class="page-title">${App.i18n.value(() => (activeCat === "overview" ? App.i18n.t("Settings") : U().esc(SETTINGS_CATEGORIES.find(c => c.id === activeCat).label)))}</div><div class="page-desc">Manage your profile and workspace. Open Advanced for custom fields and data safety.</div></div></div>
+      <div class="page-header"><div><div class="page-title">${App.i18n.value(() => (activeCat === "overview" ? App.i18n.t("Settings") : U().esc(SETTINGS_CATEGORIES.find(c => c.id === activeCat).label)))}</div><div class="page-desc">Manage your profile and workspace.</div></div></div>
       <div class="settings-shell${App.i18n.value(() => (activeCat !== "overview" ? " settings-has-category" : ""))}">
-        <nav class="settings-nav" aria-label="Settings categories">${App.i18n.value(() => (navHtml))}<div class="settings-last-saved" id="settingsLastSaved" style="${App.i18n.value(() => (_settingsLastSaved?'':'display:none'))}">${App.i18n.value(() => (_settingsLastSaved?'Last saved at '+U().esc(_settingsLastSaved):''))}</div></nav>
+        <nav class="settings-nav" aria-label="Settings categories">${App.i18n.value(() => (navHtml))}<div class="settings-nav-utils" id="settingsNavUtils">${App.i18n.value(() => (App.pages.onboarding ? App.i18n.html`<button type="button" class="settings-nav-item" id="settingsNavSetupGuide">${App.i18n.value(() => (App.app.icon("spark")))}<span>Setup Guide</span><span class="settings-chevron" aria-hidden="true">›</span></button>` : ""))}</div><div class="settings-last-saved" id="settingsLastSaved" style="${App.i18n.value(() => (_settingsLastSaved?'':'display:none'))}">${App.i18n.value(() => (_settingsLastSaved?'Last saved at '+U().esc(_settingsLastSaved):''))}</div></nav>
         <div class="settings-content" id="settingsContent"></div>
       </div>`;
+
+    const navSetupBtn = container.querySelector("#settingsNavSetupGuide");
+    if (navSetupBtn && App.pages.onboarding) {
+      navSetupBtn.addEventListener("click", () => App.pages.onboarding.open(1));
+    }
+    const navUtils = container.querySelector("#settingsNavUtils");
+    if (navUtils && App.pwa) {
+      const slot = document.createElement("div");
+      slot.id = "pwaInstallSlot";
+      slot.className = "settings-nav-install";
+      navUtils.appendChild(slot);
+      App.pwa.renderInstallCard(slot);
+    }
 
     container.querySelectorAll("[data-settings-cat]").forEach(btn => {
       btn.addEventListener("click", () => {
@@ -815,7 +829,11 @@ App.pages.release = (function () {
       App.app.navigate("/settings");
     });
 
-    await renderSettingsCategory(container.querySelector("#settingsContent"), activeCat, catQuery);
+    const contentPane = container.querySelector("#settingsContent");
+    await renderSettingsCategory(contentPane, activeCat, catQuery);
+    if (isDesktopSettings && !known) {
+      renderSetupGuideRow(contentPane);
+    }
   }
 
   // One value out of a query string, without pulling in a URL parser for it.
@@ -985,51 +1003,57 @@ App.pages.release = (function () {
   // Phase 2E. The guide has to be reachable after it is dismissed: the one
   // thing worse than a wizard is a wizard you cannot get back.
   function renderSetupGuideRow(pane) {
-    const row = pane.querySelector("#settingsReopenGuide");
-    if (row) row.addEventListener("click", () => App.pages.onboarding.open(1));
+    if (!pane || !App.pages.onboarding) return;
+    let row = pane.querySelector("#settingsReopenGuide");
+    if (!row) {
+      const card = App.i18n.html`<button type="button" class="settings-overview-card settings-setup-banner" id="settingsReopenGuide"><span class="icon-slot">${App.i18n.value(() => (App.app.icon("spark")))}</span><div><h3>Setup Guide</h3><p>Walk through the first-run setup again, or finish what you skipped</p></div></button>`;
+      pane.insertAdjacentHTML("afterbegin", card);
+      row = pane.querySelector("#settingsReopenGuide");
+    }
+    if (row && !row.dataset.wired) {
+      row.dataset.wired = "1";
+      row.addEventListener("click", () => App.pages.onboarding.open(1));
+    }
   }
 
   function renderSettingsOverview(pane) {
-    const cards = [
-      { id: "business-profile", icon: "cog", get title() { return App.i18n.t("Business Profile"); }, get desc() { return App.i18n.t("Set your name, brokerage, currency"); } },
-      { id: "pipeline", icon: "columns", get title() { return App.i18n.t("Pipeline"); }, get desc() { return App.i18n.t("Customize your deal stages"); } },
-      { id: "modules", icon: "spark", get title() { return App.i18n.t("Modules"); }, get desc() { return App.i18n.t("Choose what appears in your sidebar"); } },
-      { id: "google-sheets", icon: "grid", get title() { return App.i18n.t("Google Sheets"); }, get desc() { return App.i18n.t("Import leads from a Google Sheet automatically"); } },
-      { id: "sheet-imports", icon: "activity", get title() { return App.i18n.t("Import History"); }, get desc() { return App.i18n.t("Review Google Sheets and file imports, and fix rejected leads"); } },
-      { id: "email-sending", icon: "chart", get title() { return App.i18n.t("Email Sending"); }, get desc() { return App.i18n.t("Configure your sender identity and safely test email delivery"); } },
-      { id: "notifications", icon: "bell", get title() { return App.i18n.t("Notifications"); }, get desc() { return App.i18n.t("Get told on your phone when a lead replies, even with RealtorCRM closed"); } },
-      // Not "browser-only" since the Supabase migration: buildExport() in
-      // backup.js serialises the loaded workspace state, which is hydrated
-      // from the account's cloud tables.
-      { id: "data-safety", icon: "save", get title() { return App.i18n.t("Backup & Safety"); }, get desc() { return App.i18n.t("Export or restore your whole workspace as a JSON file"); } },
-      { id: "custom-fields", icon: "edit", get title() { return App.i18n.t("Custom Fields"); }, get desc() { return App.i18n.t("Add custom fields to contacts, deals, properties and tasks."); } }
-    ];
-    const advanced = cards.filter(c => SETTINGS_CATEGORIES.some(cat => cat.id === c.id && cat.group === "Advanced"));
-    const first = ["business-profile", "pipeline", "notifications", "modules"];
-    const essential = first.map(id => cards.find(c => c.id === id)).concat(cards.filter(c => !advanced.includes(c) && !first.includes(c.id)));
-    const cardHtml = c => App.i18n.html`<button type="button" class="settings-overview-card" data-overview-cat="${App.i18n.value(() => (U().esc(c.id)))}"><span class="icon-slot">${App.i18n.value(() => (App.app.icon(c.icon)))}</span><h3>${App.i18n.value(() => (U().esc(c.title)))}</h3><p>${App.i18n.value(() => (U().esc(c.desc)))}</p></button>`;
+    const descById = {
+      "business-profile": App.i18n.t("Set your name, brokerage, currency"),
+      "appearance": App.i18n.t("Language, theme and display"),
+      "notifications": App.i18n.t("Phone alerts when a lead replies"),
+      "pipeline": App.i18n.t("Customize your deal stages"),
+      "team-access": App.i18n.t("Members, roles and permissions"),
+      "team-permissions": App.i18n.t("What each role can see and do"),
+      "google-sheets": App.i18n.t("Import leads from a Google Sheet automatically"),
+      "sheet-imports": App.i18n.t("Review imports and fix rejected leads"),
+      "email-sending": App.i18n.t("Sender identity and delivery tests"),
+      "modules": App.i18n.t("Choose what appears in your sidebar"),
+      "dashboard": App.i18n.t("Choose what your dashboard shows"),
+      "data-safety": App.i18n.t("Export or restore your whole workspace as a JSON file"),
+      "custom-fields": App.i18n.t("Add custom fields to contacts, deals, properties and tasks.")
+    };
+    const groupOrder = ["Account & Preferences", "Workspace", "Integrations", "Features", "Advanced"];
+    const teamOn = !!(App.customization && App.customization.isTeamMode());
+    const canManageTeam = !!(App.workspace && App.workspace.can("team_manage"));
+    const cardHtml = c => {
+      const title = c.id === "team-access" && !canManageTeam ? App.i18n.t("Workspace membership") : c.label;
+      const desc = descById[c.id] || "";
+      const attr = c.route ? `data-overview-route="${U().esc(c.route)}"` : `data-overview-cat="${U().esc(c.id)}"`;
+      return App.i18n.html`<button type="button" class="settings-overview-card" ${App.i18n.value(() => (attr))}><span class="icon-slot">${App.i18n.value(() => (App.app.icon(c.icon)))}</span><h3>${App.i18n.value(() => (U().esc(title)))}</h3><p>${App.i18n.value(() => (U().esc(desc)))}</p></button>`;
+    };
+    const groupsHtml = groupOrder.map(group => {
+      const cats = SETTINGS_CATEGORIES.filter(c => c.group === group && (!c.needsTeam || (teamOn && canManageTeam)));
+      if (!cats.length) return "";
+      return App.i18n.html`<section class="settings-overview-group"><h2 class="settings-overview-group-title">${App.i18n.value(() => (App.i18n.t(group)))}</h2><div class="settings-overview-grid">${App.i18n.value(() => (cats.map(cardHtml).join("")))}</div></section>`;
+    }).join("");
     pane.innerHTML = App.i18n.html`
       <div class="settings-category-head">
         <div class="settings-category-title">Settings Overview</div>
-        <p class="form-help">Start with your Business Profile, Pipeline and Notifications. More options are grouped in the Settings menu.</p>
+        <p class="form-help">Start with your Business Profile, Pipeline and Notifications.</p>
       </div>
-      <div class="settings-overview-grid">
-        ${App.i18n.value(() => (essential.map(cardHtml).join("")))}
-        ${App.i18n.value(() => (App.pages.onboarding ? App.i18n.html`<button type="button" class="settings-overview-card" id="settingsReopenGuide"><span class="icon-slot">${App.i18n.value(() => (App.app.icon("spark")))}</span><h3>Setup Guide</h3><p>Walk through the first-run setup again, or finish what you skipped</p></button>` : ""))}
-      </div>`;
-    pane.insertAdjacentHTML("beforeend", App.i18n.html`<details><summary>Advanced: Custom Fields and Backup &amp; Safety</summary><div class="settings-overview-grid">${App.i18n.value(() => (advanced.map(cardHtml).join("")))}</div></details>`);
+      ${App.i18n.value(() => (groupsHtml))}`;
     pane.querySelectorAll("[data-overview-cat]").forEach(card => card.onclick = () => App.app.navigate("/settings/" + card.getAttribute("data-overview-cat")));
-    renderSetupGuideRow(pane);
-    // Phase 3A. "Install the app" is a card rather than a settings
-    // category: there is nothing to configure, only one button whose
-    // wording depends on the browser, and core/pwa.js owns all three
-    // versions of it.
-    if (App.pwa) {
-      const slot = document.createElement("div");
-      slot.id = "pwaInstallSlot";
-      pane.appendChild(slot);
-      App.pwa.renderInstallCard(slot);
-    }
+    pane.querySelectorAll("[data-overview-route]").forEach(card => card.onclick = () => App.app.navigate(card.getAttribute("data-overview-route")));
   }
 
   // ---------- BUSINESS PROFILE ----------

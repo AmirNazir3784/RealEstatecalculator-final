@@ -26,21 +26,32 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
     <section class="legal-section">
       <div class="wrap legal-prose">
+        <nav class="legal-toc" aria-label="On this page">
+          <p>On this page</p>
+          <ul>
+            <li><a href="#browser-calculators">Calculators run in your browser</a></li>
+            <li><a href="#website-collection">Information the website collects</a></li>
+            <li><a href="#hosting-logs">Hosting &amp; CDN logs</a></li>
+            <li><a href="#realtorcrm-accounts">RealtorCRM accounts</a></li>
+            <li><a href="#advertising">Advertising</a></li>
+            <li><a href="#contact">Contact</a></li>
+          </ul>
+        </nav>
 
-        <h2>Calculators run in your browser</h2>
+        <h2 id="browser-calculators">Calculators run in your browser</h2>
         <p>Every calculator on this website runs entirely in your web browser. The figures you enter are processed on your device by the page's own code. The website's code does not send your calculator inputs to a server, does not save them, and does not use browser storage (such as localStorage) or cookies to keep them. When you close or leave a page, the figures you entered are gone unless you saved them yourself.</p>
 
-        <h2>Information the website itself collects</h2>
+        <h2 id="website-collection">Information the website itself collects</h2>
         <p>The website has no accounts, no sign-up forms, and no comment or upload features. The contact page helps you prepare a message draft in your browser; it does not send or store that draft on the website. The website's own code does not set cookies and does not run analytics scripts. Advertising, when displayed, is provided by third-party vendors as described in the Advertising section below.</p>
 
-        <h2>Hosting and content-delivery logs</h2>
+        <h2 id="hosting-logs">Hosting and content-delivery logs</h2>
         <p>Like almost every website, this site is served through a hosting provider and a content-delivery network. Those providers automatically receive technical information needed to deliver pages — such as your IP address, browser type, and the pages requested — and may keep standard server logs for security and operations. That logging is controlled by the providers, not by the website's own code.</p>
 
-        <h2>RealtorCRM accounts</h2>
+        <h2 id="realtorcrm-accounts">RealtorCRM accounts</h2>
         <p>RealtorCRM is a separate application. If you create a RealtorCRM account, we collect the name and email address you sign up with, and the information you add to your workspace (such as contacts, deals, properties, tasks and notes) is stored with our database provider (Supabase) so the application can work. We use email delivery providers (such as Resend) to send account emails and, when you set them up, follow-up emails on your behalf. You can ask for your account and workspace data to be deleted via the Contact section below.</p>
         <p>If you choose to connect a third-party service to RealtorCRM — for example Google Sheets, or your Google account so the CRM can send follow-up email from your own address — we access only the permissions you grant on that service's consent screen, we use them only to provide the feature you connected, and you can disconnect the service at any time. Our use of information received from Google APIs adheres to the Google API Services User Data Policy, including its Limited Use requirements.</p>
 
-        <h2>Advertising</h2>
+        <h2 id="advertising">Advertising</h2>
         <p>This website may display advertising provided by Google AdSense. Third-party vendors, including Google, use cookies to serve ads based on your prior visits to this website or other websites. Google's use of advertising cookies enables it and its partners to serve ads to you based on your visits to this and other sites on the internet. You may opt out of personalized advertising by visiting <a href="https://adssettings.google.com" rel="noopener" target="_blank">Google Ads Settings</a>, or opt out of some third-party vendors' use of cookies for personalized advertising at <a href="https://www.aboutads.info" rel="noopener" target="_blank">www.aboutads.info</a>.</p>
 
         <h2>External links</h2>
@@ -52,8 +63,8 @@ import BaseLayout from '../layouts/BaseLayout.astro';
         <h2>Changes to this policy</h2>
         <p>If our practices change, this policy will be updated and the effective date above will change with it.</p>
 
-        <h2>Contact</h2>
-        <p>Questions about this policy can be sent through our <a href="../contact/">Contact page</a>.</p>
+        <h2 id="contact">Contact</h2>
+        <p>Questions about this policy can be prepared on our <a href="../contact/">Contact page</a>. Also see our <a href="../terms/">Terms of Use</a>.</p>
 
       </div>
     </section>

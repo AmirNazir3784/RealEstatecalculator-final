@@ -18,12 +18,13 @@ dom("Settings groups essentials and keeps advanced options discoverable without 
   const p = await settings();
   assert.deepEqual(Array.from(p.pane.querySelectorAll(".settings-nav-section-title"), e => e.textContent),
     ["Account & Preferences", "Workspace", "Integrations", "Features", "Advanced"]);
-  const advanced = p.pane.querySelector(".settings-nav details");
-  assert.equal(advanced.open, false);
+  const sections = p.pane.querySelectorAll(".settings-nav .settings-nav-section");
+  const advanced = sections[sections.length - 1];
+  assert.equal(p.pane.querySelector(".settings-nav details"), null);
   assert.deepEqual(Array.from(advanced.querySelectorAll("[data-settings-cat]"), e => e.dataset.settingsCat),
     ["data-safety", "custom-fields"]);
   const card = p.pane.querySelector('[data-overview-cat="data-safety"]');
-  assert.equal(card.closest("details").open, false);
+  assert.equal(card.closest("details"), null);
   assert.equal(p.pane.querySelector('[data-overview-cat="business-profile"]').closest("details"), null);
   assert.deepEqual(p.writes, []);
   p.pane.querySelector('[data-settings-cat="pipeline"]').click();
@@ -38,7 +39,7 @@ dom("Advanced deep links open their group and preserve existing category rendere
   p.window.App.pages.customFieldsSettings = { render: async pane => { calls++; pane.textContent = "Existing custom fields"; } };
   await p.window.App.pages.release.renderSettings(p.pane, "custom-fields");
   assert.equal(calls, 1);
-  assert.equal(p.pane.querySelector(".settings-nav details").open, true);
+  assert.equal(p.pane.querySelector(".settings-nav details"), null);
   assert.equal(p.pane.querySelector('[data-settings-cat="custom-fields"]').getAttribute("aria-current"), "page");
   assert.match(p.pane.querySelector("#settingsContent").textContent, /Existing custom fields/);
   assert.deepEqual(p.writes, []);

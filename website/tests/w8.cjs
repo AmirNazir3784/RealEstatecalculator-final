@@ -19,15 +19,15 @@ const frozen = {
     // All baselines recaptured 2026-11-24 (Rental Yield): the Rental Yield Calculator became the 12th tool — every footer gained the Rental Yield link, and the Rental Yield page gained a frozen header entry.
     // All baselines recaptured 2026-11-24: the redesign stack and the Down Payment Calculator were merged onto main together — every footer gained the Down Payment link, and the Down Payment page gained a frozen header entry.
     // Homepage baseline includes the approved Google Search Console verification tag.
-    "index.html": "ad3f59dfcdd690cf96335b55567d57eb718b00fdc2294c85f091b8be1a283a41",
+    "index.html": "442357c56a7cb11fec144a18ec2904e7ab193de0492d8437d10ae73b69a5336c",
     // About baseline refreshed for the editorial refinement; shared header stays frozen.
     // All page baselines refreshed 2026-11-16: footer Platform column gained the Privacy Policy link on every page.
     // All page baselines refreshed 2026-11-17: footer Platform column gained the Terms of Use link on every page.
     // All page baselines refreshed 2026-11-24: footer Tools list rebuilt (mega-menu order, Title Case, two fixed lists), footer headings h2 -> p, "Access availability" renamed "Early access".
-    "about/index.html": "682a38368b2d22ca5b48d6c5250a0a49ffe7540ade5f2d40426af69158d91f59",
-    "contact/index.html": "60ee5ad4aed5d332778e7945a2da0f32e2199ce9807b5a630e9e10512f2d7438",
-    "resources/index.html": "925c0e54de920f74625ea438ebdd0dbb236869ce92e7473fd70083baacbc4c48",
-    "real-estate-crm/index.html": "d805c6ab3cca1c496a0c90facb2622ea4f33653ff79a17e14c7541be69fc6ce1",
+    "about/index.html": "f52b2e71b34a32ef7969128f548ed0c327501edeac058dc82c5d38d713623b3c",
+    "contact/index.html": "b59368635429247b6731a942f239369b9b2a2eda17d764f2ba38f3efb0d2ec47",
+    "resources/index.html": "1177c5fa5dbf2816f77e1dbafa99e3a1a6036ab311e4457b9776c32cf8218894",
+    "real-estate-crm/index.html": "4106c981fbe8614fc7e425179e5e845da542023b65c2b3c55b9c0460983bc576",
     "tools/index.html": "a71ed5ca019af7f25d9df95c4b7f5e0242706b4a97cb10302c4f5d5983d3a4d2",
     "tools/bridge-loan-calculator/index.html": "1469e8f4dea7d0f0412eb46e0923125242a35dc2a21f22fda1a38e914ffc036d",
     "tools/cap-rate-calculator/index.html": "c13d8b0ab54569cb3493474807157b511950fa0c4ad052a0178e601e2f473273",

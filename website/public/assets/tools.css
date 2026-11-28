@@ -288,6 +288,8 @@ body { background: #F6F4EF; color: #14202B; }
 
 /* Integrated calculator foundations: reuse local fonts and the same controls. */
 .calc-page h1, .calc-page h2 { font-family: var(--font-display); }
+.calc-page .calc-back { display: inline-flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 600; color: var(--teal); text-decoration: none; margin-bottom: 6px; }
+.calc-page .calc-back:hover { text-decoration: underline; text-underline-offset: 3px; }
 .calc-page .page-hero h1 { font-size: clamp(2rem, 3.4vw, 2.75rem); line-height: 1.2; margin: 8px 0 10px; max-width: none; }
 .calc-page .page-hero > .wrap > p, .calc-page .commission-intro { font-size: 16px; line-height: 1.6; max-width: 78ch; margin-bottom: 24px; }
 .calc-page .calculator-layout { align-items: start; }
@@ -302,6 +304,10 @@ body { background: #F6F4EF; color: #14202B; }
 .calc-page .result-row { gap: 16px; font-size: 14px; line-height: 1.5; }
 .calc-page .result-row b { text-align: right; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
 .calc-page .result .result-assumption { color: #C9D6E0; font-size: 13px; line-height: 1.65; margin: 16px 0 0; }
+.calc-page .result .result-next { margin-top: 16px; padding-top: 14px; border-top: 1px solid #E5E2DB; font-size: 13.5px; line-height: 1.5; color: #4B5B6B; }
+.calc-page .result .result-next a { display: inline-flex; align-items: center; gap: 6px; color: #0F766E; font-weight: 700; text-decoration: underline; text-underline-offset: 3px; margin-top: 4px; }
+.calc-page .result .result-next a:hover { color: #095E58; }
+.calc-page .result .result-next a:focus-visible { outline: 3px solid #0F766E; outline-offset: 3px; border-radius: 4px; }
 .calc-page .result .rent-verdict-detail, .calc-page .result .disclaimer { color: #C9D6E0; }
 .calc-page .result .copy-row .tool-btn { min-height: 44px; flex: 1 1 auto; font-size: 14px; }
 .tool-btn:disabled { opacity: .5; cursor: not-allowed; }

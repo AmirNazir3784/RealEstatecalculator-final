@@ -36,28 +36,32 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   <section class="section rc-features" id="features" aria-labelledby="features-title">
     <div class="wrap">
       <span class="eyebrow">ESSENTIAL TOOLS</span>
-      <h2 id="features-title">The essential tools to run your real estate business.</h2>
+      <h2 id="features-title">Everything you need between the first inquiry and closing.</h2>
       <div class="rc-cards">
-        <article class="rc-card">
+        <a class="rc-card rc-card-link" href="#lead-deal-management">
           <span class="rc-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="9" cy="8" r="3.4"/><path d="M3.6 19.2c.7-3 2.8-4.6 5.4-4.6s4.7 1.6 5.4 4.6"/><path d="M15.5 5.4a3.4 3.4 0 0 1 0 5.9M18.3 14.9c1.2.8 2 2 2.4 3.7"/></svg></span>
           <h3>Contacts</h3>
-          <p>Organize buyers, sellers, investors, and referral partners with stage, temperature, budget, and full activity history.</p>
-        </article>
-        <article class="rc-card">
+          <p>Organize buyers, sellers, and investors with stage, temperature, and activity history.</p>
+          <span class="rc-card-cue" aria-hidden="true">See lead workspace &rarr;</span>
+        </a>
+        <a class="rc-card rc-card-link" href="#lead-deal-management">
           <span class="rc-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="7.8" width="18" height="12.2" rx="2"/><path d="M9 7.8V6a3 3 0 0 1 6 0v1.8M3 12.8h18"/></svg></span>
           <h3>Deals</h3>
-          <p>Track buyer and seller opportunities through your pipeline, link properties, and calculate expected commission.</p>
-        </article>
-        <article class="rc-card">
+          <p>Track active opportunities across pipeline stages, link properties, and forecast commission.</p>
+          <span class="rc-card-cue" aria-hidden="true">See deal pipeline &rarr;</span>
+        </a>
+        <a class="rc-card rc-card-link" href="#how-it-works">
           <span class="rc-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3.2" y="5" width="17.6" height="15.8" rx="2"/><path d="M8 3v3.6M16 3v3.6M3.2 10h17.6"/><path d="M9.3 15.6l2 2 3.6-3.8"/></svg></span>
           <h3>Follow-ups</h3>
-          <p>Schedule reminders or run multi-step email sequences that pause automatically when a contact replies or unsubscribes.</p>
-        </article>
-        <article class="rc-card">
+          <p>Run scheduled reminders and email sequences that pause automatically on reply.</p>
+          <span class="rc-card-cue" aria-hidden="true">See inbox automation &rarr;</span>
+        </a>
+        <a class="rc-card rc-card-link" href="#access">
           <span class="rc-icon"><svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4v15.4h16"/><path d="M8.2 16v-4.6M12.2 16V8.4M16.2 16v-6.4"/></svg></span>
           <h3>Reports</h3>
-          <p>Review pipeline value, conversion activity, and upcoming tasks so you always know what needs attention next.</p>
-        </article>
+          <p>Spot stalled leads, review pipeline value, and see what needs your attention today.</p>
+          <span class="rc-card-cue" aria-hidden="true">Try it free &rarr;</span>
+        </a>
       </div>
     </div>
   </section>
@@ -66,43 +70,34 @@ import BaseLayout from '../layouts/BaseLayout.astro';
     <div class="wrap rc-spotlight-grid">
       <div class="rc-spotlight-copy">
         <span class="eyebrow">LEAD &amp; DEAL MANAGEMENT</span>
-        <h2 id="leads-title">Bring every lead in cleanly and move deals forward.</h2>
+        <h2 id="leads-title">Stop losing warm leads in spreadsheets and sticky notes.</h2>
         <p class="rc-section-intro">Import spreadsheets in seconds, separate active buyers and sellers into dedicated workspaces, and keep every transaction stage visible.</p>
-        <div class="rc-feature-list">
-          <article class="rc-feature-item">
-            <span class="rc-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3.5H7a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8.5z"/><path d="M14 3.5v5h5"/><path d="M9 14l2 2 4-4"/></svg></span>
-            <div>
-              <h3>CSV, Excel &amp; Google Sheets Import</h3>
-              <p>Upload <code>.csv</code>, <code>.xlsx</code>, or <code>.xls</code> files with automatic column mapping and import history, or connect Google Sheets to bring new leads straight into your CRM.</p>
-            </div>
-          </article>
-          <article class="rc-feature-item">
-            <span class="rc-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5L12 4l9 6.5"/><path d="M5 9.5V19a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9.5"/><path d="M9.5 20v-6h5v6"/></svg></span>
-            <div>
-              <h3>Buyer &amp; Seller Workspaces</h3>
-              <p>Filter between Buyers, Sellers, and Past Clients to review showings, active listings, preferred neighborhoods, and upcoming follow-up dates in one view.</p>
-            </div>
-          </article>
-          <article class="rc-feature-item">
-            <span class="rc-icon"><svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="5.5" height="16" rx="1.2"/><rect x="10.25" y="4" width="5.5" height="11" rx="1.2"/><rect x="17.5" y="4" width="3.5" height="14" rx="1.2"/></svg></span>
-            <div>
-              <h3>Visual Deal &amp; Property Pipeline</h3>
-              <p>Move opportunities across customizable stages, link properties to contacts, and track expected net commission as deals progress toward closing.</p>
-            </div>
-          </article>
-        </div>
+        <ul class="rc-editorial-list">
+          <li class="rc-editorial-item">
+            <h3><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 3.5H7a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8.5z"/><path d="M14 3.5v5h5"/><path d="M9 14l2 2 4-4"/></svg>CSV, Excel &amp; Google Sheets Import</h3>
+            <p>Upload CSV or Excel files with automatic column mapping and import history, or connect Google Sheets to bring new leads straight into your CRM.</p>
+          </li>
+          <li class="rc-editorial-item">
+            <h3><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10.5L12 4l9 6.5"/><path d="M5 9.5V19a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1V9.5"/><path d="M9.5 20v-6h5v6"/></svg>Buyer &amp; Seller Workspaces</h3>
+            <p>Switch between Buyers, Sellers, and Past Clients to review showings, active listings, preferred neighborhoods, and upcoming follow-up dates.</p>
+          </li>
+          <li class="rc-editorial-item">
+            <h3><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="5.5" height="16" rx="1.2"/><rect x="10.25" y="4" width="5.5" height="11" rx="1.2"/><rect x="17.5" y="4" width="3.5" height="14" rx="1.2"/></svg>Visual Deal &amp; Property Pipeline</h3>
+            <p>Move opportunities across customizable stages, link properties to contacts, and track expected net commission as deals progress toward closing.</p>
+          </li>
+        </ul>
       </div>
       <figure class="rc-shot">
         <div class="rc-shot-frame">
           <img
             src="crm-leads-contacts.webp"
-            alt="RealtorCRM Contacts workspace displaying buyer, seller, and investor leads with role, stage, temperature badges, next follow-up dates, and file import controls"
+            alt="RealtorCRM Contacts workspace showing 11 buyer, seller, investor, and referral partner leads with stage, temperature tags, next follow-up dates, and unified search and filter controls"
             width="1280"
             height="800"
             decoding="async"
           />
         </div>
-        <figcaption>Contacts workspace with Buyer &amp; Seller tabs, temperature tags, and file import.</figcaption>
+        <figcaption>Contacts workspace with Buyer &amp; Seller tabs, unified filters, and file import.</figcaption>
       </figure>
     </div>
   </section>
@@ -123,24 +118,24 @@ import BaseLayout from '../layouts/BaseLayout.astro';
       </figure>
       <div class="rc-spotlight-copy">
         <span class="eyebrow">FOLLOW-UPS &amp; EMAIL COMMUNICATION</span>
-        <h2 id="followup-title">Consistent follow-up that sends from your own inbox.</h2>
+        <h2 id="followup-title">Follow up consistently — and step in the moment they reply.</h2>
         <p class="rc-section-intro">Pair reusable email templates with automated sequences, connect Gmail or Outlook, and stay in control of every conversation.</p>
-        <ol class="rc-connected-steps">
-          <li class="rc-connected-step">
+        <ol class="rc-timeline">
+          <li class="rc-timeline-item">
             <span class="rc-step-num" aria-hidden="true">1</span>
             <div>
               <h3>Connect Gmail or Outlook</h3>
               <p>Link your personal Gmail or Microsoft Outlook mailbox — or a shared team mailbox — with automatic built-in fallback delivery if a connected mailbox is unavailable.</p>
             </div>
           </li>
-          <li class="rc-connected-step">
+          <li class="rc-timeline-item">
             <span class="rc-step-num" aria-hidden="true">2</span>
             <div>
               <h3>Trigger Templates &amp; Sequences</h3>
               <p>Build reusable plain-text email templates and multi-step sequences triggered by new leads, stage changes, stale contacts, or scheduled follow-up dates.</p>
             </div>
           </li>
-          <li class="rc-connected-step">
+          <li class="rc-timeline-item">
             <span class="rc-step-num" aria-hidden="true">3</span>
             <div>
               <h3>Auto-Stop on Reply or Unsubscribe</h3>
@@ -149,6 +144,31 @@ import BaseLayout from '../layouts/BaseLayout.astro';
           </li>
         </ol>
       </div>
+    </div>
+  </section>
+
+  <section class="section rc-faq" id="faq" aria-labelledby="faq-title">
+    <div class="wrap">
+      <span class="eyebrow">COMMON QUESTIONS</span>
+      <h2 id="faq-title">Quick answers before you jump in.</h2>
+      <dl class="rc-faq-grid">
+        <div class="rc-faq-item">
+          <dt>Is RealtorCRM free during early access?</dt>
+          <dd>Yes. RealtorCRM is free during early access so you can organize contacts, deals, tasks, and automated follow-ups without a credit card.</dd>
+        </div>
+        <div class="rc-faq-item">
+          <dt>Can I import my existing contacts from CSV, Excel, or Google Sheets?</dt>
+          <dd>Yes. Upload CSV or Excel spreadsheets with automatic column mapping, or connect Google Sheets to bring your active buyer and seller list straight in.</dd>
+        </div>
+        <div class="rc-faq-item">
+          <dt>Do automated follow-ups send from my own Gmail or Outlook?</dt>
+          <dd>Yes. Connect your Gmail or Outlook mailbox so replies land directly in your inbox, with built-in fallback delivery if a connected mailbox is unavailable.</dd>
+        </div>
+        <div class="rc-faq-item">
+          <dt>Does it work on my phone without an app-store download?</dt>
+          <dd>Yes. RealtorCRM runs cleanly in any mobile browser and can be installed directly to your home screen as a lightweight web app.</dd>
+        </div>
+      </dl>
     </div>
   </section>
 

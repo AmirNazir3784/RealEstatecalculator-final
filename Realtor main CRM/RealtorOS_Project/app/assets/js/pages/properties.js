@@ -324,8 +324,6 @@ App.pages.properties = (function () {
               <button class="btn btn-block" id="qAddTask">${App.i18n.value(() => (App.app.icon("plus")))} Add Task</button>
             </div>
           </div>
-          <!-- Tasks moved into the aside: this column held Quick Actions alone
-               against five sections opposite, which left most of it blank. -->
           <div class="card">
             <div class="card-header"><div class="card-title">Tasks</div><span class="badge badge-neutral">${App.i18n.value(() => (tasks.length))}</span></div>
             <div class="card-body zero">

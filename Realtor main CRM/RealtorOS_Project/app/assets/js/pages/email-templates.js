@@ -212,17 +212,6 @@ App.pages.emailTemplates = (function () {
           <p style="margin:0">${App.i18n.value(() => (subjectHtml))}</p>
           <div class="form-help" style="margin:8px 0 2px">Body</div>
           <p>${App.i18n.value(() => (U().esc(U().truncate(t.body_text || "", 220))))}</p>
-          <!-- Seven flat buttons buried the one people actually want. Edit,
-               the active toggle and Delete stay on the card; the four
-               read-only/copy helpers move behind a More menu. Every action is
-               still present, and each keeps its original data-* attribute, so
-               the existing delegated handler in wireCardActions() matches them
-               unchanged wherever they now sit.
-               Order is Edit | Deactivate | Delete | More: the overflow menu is
-               always the last element in an action row, never wedged between
-               two primary buttons. The menu stays right-anchored to its own
-               .action-more wrapper, so moving it to the end needs no CSS
-               change. -->
           <div class="release-card-actions">
             <button type="button" class="btn btn-sm" data-edit="${App.i18n.value(() => (U().esc(t.id)))}">Edit</button>
             <button type="button" class="btn btn-sm" data-toggle-active="${App.i18n.value(() => (U().esc(t.id)))}">${App.i18n.value(() => (t.is_active ? App.i18n.t("Deactivate") : App.i18n.t("Activate")))}</button>

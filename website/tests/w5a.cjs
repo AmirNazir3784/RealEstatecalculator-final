@@ -60,10 +60,10 @@ for (const page of pages) {
   assert(page.includes('Manage buyers, sellers, listings, deals, and automated email follow-ups'), 'hero description');
   for (const t of ['Buyer &amp; Seller workspaces', 'Gmail &amp; Outlook sending', 'Built for realtors']) assert(page.includes(t), `trust item: ${t}`);
   assert(page.includes('rc-media-frame') && !page.includes('Add your product video or screenshots here') && !page.includes('RealtorCRM Product Demo'), 'hero media: clean video-ready frame, placeholder removed');
-  assert(page.includes('<h2 id="features-title">The essential tools to run your real estate business.</h2>'), 'features heading');
-  assert(page.includes('<h2 id="leads-title">Bring every lead in cleanly and move deals forward.</h2>'), 'lead & deal management heading');
+  assert(page.includes('<h2 id="features-title">Everything you need between the first inquiry and closing.</h2>'), 'features heading');
+  assert(page.includes('<h2 id="leads-title">Stop losing warm leads in spreadsheets and sticky notes.</h2>'), 'lead & deal management heading');
   assert(page.includes('crm-leads-contacts.webp'), 'lead & deal screenshot');
-  assert(page.includes('<h2 id="followup-title">Consistent follow-up that sends from your own inbox.</h2>'), 'follow-ups & email heading');
+  assert(page.includes('<h2 id="followup-title">Follow up consistently — and step in the moment they reply.</h2>'), 'follow-ups & email heading');
   assert(page.includes('crm-followup-automation.webp'), 'follow-up automation screenshot');
   assert(page.includes('<h2 id="access-title">Your next opportunity starts with better follow-up.</h2>'), 'final CTA heading');
   assert.equal([...page.matchAll(/data-crm-link="signup"[^>]*>Get Started with RealtorCRM/g)].length, 2, 'both Get Started CTAs use the signup app link');

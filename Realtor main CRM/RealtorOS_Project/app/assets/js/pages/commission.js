@@ -244,12 +244,11 @@ App.pages.commission = (function () {
       return;
     }
 
+    // Seven columns in a half-width grid column: without fixed widths a long
+    // deal name wraps to three lines and squeezes money columns. Widths sum to 100%.
     container.innerHTML = App.i18n.html`
       <div class="table-wrap">
         <table class="tbl tbl-responsive tbl-compact">
-          <!-- Seven columns in a half-width grid column: without fixed widths
-               a long deal name wraps to three lines and squeezes every money
-               column into an unreadable sliver. Widths sum to 100%. -->
           <colgroup>
             <col style="width:22%"><col style="width:16%"><col style="width:13%">
             <col style="width:8%"><col style="width:14%"><col style="width:14%">

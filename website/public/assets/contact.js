@@ -5,6 +5,7 @@
   const draft = document.getElementById('enquiry-draft');
   const output = document.getElementById('draft-output');
   const status = document.getElementById('enquiry-status');
+  const copyBtn = document.getElementById('copy-enquiry-draft');
   const field = id => document.getElementById(id).value.trim();
   form.addEventListener('submit', event => { event.preventDefault(); });
   form.addEventListener('input', () => {
@@ -31,4 +32,22 @@
     draft.focus();
     draft.select();
   });
+  if (copyBtn) {
+    copyBtn.addEventListener('click', () => {
+      if (!draft.value) return;
+      if (typeof navigator !== 'undefined' && navigator.clipboard && typeof navigator.clipboard.writeText === 'function') {
+        navigator.clipboard.writeText(draft.value).then(() => {
+          status.textContent = 'Draft copied to clipboard. Nothing has been sent.';
+        }).catch(() => {
+          draft.focus();
+          draft.select();
+          status.textContent = 'Draft selected. Press Ctrl+C or Cmd+C to copy.';
+        });
+      } else {
+        draft.focus();
+        draft.select();
+        status.textContent = 'Draft selected. Press Ctrl+C or Cmd+C to copy.';
+      }
+    });
+  }
 })();

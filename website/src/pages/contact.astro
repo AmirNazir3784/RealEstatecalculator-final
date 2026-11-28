@@ -31,6 +31,9 @@ import BaseLayout from '../layouts/BaseLayout.astro';
 
         <!-- LEFT: FORM -->
         <div class="contact-panel">
+          <div class="contact-notice" role="note">
+            <strong>Draft builder only:</strong> No live inbox is connected yet, so nothing is sent or saved from this page.
+          </div>
           <h2>Prepare your message</h2>
           <p class="contact-intro">
             Select a topic, add a few details, and prepare a message.
@@ -116,6 +119,9 @@ import BaseLayout from '../layouts/BaseLayout.astro';
               class="field"
               readonly
               aria-describedby="copy-help"></textarea>
+            <div class="draft-actions">
+              <button type="button" class="btn btn-outline" id="copy-enquiry-draft">Copy draft to clipboard</button>
+            </div>
             <p id="copy-help">
               Copy this text into your own notes. Once a verified contact
               route is published, you can send it yourself.

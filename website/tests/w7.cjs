@@ -24,10 +24,10 @@ for (const stale of ['currently published Commission and Mortgage', 'current Com
   'The mortgage estimate excludes taxes, insurance', 'free Commission and Mortgage calculators, with clear inputs']) {
   check(`stale wording absent: "${stale.slice(0, 40)}"`, !all.includes(stale));
 }
-// 2. Homepage states the ten-calculator reality.
+// 2. Homepage states the 16-calculator reality.
 const home = read('index.html');
-check('homepage says all ten calculators', home.includes('All ten calculators are ready to use'));
-check('homepage FAQ free answer updated', home.includes('All ten calculators are free to use'));
+check('homepage says all 16 calculators', home.includes('All 16 calculators are ready to use'));
+check('homepage FAQ free answer updated', home.includes('All 16 calculators are free to use'));
 check('homepage mortgage FAQ corrected', home.includes('plus property tax, homeowners insurance, HOA dues and PMI'));
 // 3. Inactive automation is not marketed anywhere.
 check('"Follow-up Plans" absent from all pages', !all.includes('Follow-up Plans'));
@@ -79,7 +79,7 @@ check('about methodology', ['formulas, inputs and assumptions', 'Worked examples
 check('privacy page published in website tree', fs.existsSync(path.join(ROOT, 'privacy-policy', 'index.html')));
 check('terms page published in website tree', fs.existsSync(path.join(ROOT, 'terms', 'index.html')));
 const sm = read('sitemap.xml');
-check('sitemap still 29 URLs', (sm.match(/<loc>/g) || []).length === 29); // +1: down-payment-calculator (2026-11-22), +1: rental-yield-calculator (2026-11-24), +1: commercial-real-estate-calculator (2026-11-24), +1: irr-calculator (2026-11-24), +1: depreciation-calculator (2026-11-25), +1: wholesale-calculator (2026-11-25)
+check('sitemap still 30 URLs', (sm.match(/<loc>/g) || []).length === 30); // +1: 70-percent-rule-wholesale-real-estate (2026-11-28)
 console.log(`W7: ${passed} passed, ${failures.length} failed`);
 for (const f of failures) console.log('  FAIL:', f);
 process.exit(failures.length ? 1 : 0);

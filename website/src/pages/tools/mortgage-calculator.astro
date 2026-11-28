@@ -4,14 +4,14 @@ import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
 
 <CalculatorLayout
   title="Mortgage Calculator | Every Real Estate Calculator"
-  description="Use the mortgage calculator to estimate your full monthly payment: principal and interest, tax, insurance, HOA and PMI, with total interest and payoff savings."
+  description="Free Mortgage Calculator with PMI, property taxes, HOA dues, and extra payments. See monthly payment, cash to close, payoff date, and worked formula — no signup."
   canonical="https://everyrealestatecalculator.com/tools/mortgage-calculator/"
   stickyLabel="Total monthly payment"
   stickyId="sticky-value"
   stickyValue="—"
 >
 <div class="calc-summary-bar" id="calc-summary-bar" aria-hidden="true"><div class="wrap summary-bar-inner"><span class="summary-bar-item">Monthly payment <b id="summary-total">—</b></span><span class="summary-bar-item">Cash needed at close <b id="summary-cash">—</b></span><span class="summary-bar-note">Estimates update as you type</span></div></div>
-<section class="page-hero"><div class="wrap"><h1>Mortgage Payment Calculator</h1></div>
+<section class="page-hero"><div class="wrap"><a class="calc-back" href="../">&larr; All Tools</a><h1>Mortgage Payment Calculator</h1></div>
 <div class="wrap calculator-layout mortgage-calc-layout">
 <div class="panel">
 <h2>Enter your loan details</h2>
@@ -61,6 +61,7 @@ import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
 <p class="muted" id="mortgage-pmi-note"></p>
 <div class="copy-row"><button class="tool-btn tool-btn-primary" id="copy-results" type="button">Copy results</button><button class="tool-btn tool-btn-outline" id="print-results" type="button">Print</button></div>
 <p class="copy-note" id="copy-note"></p></div>
+<div class="result-next"><span>Deciding whether to buy or keep renting?</span><a href="../rent-vs-buy-calculator/">Compare renting vs. buying &rarr;</a></div>
 </aside>
 </div></section><section class="section"><div class="wrap content">
 <h2>Mortgage Calculator: Understand Your Monthly Payment and Loan Costs</h2>
@@ -164,6 +165,7 @@ import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
 </div></section>
 <section class="section"><div class="wrap content">
 <h2>Explore More Real Estate Calculators</h2>
+<p class="how-to-note">Planning your cash to close? Compare 3%–20% tiers in the <a href="../down-payment-calculator/">Down Payment Calculator</a>, or read <a href="../../resources/mortgage-payments/">Understanding Mortgage Payments</a> for the full formula walkthrough.</p>
 <div class="related-cards">
 <a class="related-card" href="../home-affordability-calculator/"><h3>Home Affordability Calculator</h3><p>Maximum price from the payment you can afford.</p><span class="open">Open calculator ↗</span></a>
 <a class="related-card" href="../rent-vs-buy-calculator/"><h3>Rent vs Buy Calculator</h3><p>Breakeven year for renting against buying.</p><span class="open">Open calculator ↗</span></a>

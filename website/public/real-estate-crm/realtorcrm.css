@@ -51,8 +51,28 @@
   background: var(--white); border: 1px solid var(--line); border-radius: var(--round);
   box-shadow: 0 6px 22px rgba(26, 58, 70, .035); padding: 26px;
 }
+.realtoros-page .rc-card-link {
+  display: flex;
+  flex-direction: column;
+  text-decoration: none;
+  color: inherit;
+  transition: border-color .18s ease, box-shadow .18s ease, transform .18s ease;
+}
+.realtoros-page .rc-card-link:hover {
+  border-color: rgba(8, 126, 128, .45);
+  box-shadow: 0 10px 28px rgba(26, 58, 70, .08);
+  transform: translateY(-2px);
+}
 .realtoros-page .rc-card h3 { margin: 16px 0 8px; }
 .realtoros-page .rc-card p { color: var(--muted); font-size: .95rem; line-height: 1.55; margin: 0; }
+.realtoros-page .rc-card-cue {
+  margin-top: auto;
+  padding-top: 14px;
+  font-size: .86rem;
+  font-weight: 600;
+  color: var(--teal);
+}
+.realtoros-page .rc-card-link:hover .rc-card-cue { text-decoration: underline; text-underline-offset: 3px; }
 .realtoros-page .rc-icon {
   width: 48px; height: 48px; border-radius: 13px;
   background: #e6f4f1; color: var(--teal);
@@ -74,59 +94,70 @@
 .realtoros-page .rc-spotlight-grid-flip {
   grid-template-columns: minmax(0, 54fr) minmax(0, 46fr);
 }
-.realtoros-page .rc-spotlight-copy h2 { font-size: clamp(1.75rem, 2.7vw, 2.35rem); line-height: 1.15; margin-bottom: 12px; }
-
-.realtoros-page .rc-feature-list {
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-}
-.realtoros-page .rc-feature-item {
-  display: flex;
-  gap: 16px;
-  align-items: flex-start;
-  background: var(--white);
-  border: 1px solid var(--line);
-  border-radius: var(--round);
-  padding: 18px 20px;
-  box-shadow: 0 4px 16px rgba(26, 58, 70, .03);
-}
-.realtoros-page .rc-feature-item h3 { font-size: 1.04rem; margin: 0 0 5px; color: var(--navy); }
-.realtoros-page .rc-feature-item p { font-size: .93rem; line-height: 1.55; color: var(--muted); margin: 0; }
-.realtoros-page .rc-feature-item code {
-  font-size: .86em; background: #eef4f3; color: var(--navy);
-  padding: 1px 5px; border-radius: 4px;
+.realtoros-page .rc-spotlight-copy h2 {
+  font-size: clamp(1.75rem, 2.7vw, 2.35rem);
+  line-height: 1.14;
+  letter-spacing: -.02em;
+  margin-bottom: 12px;
 }
 
-/* Connected 3-step cards in Follow-ups & Email section */
-.realtoros-page .rc-connected-steps {
+.realtoros-page .rc-editorial-list {
   list-style: none;
+  margin: 24px 0 0;
+  padding: 0;
+  border-top: 1px solid var(--line);
+}
+.realtoros-page .rc-editorial-item {
+  padding: 16px 0;
+  border-bottom: 1px solid var(--line);
+}
+.realtoros-page .rc-editorial-item h3 {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-family: var(--font-sans, 'Inter', sans-serif);
+  font-size: 1.02rem;
+  font-weight: 650;
+  letter-spacing: -.01em;
+  color: var(--navy);
+  margin: 0 0 6px;
+}
+.realtoros-page .rc-editorial-item h3 svg {
+  color: var(--teal);
+  flex: 0 0 auto;
+}
+.realtoros-page .rc-editorial-item p {
+  font-size: .95rem;
+  line-height: 1.58;
+  color: var(--muted);
   margin: 0;
+  padding-left: 28px;
+}
+
+/* Connected vertical timeline in Follow-ups & Email section */
+.realtoros-page .rc-timeline {
+  list-style: none;
+  margin: 24px 0 0;
   padding: 0;
   display: flex;
   flex-direction: column;
-  gap: 14px;
-  position: relative;
 }
-.realtoros-page .rc-connected-step {
+.realtoros-page .rc-timeline-item {
   display: flex;
   gap: 16px;
   align-items: flex-start;
-  background: var(--white);
-  border: 1px solid var(--line);
-  border-radius: var(--round);
-  padding: 18px 20px;
-  box-shadow: 0 4px 16px rgba(26, 58, 70, .03);
+  padding-bottom: 22px;
   position: relative;
 }
-.realtoros-page .rc-connected-step:not(:last-child)::after {
+.realtoros-page .rc-timeline-item:last-child { padding-bottom: 0; }
+.realtoros-page .rc-timeline-item:not(:last-child)::after {
   content: "";
   position: absolute;
-  left: 36px;
-  top: 56px;
-  bottom: -15px;
+  left: 16px;
+  top: 40px;
+  bottom: 4px;
   width: 2px;
-  background: rgba(8, 126, 128, .25);
+  background: rgba(8, 126, 128, .22);
   pointer-events: none;
 }
 .realtoros-page .rc-step-num {
@@ -141,22 +172,31 @@
   place-items: center;
   flex: 0 0 auto;
   margin-top: 2px;
+  position: relative;
+  z-index: 1;
 }
-.realtoros-page .rc-connected-step h3 { font-size: 1.04rem; margin: 0 0 5px; color: var(--navy); }
-.realtoros-page .rc-connected-step p { font-size: .93rem; line-height: 1.55; color: var(--muted); margin: 0; }
+.realtoros-page .rc-timeline-item h3 {
+  font-family: var(--font-sans, 'Inter', sans-serif);
+  font-size: 1.02rem;
+  font-weight: 650;
+  letter-spacing: -.01em;
+  margin: 0 0 5px;
+  color: var(--navy);
+}
+.realtoros-page .rc-timeline-item p { font-size: .95rem; line-height: 1.58; color: var(--muted); margin: 0; }
 
 /* Screenshot frame */
 .realtoros-page .rc-shot {
   min-width: 0;
   margin: 0;
-  padding: 14px;
+  padding: 8px;
   background: var(--white);
   border: 1px solid var(--line);
-  border-radius: 20px;
+  border-radius: 16px;
   box-shadow: var(--shadow);
 }
 .realtoros-page .rc-shot-frame {
-  border-radius: 12px;
+  border-radius: 10px;
   overflow: hidden;
   border: 1px solid var(--line);
   background: var(--paper);
@@ -168,6 +208,40 @@
   aspect-ratio: 16 / 10;
   object-fit: cover;
   object-position: top left;
+}
+
+/* ---------- Compact FAQ ---------- */
+.realtoros-page .rc-faq {
+  background: var(--mist);
+  border-top: 1px solid var(--line);
+  border-bottom: 1px solid var(--line);
+}
+.realtoros-page .rc-faq h2 {
+  margin-bottom: 28px;
+}
+.realtoros-page .rc-faq-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px 36px;
+  margin: 0;
+}
+.realtoros-page .rc-faq-item {
+  padding-top: 16px;
+  border-top: 1px solid var(--line);
+}
+.realtoros-page .rc-faq-item dt {
+  font-family: var(--font-sans, 'Inter', sans-serif);
+  font-size: 1.02rem;
+  font-weight: 650;
+  color: var(--navy);
+  margin: 0 0 8px;
+  line-height: 1.35;
+}
+.realtoros-page .rc-faq-item dd {
+  margin: 0;
+  font-size: .94rem;
+  line-height: 1.58;
+  color: var(--muted);
 }
 
 /* ---------- Final CTA ---------- */
@@ -210,12 +284,13 @@
 @media (max-width: 760px) {
   .realtoros-page .section { padding: 36px 0; }
   .realtoros-page .rc-hero { padding: 32px 0 30px; }
+  .realtoros-page .rc-faq-grid { grid-template-columns: minmax(0, 1fr); gap: 16px; }
   .realtoros-page .rc-cta { padding: 40px 24px; }
 }
 @media (max-width: 620px) {
   .realtoros-page .rc-cards { grid-template-columns: minmax(0, 1fr); }
-  .realtoros-page .rc-feature-item,
-  .realtoros-page .rc-connected-step { padding: 15px 16px; gap: 12px; }
+  .realtoros-page .rc-editorial-item p { padding-left: 0; }
+  .realtoros-page .rc-timeline-item { gap: 12px; }
 }
 @media (max-width: 520px) {
   .realtoros-page .rc-actions .btn { width: 100%; }
@@ -226,6 +301,8 @@
 /* Reduced motion: no smooth-scroll or hover transitions on this page. */
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .realtoros-page .btn { transition: none; }
-  .realtoros-page .btn:hover { transform: none; }
+  .realtoros-page .btn,
+  .realtoros-page .rc-card-link { transition: none; }
+  .realtoros-page .btn:hover,
+  .realtoros-page .rc-card-link:hover { transform: none; }
 }

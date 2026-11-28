@@ -59,8 +59,27 @@
 @media (max-width: 1024px) { .listing-card { padding: 20px; } }
 @media (max-width: 640px) { .listing-card { padding: 16px; } }
 
-/* Static directory: indexable descriptions under the card grid (Phase 2). */
+/* Static directory: indexable descriptions under the card grid (Phase 2), collapsed by default so JS users don't see a duplicate list. */
 .tools-directory { padding-top: 8px; }
+.directory-details { background: #fff; border: 1px solid #E5E2DB; border-radius: 14px; padding: 0; }
+.directory-summary {
+  list-style: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 16px 20px;
+  font-weight: 600;
+  color: #102131;
+}
+.directory-summary::-webkit-details-marker { display: none; }
+.directory-summary:focus-visible { outline: 3px solid #0F766E; outline-offset: 2px; border-radius: 14px; }
+.directory-summary-hint { font-size: 13px; color: #0F766E; font-weight: 700; }
+.directory-details[open] .directory-summary { border-bottom: 1px solid #E5E2DB; }
+.directory-details[open] .directory-summary-hint { opacity: .65; }
+.directory-details-body { padding: 20px; }
+.tools-directory h2 { margin: 0 0 8px; }
 .tools-directory h3 { margin: 26px 0 10px; font-size: 1.05rem; color: #102131; }
 .directory-intro { color: #5E6C79; max-width: 65ch; }
 .directory-list { list-style: none; margin: 0; padding: 0; display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px 28px; }

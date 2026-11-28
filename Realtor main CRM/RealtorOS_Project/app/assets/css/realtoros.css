@@ -2631,9 +2631,12 @@ a:hover { text-decoration: underline; text-underline-offset: 2px; }
    is already max-width:100% (see above) and every other page fills that
    full available width, so Settings matches that same convention instead
    of capping itself narrower and leaving unused space on wide viewports. */
+#page:has(.settings-shell) {
+  padding: 12px 24px 24px;
+}
 .settings-shell {
   display: grid;
-  grid-template-columns: 184px minmax(0, 1fr);
+  grid-template-columns: 248px minmax(0, 1fr);
   background: var(--card);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
@@ -2646,7 +2649,7 @@ a:hover { text-decoration: underline; text-underline-offset: 2px; }
   display: flex;
   flex-direction: column;
   gap: 1px;
-  padding: 16px 10px;
+  padding: 10px 10px 16px;
   border-right: 1px solid var(--border);
   background: var(--surface-sunk);
   position: sticky;
@@ -2656,7 +2659,8 @@ a:hover { text-decoration: underline; text-underline-offset: 2px; }
   align-self: stretch;
 }
 .settings-nav-item {
-  display: block; width: 100%; text-align: left;
+  display: flex; align-items: center; gap: 10px;
+  width: 100%; text-align: left;
   padding: 7px 10px;
   border: none;
   border-radius: var(--radius-sm);
@@ -2666,6 +2670,44 @@ a:hover { text-decoration: underline; text-underline-offset: 2px; }
   cursor: pointer;
   transition: background 0.12s, color 0.12s;
   line-height: 1.4;
+  min-width: 0;
+}
+.settings-nav-item > span:not(.settings-chevron) {
+  flex: 1 1 auto;
+  min-width: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.settings-nav-utils {
+  margin-top: 12px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.settings-nav-utils:empty { display: none; }
+.settings-nav-install:empty { display: none; }
+.settings-setup-banner {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  margin-bottom: 12px;
+  padding: 10px 14px;
+}
+.settings-setup-banner .icon-slot { margin-bottom: 0; flex-shrink: 0; }
+.settings-setup-banner h3 { margin: 0 0 2px; font-size: var(--font-size-md); }
+.settings-overview-group { margin-top: 18px; }
+.settings-overview-group:first-of-type { margin-top: 4px; }
+.settings-overview-group-title {
+  margin: 0 0 8px;
+  color: var(--text-soft);
+  font-size: var(--font-size-2xs);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
 }
 .settings-nav-item:hover {
   background: rgba(15, 118, 110, 0.06);
@@ -2680,11 +2722,11 @@ a:hover { text-decoration: underline; text-underline-offset: 2px; }
 /* Content: right panel inside the shared container */
 .settings-content {
   min-width: 0;
-  padding: 24px 28px 28px;
+  padding: 12px 24px 24px;
 }
 
 /* Section heading */
-.settings-category-head { margin-bottom: 18px; }
+.settings-category-head { margin-bottom: 12px; }
 .settings-category-title {
   font-family: var(--font-display);
   font-size: var(--font-size-xl);
@@ -2727,7 +2769,7 @@ a:hover { text-decoration: underline; text-underline-offset: 2px; }
 
 @media (min-width: 901px) and (max-width: 1150px) {
   .settings-shell {
-    grid-template-columns: 164px minmax(0, 1fr);
+    grid-template-columns: 224px minmax(0, 1fr);
   }
   .settings-content { padding: 20px 24px 24px; }
 }
