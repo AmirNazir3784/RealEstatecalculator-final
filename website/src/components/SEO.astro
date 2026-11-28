@@ -8,6 +8,7 @@ export interface Props {
   twitterCard?: string;
   robots?: string;
   googleSiteVerification?: string;
+  structuredData?: Record<string, unknown> | Record<string, unknown>[];
 }
 
 const {
@@ -19,7 +20,11 @@ const {
   twitterCard = 'summary',
   robots,
   googleSiteVerification,
+  structuredData,
 } = Astro.props;
+const schemas = structuredData
+  ? (Array.isArray(structuredData) ? structuredData : [structuredData])
+  : [];
 ---
 
 <meta name="description" content={description} />
@@ -36,3 +41,6 @@ const {
 <meta name="twitter:card" content={twitterCard} />
 <meta name="twitter:title" content={title} />
 <meta name="twitter:description" content={description} />
+{schemas.map((schema) => (
+  <script type="application/ld+json" set:html={JSON.stringify(schema)} />
+))}

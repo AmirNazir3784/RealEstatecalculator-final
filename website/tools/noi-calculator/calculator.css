@@ -1,166 +1,36 @@
 
 
-.hero-intro {
-  margin-bottom: 32px;
+.page-hero .calculator-layout { margin-top: 6px; }
+@media (max-width: 760px) {
+  .page-hero .calculator-layout { margin-top: 0; }
 }
-
-.eyebrow,
-.section-kicker {
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: .13em;
-  color: #0F766E;
-}
-
-.eyebrow {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin-bottom: 19px;
-}
-
-.eyebrow-dot,
-.live-dot {
-  width: 7px;
-  height: 7px;
-  border-radius: 50%;
-  background: #0F766E;
-  display: inline-block;
-  flex: 0 0 auto;
-}
-
-.hero-heading-row {
-  display: flex;
-  align-items: end;
-  justify-content: space-between;
-  gap: 28px;
-}
-
-.page-hero .hero-lede {
-  font-size: 16px;
-  line-height: 1.7;
-  color: #5E6C79;
-  max-width: 680px;
-  margin: 0;
-}
-
-.hero-fact {
-  border: 1px solid #DEE7E1;
-  background: #fff;
-  border-radius: 14px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 15px 18px;
-  min-width: 250px;
-  margin-bottom: 5px;
-  box-shadow: 0 5px 24px rgba(16, 33, 49, .035);
-}
-
-.hero-fact-icon {
-  display: grid;
-  place-items: center;
-  width: 37px;
-  height: 37px;
-  border-radius: 11px;
-  background: #EAF2EF;
-  color: #0F766E;
-  font-size: 22px;
-}
-
-.hero-fact strong,
-.hero-fact small {
-  display: block;
-}
-
-.hero-fact strong {
-  font-size: 12px;
-  color: #102131;
-}
-
-.hero-fact small {
-  font-size: 11px;
-  color: #5E6C79;
-  margin-top: 4px;
-}
-
-/* PANEL HEADINGS */
-
 .panel-heading {
   display: flex;
   justify-content: space-between;
   align-items: start;
   gap: 12px;
+  margin-bottom: 8px;
 }
-
 .panel-heading h2 {
-  margin: 9px 0 7px;
-  font-family: var(--font-display);
-  font-size: 1.9rem;
-  line-height: 1.12;
-  letter-spacing: -.025em;
-  font-weight: 600;
-  color: #102131;
+  margin: 0 0 2px;
+  font-size: 1.25rem;
+  line-height: 1.2;
+  color: var(--navy);
 }
-
-.panel-heading p {
-  margin: 0;
-  color: #5E6C79;
-  font-size: 13px;
+.panel-heading p { margin: 0; color: #5E6C79; font-size: 0.82rem; }
+#noi-form { margin-top: 4px; }
+.expenses-group { margin-top: 10px; padding-top: 8px; border-top: 1px solid #E5E2DB; }
+.field-tip { color: #94A39F; cursor: help; }
+.unit-trailing { background: #F8F9F7; align-self: stretch; display: flex; align-items: center; padding: 0 10px; border-left: 1px solid #EDF0ED; font-size: 12px; }
+.calculator-layout .panel .input-unit {
+  width: 100%;
+  max-width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  overflow: hidden;
+  border-color: #D9DEDB;
 }
-
-/* FORM */
-
-#noi-form {
-  margin-top: 26px;
-}
-
-.expenses-group {
-  margin-top: 25px;
-  padding-top: 25px;
-  border-top: 1px solid #E5E2DB;
-}
-
-.legend-icon {
-  width: 30px;
-  height: 30px;
-  display: grid;
-  place-items: center;
-  border-radius: 9px;
-  background: #EAF2EF;
-  color: #0F766E;
-  font-size: 17px;
-}
-
-.legend-meta {
-  font-size: 9px;
-  color: #5A6772;
-  letter-spacing: .12em;
-  margin-left: auto;
-}
-
-.field-tip {
-  color: #94A39F;
-  cursor: help;
-}
-
-.optional-label {
-  font-size: 9px;
-  letter-spacing: .04em;
-  color: #5A6772;
-  margin-left: 5px;
-  white-space: normal;
-}
-
-.unit-trailing {
-  background: #F8F9F7;
-  align-self: stretch;
-  display: flex;
-  align-items: center;
-  padding: 0 13px;
-  border-left: 1px solid #EDF0ED;
-  font-size: 11px;
-}
+.calculator-layout .panel .input-unit .field { min-width: 0; box-sizing: border-box; }
 
 /* INPUT FOOTER */
 
@@ -252,8 +122,51 @@
    Calculator's light-card system — white result card, navy ink, one brand
    palette for the breakdown bar, compact hero, richer article type. The
    calculator engine and markup are unchanged. */
-.calc-page .page-hero { padding: 10px 0 16px; }
-.calc-page .page-hero h1 { margin: 0 0 4px; }
+.calc-page .page-hero { padding: 4px 0 8px; border-bottom: 0; }
+.calc-page .page-hero h1 { margin: 0 0 2px; font-size: clamp(1.85rem, 3.2vw, 2.35rem); line-height: 1.15; }
+.calc-page .page-hero > .wrap > p { display: none; }
+@media (min-width: 961px) { .calc-page .wrap { width: min(calc(100% - 64px), 1100px); } }
+.calc-page .page-hero .eyebrow, .calc-page .page-hero .hero-lede, .calc-page .page-hero .hero-fact { display: none; }
+
+@media (min-width: 761px) {
+  .calc-page .calculator-layout {
+    grid-template-columns: minmax(0, 1.14fr) minmax(330px, 0.86fr);
+    gap: 16px;
+    align-items: stretch;
+  }
+  .calc-page .calculator-layout > .panel {
+    display: flex;
+    flex-direction: column;
+    padding: 14px 18px 12px;
+  }
+  .calculator-layout .form-group { margin-top: 8px; }
+  .calculator-layout .form-group:first-of-type { margin-top: 2px; }
+  .calculator-layout .form-group legend { margin-bottom: 5px; padding-bottom: 3px; font-size: 0.84rem; }
+  .calculator-layout .panel .form-grid { gap: 7px 12px; }
+  .calculator-layout .panel .form-field label { font-size: 12.5px; font-weight: 700; color: #14202B; margin-bottom: 2px; line-height: 1.25; }
+  .calculator-layout .panel .input-unit { min-height: 36px; height: 36px; border-radius: 8px; }
+  .calculator-layout .panel .input-unit .field { min-height: 36px; height: 36px; font-size: 13.5px; padding: 0 10px; }
+  .calculator-layout .panel .unit-affix { font-size: 12.5px; padding: 0 9px; line-height: 36px; }
+  .calculator-layout .panel .field-slider { min-height: 16px; height: 16px; margin: 2px 0 0; accent-color: var(--teal); cursor: pointer; }
+  .input-footnote { padding-top: 8px; }
+
+  .calculator-layout .result { padding: 14px 18px 12px; position: static; }
+  .calculator-layout .result .result-number { font-size: 2.15rem; font-weight: 800; line-height: 1.05; margin: 2px 0 3px; }
+  .calculator-layout .result .result-label { font-size: 11px; margin: 0; }
+  .calculator-layout .result .result-hero-sub { font-size: 0.84rem; margin: 0 0 6px; line-height: 1.35; }
+  .calculator-layout .result .result-tiles { gap: 6px; margin-top: 4px; }
+  .calculator-layout .result .result-tile { padding: 7px 9px; }
+  .calculator-layout .result .result-tile > span { font-size: 10px; margin-bottom: 2px; }
+  .calculator-layout .result .result-tile > b { font-size: 0.9rem; }
+  .calculator-layout .result .result-group { font-size: 11px; margin: 7px 0 2px; padding-top: 6px; }
+  .calculator-layout .result-row { padding: 4px 0; font-size: 13px; line-height: 1.35; }
+  .calculator-layout .breakdown-track { height: 8px; margin: 5px 0 3px; }
+  .calculator-layout .breakdown-legend { padding: 4px 8px; margin: 3px 0 0; gap: 2px 10px; font-size: 11.5px; }
+  .calculator-layout .result .copy-row { margin-top: 8px; display: flex; gap: 8px; }
+  .calculator-layout .result .tool-btn { min-height: 36px; padding: 5px 12px; font-size: 0.82rem; border-radius: 8px; }
+  .calculator-layout .result .result-cta { margin-top: 6px; min-height: 36px; padding: 6px 10px; font-size: 0.82rem; border-radius: 8px; }
+  .calculator-layout .result .copy-note { font-size: 0.78rem; margin: 3px 0 0; min-height: 1.1em; }
+}
 .calculator-layout .result { background: #fff; color: #243442; border: 1px solid var(--line); border-radius: 20px; box-shadow: 0 16px 40px rgba(16, 33, 49, .09); padding: 16px 22px 14px; }
 .calculator-layout .result .result-number { color: var(--navy); font-family: var(--font-display); }
 .calculator-layout .result .result-label, .calculator-layout .result small { color: #5E6C79; }
@@ -297,14 +210,4 @@
 .calc-page .content > h3 { color: var(--navy); font-size: 20px; }
 .calc-page .faq p { color: #2A3947; font-size: 16px; line-height: 1.7; max-width: none; }
 
-/* Hero + width alignment (2026-11-24): match the Mortgage page — no divider
-   line under the heading, the intro paragraph hidden so the form sits right
-   under the H1 near the navbar, and every wrap on the page shares the
-   calculator's 1120px column so the heading, form, result and article all
-   align with clear space at the sides. */
-.calc-page .page-hero { border-bottom: 0; }
-.calc-page .page-hero > .wrap > p { display: none; }
-@media (min-width: 961px) { .calc-page .wrap { width: min(calc(100% - 96px), 1120px); } }
-/* NOI's bespoke hero (eyebrow, lede, formula chip) is hidden to match the
-   Mortgage template: heading only, form right below it. */
-.calc-page .page-hero .eyebrow, .calc-page .page-hero .hero-lede, .calc-page .page-hero .hero-fact { display: none; }
+

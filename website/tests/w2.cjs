@@ -414,7 +414,7 @@ for (const file of walk(root).filter(f => f.endsWith('.html') && !f.split(path.s
   const label = path.relative(root, file);
   assert(!/<[^>]*\son[a-z]+\s*=/i.test(content), `inline event handler in ${label}`);
   assert(!/href\s*=\s*["']\s*javascript:/i.test(content), `javascript: URL in ${label}`);
-  assert(!/<script(?![^>]*\bsrc=)/i.test(content), `inline <script> block in ${label}`);
+  assert(!/<script(?![^>]*\bsrc=)(?![^>]*\btype=["']application\/ld\+json["'])/i.test(content), `inline <script> block in ${label}`);
 }
 let references = 0, pages = 0;
 for (const file of walk(root).filter(f => /\.(html|css|js)$/.test(f))) {

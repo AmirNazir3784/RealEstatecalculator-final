@@ -8,6 +8,59 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   canonical="https://everyrealestatecalculator.com/real-estate-crm/"
   currentNav="crm"
   extraStyles={["realtorcrm.css"]}
+  structuredData={[
+    {
+      '@context': 'https://schema.org',
+      '@type': 'SoftwareApplication',
+      name: 'RealtorCRM',
+      applicationCategory: 'BusinessApplication',
+      operatingSystem: 'Web Browser',
+      url: 'https://everyrealestatecalculator.com/real-estate-crm/',
+      offers: {
+        '@type': 'Offer',
+        price: '0',
+        priceCurrency: 'USD',
+      },
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: [
+        {
+          '@type': 'Question',
+          name: 'Is RealtorCRM free during early access?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Yes. RealtorCRM is free during early access so you can organize contacts, deals, tasks, and automated follow-ups without a credit card.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'Can I import my existing contacts from CSV, Excel, or Google Sheets?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Yes. Upload CSV or Excel spreadsheets with automatic column mapping, or connect Google Sheets to bring your active buyer and seller list straight in.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'Do automated follow-ups send from my own Gmail or Outlook?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Yes. Connect your Gmail or Outlook mailbox so replies land directly in your inbox, with built-in fallback delivery if a connected mailbox is unavailable.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'Does it work on my phone without an app-store download?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Yes. RealtorCRM runs cleanly in any mobile browser and can be installed directly to your home screen as a lightweight web app.',
+          },
+        },
+      ],
+    },
+  ]}
 >
 <main id="main" class="realtoros-page">
   <section class="rc-hero" aria-labelledby="product-title">

@@ -48,6 +48,10 @@
         return '<tr' + (p === Math.round(r.pct) ? ' class="final-row"' : '') + '><td>' + p + '% of ARV</td><td>' + usd(b) + '</td><td>' + usd(o) + '</td></tr>';
       }).join('');
     }
+    var cta = document.getElementById('ws-roi-cta');
+    if (cta && r.buyer > 0) {
+      cta.setAttribute('href', '../../tools/roi-calculator/?purchase=' + Math.round(r.buyer) + '&closing=' + Math.round(r.closing));
+    }
   }
   form.addEventListener('input', run);
   run();
@@ -61,6 +65,12 @@
         copyBtn.textContent = 'Copied ✓';
         setTimeout(function () { copyBtn.textContent = old; }, 1600);
       });
+    });
+  }
+  var printBtn = document.getElementById('print-results');
+  if (printBtn) {
+    printBtn.addEventListener('click', function () {
+      if (typeof window !== 'undefined' && window.print) window.print();
     });
   }
 })();

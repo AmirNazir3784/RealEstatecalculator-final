@@ -11,30 +11,9 @@ import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
   stickyValue="—"
 >
 <section class="page-hero" aria-labelledby="page-title">
-  <div class="wrap hero-intro">
-    <a class="calc-back" href="../">&larr; All Tools</a>
-    <div class="eyebrow">
-      <span class="eyebrow-dot"></span>
-      REAL ESTATE / INVESTMENT TOOLS
-    </div>
-    <div class="hero-heading-row">
-      <div>
-        <h1 id="page-title">
-          NOI Calculator
-        </h1>
-        <p class="hero-lede">
-          Know what a rental property really earns. Model rental income,
-          vacancy and operating costs to see your property's NOI instantly.
-        </p>
-      </div>
-      <div class="hero-fact" aria-label="Calculation formula">
-        <span class="hero-fact-icon">↗</span>
-        <div>
-          <strong>NOI = Income − Expenses</strong>
-          <small>Before financing and income tax</small>
-        </div>
-      </div>
-    </div>
+  <div class="wrap">
+    <h1 id="page-title">NOI Calculator</h1>
+    <p class="hero-lede">Know what a rental property really earns. Model rental income, vacancy and operating costs to see your property's NOI instantly.</p>
   </div>
 
   <div class="wrap calculator-layout">
@@ -42,9 +21,8 @@ import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
     <div class="panel">
       <div class="panel-heading">
         <div>
-          <span class="section-kicker">01 / PROPERTY INPUTS</span>
           <h2>Property details</h2>
-          <p>Start with the sample figures, then make them yours.</p>
+          <p class="muted">Start with the sample figures, then make them yours.</p>
         </div>
         <button type="button" class="tool-btn tool-btn-outline" id="reset-inputs"
           aria-label="Reset calculator to example values">
@@ -55,7 +33,6 @@ import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
       <form id="noi-form" novalidate>
         <fieldset class="form-group">
           <legend>
-            <span class="legend-icon">↗</span>
             <span>Rental income</span>
           </legend>
           <div class="form-grid">
@@ -67,9 +44,6 @@ import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
                   min="0" max="1000000000000" step="10" value="2200">
                 <span class="unit-affix unit-trailing" aria-hidden="true">/mo</span>
               </div>
-              <input class="field-slider" id="monthly-rent-slider"
-                type="range" min="0" max="10000" step="10" value="2200"
-                aria-label="Monthly rent slider">
             </div>
             <div class="form-field">
               <label for="vacancy-rate">
@@ -86,11 +60,8 @@ import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
                 type="range" min="0" max="100" step="0.5" value="5"
                 aria-label="Vacancy percentage slider">
             </div>
-            <div class="form-field form-field-full">
-              <label for="other-income">
-                Additional annual income
-                <span class="optional-label">PARKING, LAUNDRY, ETC.</span>
-              </label>
+            <div class="form-field">
+              <label for="other-income">Additional annual income</label>
               <div class="input-unit">
                 <span class="unit-affix" aria-hidden="true">$</span>
                 <input class="field" id="other-income" type="number"
@@ -103,9 +74,7 @@ import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
 
         <fieldset class="form-group expenses-group">
           <legend>
-            <span class="legend-icon">▤</span>
             <span>Operating expenses</span>
-            <span class="legend-meta">ANNUAL COSTS</span>
           </legend>
           <div class="form-grid">
             <div class="form-field">
@@ -147,7 +116,7 @@ import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
                 <span class="unit-affix unit-trailing" aria-hidden="true">%</span>
               </div>
             </div>
-            <div class="form-field form-field-full">
+            <div class="form-field">
               <label for="hoa-other">HOA &amp; other operating costs</label>
               <div class="input-unit">
                 <span class="unit-affix" aria-hidden="true">$</span>
@@ -177,11 +146,10 @@ import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
 <p class="result-empty" id="result-empty" hidden>Correct the highlighted inputs to see your estimate.</p>
 
 <div id="result-body">
-<div class="result-tiles">
-<div class="result-tile"><span>Effective income</span><b id="tile-effective">—</b><small>Annual collected income</small></div>
-<div class="result-tile"><span>Operating expenses</span><b id="tile-expenses">—</b><small>Annual running costs</small></div>
-<div class="result-tile"><span>Monthly NOI</span><b id="tile-monthly">—</b><small>Before mortgage</small></div>
-<div class="result-tile"><span>Expense ratio</span><b id="tile-ratio">—</b><small>Of effective income</small></div>
+<div class="result-tiles tiles-3">
+<div class="result-tile"><span>Effective income</span><b id="tile-effective">—</b></div>
+<div class="result-tile"><span>Operating expenses</span><b id="tile-expenses">—</b></div>
+<div class="result-tile"><span>Expense ratio</span><b id="tile-ratio">—</b></div>
 </div>
 
 <h3 class="result-group">Income breakdown</h3>
@@ -203,11 +171,9 @@ import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
 <li><span class="swatch seg-coral"></span> HOA &amp; other <b id="lg-hoa">—</b></li>
 </ul>
 
-<div class="result-row result-row-total"><span>Net operating income</span><b id="row-noi">—</b></div>
-
 <div class="copy-row">
-<button class="tool-btn tool-btn-primary" id="copy-results" type="button">⧉ &nbsp; Copy report</button>
-<button class="tool-btn tool-btn-outline" id="print-results" type="button">↧ &nbsp; Print / Save PDF</button>
+<button class="tool-btn tool-btn-primary" id="copy-results" type="button">Copy results</button>
+<button class="tool-btn tool-btn-outline" id="print-results" type="button">Print</button>
 </div>
 <p class="copy-note" id="copy-note" role="status"></p>
 </div>

@@ -125,6 +125,11 @@
     set('lg-hoa', usd(hoa)); set('lg-pmi', usd(pmiM));
     set('sticky-value', usd(price));
     syncDownPct();
+    var ctaEl = document.getElementById('afford-mortgage-cta');
+    if (ctaEl && ctaEl.setAttribute) {
+      ctaEl.setAttribute('href', '../mortgage-calculator/?price=' + Math.round(price) +
+        '&down=' + Math.round(down) + '&rate=' + rate + '&term=' + years);
+    }
 
     if (housing > 0) {
       setWidth('bd-pi', (pi / housing) * 100);

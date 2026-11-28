@@ -10,7 +10,7 @@ import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
   stickyId="sticky-value"
   stickyValue="—"
 >
-<section class="page-hero"><div class="wrap"><a class="calc-back" href="../">&larr; All Tools</a><h1>Commercial Real Estate Calculator</h1><p>Underwrite a commercial property the way a lender does. Enter the price, the loan and the income — we'll work out the NOI, cap rate, debt coverage (DSCR), monthly cash flow and the balloon payment due when the term ends.</p></div>
+<section class="page-hero"><div class="wrap"><h1>Commercial Real Estate Calculator</h1><p>Underwrite a commercial property the way a lender does. Enter the price, the loan and the income — we'll work out the NOI, cap rate, debt coverage (DSCR), monthly cash flow and the balloon payment due when the term ends.</p></div>
 <div class="wrap calculator-layout">
 <div class="calc-left">
 <div class="panel">
@@ -58,7 +58,8 @@ import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
 <div class="result-tile"><span>Down payment</span><b id="strip-down">—</b></div>
 <div class="result-tile"><span id="balloon-label">Balloon due</span><b id="strip-balloon">—</b></div>
 </div>
-<div class="copy-row"><button class="tool-btn tool-btn-primary" id="copy-results" type="button">Copy results</button><a class="tool-btn tool-btn-outline" href="../cap-rate-calculator/">Cap rate calculator</a></div>
+<div class="copy-row"><button class="tool-btn tool-btn-primary" id="copy-results" type="button">Copy results</button><button class="tool-btn tool-btn-outline" id="print-results" type="button">Print</button></div>
+<a class="tool-btn tool-btn-outline result-cta" id="cre-cap-cta" href="../cap-rate-calculator/">Test cap rate sensitivity &rarr;</a>
 <p class="copy-note" id="copy-note"></p>
 <div class="result-next"><span>Tracking commercial deals &amp; owner follow-ups?</span><a href="../../real-estate-crm/">Manage pipelines in RealtorCRM &rarr;</a></div>
 </aside>

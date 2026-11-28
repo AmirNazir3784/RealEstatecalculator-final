@@ -110,6 +110,10 @@
     set('rent-for-6', rentFor(6));
     set('rent-for-7', rentFor(7));
     set('sticky-value', pct(netYield));
+    var cta = document.getElementById('ry-cap-cta');
+    if (cta && price > 0) {
+      cta.setAttribute('href', '../cap-rate-calculator/?price=' + Math.round(price) + '&rent=' + Math.round(rent) + '&vacancy=' + vacancy + '&other=' + Math.round(other) + '&tax=' + Math.round(tax) + '&insurance=' + Math.round(ins) + '&maintenance=' + Math.round(maint) + '&mgmt=' + mgmtRate + '&hoa=' + Math.round(hoa));
+    }
   }
   document.querySelectorAll('#rental-yield-form input').forEach(function (input) {
     input.addEventListener('input', run);
@@ -137,5 +141,11 @@
   }
   var copyBtn = document.getElementById('copy-results');
   if (copyBtn) copyBtn.addEventListener('click', copyResults);
+  var printBtn = document.getElementById('print-results');
+  if (printBtn) {
+    printBtn.addEventListener('click', function () {
+      if (typeof window !== 'undefined' && window.print) window.print();
+    });
+  }
   run();
 })();

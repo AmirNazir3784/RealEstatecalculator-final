@@ -96,6 +96,11 @@
     var capNote = document.getElementById('cap-note');
     if (capNote) capNote.hidden = !(noi < 0);
     set('sticky-value', pct(cap));
+    var ctaEl = document.getElementById('cap-mortgage-cta');
+    if (ctaEl && ctaEl.setAttribute) {
+      ctaEl.setAttribute('href', '../../tools/mortgage-calculator/?price=' + Math.round(price) +
+        '&down=' + Math.round(price * 0.2) + '&rate=6.5&term=30');
+    }
   }
   document.querySelectorAll('#cap-rate-form input').forEach(function (input) {
     input.addEventListener('input', run);
@@ -134,5 +139,47 @@
   if (printBtn) printBtn.addEventListener('click', function () {
     if (typeof window !== 'undefined' && window.print) window.print();
   });
+  function readUrlParameters() {
+    var search = '';
+    if (typeof window !== 'undefined' && window.location && typeof window.location.search === 'string') {
+      search = window.location.search;
+    } else if (typeof location !== 'undefined' && location && typeof location.search === 'string') {
+      search = location.search;
+    }
+    if (!search || search === '?') return;
+    var params = {};
+    search.replace(/^\?/, '').split('&').forEach(function (part) {
+      if (!part) return;
+      var pair = part.split('=');
+      var key = '';
+      var value = '';
+      try { key = decodeURIComponent(pair.shift().replace(/\+/g, ' ')); } catch (e) { return; }
+      try { value = decodeURIComponent(pair.join('=').replace(/\+/g, ' ')); } catch (e) { value = ''; }
+      if (key) params[key] = value;
+    });
+    var map = [
+      ['price', 'property-price', 0, 1e12, true],
+      ['rent', 'monthly-rent', 0, 1e12, false],
+      ['vacancy', 'vacancy-rate', 0, 100, false],
+      ['tax', 'property-tax', 0, 1e12, false],
+      ['ins', 'home-insurance', 0, 1e12, false],
+      ['maint', 'maintenance-cost', 0, 1e12, false],
+      ['mgmt', 'management-rate', 0, 100, false],
+      ['other', 'other-income', 0, 1e12, false],
+      ['hoa', 'hoa-other', 0, 1e12, false],
+      ['target', 'target-cap-rate', 0, 100, true]
+    ];
+    map.forEach(function (item) {
+      var raw = params[item[0]];
+      var el = document.getElementById(item[1]);
+      if (el && /^\s*-?\d+(\.\d+)?\s*$/.test(raw || '')) {
+        var n = Number(raw);
+        if (valid(n, item[2], item[3]) && (!item[4] || n > 0)) {
+          el.value = String(n);
+        }
+      }
+    });
+  }
+  readUrlParameters();
   run();
 })();

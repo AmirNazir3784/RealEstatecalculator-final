@@ -10,7 +10,7 @@ import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
   stickyId="sticky-value"
   stickyValue="—"
 >
-<section class="page-hero"><div class="wrap"><a class="calc-back" href="../">&larr; All Tools</a><h1>Capital Gains Tax Calculator</h1><p>Selling a property? Enter what you paid, what you spent on it, and what you sold it for — we'll work out the taxable gain, any primary-residence exclusion, depreciation recapture, and what you keep after tax.</p></div>
+<section class="page-hero"><div class="wrap"><h1>Capital Gains Tax Calculator</h1><p>Selling a property? Enter what you paid, what you spent on it, and what you sold it for — we'll work out the taxable gain, any primary-residence exclusion, depreciation recapture, and what you keep after tax.</p></div>
 <div class="wrap calculator-layout">
 
 <div class="panel">
@@ -19,62 +19,40 @@ import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
 
 <form id="capital-gains-tax-form">
 
-<fieldset class="form-group">
-<legend>The sale</legend>
-<div class="form-grid">
-<div class="form-field"><label for="sale-price">Sale price</label><span class="input-unit"><span class="unit-affix" aria-hidden="true">$</span><input class="field" id="sale-price" type="number" min="0" max="1000000000000" step="1000" value="650000"></span></div>
-<div class="form-field"><label for="purchase-price">Purchase price</label><span class="input-unit"><span class="unit-affix" aria-hidden="true">$</span><input class="field" id="purchase-price" type="number" min="0" max="1000000000000" step="1000" value="400000"></span></div>
-<div class="form-field form-field-full"><label for="improvements">Capital improvements</label><span class="input-unit"><span class="unit-affix" aria-hidden="true">$</span><input class="field" id="improvements" type="number" min="0" max="1000000000000" step="1000" value="30000"></span><small class="field-helper">Additions and major renovations only. Routine repairs do not count.</small></div>
-</div>
-</fieldset>
-
-<fieldset class="form-group">
-<legend>How you used it</legend>
-<div class="form-field">
-<span class="seg-label" id="property-use-label">Property use</span>
-<div class="seg-control cgt-use" role="group" aria-labelledby="property-use-label">
-<button type="button" data-target="property-use" data-value="primary" aria-pressed="false"><strong>Primary residence</strong><span>Up to $250,000 of gain can be excluded if you qualify.</span></button>
-<button type="button" data-target="property-use" data-value="investment" aria-pressed="true"><strong>Investment</strong><span>Depreciation recapture applies.</span></button>
+<div class="form-field cgt-top-toggle">
+<div class="seg-control cgt-use" role="group" aria-label="Property use">
+<button type="button" data-target="property-use" data-value="primary" aria-pressed="false">Primary residence</button>
+<button type="button" data-target="property-use" data-value="investment" aria-pressed="true">Investment property</button>
 </div>
 <input type="hidden" id="property-use" value="investment">
 </div>
+
+<fieldset class="form-group">
+<legend>Sale, costs &amp; basis</legend>
 <div class="form-grid" id="conditional-fields">
-<div class="form-field" id="field-years-lived" hidden><label for="years-lived">Years lived in as main home</label><span class="input-unit"><input class="field" id="years-lived" type="number" min="0" max="50" step="1" value="0"><span class="unit-affix" aria-hidden="true">years</span></span><small class="field-helper">You need 2 or more for the exclusion.</small></div>
-<div class="form-field" id="field-depreciation"><label for="depreciation">Depreciation claimed</label><span class="input-unit"><span class="unit-affix" aria-hidden="true">$</span><input class="field" id="depreciation" type="number" min="0" max="1000000000000" step="1000" value="60000"></span><small class="field-helper">Leave at 0 if you never depreciated it.</small></div>
+<div class="form-field"><label for="sale-price">Sale price</label><span class="input-unit"><span class="unit-affix" aria-hidden="true">$</span><input class="field" id="sale-price" type="number" min="0" max="1000000000000" step="1000" value="650000"></span></div>
+<div class="form-field"><label for="purchase-price">Purchase price</label><span class="input-unit"><span class="unit-affix" aria-hidden="true">$</span><input class="field" id="purchase-price" type="number" min="0" max="1000000000000" step="1000" value="400000"></span></div>
+<div class="form-field"><label for="improvements">Capital improvements</label><span class="input-unit"><span class="unit-affix" aria-hidden="true">$</span><input class="field" id="improvements" type="number" min="0" max="1000000000000" step="1000" value="30000"></span></div>
+<div class="form-field"><label for="buying-costs">Buying closing costs</label><span class="input-unit"><span class="unit-affix" aria-hidden="true">$</span><input class="field" id="buying-costs" type="number" min="0" max="1000000000000" step="100" value="8000"></span></div>
+<div class="form-field"><label for="selling-rate">Selling costs</label><span class="input-unit"><input class="field" id="selling-rate" type="number" min="0" max="100" step="0.5" value="6"><span class="unit-affix" aria-hidden="true">% of price</span></span></div>
+<div class="form-field" id="field-years-lived" hidden><label for="years-lived">Years lived in as home</label><span class="input-unit"><input class="field" id="years-lived" type="number" min="0" max="50" step="1" value="0"><span class="unit-affix" aria-hidden="true">years</span></span></div>
+<div class="form-field" id="field-depreciation"><label for="depreciation">Depreciation claimed</label><span class="input-unit"><span class="unit-affix" aria-hidden="true">$</span><input class="field" id="depreciation" type="number" min="0" max="1000000000000" step="1000" value="60000"></span></div>
 </div>
 <p class="cgt-depr-note" id="depr-note" hidden></p>
 </fieldset>
 
 <fieldset class="form-group">
-<legend>Refine the estimate</legend>
-
-<div class="cgt-collapse">
-<button type="button" class="cgt-collapse-btn" aria-expanded="false" aria-controls="panel-costs"><span class="t">Costs</span><span class="cgt-collapse-summary" id="summary-costs"></span><span class="cgt-act"><span class="cgt-edit"></span><span class="cgt-chevron" aria-hidden="true">▾</span></span></button>
-<div id="panel-costs" hidden><div class="form-grid">
-<div class="form-field"><label for="buying-costs">Buying costs</label><span class="input-unit"><span class="unit-affix" aria-hidden="true">$</span><input class="field" id="buying-costs" type="number" min="0" max="1000000000000" step="100" value="8000"></span><small class="field-helper">Closing costs from the purchase. They raise your basis.</small></div>
-<div class="form-field"><label for="selling-rate">Selling costs</label><span class="input-unit"><input class="field" id="selling-rate" type="number" min="0" max="100" step="0.5" value="6"><span class="unit-affix" aria-hidden="true">% of sale price</span></span></div>
-</div></div>
+<legend>Filing &amp; tax rates</legend>
+<div class="form-grid" id="panel-rates">
+<div class="form-field"><span class="seg-label" id="filing-status-label">Filing status</span><div class="seg-control" role="group" aria-labelledby="filing-status-label"><button type="button" data-target="filing-status" data-value="single" aria-pressed="true">Single</button><button type="button" data-target="filing-status" data-value="mfj" aria-pressed="false">Married joint</button></div><input type="hidden" id="filing-status" value="single"></div>
+<div class="form-field"><span class="seg-label" id="holding-label">Holding period</span><div class="seg-control" role="group" aria-labelledby="holding-label"><button type="button" data-target="holding" data-value="short" aria-pressed="false">&le; 1 year</button><button type="button" data-target="holding" data-value="long" aria-pressed="true">&gt; 1 year</button></div><input type="hidden" id="holding" value="long"></div>
+<div class="form-field"><span class="seg-label" id="ltcg-rate-label">Long-term gains rate</span><div class="seg-control" role="group" aria-labelledby="ltcg-rate-label"><button type="button" data-target="ltcg-rate" data-value="0" aria-pressed="false">0%</button><button type="button" data-target="ltcg-rate" data-value="15" aria-pressed="true">15%</button><button type="button" data-target="ltcg-rate" data-value="20" aria-pressed="false">20%</button></div><input type="hidden" id="ltcg-rate" value="15"></div>
+<div class="form-field"><label for="ordinary-rate">Ordinary income rate</label><span class="input-unit"><input class="field" id="ordinary-rate" type="number" min="0" max="100" step="1" value="22"><span class="unit-affix" aria-hidden="true">%</span></span></div>
+<div class="form-field"><label for="state-rate">State tax rate</label><span class="input-unit"><input class="field" id="state-rate" type="number" min="0" max="100" step="0.5" value="5"><span class="unit-affix" aria-hidden="true">%</span></span></div>
+<div class="form-field"><span class="seg-label" id="niit-label">NIIT (3.8% surtax)</span><div class="seg-control" role="group" aria-labelledby="niit-label"><button type="button" data-target="niit" data-value="yes" aria-pressed="true">Applies</button><button type="button" data-target="niit" data-value="no" aria-pressed="false">None</button></div><input type="hidden" id="niit" value="yes"></div>
 </div>
-
-<div class="cgt-collapse">
-<button type="button" class="cgt-collapse-btn" aria-expanded="false" aria-controls="panel-situation"><span class="t">Your situation</span><span class="cgt-collapse-summary" id="summary-situation"></span><span class="cgt-act"><span class="cgt-edit"></span><span class="cgt-chevron" aria-hidden="true">▾</span></span></button>
-<div id="panel-situation" hidden><div class="form-grid">
-<div class="form-field"><span class="seg-label" id="filing-status-label">Filing status</span><div class="seg-control" role="group" aria-labelledby="filing-status-label"><button type="button" data-target="filing-status" data-value="single" aria-pressed="true">Single</button><button type="button" data-target="filing-status" data-value="mfj" aria-pressed="false">Married filing jointly</button></div><input type="hidden" id="filing-status" value="single"></div>
-<div class="form-field"><span class="seg-label" id="holding-label">How long you owned it</span><div class="seg-control" role="group" aria-labelledby="holding-label"><button type="button" data-target="holding" data-value="short" aria-pressed="false">1 year or less</button><button type="button" data-target="holding" data-value="long" aria-pressed="true">More than 1 year</button></div><input type="hidden" id="holding" value="long"></div>
-</div></div>
-</div>
-
-<div class="cgt-collapse">
-<button type="button" class="cgt-collapse-btn" aria-expanded="false" aria-controls="panel-rates"><span class="t">Tax rates</span><span class="cgt-collapse-summary" id="summary-rates"></span><span class="cgt-act"><span class="cgt-edit"></span><span class="cgt-chevron" aria-hidden="true">▾</span></span></button>
-<div id="panel-rates" hidden><div class="form-grid">
-<div class="form-field"><span class="seg-label" id="ltcg-rate-label">Long-term capital gains rate</span><div class="seg-control" role="group" aria-labelledby="ltcg-rate-label"><button type="button" data-target="ltcg-rate" data-value="0" aria-pressed="false">0%</button><button type="button" data-target="ltcg-rate" data-value="15" aria-pressed="true">15%</button><button type="button" data-target="ltcg-rate" data-value="20" aria-pressed="false">20%</button></div><input type="hidden" id="ltcg-rate" value="15"></div>
-<div class="form-field"><label for="ordinary-rate">Ordinary income tax rate</label><span class="input-unit"><input class="field" id="ordinary-rate" type="number" min="0" max="100" step="1" value="22"><span class="unit-affix" aria-hidden="true">%</span></span><small class="field-helper">Used for short-term gains and depreciation recapture (capped at 25%).</small></div>
-<div class="form-field"><label for="state-rate">State tax rate on the gain</label><span class="input-unit"><input class="field" id="state-rate" type="number" min="0" max="100" step="0.5" value="5"><span class="unit-affix" aria-hidden="true">%</span></span></div>
-<div class="form-field"><span class="seg-label" id="niit-label">Net investment income tax (NIIT)</span><div class="seg-control" role="group" aria-labelledby="niit-label"><button type="button" data-target="niit" data-value="yes" aria-pressed="true">Applies to me</button><button type="button" data-target="niit" data-value="no" aria-pressed="false">Does not apply</button></div><input type="hidden" id="niit" value="yes"><small class="field-helper">3.8%. It generally applies when income is above $200,000 single or $250,000 married filing jointly.</small></div>
-</div></div>
-</div>
-
 </fieldset>
+
 </form>
 <p class="validation-note" id="validation-note" role="alert"></p>
 </div>
@@ -82,49 +60,33 @@ import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
 <aside class="result" id="cgt-results" aria-live="polite">
 <p class="result-label">You keep after tax</p>
 <p class="result-number" id="net-proceeds" aria-live="polite">—</p>
-<p class="result-hero-sub"><b id="total-tax">—</b> goes to tax. Net proceeds are before any mortgage payoff.</p>
+<p class="result-hero-sub"><b id="total-tax">—</b> goes to tax &middot; before mortgage payoff</p>
 <p class="result-note" id="loss-note" hidden>No tax is due on this estimate: the sale shows no taxable gain.</p>
 <div class="breakdown-track" role="img" aria-label="Sale price split into selling costs, tax and what you keep"><div class="seg-gray" id="bar-costs"></div><div class="seg-coral" id="bar-tax"></div><div class="seg-teal" id="bar-keep"></div></div>
 <ul class="breakdown-legend">
 <li><span class="swatch seg-gray"></span> Selling costs <b id="lg-costs">—</b></li>
 <li><span class="swatch seg-coral"></span> Tax <b id="lg-tax">—</b></li>
 <li><span class="swatch seg-teal"></span> You keep <b id="lg-keep">—</b></li>
-<li>Sale price <b id="lg-sale">—</b></li>
 </ul>
 <p class="validation-note" id="cgt-validation" role="alert"></p>
 <p class="result-empty" id="result-empty" hidden>Enter your details to see your estimate.</p>
 
 <div id="result-body">
-<div class="result-tiles tiles-3">
-<div class="result-tile"><span>Total gain</span><b id="tile-gain">—</b></div>
-<div class="result-tile"><span>Taxable gain</span><b id="tile-taxable">—</b></div>
+<div class="result-tiles">
+<div class="result-tile"><span>Total capital gain</span><b id="tile-gain">—</b></div>
 <div class="result-tile"><span>Effective tax rate</span><b id="tile-effective">—</b></div>
 </div>
-<div hidden aria-hidden="true"><span id="tile-exclusion">—</span><span id="tile-federal">—</span><span id="tile-net">—</span></div>
+<div hidden aria-hidden="true"><span id="tile-taxable">—</span><span id="tile-exclusion">—</span><span id="tile-federal">—</span><span id="tile-net">—</span></div>
 
-<div id="gain-split">
-<h3 class="result-group">How the gain is taxed</h3>
-<div class="breakdown-track" role="img" aria-label="The gain split into excluded, depreciation recapture and remaining gain"><div class="seg-blue" id="gb-excl"></div><div class="seg-gold" id="gb-recap"></div><div class="seg-teal" id="gb-rest"></div></div>
-<ul class="breakdown-legend">
-<li id="gb-excl-item"><span class="swatch seg-blue"></span> Excluded (primary residence) <b id="gb-excl-amt">—</b></li>
-<li id="gb-recap-item"><span class="swatch seg-gold"></span> Depreciation recapture <small id="gb-recap-rate"></small> <b id="gb-recap-amt">—</b></li>
-<li id="gb-rest-item"><span class="swatch seg-teal"></span> <span id="gb-rest-label">Long-term gain</span> <small id="gb-rest-rate"></small> <b id="gb-rest-amt">—</b></li>
-</ul>
-</div>
-
-<h3 class="result-group">Your gain</h3>
+<h3 class="result-group">Tax &amp; basis breakdown</h3>
 <div class="result-row" id="gain-realized-row"><span>Amount realized</span><b id="row-realized">—</b></div>
 <div class="result-row" id="gain-basis-row"><span>Adjusted basis</span><b id="row-basis">—</b></div>
-<div class="result-row" id="gain-taxable-row"><span>Taxable gain</span><b id="row-taxable">—</b></div>
-
-<h3 class="result-group">Your tax</h3>
 <div class="result-row" id="row-recapture-tax"><span>Depreciation recapture tax <small id="hint-recap"></small></span><b id="row-recapture-tax-out">—</b></div>
 <div class="result-row"><span><span id="row-gain-tax-label">Long-term capital gains tax</span> <small id="hint-gain"></small></span><b id="row-gain-tax">—</b></div>
 <div class="result-row" id="row-niit"><span>Net investment income tax <small id="hint-niit"></small></span><b id="row-niit-out">—</b></div>
 <div class="result-row" id="row-state"><span>State tax <small id="hint-state"></small></span><b id="row-state-out">—</b></div>
-<div class="result-row result-row-total" id="row-total-tax-row"><span>Total tax</span><b id="row-total-tax">—</b></div>
 <p class="hidden-row-note" id="cgt-note"></p>
-<div class="copy-row"><button class="tool-btn tool-btn-primary" id="copy-results" type="button">Copy results</button></div>
+<div class="copy-row"><button class="tool-btn tool-btn-primary" id="copy-results" type="button">Copy results</button><button class="tool-btn tool-btn-outline" id="print-results" type="button">Print</button></div>
 <p class="copy-note" id="copy-note"></p>
 </div>
 

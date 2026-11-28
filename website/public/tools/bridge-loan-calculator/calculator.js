@@ -31,7 +31,7 @@
   }
   var OUTPUTS = ['bridge-amount', 'bridge-monthly', 'available-equity', 'total-interest',
     'origination-fee', 'other-closing-out', 'total-bridge-cost', 'lg-interest', 'lg-fees',
-    'down-needed', 'covered-by-bridge', 'cash-needed', 'sale-price', 'mortgage-repaid',
+    'down-needed', 'covered-by-bridge', 'cash-needed', 'total-debt-repaid', 'sale-price', 'mortgage-repaid',
     'bridge-repaid', 'selling-costs', 'cash-after-sale'];
   function run() {
     var value = num('current-value');
@@ -71,6 +71,7 @@
       return;
     }
     set('validation-note', '');
+    set('copy-note', '');
     hideRow('result-body', false); hideRow('result-empty', true);
     var equity = value - mortgage;
     var monthly = bridge * rate / 100 / 12;
@@ -97,12 +98,18 @@
     set('down-needed', usd(downNeeded));
     set('covered-by-bridge', usd(covered));
     set('cash-needed', usd(cashNeeded));
+    var totalDebt = mortgage + bridge;
+    set('total-debt-repaid', usd(totalDebt));
     set('sale-price', usd(value));
     set('mortgage-repaid', usd(mortgage));
     set('bridge-repaid', usd(bridge));
     set('selling-costs', usd(selling));
     set('cash-after-sale', usd(cashAfter));
     set('sticky-value', usd(bridge));
+    var ctaEl = document.getElementById('bridge-mortgage-cta');
+    if (ctaEl && ctaEl.setAttribute) {
+      ctaEl.setAttribute('href', '../../tools/mortgage-calculator/?price=' + Math.round(newPrice) + '&down=' + Math.round(downNeeded) + '&rate=6.5&term=30');
+    }
     // Hide $0 rows; everything else stays visible.
     hideRow('row-total-interest', interest === 0);
     hideRow('row-origination-fee', origination === 0);
@@ -113,7 +120,6 @@
     if (interest === 0) hidden.push('Total interest');
     if (origination === 0) hidden.push('Origination fee');
     if (closing === 0) hidden.push('Other closing costs');
-    if (cashNeeded === 0) hidden.push('Cash still needed');
     if (selling === 0) hidden.push('Selling costs');
     set('hidden-rows-note', hidden.length ? 'Not shown because $0: ' + hidden.join(', ') + '.' : '');
   }
@@ -167,7 +173,8 @@
   var copyBtn = document.getElementById('copy-results');
   if (copyBtn) copyBtn.addEventListener('click', function () {
     copyResults([['Maximum bridge loan', 'bridge-amount'], ['Monthly interest-only payment', 'bridge-monthly'],
-      ['Total bridge cost', 'total-bridge-cost'], ['Down payment needed', 'down-needed'],
+      ['Equity in current home', 'available-equity'], ['Total bridge cost', 'total-bridge-cost'],
+      ['Down payment needed', 'down-needed'], ['Covered by bridge loan', 'covered-by-bridge'],
       ['Cash still needed', 'cash-needed'], ['Cash left after sale', 'cash-after-sale']],
       'Bridge Loan Calculator');
   });

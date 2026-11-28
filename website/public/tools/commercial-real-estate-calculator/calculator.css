@@ -170,3 +170,32 @@
   .calculator-layout .form-field input { padding-top: 5px; padding-bottom: 5px; }
   .calculator-layout .form-group legend { margin-bottom: 6px; }
 }
+
+.calc-page .input-unit { overflow: hidden; box-sizing: border-box; }
+.calculator-layout .copy-row .tool-btn { flex: 1; text-align: center; justify-content: center; }
+.calculator-layout .result .result-cta { width: 100%; margin-top: 8px; justify-content: center; text-align: center; }
+.calculator-layout .result .result-next { margin-top: 8px; padding-top: 8px; border-top: 1px solid var(--line); font-size: 13px; color: #5E6C79; }
+.calculator-layout .result .result-next a { display: block; margin-top: 2px; font-weight: 600; color: var(--teal-dark); }
+
+@media (min-width: 761px) {
+  .calc-page .page-hero { padding: 8px 0 18px; }
+  .calc-page .page-hero h1 { font-size: clamp(28px, 3vw, 36px); margin: 0 0 8px; }
+  .calc-page .calculator-layout { grid-template-columns: minmax(0, 1.14fr) minmax(0, 0.86fr); gap: 16px; align-items: stretch; }
+  .calc-page .calculator-layout .calc-left { display: flex; flex-direction: column; gap: 10px; }
+  .calc-page .calculator-layout .calc-left > .panel { flex: 1 1 auto; padding: 16px 18px; }
+  .calc-page .calculator-layout .panel h2 { font-size: 18px; margin: 0 0 2px; }
+  .calc-page .calculator-layout .panel-sub { font-size: 13px; margin: 0 0 8px; }
+  .calc-page .calculator-layout .form-group { margin: 0 0 10px; }
+  .calc-page .calculator-layout .form-group legend { font-size: 13px; margin-bottom: 6px; }
+  .calc-page .calculator-layout .form-grid { gap: 8px 10px; }
+  .calc-page .calculator-layout .form-field input { padding: 5px 8px; font-size: 14px; min-height: 34px; }
+  .calc-page .calculator-layout .calc-left .note { font-size: 13.5px; padding: 10px 14px; }
+  .calc-page .calculator-layout .result { padding: 16px 18px; display: flex; flex-direction: column; }
+  .calc-page .calculator-layout .result .result-number { font-size: 34px; margin-bottom: 2px; }
+  .calc-page .calculator-layout .result .yield-verdict { font-size: 14px; margin: 0 0 4px; }
+  .calc-page .calculator-layout .result .hero-sub { font-size: 13px; margin: 0 0 4px; }
+  .calc-page .calculator-layout .result .result-group { margin: 8px 0 4px; padding-top: 6px; font-size: 11px; }
+  .calc-page .calculator-layout .result-row { padding: 3px 0; font-size: 13px; }
+  .calc-page .calculator-layout .result-tile { padding: 6px 10px; }
+  .calc-page .calculator-layout .copy-row { margin-top: auto; padding-top: 8px; }
+}

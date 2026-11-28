@@ -9,6 +9,14 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
   bodyClass="article-page"
   currentNav="resources"
   extraStyles={["../../assets/resources.css"]}
+  structuredData={{
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: 'Understanding Mortgage Payments',
+    description: 'How a fixed-rate mortgage payment is calculated: principal and interest, the amortization formula, a worked example, and how property tax, insurance, HOA dues and PMI change the total monthly payment.',
+    mainEntityOfPage: 'https://everyrealestatecalculator.com/resources/mortgage-payments/',
+    publisher: { '@type': 'Organization', name: 'Every Real Estate Calculator', url: 'https://everyrealestatecalculator.com/' },
+  }}
 >
 <main id="main"><div class="article-col">
 <article class="article">

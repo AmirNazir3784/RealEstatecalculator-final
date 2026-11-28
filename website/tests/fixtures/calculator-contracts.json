@@ -70,7 +70,7 @@
           "max": "100"
         }
       },
-      "engineHash": "73a3f70cc58556491caef23fd5a70bfc2c26a84cc99f92743598f9248661af22"
+      "engineHash": "1c2479300a90e5e6cc296aeb2fbc1ca47706c955f4bacaabc177f8bc428d7fec"
     },
     "cap-rate-calculator": {
       "metadata": {
@@ -141,7 +141,7 @@
           "max": "100"
         }
       },
-      "engineHash": "2b799718b8337003dbd3ff2467862fc702cfa91ad04188dd551a28cb5387ad6e"
+      "engineHash": "bad9b33b53daea592840bac5558993d1ef00ccbf0bfbdd3d3434e24e052aedb5"
     },
     "capital-gains-tax-calculator": {
       "metadata": {
@@ -207,7 +207,7 @@
           "max": "100"
         }
       },
-      "engineHash": "1b6421d1d048cd7e31f8e0eb1b9ea96f8af13cdd6431b446a42a90b779182385"
+      "engineHash": "614beee941e06233c379656c327cf24143992f50a1e60ecc79a91639e010ea6f"
     },
     "commission-calculator": {
       "metadata": {
@@ -360,7 +360,7 @@
           "max": "100"
         }
       },
-      "engineHash": "7b5d4e818ecfd09d49905ab72b87317de6a072d738fccf663bbe59884bdf2c11"
+      "engineHash": "d3129c1c7fb9fa61ef0892fbba3e03b5524d0755c3a0f617a86ec8cde18f707f"
     },
     "mortgage-calculator": {
       "metadata": {
@@ -430,7 +430,7 @@
           "max": "100"
         }
       },
-      "engineHash": "707326c7b4eb1fe1cf643cdfe0a91b7e7cb57a753f8afe539c43b6b741775caf"
+      "engineHash": "210cf91e81543f6150cc1490f357ba93b8bae2ef9c73c5a6a12b1213443faa3b"
     },
     "noi-calculator": {
       "metadata": {
@@ -582,7 +582,7 @@
           "max": "1000000000000"
         }
       },
-      "engineHash": "bab77ec3c4d6eaf745b37512aebcc90078126ec3c86589bbd957a7c2142148c9"
+      "engineHash": "05bc3703f03c5bbc7dfc1f06289e430480d5e35115758766dd2c7bee958257cd"
     },
     "rent-vs-buy-calculator": {
       "metadata": {
@@ -683,7 +683,7 @@
           "max": "100"
         }
       },
-      "engineHash": "7fb5a20177e1013f4ae2295a9181d936539caa0846b4e98c4e83060fb518f830"
+      "engineHash": "7b3b4e806f6eeebc334e1d57dddfa0da2348752ee5805776961a1fbe202642ba"
     },
     "roi-calculator": {
       "metadata": {
@@ -769,7 +769,7 @@
           "max": "100"
         }
       },
-      "engineHash": "0c99f92a90aedbf249108c63d39af0276cdbfcf88c1c8a8498965ed0dcf4bacb"
+      "engineHash": "19c48a582ada7600ddd429f3da269a362402ce6c04702b9d434971751ec92bfb"
     }
   }
 }

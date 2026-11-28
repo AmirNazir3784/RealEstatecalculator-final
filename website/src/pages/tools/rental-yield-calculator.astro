@@ -10,7 +10,7 @@ import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
   stickyId="sticky-value"
   stickyValue="—"
 >
-<section class="page-hero"><div class="wrap"><a class="calc-back" href="../">&larr; All Tools</a><h1>Rental Yield Calculator</h1><p>How much does this property earn for its price? Enter the price, the rent and the running costs — we'll work out the gross yield, the net yield after expenses, and the rent you would need for the yield you want.</p></div>
+<section class="page-hero"><div class="wrap"><h1>Rental Yield Calculator</h1><p>How much does this property earn for its price? Enter the price, the rent and the running costs — we'll work out the gross yield, the net yield after expenses, and the rent you would need for the yield you want.</p></div>
 <div class="wrap calculator-layout">
 <div class="calc-left">
 <div class="panel">
@@ -59,7 +59,8 @@ import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
 <div class="result-tile"><span>7% net</span><b id="rent-for-7">—</b></div>
 </div>
 </div>
-<div class="copy-row"><button class="tool-btn tool-btn-primary" id="copy-results" type="button">Copy results</button><a class="tool-btn tool-btn-outline" href="../cap-rate-calculator/">Cap rate calculator</a></div>
+<div class="copy-row"><button class="tool-btn tool-btn-primary" id="copy-results" type="button">Copy results</button><button class="tool-btn tool-btn-outline" id="print-results" type="button">Print</button></div>
+<a class="tool-btn tool-btn-outline result-cta" id="ry-cap-cta" href="../cap-rate-calculator/">Test cap rate &amp; implied value &rarr;</a>
 <p class="copy-note" id="copy-note"></p>
 </aside>
 </div></section>

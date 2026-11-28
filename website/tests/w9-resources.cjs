@@ -73,7 +73,7 @@ for (const [name, page, slug, title] of [
   check(`${name} canonical`, page.includes(`rel="canonical" href="https://everyrealestatecalculator.com/resources/${slug}/"`));
   check(`${name} shared stylesheet`, page.includes('href="../../assets/resources.css"'));
   check(`${name} no article breadcrumbs or metadata row`, !/class="(?:breadcrumbs|article-meta|article-readtime|chip)"/.test(page));
-  check(`${name} no inline scripts`, !/<script(?![^>]*\bsrc=)/i.test(page));
+  check(`${name} no inline scripts`, !/<script(?![^>]*\bsrc=)(?![^>]*\btype=["']application\/ld\+json["'])/i.test(page));
   check(`${name} no inline handlers`, !/<[^>]*\son[a-z]+\s*=/i.test(page));
   check(`${name} no invented date`, !/<time[\s>]/.test(page) && !page.includes('Last updated'));
 }

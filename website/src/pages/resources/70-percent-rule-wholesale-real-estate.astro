@@ -9,6 +9,37 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
   bodyClass="article-page"
   currentNav="resources"
   extraStyles={["../../assets/resources.css"]}
+  structuredData={[
+    {
+      '@context': 'https://schema.org',
+      '@type': 'Article',
+      headline: 'The 70% Rule in Wholesale Real Estate: Formula, Example, and Maximum Allowable Offer',
+      description: 'Learn the 70% rule in wholesale real estate: the Maximum Allowable Offer (MAO) formula, worked $250,000 ARV example, 60%–80% comparison table, and common mistakes.',
+      mainEntityOfPage: 'https://everyrealestatecalculator.com/resources/70-percent-rule-wholesale-real-estate/',
+      publisher: { '@type': 'Organization', name: 'Every Real Estate Calculator', url: 'https://everyrealestatecalculator.com/' },
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: [
+        {
+          '@type': 'Question',
+          name: 'What is the 70% rule in wholesale real estate?',
+          acceptedAnswer: { '@type': 'Answer', text: 'It is an investing guideline used to estimate the maximum purchase price for a property needing repairs: multiply ARV by 70%, subtract repair costs, and subtract your assignment fee to find your maximum offer to the seller.' },
+        },
+        {
+          '@type': 'Question',
+          name: 'What is the formula for the 70% rule?',
+          acceptedAnswer: { '@type': 'Answer', text: 'The traditional formula is (ARV × 70%) − Repair Costs. For wholesale transactions with an assignment fee, use (ARV × 70%) − Repair Costs − Assignment Fee.' },
+        },
+        {
+          '@type': 'Question',
+          name: 'Does the 70% rule include the wholesaler\'s assignment fee?',
+          acceptedAnswer: { '@type': 'Answer', text: 'No. The traditional 70% formula stops at the end buyer\'s maximum price. Wholesalers must subtract their desired assignment fee separately to arrive at the maximum offer to the seller.' },
+        },
+      ],
+    },
+  ]}
 >
 <main id="main"><div class="article-col">
 <a class="article-back" href="../">&larr; All Resources</a>

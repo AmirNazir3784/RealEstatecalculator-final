@@ -9,6 +9,14 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
   bodyClass="article-page"
   currentNav="resources"
   extraStyles={["../../assets/resources.css"]}
+  structuredData={{
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: 'Should I Rent or Buy a House?',
+    description: 'Compare the full monthly cost of owning with rent, find the breakeven year, and test the 5% rule and price-to-rent ratio.',
+    mainEntityOfPage: 'https://everyrealestatecalculator.com/resources/should-i-rent-or-buy-a-house/',
+    publisher: { '@type': 'Organization', name: 'Every Real Estate Calculator', url: 'https://everyrealestatecalculator.com/' },
+  }}
 >
 <main id="main"><div class="article-col">
 <a class="article-back" href="../">&larr; All Resources</a>

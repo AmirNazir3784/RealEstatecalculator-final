@@ -10,14 +10,14 @@ import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
   stickyId="sticky-value"
   stickyValue="—"
 >
-<section class="page-hero"><div class="wrap"><a class="calc-back" href="../">&larr; All Tools</a><h1>Rent vs Buy Calculator</h1><p>Is it cheaper to rent or buy? Enter your rent, the home price and how long you'll stay — we'll compare the full cost of both, and tell you the year buying starts winning.</p></div>
+<section class="page-hero"><div class="wrap"><h1>Rent vs Buy Calculator</h1><p>Is it cheaper to rent or buy? Enter your rent, the home price and how long you'll stay — we'll compare the full cost of both, and tell you the year buying starts winning.</p></div>
 <div class="wrap calculator-layout">
 <div class="panel">
 <h2>Enter your figures</h2>
 <p class="muted">Adjust the sample values below to calculate an estimate instantly.</p>
 <form id="rent-vs-buy-form"><div class="form-grid">
-<div class="form-field"><label for="monthly-rent">Monthly rent (USD)</label><span class="input-unit"><span class="unit-affix" aria-hidden="true">$</span><input class="field" id="monthly-rent" type="number" min="0" max="1000000000000" step="10" value="1800"><span class="unit-affix" aria-hidden="true">/ month</span></span><input class="field-slider" id="monthly-rent-slider" type="range" min="0" max="10000" step="10" value="1800" aria-label="Monthly rent (USD) slider"></div>
-<div class="form-field"><label for="home-price">Home price (USD)</label><span class="input-unit"><span class="unit-affix" aria-hidden="true">$</span><input class="field" id="home-price" type="number" min="0" max="1000000000000" step="1000" value="350000"></span><input class="field-slider" id="home-price-slider" type="range" min="0" max="1000000" step="1000" value="350000" aria-label="Home price (USD) slider"></div>
+<div class="form-field"><label for="monthly-rent">Monthly rent (USD)</label><span class="input-unit"><span class="unit-affix" aria-hidden="true">$</span><input class="field" id="monthly-rent" type="number" min="0" max="1000000000000" step="10" value="1800"><span class="unit-affix" aria-hidden="true">/ month</span></span></div>
+<div class="form-field"><label for="home-price">Home price (USD)</label><span class="input-unit"><span class="unit-affix" aria-hidden="true">$</span><input class="field" id="home-price" type="number" min="0" max="1000000000000" step="1000" value="350000"></span></div>
 <div class="form-field"><label for="down-payment">Down payment (USD)</label><span class="input-unit"><span class="unit-affix" aria-hidden="true">$</span><input class="field" id="down-payment" type="number" min="0" max="1000000000000" step="1000" value="70000"></span></div><div class="form-field"><label for="down-percent-input">Down payment (%)</label><span class="input-unit"><input class="field" id="down-percent-input" type="number" min="0" max="100" step="0.1" value="20"><span class="unit-affix" aria-hidden="true">%</span></span><small class="field-helper">Share of the home price. Edit either value; the other follows.</small></div>
 <div class="form-field"><label for="interest-rate">Mortgage rate (%)</label><span class="input-unit"><input class="field" id="interest-rate" type="number" min="0" max="100" step="0.01" value="6.5"><span class="unit-affix" aria-hidden="true">%</span></span><input class="field-slider" id="interest-rate-slider" type="range" min="0" max="15" step="0.1" value="6.5" aria-label="Mortgage rate (%) slider"></div>
 <div class="form-field form-field-full"><span class="seg-label" id="loan-years-label">Loan term</span><div class="seg-control" role="group" aria-labelledby="loan-years-label"><button type="button" data-years="15" aria-pressed="false">15 years</button><button type="button" data-years="20" aria-pressed="false">20 years</button><button type="button" data-years="30" aria-pressed="true">30 years</button></div><input type="hidden" id="loan-years" value="30"></div>
@@ -63,7 +63,7 @@ import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
 <div class="result-row"><span id="savings-label">Cheaper option saves</span><b id="savings-amount">—</b></div>
 <div class="copy-row"><button class="tool-btn tool-btn-primary" id="copy-results" type="button">Copy results</button><button class="tool-btn tool-btn-outline" id="print-results" type="button">Print</button></div>
 <p class="copy-note" id="copy-note"></p></div>
-<a class="tool-btn tool-btn-outline result-cta" href="../../tools/mortgage-calculator/">See the payment on the mortgage calculator ↗</a>
+<a class="tool-btn tool-btn-outline result-cta" id="rvb-mortgage-cta" href="../../tools/mortgage-calculator/">See the payment on the mortgage calculator ↗</a>
 </aside>
 </div></section>
 <section class="section"><div class="wrap content">

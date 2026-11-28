@@ -80,6 +80,10 @@
       segD.style.width = dW + '%'; segE.style.width = eW + '%'; segC.style.width = cW + '%';
     }
     last = { price: price, dscr: dscr, noi: noi, cap: cap, pmt: pmt, coc: coc, loan: loan, down: down, balloon: balloon, termYears: termYears };
+    var cta = document.getElementById('cre-cap-cta');
+    if (cta && price > 0) {
+      cta.setAttribute('href', '../cap-rate-calculator/?price=' + Math.round(price) + '&rent=' + Math.round(gross / 12) + '&vacancy=' + vacancy + '&tax=' + Math.round(tax) + '&insurance=' + Math.round(ins) + '&maintenance=' + Math.round(maint) + '&mgmt=' + mgmtPct);
+    }
   }
   form.addEventListener('input', run);
   var copyBtn = document.getElementById('copy-results');
@@ -95,5 +99,11 @@
     if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done, done);
     else done();
   });
+  var printBtn = document.getElementById('print-results');
+  if (printBtn) {
+    printBtn.addEventListener('click', function () {
+      if (typeof window !== 'undefined' && window.print) window.print();
+    });
+  }
   run();
 })();

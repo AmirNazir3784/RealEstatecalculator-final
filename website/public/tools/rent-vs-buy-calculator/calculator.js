@@ -166,6 +166,11 @@
     // Shared restyle behaviors: sticky value, down % sync, breakeven chart.
     set('sticky-value', breakeven ? 'Year ' + breakeven : 'Over 30 years');
     syncDownPct();
+    var ctaEl = document.getElementById('rvb-mortgage-cta');
+    if (ctaEl && ctaEl.setAttribute) {
+      ctaEl.setAttribute('href', '../../tools/mortgage-calculator/?price=' + Math.round(price) +
+        '&down=' + Math.round(down) + '&rate=' + rate + '&term=' + years);
+    }
     var minVal = 0, maxVal = 0;
     for (var ci = 1; ci <= 30; ci++) {
       if (netBuy[ci] < minVal) minVal = netBuy[ci];

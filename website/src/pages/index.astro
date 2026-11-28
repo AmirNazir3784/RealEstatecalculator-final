@@ -10,6 +10,52 @@ import BaseLayout from '../layouts/BaseLayout.astro';
   bodyClass="home"
   extraStyles={["assets/home.css"]}
   extraScripts={["assets/tool-registry.js","assets/tool-search.js","assets/home.js"]}
+  structuredData={[
+    {
+      '@context': 'https://schema.org',
+      '@type': 'WebSite',
+      name: 'Every Real Estate Calculator',
+      url: 'https://everyrealestatecalculator.com/',
+    },
+    {
+      '@context': 'https://schema.org',
+      '@type': 'FAQPage',
+      mainEntity: [
+        {
+          '@type': 'Question',
+          name: 'Are the calculators free to use?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Yes. All 16 calculators are free to use on this website, with no signup. RealtorCRM is a separate product; it is free during early access.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'Do I need to create an account?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'No account or signup is required for the current calculators. Open a tool, enter your figures and review the result.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'How should I use the estimates?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'Use them to explore scenarios, not as a lender quote or a final earnings figure. Check the assumptions on each tool page.',
+          },
+        },
+        {
+          '@type': 'Question',
+          name: 'How is RealtorCRM different from the free tools?',
+          acceptedAnswer: {
+            '@type': 'Answer',
+            text: 'The calculators answer specific number-based questions. RealtorCRM is the CRM for ongoing contacts, deals and follow-ups.',
+          },
+        },
+      ],
+    },
+  ]}
 >
   <Fragment slot="head">
     <link rel="preload" as="image" type="image/avif" media="(min-width: 901px)" href="assets/home-architecture.avif">

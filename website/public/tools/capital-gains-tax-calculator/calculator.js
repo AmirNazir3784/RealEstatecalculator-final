@@ -317,5 +317,50 @@
   if (printBtn) printBtn.addEventListener('click', function () {
     if (typeof window !== 'undefined' && window.print) window.print();
   });
+  function readUrlParameters() {
+    var search = '';
+    if (typeof window !== 'undefined' && window.location && typeof window.location.search === 'string') {
+      search = window.location.search;
+    } else if (typeof location !== 'undefined' && location && typeof location.search === 'string') {
+      search = location.search;
+    }
+    if (!search || search === '?') return;
+    var params = {};
+    search.replace(/^\?/, '').split('&').forEach(function (part) {
+      if (!part) return;
+      var pair = part.split('=');
+      var key = '';
+      var value = '';
+      try { key = decodeURIComponent(pair.shift().replace(/\+/g, ' ')); } catch (e) { return; }
+      try { value = decodeURIComponent(pair.join('=').replace(/\+/g, ' ')); } catch (e) { value = ''; }
+      if (key) params[key] = value;
+    });
+    var map = [
+      ['sale', 'sale-price', 0, 1e12, true],
+      ['purchase', 'purchase-price', 0, 1e12, false],
+      ['improvements', 'improvements', 0, 1e12, false],
+      ['depr', 'depreciation', 0, 1e12, false],
+      ['buying', 'buying-costs', 0, 1e12, false],
+      ['selling', 'selling-rate', 0, 100, false]
+    ];
+    map.forEach(function (item) {
+      var raw = params[item[0]];
+      var el = document.getElementById(item[1]);
+      if (el && /^\s*-?\d+(\.\d+)?\s*$/.test(raw || '')) {
+        var n = Number(raw);
+        if (valid(n, item[2], item[3]) && (!item[4] || n > 0)) {
+          el.value = String(n);
+        }
+      }
+    });
+    if (params.use === 'primary' || params.use === 'investment') {
+      var useEl = document.getElementById('property-use');
+      if (useEl) useEl.value = params.use;
+      document.querySelectorAll('.seg-control button[data-target="property-use"]').forEach(function (b) {
+        if (b.getAttribute) setAttr(b, 'aria-pressed', b.getAttribute('data-value') === params.use ? 'true' : 'false');
+      });
+    }
+  }
+  readUrlParameters();
   run();
 })();

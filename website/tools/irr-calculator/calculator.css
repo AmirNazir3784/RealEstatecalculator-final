@@ -278,3 +278,31 @@
 .calc-left { display: flex; flex-direction: column; align-self: stretch; }
 .calc-left > .panel { flex: 1 1 auto; }
 .timeline-box { max-width: 900px; margin-left: auto; margin-right: auto; }
+
+.calc-page .input-unit { overflow: hidden; box-sizing: border-box; }
+.calculator-layout .copy-row .tool-btn { flex: 1; text-align: center; justify-content: center; }
+.calculator-layout .result .result-cta { width: 100%; margin-top: 8px; justify-content: center; text-align: center; }
+
+@media (min-width: 761px) {
+  .calc-page .page-hero { padding: 8px 0 18px; }
+  .calc-page .calculator-layout { grid-template-columns: minmax(0, 1.18fr) minmax(0, 0.82fr); gap: 16px; align-items: stretch; }
+  .calc-page .calculator-layout .calc-left > .panel { padding: 14px 18px; }
+  .calc-page .panel-head h1 { font-size: clamp(26px, 2.5vw, 34px); line-height: 1.1; margin: 0 0 4px; }
+  .calc-page .calculator-layout .panel-sub { font-size: 13px; margin: 0 0 10px; }
+  .calc-page .calculator-layout .form-group { margin: 0 0 8px; padding: 0; border: 0; }
+  .calc-page .calculator-layout .form-group legend { font-size: 12.5px; font-weight: 700; margin-bottom: 5px; padding-bottom: 3px; border-bottom: 1px solid var(--line); width: 100%; }
+  .calc-page .calculator-layout .form-grid { gap: 7px 10px; }
+  .calc-page .calculator-layout .form-field label { font-size: 12px; margin-bottom: 2px; }
+  .calc-page .calculator-layout .form-field input { padding: 5px 8px; font-size: 13.5px; min-height: 32px; }
+  .calc-page .calculator-layout .field-helper { font-size: 11px; line-height: 1.25; margin-top: 2px; }
+  .calc-page .calculator-layout > .result { padding: 14px 18px; }
+  .calc-page .calculator-layout > .result .result-number { font-size: 34px; margin: 2px 0 4px; }
+  .calc-page .calculator-layout > .result .yield-verdict { font-size: 14px; margin: 0 0 4px; }
+  .calc-page .calculator-layout > .result .hero-sub { font-size: 13px; margin: 0 0 6px; }
+  .calc-page .calculator-layout > .result .result-group { margin: 8px 0 4px; padding-top: 6px; font-size: 11px; }
+  .calc-page .calculator-layout > .result > .result-row { flex: 0 0 auto; padding: 4px 0; font-size: 13px; }
+  .calc-page .equity-chart { height: 74px; margin-top: 6px; }
+  .calc-page .calculator-layout > .result .result-tile { padding: 8px 10px; }
+  .calc-page .calculator-layout > .result .copy-row { margin-top: auto; padding-top: 10px; }
+  .calc-page .calculator-layout > .result .copy-row .tool-btn { padding: 9px 12px; font-size: 14px; }
+}

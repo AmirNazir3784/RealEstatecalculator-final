@@ -9,6 +9,14 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
   bodyClass="article-page"
   currentNav="resources"
   extraStyles={["../../assets/resources.css"]}
+  structuredData={{
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: 'How Much House Can I Afford?',
+    description: 'Work out the home price your income supports: the 28/36 rule, front-end and back-end debt-to-income ratios, a worked example from income to maximum price, and what lenders actually allow.',
+    mainEntityOfPage: 'https://everyrealestatecalculator.com/resources/how-much-house-can-i-afford/',
+    publisher: { '@type': 'Organization', name: 'Every Real Estate Calculator', url: 'https://everyrealestatecalculator.com/' },
+  }}
 >
 <main id="main"><div class="article-col">
 <article class="article">

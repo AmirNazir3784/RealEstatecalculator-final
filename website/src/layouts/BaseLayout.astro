@@ -16,6 +16,7 @@ export interface Props {
   currentNav?: 'crm' | 'resources' | 'about' | 'contact' | '';
   extraStyles?: string[];
   extraScripts?: string[];
+  structuredData?: Record<string, unknown> | Record<string, unknown>[];
 }
 
 const {
@@ -31,6 +32,7 @@ const {
   currentNav = '',
   extraStyles = [],
   extraScripts = [],
+  structuredData,
 } = Astro.props;
 
 const segments = Astro.url.pathname.replace(/^\/|\/$/g, '').split('/').filter(Boolean);
@@ -52,6 +54,7 @@ const base = segments.length === 0 ? '' : '../'.repeat(segments.length);
     twitterCard={twitterCard}
     robots={robots}
     googleSiteVerification={googleSiteVerification}
+    structuredData={structuredData}
   />
   <link rel="preload" as="font" type="font/woff2" href={`${base}assets/fonts/inter-latin.woff2`} crossorigin />
   <link rel="preload" as="font" type="font/woff2" href={`${base}assets/fonts/source-serif-4-latin.woff2`} crossorigin />

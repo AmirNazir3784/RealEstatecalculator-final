@@ -146,6 +146,11 @@
       });
       body.innerHTML = html;
     }
+    var cta = document.getElementById('irr-roi-cta');
+    if (cta && inp.price > 0) {
+      var roiUrl = '../roi-calculator/?price=' + Math.round(inp.price) + '&down=' + Math.round(inp.price * inp.downPct / 100) + '&rate=' + inp.rate + '&term=' + Math.round(inp.termYears) + '&hold=' + Math.round(inp.holdYears) + '&rent=' + Math.round(inp.rent / 12) + '&vacancy=' + inp.vacancy + '&appr=' + inp.appr + '&selling=' + inp.sellPct + '&closing=' + Math.round(inp.price * inp.closingPct / 100);
+      cta.setAttribute('href', roiUrl);
+    }
   }
 
   form.addEventListener('input', run);
@@ -163,5 +168,11 @@
     if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(text).then(done, done);
     else done();
   });
+  var printBtn = document.getElementById('print-results');
+  if (printBtn) {
+    printBtn.addEventListener('click', function () {
+      if (typeof window !== 'undefined' && window.print) window.print();
+    });
+  }
   run();
 })();

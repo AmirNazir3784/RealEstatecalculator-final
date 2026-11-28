@@ -183,7 +183,7 @@ for (const rel of relFiles) {
   const content = fs.readFileSync(path.join(outDir, rel), 'utf8');
   if (/<[^>]*\son[a-z]+\s*=/i.test(content)) failures.push(`inline event handler in packaged page: ${posix}`);
   if (/href\s*=\s*["']\s*javascript:/i.test(content)) failures.push(`javascript: URL in packaged page: ${posix}`);
-  if (/<script(?![^>]*\bsrc=)/i.test(content)) failures.push(`inline <script> block in packaged page: ${posix}`);
+  if (/<script(?![^>]*\bsrc=)(?![^>]*\btype=["']application\/ld\+json["'])/i.test(content)) failures.push(`inline <script> block in packaged page: ${posix}`);
 }
 
 // ---- report ------------------------------------------------------------------

@@ -9,9 +9,24 @@ import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
   stickyLabel="Max offer"
   stickyId="sticky-value"
   stickyValue="—"
+  structuredData={{
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: [
+      {
+        '@type': 'Question',
+        name: 'What is the 70% rule in wholesaling?',
+        acceptedAnswer: { '@type': 'Answer', text: 'An investor should pay no more than 70% of a property\'s after repair value (ARV), minus repair costs, leaving room for profit, risk, and transaction costs.' },
+      },
+      {
+        '@type': 'Question',
+        name: 'How much should my wholesale fee be?',
+        acceptedAnswer: { '@type': 'Answer', text: 'Fees of $5,000–$15,000 are common on single-family deals, or roughly 5–10% of the property\'s value, and must fit inside the spread between the seller\'s price and the buyer\'s ceiling.' },
+      },
+    ],
+  }}
 >
 <section class="page-hero"><div class="wrap">
-<a class="calc-back" href="../">&larr; All Tools</a>
 <div class="calculator-wrap"><div class="calculator-layout">
 <div class="calc-left"><section class="panel" aria-labelledby="calc-heading">
 <h1 id="calc-heading">Wholesale Calculator</h1>
@@ -40,7 +55,8 @@ import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
 <div class="result-row"><span><i class="dot dot-navy" aria-hidden="true"></i>Your wholesale fee</span><b id="row-fee">—</b></div>
 <p class="result-group">In cash terms</p>
 <div class="result-tiles"><div class="result-tile"><span>Offer as % of ARV</span><b id="tile-arv">—</b></div><div class="result-tile"><span>Headroom at asking</span><b id="tile-headroom">—</b></div></div>
-<div class="copy-row"><button class="tool-btn tool-btn-primary" id="copy-results" type="button">Copy results</button><a class="tool-btn tool-btn-outline" href="../../tools/roi-calculator/">ROI calculator</a></div>
+<div class="copy-row"><button class="tool-btn tool-btn-primary" id="copy-results" type="button">Copy results</button><button class="tool-btn tool-btn-outline" id="print-results" type="button">Print</button></div>
+<a class="tool-btn tool-btn-outline result-cta" id="ws-roi-cta" href="../../tools/roi-calculator/">Test buyer's ROI on this deal &rarr;</a>
 <div class="result-next"><span>Managing motivated sellers &amp; cash buyers?</span><a href="../../real-estate-crm/">Track leads &amp; follow-ups in RealtorCRM &rarr;</a></div>
 </aside>
 </div></div>

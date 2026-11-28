@@ -3,36 +3,49 @@
    Visual system: approved design mockup (light results card, composition bar,
    PMI banner, segmented tier pill, tier cards, program cards, formula strip). */
 
-/* Keep the results card compact and in view; never stretch it with the form column. */
-.dp-calc-section .calculator-layout { align-items: start; }
+.dp-calc-section .calculator-layout { align-items: start; margin-top: 6px; }
 .dp-calc-section .calculator-layout > * { min-width: 0; }
-@media (min-width: 961px) {
-  .dp-calc-section .result { position: sticky; top: 96px; margin-top: -68px; }
+.dp-calc-section .input-unit { width: 100%; max-width: 100%; min-width: 0; box-sizing: border-box; overflow: hidden; }
+.dp-calc-section .input-unit .field { min-width: 0; box-sizing: border-box; }
+.calc-page .page-hero.dp-calc-section { padding: 4px 0 8px; border-bottom: 0; }
+.calc-page .page-hero.dp-calc-section h1 {
+  margin: 0 0 2px;
+  font-size: clamp(1.85rem, 3.2vw, 2.35rem);
+  line-height: 1.15;
 }
-
-/* First-screen fit: slim hero + compact calculator so Layer 1 sits in the
-   first viewport without scrolling on desktop. */
-.calc-page .page-hero { padding: 8px 0 6px; }
-.calc-page .page-hero h1 { font-family: Inter, ui-sans-serif, system-ui, sans-serif; font-weight: 800; letter-spacing: -0.02em; font-size: 2.35rem; margin-bottom: 6px; }
-.calc-page .page-hero p { font-size: 0.98rem; line-height: 1.45; margin-bottom: 0; }
-/* tools.css sets a 24px bottom margin on this paragraph at higher specificity; match it to reclaim the space. */
-.calc-page .page-hero > .wrap > p { margin-bottom: 0; }
-.calc-page .section.dp-calc-section { padding-top: 10px; }
-.dp-calc-section .panel { padding: 20px 24px; }
-.dp-calc-section .panel h2 { font-size: 1.35rem; margin-bottom: 2px; }
-.dp-calc-section .panel .muted { margin-bottom: 8px; }
-.dp-calc-section .form-grid { gap: 12px; }
-.dp-calc-section .form-field label { margin-bottom: 5px; }
-.dp-calc-section .form-group legend { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.dp-calc-section .panel > h2 { font-size: 1.25rem; margin: 0 0 2px; line-height: 1.2; }
+.dp-calc-section .panel > .muted { font-size: 0.82rem; margin: 0 0 8px; }
 .dp-calc-section .form-group { border: 0; padding: 0; margin: 0; }
-.dp-calc-section .form-field small { margin-top: 3px; }
-.dp-calc-section .field { padding-top: 8px; padding-bottom: 8px; }
-
-/* Narrower content column than the site default: like the competitor, the
-   page sits in a ~1120px column with clear space on both sides. */
+.dp-calc-section .form-group legend { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
 @media (min-width: 961px) {
-  .calc-page .wrap { width: min(calc(100% - 96px), 1120px); }
+  .calc-page .wrap { width: min(calc(100% - 64px), 1100px); }
 }
+@media (min-width: 761px) {
+  .dp-calc-section .calculator-layout {
+    grid-template-columns: minmax(0, 1.14fr) minmax(330px, 0.86fr);
+    gap: 16px;
+    align-items: stretch;
+  }
+  .dp-calc-section .panel { padding: 14px 18px 12px; display: flex; flex-direction: column; }
+  .dp-calc-section .form-grid { gap: 8px 12px; }
+  .dp-calc-section .form-field label,
+  .dp-calc-section .seg-label { font-size: 12.5px; margin-bottom: 3px; }
+  .dp-calc-section .form-field small { margin-top: 2px; font-size: 11px; line-height: 1.25; }
+  .dp-calc-section .input-unit { min-height: 38px; height: 38px; border-radius: 8px; }
+  .dp-calc-section .input-unit .field,
+  .dp-calc-section select.field { min-height: 38px; height: 38px; font-size: 14px; padding: 0 10px; }
+  .dp-calc-section .unit-affix { font-size: 13px; padding: 0 10px; line-height: 38px; }
+  .dp-calc-section .result { padding: 14px 18px 12px; position: static; }
+  .dp-calc-section .copy-row { margin-top: 8px; display: flex; gap: 8px; }
+  .dp-calc-section .copy-row .tool-btn { min-height: 36px; padding: 5px 12px; font-size: 0.82rem; border-radius: 8px; }
+  .dp-calc-section .dp-handoff { margin-top: 8px; min-height: 38px; font-size: 0.88rem; }
+}
+.dp-calc-section .copy-row { margin-top: 10px; display: flex; gap: 8px; }
+.dp-calc-section .result .tool-btn-primary { background: var(--teal); border-color: var(--teal); color: #fff; }
+.dp-calc-section .result .tool-btn-primary:hover { background: var(--teal-dark); border-color: var(--teal-dark); }
+.dp-calc-section .result .tool-btn-outline { background: #fff; border-color: #CEDADA; color: var(--navy); }
+.dp-calc-section .result .tool-btn-outline:hover { background: #F7F5EF; border-color: #CEDADA; color: var(--navy); }
+.dp-calc-section .result .copy-note { color: #5E6C79; font-size: 0.78rem; margin: 3px 0 0; min-height: 1.1em; }
 
 /* Contrast: crisp dark-slate body text on this page; navy stays on headings,
    bold, labels and table numbers; secondary text is #475569. */
@@ -246,14 +259,9 @@ ol.dp-steps li::before { content: counter(dpstep); position: absolute; left: 0; 
 
 /* Short-viewport overrides live at the end so they win over the base rules above. */
 @media (max-height: 840px) and (min-width: 961px) {
-  .calc-page .page-hero { padding: 6px 0 6px; }
-  .calc-page .page-hero h1 { font-size: 2.1rem; }
-  .calc-page .section.dp-calc-section { padding-top: 6px; }
   .dp-calc-section .result-hero-sub { display: none; }
-  .dp-calc-section .panel { padding: 16px 22px; }
-  .dp-calc-section .result { padding: 14px 20px 7px; }
-  .dp-calc-section .result { margin-top: -58px; }
-  .dp-calc-section .result-number { font-size: 2.3rem; }
+  .dp-calc-section .result { margin-top: 0; padding: 14px 18px 10px; }
+  .dp-calc-section .result-number { font-size: 2.15rem; margin: 2px 0 4px; }
   .dp-calc-section .dp-pmi-banner { padding-top: 6px; padding-bottom: 6px; }
   .dp-calc-section .dp-breakdown { margin-top: 6px; }
   .dp-calc-section .dp-metrics { grid-template-columns: repeat(4, 1fr); gap: 0 12px; }

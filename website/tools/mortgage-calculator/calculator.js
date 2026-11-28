@@ -351,6 +351,10 @@
     set('interest-with-extras', usd(plan.totalInterest));
     set('interest-saved', usd(Math.max(0, baseInterest - effectiveInterest)));
     set('time-saved', timeSavedText((isArm ? basePlan.months : baseMonths) - plan.months));
+    var hasExtra = extra > 0 || lump > 0;
+    hideRow('row-interest-extras', !hasExtra);
+    hideRow('row-interest-saved', !hasExtra);
+    hideRow('row-time-saved', !hasExtra);
     set('schedule-note', (extra > 0 || lump > 0)
       ? 'Schedule includes your extra payments.'
       : 'Schedule shows the standard plan without extra payments.');
@@ -653,7 +657,9 @@
   var copyBtn = document.getElementById('copy-results');
   if (copyBtn) copyBtn.addEventListener('click', function () {
     copyResults([['Total monthly payment', 'monthly-total'], ['Principal & interest', 'monthly-payment'],
-      ['Loan amount', 'loan-amount'], ['Total interest', 'total-interest'], ['Payoff date', 'payoff-date']],
+      ['Property tax', 'lg-tax'], ['Home insurance', 'lg-ins'], ['HOA dues', 'lg-hoa'], ['PMI / MIP', 'lg-pmi'],
+      ['Cash needed at close', 'cc-total'], ['Loan amount', 'loan-amount'],
+      ['Total interest', 'total-interest'], ['Payoff date', 'payoff-date']],
       'Mortgage Payment Calculator');
   });
   var printBtn = document.getElementById('print-results');

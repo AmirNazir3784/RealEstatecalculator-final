@@ -15,6 +15,7 @@ export interface Props {
   bodyClass?: string;
   extraStyles?: string[];
   extraScripts?: string[];
+  structuredData?: Record<string, unknown> | Record<string, unknown>[];
 }
 
 const {
@@ -31,7 +32,26 @@ const {
   bodyClass,
   extraStyles = [],
   extraScripts = [],
+  structuredData,
 } = Astro.props;
+
+const defaultAppSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebApplication',
+  name: heroTitle || title.split(' | ')[0],
+  url: canonical,
+  description,
+  applicationCategory: 'FinanceApplication',
+  operatingSystem: 'Any',
+  offers: {
+    '@type': 'Offer',
+    price: '0',
+    priceCurrency: 'USD',
+  },
+};
+const resolvedStructuredData = structuredData
+  ? (Array.isArray(structuredData) ? [defaultAppSchema, ...structuredData] : [defaultAppSchema, structuredData])
+  : defaultAppSchema;
 
 const styles = [
   ...(includeToolsCss ? ['../../assets/tools.css'] : []),
@@ -48,6 +68,7 @@ const scripts = ['calculator.js', ...extraScripts];
   bodyClass={bodyClass}
   extraStyles={styles}
   extraScripts={scripts}
+  structuredData={resolvedStructuredData}
 >
   <main id="main" class="calc-page">
     {stickyLabel && (
@@ -59,7 +80,6 @@ const scripts = ['calculator.js', ...extraScripts];
     {heroTitle && (
       <section class="page-hero">
         <div class="wrap">
-          <a class="calc-back" href="../">&larr; All Tools</a>
           <h1>{heroTitle}</h1>
           {heroSubtitle && <p>{heroSubtitle}</p>}
         </div>

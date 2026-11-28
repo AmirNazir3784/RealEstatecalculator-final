@@ -9,6 +9,14 @@ import BaseLayout from '../../layouts/BaseLayout.astro';
   bodyClass="article-page"
   currentNav="resources"
   extraStyles={["../../assets/resources.css"]}
+  structuredData={{
+    '@context': 'https://schema.org',
+    '@type': 'Article',
+    headline: 'What Is a Good Cap Rate for a Rental Property?',
+    description: 'What is a good cap rate for a rental property? Learn the cap rate formula, typical 2026 ranges by market, and how to judge a property\'s yield.',
+    mainEntityOfPage: 'https://everyrealestatecalculator.com/resources/what-is-a-good-cap-rate/',
+    publisher: { '@type': 'Organization', name: 'Every Real Estate Calculator', url: 'https://everyrealestatecalculator.com/' },
+  }}
 >
 <main id="main"><div class="article-col">
 <a class="article-back" href="../">&larr; All Resources</a>

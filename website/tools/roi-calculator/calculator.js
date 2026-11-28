@@ -215,6 +215,11 @@
     setWidth('bar-appreciation', share(apprGain));
     setWidth('bar-paydown', share(paydown));
     set('sticky-value', roi === null ? '—' : pct(roi));
+    var ctaEl = document.getElementById('roi-cgt-cta');
+    if (ctaEl && ctaEl.setAttribute) {
+      ctaEl.setAttribute('href', '../../tools/capital-gains-tax-calculator/?sale=' + Math.round(value) +
+        '&purchase=' + Math.round(price) + '&buying=' + Math.round(closing) + '&selling=' + sellPct + '&use=investment');
+    }
     var table = document.getElementById('year-table-body');
     if (table) table.innerHTML = rowsHtml;
     // Hide $0 rows; everything else stays visible.
@@ -225,10 +230,6 @@
     hideRow('row-paydown', paydown === 0);
     var hidden = [];
     if (selling === 0) hidden.push('Selling costs');
-    if (closing === 0) hidden.push('Closing costs');
-    if (totalCf === 0) hidden.push('Total cash flow');
-    if (apprGain === 0) hidden.push('Appreciation gain');
-    if (paydown === 0) hidden.push('Loan paydown');
     set('hidden-rows-note', hidden.length ? 'Not shown because $0: ' + hidden.join(', ') + '.' : '');
     syncDownPct();
   }
@@ -331,5 +332,73 @@
   if (printBtn) printBtn.addEventListener('click', function () {
     if (typeof window !== 'undefined' && window.print) window.print();
   });
+  function readUrlParameters() {
+    var search = '';
+    if (typeof window !== 'undefined' && window.location && typeof window.location.search === 'string') {
+      search = window.location.search;
+    } else if (typeof location !== 'undefined' && location && typeof location.search === 'string') {
+      search = location.search;
+    }
+    if (!search || search === '?') return;
+    var params = {};
+    search.replace(/^\?/, '').split('&').forEach(function (part) {
+      if (!part) return;
+      var pair = part.split('=');
+      var key = '';
+      var value = '';
+      try { key = decodeURIComponent(pair.shift().replace(/\+/g, ' ')); } catch (e) { return; }
+      try { value = decodeURIComponent(pair.join('=').replace(/\+/g, ' ')); } catch (e) { value = ''; }
+      if (key) params[key] = value;
+    });
+    function applyNum(paramKey, inputId, mn, mx, gtZero) {
+      var raw = params[paramKey];
+      var el = document.getElementById(inputId);
+      if (el && /^\s*-?\d+(\.\d+)?\s*$/.test(raw || '')) {
+        var n = Number(raw);
+        if (valid(n, mn, mx) && (!gtZero || n > 0)) {
+          el.value = String(n);
+          var sl = document.getElementById(inputId + '-slider');
+          if (sl) {
+            var smn = Number(sl.min), smx = Number(sl.max);
+            var sv = n;
+            if (Number.isFinite(smn) && sv < smn) sv = smn;
+            if (Number.isFinite(smx) && sv > smx) sv = smx;
+            sl.value = String(sv);
+          }
+          return true;
+        }
+      }
+      return false;
+    }
+    applyNum('price', 'purchase-price', 0, 1e12, true);
+    var priceEl = document.getElementById('purchase-price');
+    var finalPrice = priceEl ? Number(String(priceEl.value).replace(/,/g, '').trim()) : NaN;
+    if (applyNum('down', 'down-payment', 0, Number.isFinite(finalPrice) ? finalPrice : 1e12, false)) {
+      var downEl = document.getElementById('down-payment');
+      var pctEl = document.getElementById('down-percent-input');
+      if (downEl && pctEl && Number.isFinite(finalPrice) && finalPrice > 0) {
+        pctEl.value = (Number(downEl.value) / finalPrice * 100).toFixed(1);
+      }
+    }
+    applyNum('rate', 'interest-rate', 0, 100, false);
+    applyNum('rent', 'monthly-rent', 0, 1e12, false);
+    applyNum('vacancy', 'vacancy-rate', 0, 100, false);
+    applyNum('expenses', 'monthly-expenses', 0, 1e12, false);
+    applyNum('appr', 'appreciation-rate', -50, 100, false);
+    applyNum('hold', 'hold-years', 1, 30, false);
+    applyNum('sell', 'selling-rate', 0, 100, false);
+    applyNum('closing', 'closing-costs', 0, 1e12, false);
+    var term = params.term;
+    var termEl = document.getElementById('loan-years');
+    if (termEl && /^\s*\d+(\.\d+)?\s*$/.test(term || '') && valid(Number(term), 1, 50)) {
+      termEl.value = String(Number(term));
+      document.querySelectorAll('.seg-control button').forEach(function (b) {
+        if (b.getAttribute && b.getAttribute('data-years')) {
+          setAttr(b, 'aria-pressed', b.getAttribute('data-years') === termEl.value ? 'true' : 'false');
+        }
+      });
+    }
+  }
+  readUrlParameters();
   run();
 })();

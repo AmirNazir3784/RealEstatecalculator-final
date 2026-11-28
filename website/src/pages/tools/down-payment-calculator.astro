@@ -6,13 +6,12 @@ import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
   title="Down Payment Calculator: Cash to Close, PMI & Tiers"
   description="Calculate your down payment, total cash to close and monthly PMI at 3%, 3.5%, 5%, 10%, 15% and 20% down. See how long each tier takes to save. Free, no sign-up."
   canonical="https://everyrealestatecalculator.com/tools/down-payment-calculator/"
-  heroTitle="Down Payment Calculator"
-  heroSubtitle="Estimate your down payment, total cash to close, and monthly PMI across every tier."
   stickyLabel="Estimated cash to close"
   stickyId="sticky-value"
   stickyValue="$52,000"
 >
-  <section class="section dp-calc-section">
+  <section class="page-hero dp-calc-section">
+    <div class="wrap"><h1>Down Payment Calculator</h1></div>
     <div class="wrap calculator-layout">
       <div class="panel">
         <h2>Enter your purchase details</h2>
@@ -106,6 +105,8 @@ import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
           <div class="dp-metric"><span>Monthly P&amp;I</span><b id="dp-pi">$2,275</b></div>
           <div class="dp-metric"><span>Est. monthly PMI</span><b id="dp-pmi">$180</b></div>
         </div>
+        <div class="copy-row"><button class="tool-btn tool-btn-primary" id="copy-results" type="button">Copy results</button><button class="tool-btn tool-btn-outline" id="print-results" type="button">Print</button></div>
+        <p class="copy-note" id="copy-note"></p>
         <a class="dp-handoff" id="dp-handoff" href="../mortgage-calculator/?price=400000&down=40000&rate=6.5&term=30">See full payment with tax, insurance &amp; HOA <span aria-hidden="true">→</span></a>
         <p class="muted">Principal, interest and PMI only. Taxes, insurance and HOA dues are not included — see the full payment in the Mortgage Calculator.</p>
       </aside>

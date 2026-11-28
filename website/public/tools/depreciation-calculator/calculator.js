@@ -69,6 +69,11 @@
         return '<span class="eq-bar' + (i === r.rows.length - 1 ? ' eq-final' : '') + '" style="height:' + h + '%"></span>';
       }).join('');
     }
+    var cta = document.getElementById('dep-cgt-cta');
+    if (cta && r.price > 0) {
+      var tenYrDepr = r.rows.slice(0, 10).reduce(function (s, x) { return s + x.dep; }, 0);
+      cta.setAttribute('href', '../../tools/capital-gains-tax-calculator/?purchase=' + Math.round(r.price) + '&improvements=' + Math.round(r.improvements) + '&depr=' + Math.round(tenYrDepr) + '&use=investment');
+    }
   }
 
   form.addEventListener('input', run);
@@ -104,6 +109,12 @@
       navigator.clipboard.writeText(text);
       copyBtn.textContent = 'Copied';
       setTimeout(function () { copyBtn.textContent = 'Copy results'; }, 1600);
+    });
+  }
+  var printBtn = document.getElementById('print-results');
+  if (printBtn) {
+    printBtn.addEventListener('click', function () {
+      if (typeof window !== 'undefined' && window.print) window.print();
     });
   }
   run();

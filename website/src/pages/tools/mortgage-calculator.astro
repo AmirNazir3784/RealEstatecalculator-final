@@ -9,9 +9,30 @@ import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
   stickyLabel="Total monthly payment"
   stickyId="sticky-value"
   stickyValue="—"
+  structuredData={{
+    '@context': 'https://schema.org',
+    '@type': 'FAQPage',
+    mainEntity: [
+      {
+        '@type': 'Question',
+        name: 'What Is Included in a Monthly Mortgage Payment?',
+        acceptedAnswer: { '@type': 'Answer', text: 'A mortgage payment may include principal, interest, property taxes and homeowners insurance (PITI), plus PMI, HOA fees and other housing expenses.' },
+      },
+      {
+        '@type': 'Question',
+        name: 'When Can PMI Be Removed From a Mortgage?',
+        acceptedAnswer: { '@type': 'Answer', text: 'For many conventional loans with borrower-paid PMI, you can request cancellation when your scheduled loan balance reaches 80% of the home\'s original value, with automatic termination generally at 78%.' },
+      },
+      {
+        '@type': 'Question',
+        name: 'Is a 15-Year Mortgage Better Than a 30-Year Mortgage?',
+        acceptedAnswer: { '@type': 'Answer', text: 'A 15-year mortgage generally has higher monthly payments but lower total interest, while a 30-year mortgage lowers the monthly payment and increases total interest.' },
+      },
+    ],
+  }}
 >
 <div class="calc-summary-bar" id="calc-summary-bar" aria-hidden="true"><div class="wrap summary-bar-inner"><span class="summary-bar-item">Monthly payment <b id="summary-total">—</b></span><span class="summary-bar-item">Cash needed at close <b id="summary-cash">—</b></span><span class="summary-bar-note">Estimates update as you type</span></div></div>
-<section class="page-hero"><div class="wrap"><a class="calc-back" href="../">&larr; All Tools</a><h1>Mortgage Payment Calculator</h1></div>
+<section class="page-hero"><div class="wrap"><h1>Mortgage Payment Calculator</h1></div>
 <div class="wrap calculator-layout mortgage-calc-layout">
 <div class="panel">
 <h2>Enter your loan details</h2>
@@ -55,7 +76,7 @@ import CalculatorLayout from '../../layouts/CalculatorLayout.astro';
 <div class="result-row"><span>Total of monthly payments over term</span><b id="total-cost">—</b></div>
 <h3 class="result-group">Payoff</h3>
 <div class="result-row"><span>Estimated payoff date</span><b id="payoff-date">—</b></div>
-<div class="result-row"><span>Total interest with extra payments</span><b id="interest-with-extras">—</b></div>
+<div class="result-row" id="row-interest-extras"><span>Total interest with extra payments</span><b id="interest-with-extras">—</b></div>
 <div class="result-row" id="row-interest-saved"><span>Interest saved</span><b id="interest-saved">—</b></div>
 <div class="result-row" id="row-time-saved"><span>Time saved</span><b id="time-saved">—</b></div>
 <p class="muted" id="mortgage-pmi-note"></p>
